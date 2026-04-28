@@ -10,23 +10,17 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 .container { max-width: 600px; margin: 0 auto; }
 h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .sub { font-size: 14px; color: #888; margin-bottom: 28px; }
-
 .card { background: #111; border: 1px solid #222; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
 .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #ccc; }
-
 .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
 .input-group input { flex: 1; padding: 12px 14px; font-size: 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
 .input-group input:focus { outline: none; border-color: #7F77DD; }
-
 .btn-add { padding: 12px 20px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .btn-add:hover { background: #534AB7; }
 .btn-add:disabled { background: #333; cursor: not-allowed; }
-
-.plataformas { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.plataformas { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
 .plt-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; color: #888; }
-
 .loading { text-align: center; padding: 16px; color: #7F77DD; font-size: 14px; display: none; }
-
 .produtos-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
 .produto-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
 .produto-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: #333; flex-shrink: 0; }
@@ -41,19 +35,17 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .plt-outro { background: #333; color: #aaa; }
 .btn-remover { background: none; border: none; color: #555; cursor: pointer; font-size: 18px; padding: 4px; flex-shrink: 0; }
 .btn-remover:hover { color: #e63946; }
-
 .vazio { text-align: center; padding: 30px; color: #444; font-size: 14px; }
 .vazio .icon { font-size: 36px; margin-bottom: 8px; }
-
 .btn-gerar-vitrine { width: 100%; padding: 16px; background: linear-gradient(135deg, #7F77DD, #5B8DEF); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; display: none; }
 .btn-gerar-vitrine.show { display: block; }
-
 .link-vitrine { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; margin-top: 16px; display: none; }
 .link-vitrine.show { display: block; }
 .link-vitrine p { font-size: 13px; color: #aaa; margin-bottom: 8px; }
 .link-box { display: flex; gap: 10px; align-items: center; }
 .link-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
 .btn-copiar { padding: 8px 14px; background: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.dica { font-size: 12px; color: #555; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -61,7 +53,6 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   <h1>Minha Lista de Presentes</h1>
   <p class="sub">Cole os links dos produtos que voce quer ganhar</p>
 
-  <!-- Card adicionar -->
   <div class="card">
     <h2>Adicionar presente</h2>
     <div class="plataformas">
@@ -69,14 +60,20 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       <span class="plt-badge">🛍️ Mercado Livre</span>
       <span class="plt-badge">🧡 Shopee</span>
     </div>
-    <div class="input-group" style="margin-top:10px;">
+
+    <div class="input-group">
       <input type="text" id="input-link" placeholder="Cole o link do produto aqui...">
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="input-nome" placeholder="Nome do produto (ex: Kindle 16GB Preto)">
       <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
     </div>
+
+    <p class="dica">Dica: preencha o nome para ficar mais bonito na vitrine</p>
     <div class="loading" id="loading">Buscando produto... aguarde</div>
   </div>
 
-  <!-- Card lista -->
   <div class="card">
     <h2>Seus presentes (<span id="total">0</span>)</h2>
     <div class="produtos-lista" id="lista">
@@ -147,6 +144,8 @@ function renderLista() {
 
 async function adicionarProduto() {
   var link = document.getElementById('input-link').value.trim();
+  var nome = document.getElementById('input-nome').value.trim();
+
   if (!link) { alert('Cole um link de produto!'); return; }
 
   document.getElementById('loading').style.display = 'block';
@@ -156,13 +155,14 @@ async function adicionarProduto() {
     var res = await fetch('/api/adicionar-produto', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({lista_id: LISTA_ID, link: link})
+      body: JSON.stringify({lista_id: LISTA_ID, link: link, nome: nome})
     });
     var data = await res.json();
     if (data.ok) {
       produtos.push(data.produto);
       renderLista();
       document.getElementById('input-link').value = '';
+      document.getElementById('input-nome').value = '';
     } else {
       alert(data.erro || 'Erro ao adicionar produto.');
     }
@@ -194,10 +194,12 @@ function copiarLink() {
   });
 }
 
-// Permite adicionar com Enter
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('input-link').addEventListener('keypress', function(e) {
+  document.getElementById('input-nome').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') adicionarProduto();
+  });
+  document.getElementById('input-link').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') document.getElementById('input-nome').focus();
   });
 });
 </script>
