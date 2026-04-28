@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGift — Minha Lista</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
+.container { max-width: 600px; margin: 0 auto; }
+h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.sub { font-size: 14px; color: #888; margin-bottom: 28px; }
+
+.card { background: #111; border: 1px solid #222; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #ccc; }
+
+.input-group { display: flex; gap: 10px; margin-bottom: 10px; }
+.input-group input { flex: 1; padding: 12px 14px; font-size: 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
+.input-group input:focus { outline: none; border-color: #7F77DD; }
+
+.btn-add { padding: 12px 20px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.btn-add:hover { background: #534AB7; }
+.btn-add:disabled { background: #333; cursor: not-allowed; }
+
+.plataformas { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.plt-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; color: #888; }
+
+.loading { text-align: center; padding: 16px; color: #7F77DD; font-size: 14px; display: none; }
+
+.produtos-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.produto-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
+.produto-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: #333; flex-shrink: 0; }
+.produto-img-placeholder { width: 64px; height: 64px; border-radius: 8px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+.produto-info { flex: 1; min-width: 0; }
+.produto-nome { font-size: 14px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.produto-preco { font-size: 13px; color: #7F77DD; margin-bottom: 4px; }
+.produto-plt { font-size: 11px; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+.plt-amazon { background: #ff9900; color: #000; }
+.plt-mercadolivre { background: #FFE600; color: #000; }
+.plt-shopee { background: #EE4D2D; color: #fff; }
+.plt-outro { background: #333; color: #aaa; }
+.btn-remover { background: none; border: none; color: #555; cursor: pointer; font-size: 18px; padding: 4px; flex-shrink: 0; }
+.btn-remover:hover { color: #e63946; }
+
+.vazio { text-align: center; padding: 30px; color: #444; font-size: 14px; }
+.vazio .icon { font-size: 36px; margin-bottom: 8px; }
+
+.btn-gerar-vitrine { width: 100%; padding: 16px; background: linear-gradient(135deg, #7F77DD, #5B8DEF); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; display: none; }
+.btn-gerar-vitrine.show { display: block; }
+
+.link-vitrine { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; margin-top: 16px; display: none; }
+.link-vitrine.show { display: block; }
+.link-vitrine p { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+.link-box { display: flex; gap: 10px; align-items: center; }
+.link-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
+.btn-copiar { padding: 8px 14px; background: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Minha Lista de Presentes</h1>
+  <p class="sub">Cole os links dos produtos que voce quer ganhar</p>
+
+  <!-- Card adicionar -->
+  <div class="card">
+    <h2>Adicionar presente</h2>
+    <div class="plataformas">
+      <span class="plt-badge">🛒 Amazon</span>
+      <span class="plt-badge">🛍️ Mercado Livre</span>
+      <span class="plt-badge">🧡 Shopee</span>
+    </div>
+    <div class="input-group" style="margin-top:10px;">
+      <input type="text" id="input-link" placeholder="Cole o link do produto aqui...">
+      <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
+    </div>
+    <div class="loading" id="loading">Buscando produto... aguarde</div>
+  </div>
+
+  <!-- Card lista -->
+  <div class="card">
+    <h2>Seus presentes (<span id="total">0</span>)</h2>
+    <div class="produtos-lista" id="lista">
+      <div class="vazio">
+        <div class="icon">🎁</div>
+        <p>Nenhum presente adicionado ainda</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-gerar-vitrine" id="btn-vitrine" onclick="gerarVitrine()">
+    Gerar minha vitrine de presentes
+  </button>
+
+  <div class="link-vitrine" id="link-vitrine">
+    <p>Sua vitrine esta pronta! Copie o link e cole no story:</p>
+    <div class="link-box">
+      <span id="link-gerado"></span>
+      <button class="btn-copiar" onclick="copiarLink()">Copiar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var LISTA_ID = "{{ lista_id }}";
+var produtos = [];
+
+function emojiPlataforma(plt) {
+  if (plt === 'amazon') return '🛒';
+  if (plt === 'mercadolivre') return '🛍️';
+  if (plt === 'shopee') return '🧡';
+  return '🔗';
+}
+
+function nomePlataforma(plt) {
+  if (plt === 'amazon') return 'Amazon';
+  if (plt === 'mercadolivre') return 'Mercado Livre';
+  if (plt === 'shopee') return 'Shopee';
+  return 'Loja';
+}
+
+function renderLista() {
+  var lista = document.getElementById('lista');
+  document.getElementById('total').textContent = produtos.length;
+
+  if (!produtos.length) {
+    lista.innerHTML = '<div class="vazio"><div class="icon">🎁</div><p>Nenhum presente adicionado ainda</p></div>';
+    document.getElementById('btn-vitrine').classList.remove('show');
+    return;
+  }
+
+  lista.innerHTML = produtos.map(function(p) {
+    return '<div class="produto-card">' +
+      (p.imagem_url
+        ? '<img class="produto-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
+        : '<div class="produto-img-placeholder">' + emojiPlataforma(p.plataforma) + '</div>') +
+      '<div class="produto-info">' +
+        '<div class="produto-nome">' + p.nome + '</div>' +
+        (p.preco ? '<div class="produto-preco">R$ ' + p.preco + '</div>' : '') +
+        '<span class="produto-plt plt-' + p.plataforma + '">' + emojiPlataforma(p.plataforma) + ' ' + nomePlataforma(p.plataforma) + '</span>' +
+      '</div>' +
+      '<button class="btn-remover" onclick="remover(' + p.id + ')">✕</button>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('btn-vitrine').classList.add('show');
+}
+
+async function adicionarProduto() {
+  var link = document.getElementById('input-link').value.trim();
+  if (!link) { alert('Cole um link de produto!'); return; }
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('btn-adicionar').disabled = true;
+
+  try {
+    var res = await fetch('/api/adicionar-produto', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({lista_id: LISTA_ID, link: link})
+    });
+    var data = await res.json();
+    if (data.ok) {
+      produtos.push(data.produto);
+      renderLista();
+      document.getElementById('input-link').value = '';
+    } else {
+      alert(data.erro || 'Erro ao adicionar produto.');
+    }
+  } catch(e) {
+    alert('Erro de conexao. Tente novamente.');
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('btn-adicionar').disabled = false;
+}
+
+async function remover(id) {
+  await fetch('/api/remover-produto/' + id, {method: 'DELETE'});
+  produtos = produtos.filter(function(p) { return p.id !== id; });
+  renderLista();
+}
+
+function gerarVitrine() {
+  var link = window.location.origin + '/vitrine/' + LISTA_ID;
+  document.getElementById('link-gerado').textContent = link;
+  document.getElementById('link-vitrine').classList.add('show');
+  document.getElementById('link-gerado').scrollIntoView({behavior: 'smooth'});
+}
+
+function copiarLink() {
+  var link = document.getElementById('link-gerado').textContent;
+  navigator.clipboard.writeText(link).then(function() {
+    alert('Link copiado! Cole no campo "Link da sua vitrine" na pagina de story.');
+  });
+}
+
+// Permite adicionar com Enter
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('input-link').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') adicionarProduto();
+  });
+});
+</script>
+</body>
+</html>
