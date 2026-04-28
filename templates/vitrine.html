@@ -6,129 +6,83 @@
 <title>InstaGift — Vitrine</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 24px 16px; }
-.topo { text-align: center; margin-bottom: 24px; }
-.topo h2 { font-size: 20px; font-weight: 700; }
+body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
+.container { max-width: 500px; margin: 0 auto; }
+.topo { text-align: center; margin-bottom: 28px; }
+.topo h2 { font-size: 22px; font-weight: 700; }
 .topo p { font-size: 13px; color: #888; margin-top: 4px; }
-.grid { display: flex; flex-direction: column; gap: 14px; max-width: 420px; margin: 0 auto; }
+.grid { display: flex; flex-direction: column; gap: 14px; }
 .card { background: #111; border: 1px solid #222; border-radius: 14px; overflow: hidden; }
-.card img { width: 100%; height: 180px; object-fit: cover; display: block; }
-.card-sem-img { width: 100%; height: 100px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-.card-body { padding: 14px; }
-.card-nome { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.card-preco { font-size: 14px; color: #7F77DD; margin-bottom: 12px; }
-.btn-presentear {
-  width: 100%; padding: 12px; background: #7F77DD; color: white;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer;
-}
-.btn-presentear:hover { background: #534AB7; }
-.btn-presentear:disabled { background: #333; color: #666; cursor: not-allowed; }
-.reservado-badge { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
-
-/* Modal */
-.modal-bg { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 100; }
-.modal-bg.show { display: flex; }
-.modal { background: #111; border: 1px solid #333; border-radius: 16px; padding: 28px 24px; max-width: 360px; width: 90%; text-align: center; }
-.modal h3 { font-size: 20px; margin-bottom: 8px; }
-.modal p { font-size: 13px; color: #888; margin-bottom: 20px; }
-.modal-produto { font-size: 16px; font-weight: 700; color: #7F77DD; margin-bottom: 20px; }
-.form-nome { width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 12px; }
-.btn-confirmar { width: 100%; padding: 13px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
-.btn-cancelar { width: 100%; padding: 11px; background: transparent; color: #888; border: 1px solid #333; border-radius: 10px; font-size: 14px; cursor: pointer; }
-
+.card-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+.card-sem-img { width: 100%; height: 120px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+.card-body { padding: 16px; }
+.card-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.card-preco { font-size: 15px; color: #7F77DD; font-weight: 700; margin-bottom: 12px; }
+.btn-comprar { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.btn-amazon { background: #ff9900; color: #000; }
+.btn-mercadolivre { background: #FFE600; color: #000; }
+.btn-shopee { background: #EE4D2D; color: #fff; }
+.btn-outro { background: #7F77DD; color: #fff; }
+.reservado { background: #333; color: #666; cursor: not-allowed; }
+.badge-reservado { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
 .loading { text-align: center; padding: 60px; color: #888; }
-.erro { text-align: center; padding: 60px; color: #e63946; }
 </style>
 </head>
 <body>
-
-<div class="topo">
-  <h2>🎁 Lista de presentes</h2>
-  <p id="subtitulo">Carregando...</p>
-</div>
-
-<div class="grid" id="grid">
-  <div class="loading">Buscando presentes...</div>
-</div>
-
-<!-- Modal de confirmação -->
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <h3>Que presente incrível!</h3>
-    <p>Você está prestes a presentear com:</p>
-    <div class="modal-produto" id="modal-produto"></div>
-    <input class="form-nome" type="text" id="nome-presenteador" placeholder="Seu nome (opcional)">
-    <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar presente</button>
-    <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+<div class="container">
+  <div class="topo">
+    <h2>Lista de Presentes</h2>
+    <p id="subtitulo">Carregando...</p>
+  </div>
+  <div class="grid" id="grid">
+    <div class="loading">Buscando presentes...</div>
   </div>
 </div>
 
 <script>
-const listaId = "{{ lista_id }}";
-let produtoSelecionado = null;
+var listaId = "{{ lista_id }}";
+
+var btnInfo = {
+  amazon: {classe: 'btn-amazon', texto: '🛒 Comprar na Amazon'},
+  mercadolivre: {classe: 'btn-mercadolivre', texto: '🛍️ Comprar no Mercado Livre'},
+  shopee: {classe: 'btn-shopee', texto: '🧡 Comprar na Shopee'},
+  outro: {classe: 'btn-outro', texto: '🔗 Ver produto'}
+};
 
 async function carregarLista() {
   try {
-    const res = await fetch(`/api/lista/${listaId}`);
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    document.getElementById('subtitulo').textContent = `Lista de ${data.nome}`;
-    renderProdutos(data.produtos);
+    var res = await fetch('/api/produtos/' + listaId);
+    var produtos = await res.json();
+    document.getElementById('subtitulo').textContent = produtos.length + ' presente(s) na lista';
+    renderProdutos(produtos);
   } catch(e) {
-    document.getElementById('grid').innerHTML = '<div class="erro">Lista não encontrada.</div>';
+    document.getElementById('grid').innerHTML = '<div class="loading">Lista nao encontrada.</div>';
   }
 }
 
 function renderProdutos(produtos) {
-  const grid = document.getElementById('grid');
+  var grid = document.getElementById('grid');
   if (!produtos.length) {
     grid.innerHTML = '<div class="loading">Nenhum produto na lista ainda.</div>';
     return;
   }
-  grid.innerHTML = produtos.map(p => `
-    <div class="card">
-      ${p.imagem_url
-        ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.style.display='none'">`
-        : `<div class="card-sem-img">🎁</div>`}
-      <div class="card-body">
-        <div class="card-nome">${p.nome}</div>
-        <div class="card-preco">${p.preco ? 'R$ ' + p.preco : ''}</div>
-        <button class="btn-presentear" ${p.reservado ? 'disabled' : ''} onclick="abrirModal(${p.id}, '${p.nome}')">
-          ${p.reservado ? 'Já reservado' : 'Quero presentear'}
-        </button>
-        ${p.reservado ? '<div class="reservado-badge">Alguém já escolheu este presente</div>' : ''}
-      </div>
-    </div>
-  `).join('');
-}
-
-function abrirModal(id, nome) {
-  produtoSelecionado = id;
-  document.getElementById('modal-produto').textContent = nome;
-  document.getElementById('nome-presenteador').value = '';
-  document.getElementById('modal').classList.add('show');
-}
-
-function fecharModal() {
-  document.getElementById('modal').classList.remove('show');
-  produtoSelecionado = null;
-}
-
-async function confirmarReserva() {
-  if (!produtoSelecionado) return;
-  try {
-    const res = await fetch(`/api/reservar/${produtoSelecionado}`, { method: 'POST' });
-    const data = await res.json();
-    if (data.ok) {
-      fecharModal();
-      carregarLista();
-      alert('Presente reservado! O aniversariante vai adorar.');
-    } else {
-      alert(data.erro || 'Erro ao reservar.');
-    }
-  } catch(e) {
-    alert('Erro de conexão.');
-  }
+  var info;
+  grid.innerHTML = produtos.map(function(p) {
+    info = btnInfo[p.plataforma] || btnInfo['outro'];
+    return '<div class="card">' +
+      (p.imagem_url
+        ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
+        : '<div class="card-sem-img">🎁</div>') +
+      '<div class="card-body">' +
+        '<div class="card-nome">' + p.nome + '</div>' +
+        (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
+        (p.reservado
+          ? '<div class="btn-comprar reservado">Presente ja escolhido</div>' +
+            '<div class="badge-reservado">Alguem ja escolheu este presente</div>'
+          : '<a href="' + p.link_afiliado + '" target="_blank" class="btn-comprar ' + info.classe + '">' + info.texto + '</a>') +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
 carregarLista();
