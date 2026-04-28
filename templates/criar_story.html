@@ -2,47 +2,93 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InstaGift — Criar Story</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #060612; color: #fff; font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 30px 16px; min-height: 100vh; }
-.container { width: 100%; max-width: 420px; }
-h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-.sub { font-size: 13px; color: #888; margin-bottom: 24px; }
-.section-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
-.templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
-.tpl-card { border: 2px solid #222; border-radius: 12px; overflow: hidden; cursor: pointer; position: relative; }
+body {
+  background: #060612;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  padding: 20px 16px 40px 16px;
+}
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
+.sub { font-size: clamp(13px, 2vw, 16px); color: #888; margin-bottom: 28px; }
+.section-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+
+/* LAYOUT DOIS PAINEIS NO PC */
+.layout { display: flex; gap: 32px; align-items: flex-start; }
+.painel-esq { flex: 1; min-width: 0; }
+.painel-dir { width: 340px; flex-shrink: 0; position: sticky; top: 20px; }
+
+@media (max-width: 700px) {
+  .layout { flex-direction: column; }
+  .painel-dir { width: 100%; position: static; }
+}
+
+.templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.tpl-card { border: 2px solid #222; border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: border-color 0.2s; }
+.tpl-card:hover { border-color: #444; }
 .tpl-card.selected { border-color: #7F77DD; }
 .tpl-card canvas { width: 100%; display: block; }
-.tpl-label { font-size: 11px; color: #888; padding: 5px; text-align: center; background: #111; }
-.check { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; border-radius: 50%; background: #7F77DD; display: none; align-items: center; justify-content: center; font-size: 11px; }
+.tpl-label { font-size: 12px; color: #888; padding: 6px; text-align: center; background: #111; }
+.check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: #7F77DD; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 .tpl-card.selected .check { display: flex; }
-.upload-box { border: 1.5px dashed #333; border-radius: 12px; padding: 18px; text-align: center; cursor: pointer; margin-bottom: 24px; }
+
+.upload-box { border: 1.5px dashed #333; border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: background 0.2s; }
 .upload-box:hover { background: #111; }
 .upload-box input { display: none; }
-.upload-text { font-size: 13px; color: #888; }
+.upload-text { font-size: 14px; color: #888; }
 .upload-text strong { color: #fff; }
-.form-row { margin-bottom: 16px; }
-.form-row label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
+
+.form-row { margin-bottom: 18px; }
+.form-row label { font-size: 13px; color: #888; display: block; margin-bottom: 6px; }
 .form-row input, .form-row textarea {
-  width: 100%; padding: 10px 12px; font-size: 14px;
-  background: #111; border: 1px solid #333; border-radius: 8px;
+  width: 100%; padding: 12px 14px; font-size: 15px;
+  background: #111; border: 1px solid #333; border-radius: 10px;
   color: #fff; font-family: Arial, sans-serif; resize: none;
 }
 .form-row input:focus, .form-row textarea:focus { outline: none; border-color: #7F77DD; }
-.frases { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.chip { font-size: 12px; padding: 4px 10px; border: 1px solid #333; border-radius: 20px; cursor: pointer; color: #aaa; background: #111; }
+
+.frases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip { font-size: 12px; padding: 5px 12px; border: 1px solid #333; border-radius: 20px; cursor: pointer; color: #aaa; background: #111; transition: all 0.15s; }
 .chip:hover { border-color: #7F77DD; color: #7F77DD; }
-.btn-gerar { width: 100%; padding: 14px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+
+.btn-gerar { width: 100%; padding: 16px; background: #7F77DD; color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
 .btn-gerar:hover { background: #534AB7; }
-.preview-section { margin-top: 28px; display: none; }
-.preview-section.show { display: block; }
-.preview-title { font-size: 14px; color: #aaa; margin-bottom: 12px; text-align: center; }
-.story-frame { width: 220px; margin: 0 auto; border-radius: 16px; overflow: hidden; }
+
+/* PAINEL DIREITO — PREVIEW */
+.preview-box { background: #0d0d1a; border: 1px solid #222; border-radius: 16px; padding: 20px; }
+.preview-title { font-size: 14px; color: #aaa; margin-bottom: 14px; text-align: center; }
+.story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 16px; overflow: hidden; }
 .story-frame canvas { width: 100%; display: block; }
-.botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-.btn-insta { width: 100%; padding: 13px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
-.btn-baixar { width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #333; border-radius: 10px; font-size: 14px; cursor: pointer; }
+
+.preview-vazio { text-align: center; padding: 40px 20px; color: #444; font-size: 14px; }
+.preview-vazio .icone { font-size: 40px; margin-bottom: 10px; }
+
+.botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.btn-baixar { width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 14px; cursor: pointer; }
+.btn-baixar:hover { background: #1a1a1a; }
+
+/* MODAL */
+.modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
+.modal-bg.show { display: flex; }
+.modal-box { background:#111; border:1px solid #333; border-radius:16px; padding:28px 22px; max-width:380px; width:90%; text-align:center; margin:20px auto; }
+.modal-step { background:#1a1a1a; border-radius:12px; padding:14px; margin-bottom:10px; text-align:left; display:flex; gap:12px; align-items:flex-start; }
+.modal-num { min-width:28px; height:28px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; }
+.modal-step-title { font-size:14px; color:#fff; font-weight:600; margin-bottom:3px; }
+.modal-step-sub { font-size:12px; color:#888; }
+.modal-link-box { background:#0a0a0a; border:1px solid #333; border-radius:8px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.btn-copiar { min-width:64px; padding:7px 12px; background:#7F77DD; color:white; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; }
+.btn-abrir-insta { width:100%; padding:14px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px; }
+.btn-fechar { width:100%; padding:12px; background:transparent; color:#888; border:1px solid #333; border-radius:12px; font-size:14px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -50,95 +96,121 @@ h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
   <h1>InstaGift</h1>
   <p class="sub">Crie seu story de aniversario em segundos</p>
 
-  <p class="section-label">Escolha um template</p>
-  <div class="templates-grid">
-    <div class="tpl-card selected" data-tpl="0" onclick="selecionarTpl(this)">
-      <canvas id="prev0" width="180" height="320"></canvas>
-      <div class="tpl-label">Festivo</div>
-      <div class="check">v</div>
-    </div>
-    <div class="tpl-card" data-tpl="1" onclick="selecionarTpl(this)">
-      <canvas id="prev1" width="180" height="320"></canvas>
-      <div class="tpl-label">Elegante</div>
-      <div class="check">v</div>
-    </div>
-    <div class="tpl-card" data-tpl="2" onclick="selecionarTpl(this)">
-      <canvas id="prev2" width="180" height="320"></canvas>
-      <div class="tpl-label">Minimalista</div>
-      <div class="check">v</div>
-    </div>
-  </div>
+  <div class="layout">
+    <!-- PAINEL ESQUERDO — FORMULARIO -->
+    <div class="painel-esq">
 
-  <p class="section-label">Ou use sua propria foto</p>
-  <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-    <input type="file" id="fileInput" accept="image/*" onchange="carregarFoto(event)">
-    <p class="upload-text"><strong>Clique aqui</strong> para escolher da galeria</p>
-  </div>
-
-  <div class="form-row">
-    <label>Seu nome</label>
-    <input type="text" id="nome" value="Danilo" oninput="atualizar()">
-  </div>
-  <div class="form-row">
-    <label>Sua frase</label>
-    <textarea id="frase" rows="2" oninput="atualizar()">Deixei ideias de presente aqui!</textarea>
-    <div class="frases">
-      <span class="chip" onclick="usarFrase(this)">Pra quem sempre pergunta</span>
-      <span class="chip" onclick="usarFrase(this)">Facilita a vida de quem me ama</span>
-      <span class="chip" onclick="usarFrase(this)">Meu aniversario, minhas regras</span>
-      <span class="chip" onclick="usarFrase(this)">Escolhi com carinho cada item</span>
-    </div>
-  </div>
-  <div class="form-row">
-    <label>Link da sua vitrine</label>
-    <input type="text" id="link" value="instagift.com/danilo" oninput="atualizar()">
-  </div>
-
-  <button class="btn-gerar" onclick="gerarStory()">Gerar story</button>
-
-  <div class="preview-section" id="preview">
-    <p class="preview-title">Story pronto!</p>
-    <div class="story-frame">
-      <canvas id="storyFinal" width="360" height="640"></canvas>
-    </div>
-    <div class="botoes-pos">
-      <button class="btn-insta" onclick="abrirInstagram()">Compartilhar no Instagram</button>
-      <button class="btn-baixar" onclick="baixar()">Baixar imagem</button>
-    </div>
-  </div>
-
-  <!-- Modal Instagram -->
-  <div id="modal-insta" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center;">
-    <div style="background:#111; border:1px solid #333; border-radius:16px; padding:28px 22px; max-width:340px; width:90%; text-align:center;">
-      <div style="font-size:36px; margin-bottom:12px;">📱</div>
-      <h3 style="font-size:18px; font-weight:700; margin-bottom:8px; color:#fff;">Quase la!</h3>
-      <p style="font-size:13px; color:#888; margin-bottom:20px;">Sua imagem foi baixada. Siga os passos:</p>
-      <div style="text-align:left; margin-bottom:20px;">
-        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
-          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">1</div>
-          <p style="font-size:14px; color:#ccc; padding-top:4px;">Abra o <strong style="color:#fff;">Instagram</strong> e toque em <strong style="color:#fff;">Seu Story</strong></p>
+      <p class="section-label">Escolha um template</p>
+      <div class="templates-grid">
+        <div class="tpl-card selected" data-tpl="0" onclick="selecionarTpl(this)">
+          <canvas id="prev0" width="180" height="320"></canvas>
+          <div class="tpl-label">Festivo</div>
+          <div class="check">v</div>
         </div>
-        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
-          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">2</div>
-          <p style="font-size:14px; color:#ccc; padding-top:4px;">Escolha a imagem <strong style="color:#fff;">story-instagift.png</strong> da galeria</p>
+        <div class="tpl-card" data-tpl="1" onclick="selecionarTpl(this)">
+          <canvas id="prev1" width="180" height="320"></canvas>
+          <div class="tpl-label">Elegante</div>
+          <div class="check">v</div>
         </div>
-        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
-          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">3</div>
-          <p style="font-size:14px; color:#ccc; padding-top:4px;">Toque em <strong style="color:#fff;">Figurinha</strong> e escolha <strong style="color:#fff;">Link</strong></p>
-        </div>
-        <div style="display:flex; align-items:flex-start; gap:12px;">
-          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">4</div>
-          <p style="font-size:14px; color:#ccc; padding-top:4px;">Cole o link abaixo no campo de link</p>
+        <div class="tpl-card" data-tpl="2" onclick="selecionarTpl(this)">
+          <canvas id="prev2" width="180" height="320"></canvas>
+          <div class="tpl-label">Minimalista</div>
+          <div class="check">v</div>
         </div>
       </div>
-      <div style="background:#1a1a1a; border:1px solid #333; border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
-        <span id="modal-link-texto" style="font-size:13px; color:#7F77DD; word-break:break-all; text-align:left;"></span>
-        <button onclick="copiarLinkModal()" style="min-width:64px; padding:6px 10px; background:#7F77DD; color:white; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">Copiar</button>
+
+      <p class="section-label">Ou use sua propria foto</p>
+      <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept="image/*" onchange="carregarFoto(event)">
+        <p class="upload-text"><strong>Clique aqui</strong> para escolher da galeria</p>
       </div>
-      <p style="font-size:11px; color:#555; margin-bottom:16px;">O link ja foi copiado automaticamente</p>
-      <button onclick="abrirAppInstagram()" style="width:100%; padding:13px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;">Abrir Instagram</button>
-      <button onclick="document.getElementById('modal-insta').style.display='none'" style="width:100%; padding:11px; background:transparent; color:#888; border:1px solid #333; border-radius:10px; font-size:14px; cursor:pointer;">Fechar</button>
+
+      <div class="form-row">
+        <label>Seu nome</label>
+        <input type="text" id="nome" value="Danilo" oninput="atualizar()">
+      </div>
+      <div class="form-row">
+        <label>Sua frase</label>
+        <textarea id="frase" rows="2" oninput="atualizar()">Deixei ideias de presente aqui!</textarea>
+        <div class="frases">
+          <span class="chip" onclick="usarFrase(this)">Pra quem sempre pergunta</span>
+          <span class="chip" onclick="usarFrase(this)">Facilita a vida de quem me ama</span>
+          <span class="chip" onclick="usarFrase(this)">Meu aniversario, minhas regras</span>
+          <span class="chip" onclick="usarFrase(this)">Escolhi com carinho cada item</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Link da sua vitrine</label>
+        <input type="text" id="link" value="instagift.com/danilo" oninput="atualizar()">
+      </div>
+
+      <button class="btn-gerar" onclick="gerarStory()">Gerar story</button>
     </div>
+
+    <!-- PAINEL DIREITO — PREVIEW -->
+    <div class="painel-dir">
+      <div class="preview-box">
+        <p class="preview-title">Preview do story</p>
+        <div id="preview-vazio" class="preview-vazio">
+          <div class="icone">🎁</div>
+          <p>Clique em "Gerar story"<br>para ver o resultado aqui</p>
+        </div>
+        <div id="preview-conteudo" style="display:none;">
+          <div class="story-frame">
+            <canvas id="storyFinal" width="360" height="640"></canvas>
+          </div>
+          <div class="botoes-pos">
+            <button class="btn-insta" onclick="abrirInstagram()">Compartilhar no Instagram</button>
+            <button class="btn-baixar" onclick="baixar()">Baixar imagem</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Instagram -->
+<div class="modal-bg" id="modal-insta">
+  <div class="modal-box">
+    <div style="font-size:32px; margin-bottom:8px;">🎉</div>
+    <h3 style="font-size:18px; font-weight:700; margin-bottom:6px; color:#fff;">Imagem baixada!</h3>
+    <p style="font-size:13px; color:#888; margin-bottom:20px;">Siga os passos para postar no Instagram</p>
+
+    <div class="modal-step">
+      <div class="modal-num">1</div>
+      <div>
+        <p class="modal-step-title">Clique em Abrir Instagram</p>
+        <p class="modal-step-sub">O app vai abrir direto na camera de <strong style="color:#ccc;">Stories</strong></p>
+      </div>
+    </div>
+    <div class="modal-step">
+      <div class="modal-num">2</div>
+      <div>
+        <p class="modal-step-title">Escolha a imagem da galeria</p>
+        <p class="modal-step-sub">Selecione <strong style="color:#ccc;">story-instagift.png</strong> que foi baixada</p>
+      </div>
+    </div>
+    <div class="modal-step">
+      <div class="modal-num">3</div>
+      <div>
+        <p class="modal-step-title">Toque em Figurinha e escolha Link</p>
+        <p class="modal-step-sub">Arraste a figurinha sobre o <strong style="color:#ccc;">botao roxo</strong> "Ver Lista de Presentes"</p>
+      </div>
+    </div>
+    <div class="modal-step" style="margin-bottom:16px;">
+      <div class="modal-num">4</div>
+      <div style="width:100%;">
+        <p class="modal-step-title">Cole o link da vitrine</p>
+        <div class="modal-link-box" style="margin-top:8px;">
+          <span id="modal-link-texto" style="font-size:12px; color:#7F77DD; word-break:break-all;"></span>
+          <button class="btn-copiar" onclick="copiarLinkModal()">Copiar</button>
+        </div>
+        <p style="font-size:11px; color:#555;">Link ja copiado automaticamente</p>
+      </div>
+    </div>
+
+    <button class="btn-abrir-insta" onclick="abrirAppInstagram()">Abrir Instagram agora</button>
+    <button class="btn-fechar" onclick="document.getElementById('modal-insta').classList.remove('show')">Fechar</button>
   </div>
 </div>
 
@@ -150,250 +222,199 @@ var previewAberto = false;
 var fundos = [
   function(ctx, w, h) {
     var g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#0a0a2a');
-    g.addColorStop(1, '#1a0a3a');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
+    g.addColorStop(0, '#0a0a2a'); g.addColorStop(1, '#1a0a3a');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     var baloes = [
-      {x:0.10,y:0.08,r:0.07,c:'#e63946'},
-      {x:0.28,y:0.04,r:0.06,c:'#f4a261'},
-      {x:0.52,y:0.06,r:0.07,c:'#2a9d8f'},
-      {x:0.75,y:0.04,r:0.06,c:'#e9c46a'},
-      {x:0.88,y:0.12,r:0.07,c:'#9b5de5'},
-      {x:0.04,y:0.28,r:0.06,c:'#f15bb5'},
-      {x:0.93,y:0.30,r:0.06,c:'#00bbf9'},
-      {x:0.06,y:0.50,r:0.05,c:'#e63946'},
+      {x:0.10,y:0.08,r:0.07,c:'#e63946'},{x:0.28,y:0.04,r:0.06,c:'#f4a261'},
+      {x:0.52,y:0.06,r:0.07,c:'#2a9d8f'},{x:0.75,y:0.04,r:0.06,c:'#e9c46a'},
+      {x:0.88,y:0.12,r:0.07,c:'#9b5de5'},{x:0.04,y:0.28,r:0.06,c:'#f15bb5'},
+      {x:0.93,y:0.30,r:0.06,c:'#00bbf9'},{x:0.06,y:0.50,r:0.05,c:'#e63946'},
       {x:0.93,y:0.50,r:0.05,c:'#f4a261'}
     ];
     baloes.forEach(function(b) {
-      var bx = b.x*w, by = b.y*h, br = b.r*w;
-      var lg = ctx.createRadialGradient(bx-br*0.3, by-br*0.3, br*0.1, bx, by, br);
-      lg.addColorStop(0, b.c+'ff');
-      lg.addColorStop(1, b.c+'88');
-      ctx.fillStyle = lg;
-      ctx.beginPath(); ctx.ellipse(bx, by, br, br*1.2, 0, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.28)';
-      ctx.beginPath(); ctx.ellipse(bx-br*0.25, by-br*0.3, br*0.25, br*0.18, -0.5, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = b.c+'99'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(bx, by+br*1.2);
-      ctx.quadraticCurveTo(bx+br*0.3, by+br*2, bx, by+br*2.8); ctx.stroke();
+      var bx=b.x*w, by=b.y*h, br=b.r*w;
+      var lg=ctx.createRadialGradient(bx-br*0.3,by-br*0.3,br*0.1,bx,by,br);
+      lg.addColorStop(0,b.c+'ff'); lg.addColorStop(1,b.c+'88');
+      ctx.fillStyle=lg; ctx.beginPath(); ctx.ellipse(bx,by,br,br*1.2,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.28)';
+      ctx.beginPath(); ctx.ellipse(bx-br*0.25,by-br*0.3,br*0.25,br*0.18,-0.5,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle=b.c+'99'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(bx,by+br*1.2);
+      ctx.quadraticCurveTo(bx+br*0.3,by+br*2,bx,by+br*2.8); ctx.stroke();
     });
   },
   function(ctx, w, h) {
-    var g = ctx.createLinearGradient(0, 0, w, h);
-    g.addColorStop(0, '#1a0a2e');
-    g.addColorStop(0.5, '#0d1b4b');
-    g.addColorStop(1, '#2d0a4e');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    for (var i = 0; i < 40; i++) {
-      var sx = Math.random()*w, sy = Math.random()*h*0.65, sr = Math.random()*1.5+0.5;
-      ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI*2); ctx.fill();
+    var g=ctx.createLinearGradient(0,0,w,h);
+    g.addColorStop(0,'#1a0a2e'); g.addColorStop(0.5,'#0d1b4b'); g.addColorStop(1,'#2d0a4e');
+    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='rgba(255,255,255,0.6)';
+    for(var i=0;i<40;i++){
+      var sx=Math.random()*w,sy=Math.random()*h*0.65,sr=Math.random()*1.5+0.5;
+      ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2); ctx.fill();
     }
-    ctx.strokeStyle = 'rgba(127,119,221,0.2)';
-    ctx.lineWidth = 40;
-    ctx.beginPath(); ctx.arc(w*0.85, h*0.12, 100, 0, Math.PI*2); ctx.stroke();
+    ctx.strokeStyle='rgba(127,119,221,0.2)'; ctx.lineWidth=40;
+    ctx.beginPath(); ctx.arc(w*0.85,h*0.12,100,0,Math.PI*2); ctx.stroke();
   },
   function(ctx, w, h) {
-    var g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#fff0f3');
-    g.addColorStop(1, '#ffd6e0');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    var pts = [
-      {x:0.1,y:0.1,r:0.06,c:'rgba(255,182,193,0.5)'},
-      {x:0.85,y:0.08,r:0.08,c:'rgba(255,182,193,0.4)'},
-      {x:0.05,y:0.35,r:0.04,c:'rgba(255,182,193,0.3)'},
-      {x:0.92,y:0.35,r:0.05,c:'rgba(255,182,193,0.4)'}
+    var g=ctx.createLinearGradient(0,0,0,h);
+    g.addColorStop(0,'#fff0f3'); g.addColorStop(1,'#ffd6e0');
+    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    var pts=[
+      {x:0.1,y:0.1,r:0.06,c:'rgba(255,182,193,0.5)'},{x:0.85,y:0.08,r:0.08,c:'rgba(255,182,193,0.4)'},
+      {x:0.05,y:0.35,r:0.04,c:'rgba(255,182,193,0.3)'},{x:0.92,y:0.35,r:0.05,c:'rgba(255,182,193,0.4)'}
     ];
-    pts.forEach(function(p) {
-      ctx.fillStyle = p.c;
-      ctx.beginPath(); ctx.arc(p.x*w, p.y*h, p.r*w, 0, Math.PI*2); ctx.fill();
+    pts.forEach(function(p){
+      ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x*w,p.y*h,p.r*w,0,Math.PI*2); ctx.fill();
     });
   }
 ];
 
-function quebrarTexto(ctx, texto, x, y, maxW, altLinha) {
-  var palavras = texto.split(' ');
-  var linha = '', yAtual = y;
-  for (var i = 0; i < palavras.length; i++) {
-    var teste = linha + palavras[i] + ' ';
-    if (ctx.measureText(teste).width > maxW && i > 0) {
-      ctx.fillText(linha.trim(), x, yAtual);
-      linha = palavras[i] + ' ';
-      yAtual += altLinha;
-    } else { linha = teste; }
+function quebrarTexto(ctx,texto,x,y,maxW,altLinha){
+  var palavras=texto.split(' '),linha='',yAtual=y;
+  for(var i=0;i<palavras.length;i++){
+    var teste=linha+palavras[i]+' ';
+    if(ctx.measureText(teste).width>maxW&&i>0){ctx.fillText(linha.trim(),x,yAtual);linha=palavras[i]+' ';yAtual+=altLinha;}
+    else{linha=teste;}
   }
-  ctx.fillText(linha.trim(), x, yAtual);
+  ctx.fillText(linha.trim(),x,yAtual);
 }
 
-function desenharCardFixo(ctx, w, h, nome, frase, sc) {
-  var cores = ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
-  for (var i = 0; i < 70; i++) {
-    ctx.fillStyle = cores[i % cores.length];
-    ctx.save();
-    ctx.globalAlpha = 0.75;
-    ctx.translate(Math.random()*w, Math.random()*h*0.62);
-    ctx.rotate(Math.random()*Math.PI*2);
-    ctx.fillRect(0, 0, 7*sc, 3*sc);
-    ctx.restore();
+function desenharCardFixo(ctx,w,h,nome,frase,sc){
+  var cores=['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
+  for(var i=0;i<70;i++){
+    ctx.fillStyle=cores[i%cores.length]; ctx.save(); ctx.globalAlpha=0.75;
+    ctx.translate(Math.random()*w,Math.random()*h*0.62);
+    ctx.rotate(Math.random()*Math.PI*2); ctx.fillRect(0,0,7*sc,3*sc); ctx.restore();
   }
-  ctx.globalAlpha = 1;
-
-  var cardX = w*0.05, cardW = w*0.90, cardY = h*0.67, cardH = h*0.29, raio = 20*sc;
-  ctx.shadowColor = 'rgba(0,0,0,0.45)';
-  ctx.shadowBlur = 25*sc;
-  ctx.shadowOffsetY = 8*sc;
-  ctx.fillStyle = 'rgba(255,255,255,0.97)';
+  ctx.globalAlpha=1;
+  var cardX=w*0.05,cardW=w*0.90,cardY=h*0.67,cardH=h*0.29,raio=20*sc;
+  ctx.shadowColor='rgba(0,0,0,0.45)'; ctx.shadowBlur=25*sc; ctx.shadowOffsetY=8*sc;
+  ctx.fillStyle='rgba(255,255,255,0.97)';
   ctx.beginPath();
-  ctx.moveTo(cardX+raio, cardY);
-  ctx.lineTo(cardX+cardW-raio, cardY);
-  ctx.quadraticCurveTo(cardX+cardW, cardY, cardX+cardW, cardY+raio);
-  ctx.lineTo(cardX+cardW, cardY+cardH-raio);
-  ctx.quadraticCurveTo(cardX+cardW, cardY+cardH, cardX+cardW-raio, cardY+cardH);
-  ctx.lineTo(cardX+raio, cardY+cardH);
-  ctx.quadraticCurveTo(cardX, cardY+cardH, cardX, cardY+cardH-raio);
-  ctx.lineTo(cardX, cardY+raio);
-  ctx.quadraticCurveTo(cardX, cardY, cardX+raio, cardY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetY = 0;
+  ctx.moveTo(cardX+raio,cardY); ctx.lineTo(cardX+cardW-raio,cardY);
+  ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
+  ctx.lineTo(cardX+cardW,cardY+cardH-raio);
+  ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
+  ctx.lineTo(cardX+raio,cardY+cardH);
+  ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
+  ctx.lineTo(cardX,cardY+raio); ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
+  ctx.closePath(); ctx.fill();
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
 
-  var icX = w/2, icY = cardY, icR = 26*sc;
-  var gradIc = ctx.createRadialGradient(icX-icR*0.2, icY-icR*0.2, 1, icX, icY, icR);
-  gradIc.addColorStop(0, '#6B9FFF');
-  gradIc.addColorStop(1, '#3B5FC0');
-  ctx.fillStyle = gradIc;
-  ctx.beginPath(); ctx.arc(icX, icY, icR, 0, Math.PI*2); ctx.fill();
+  var icX=w/2,icY=cardY,icR=26*sc;
+  var gradIc=ctx.createRadialGradient(icX-icR*0.2,icY-icR*0.2,1,icX,icY,icR);
+  gradIc.addColorStop(0,'#6B9FFF'); gradIc.addColorStop(1,'#3B5FC0');
+  ctx.fillStyle=gradIc; ctx.beginPath(); ctx.arc(icX,icY,icR,0,Math.PI*2); ctx.fill();
 
-  var t = icR*0.52, cx = icX, cy = icY;
-  ctx.fillStyle = '#e63946';
-  ctx.fillRect(cx-t*0.7, cy-t*0.05, t*1.4, t*1.05);
-  ctx.fillStyle = '#c1121f';
-  ctx.fillRect(cx-t*0.75, cy-t*0.44, t*1.5, t*0.40);
-  ctx.fillStyle = '#FFD60A';
-  ctx.fillRect(cx-t*0.11, cy-t*0.46, t*0.22, t*1.52);
-  ctx.fillRect(cx-t*0.75, cy-t*0.25, t*1.5, t*0.18);
-  ctx.strokeStyle = '#FFD60A'; ctx.lineWidth = sc*1.2;
-  ctx.beginPath(); ctx.ellipse(cx-t*0.33, cy-t*0.53, t*0.3, t*0.2, -0.3, 0, Math.PI*2); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(cx+t*0.33, cy-t*0.53, t*0.3, t*0.2, 0.3, 0, Math.PI*2); ctx.stroke();
+  var t=icR*0.52,cx=icX,cy=icY;
+  ctx.fillStyle='#e63946'; ctx.fillRect(cx-t*0.7,cy-t*0.05,t*1.4,t*1.05);
+  ctx.fillStyle='#c1121f'; ctx.fillRect(cx-t*0.75,cy-t*0.44,t*1.5,t*0.40);
+  ctx.fillStyle='#FFD60A';
+  ctx.fillRect(cx-t*0.11,cy-t*0.46,t*0.22,t*1.52);
+  ctx.fillRect(cx-t*0.75,cy-t*0.25,t*1.5,t*0.18);
+  ctx.strokeStyle='#FFD60A'; ctx.lineWidth=sc*1.2;
+  ctx.beginPath(); ctx.ellipse(cx-t*0.33,cy-t*0.53,t*0.3,t*0.2,-0.3,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx+t*0.33,cy-t*0.53,t*0.3,t*0.2,0.3,0,Math.PI*2); ctx.stroke();
 
-  ctx.textAlign = 'center';
-  var tituloCard = nome ? nome + ' - Desejos de Niver' : 'Meus Desejos de Niver';
-  ctx.font = 'bold ' + Math.round(17*sc) + 'px Arial';
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillText(tituloCard, w/2, cardY+cardH*0.36);
+  ctx.textAlign='center';
+  ctx.font='bold '+Math.round(17*sc)+'px Arial';
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillText(nome?nome+' - Desejos de Niver':'Meus Desejos de Niver',w/2,cardY+cardH*0.36);
+  ctx.font=Math.round(12*sc)+'px Arial'; ctx.fillStyle='#777';
+  quebrarTexto(ctx,frase||'Deixei ideias de presente aqui!',w/2,cardY+cardH*0.52,cardW*0.82,15*sc);
 
-  ctx.font = Math.round(12*sc) + 'px Arial';
-  ctx.fillStyle = '#777';
-  quebrarTexto(ctx, frase || 'Deixei ideias de presente aqui!', w/2, cardY+cardH*0.52, cardW*0.82, 15*sc);
-
-  var btnX = cardX+cardW*0.08, btnW = cardW*0.84;
-  var btnY = cardY+cardH*0.70, btnH = 36*sc, btnR = btnH/2;
-  var gradBtn = ctx.createLinearGradient(btnX, btnY, btnX+btnW, btnY);
-  gradBtn.addColorStop(0, '#7F77DD');
-  gradBtn.addColorStop(1, '#5B8DEF');
-  ctx.fillStyle = gradBtn;
+  var btnX=cardX+cardW*0.08,btnW=cardW*0.84,btnY=cardY+cardH*0.70,btnH=36*sc,btnR=btnH/2;
+  var gradBtn=ctx.createLinearGradient(btnX,btnY,btnX+btnW,btnY);
+  gradBtn.addColorStop(0,'#7F77DD'); gradBtn.addColorStop(1,'#5B8DEF');
+  ctx.fillStyle=gradBtn;
   ctx.beginPath();
-  ctx.moveTo(btnX+btnR, btnY);
-  ctx.lineTo(btnX+btnW-btnR, btnY);
-  ctx.quadraticCurveTo(btnX+btnW, btnY, btnX+btnW, btnY+btnR);
-  ctx.quadraticCurveTo(btnX+btnW, btnY+btnH, btnX+btnW-btnR, btnY+btnH);
-  ctx.lineTo(btnX+btnR, btnY+btnH);
-  ctx.quadraticCurveTo(btnX, btnY+btnH, btnX, btnY+btnR);
-  ctx.quadraticCurveTo(btnX, btnY, btnX+btnR, btnY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.font = 'bold ' + Math.round(13*sc) + 'px Arial';
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText('Ver Lista de Presentes', btnX+btnW/2, btnY+btnH*0.65);
+  ctx.moveTo(btnX+btnR,btnY); ctx.lineTo(btnX+btnW-btnR,btnY);
+  ctx.quadraticCurveTo(btnX+btnW,btnY,btnX+btnW,btnY+btnR);
+  ctx.quadraticCurveTo(btnX+btnW,btnY+btnH,btnX+btnW-btnR,btnY+btnH);
+  ctx.lineTo(btnX+btnR,btnY+btnH);
+  ctx.quadraticCurveTo(btnX,btnY+btnH,btnX,btnY+btnR);
+  ctx.quadraticCurveTo(btnX,btnY,btnX+btnR,btnY);
+  ctx.closePath(); ctx.fill();
+  ctx.font='bold '+Math.round(13*sc)+'px Arial'; ctx.fillStyle='#ffffff';
+  ctx.fillText('Ver Lista de Presentes',btnX+btnW/2,btnY+btnH*0.65);
 }
 
-function desenhar(canvas, tplIdx, nome, frase, link, foto) {
-  var ctx = canvas.getContext('2d');
-  var w = canvas.width, h = canvas.height;
-  var sc = w/360;
-  if (foto) {
-    ctx.drawImage(foto, 0, 0, w, h);
-    var ov = ctx.createLinearGradient(0, 0, 0, h);
-    ov.addColorStop(0, 'rgba(0,0,0,0.3)');
-    ov.addColorStop(0.5, 'rgba(0,0,0,0.1)');
-    ov.addColorStop(1, 'rgba(0,0,0,0.5)');
-    ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
-  } else {
-    fundos[tplIdx](ctx, w, h);
-  }
-  desenharCardFixo(ctx, w, h, nome, frase, sc);
+function desenhar(canvas,tplIdx,nome,frase,link,foto){
+  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,sc=w/360;
+  if(foto){
+    ctx.drawImage(foto,0,0,w,h);
+    var ov=ctx.createLinearGradient(0,0,0,h);
+    ov.addColorStop(0,'rgba(0,0,0,0.3)'); ov.addColorStop(0.5,'rgba(0,0,0,0.1)'); ov.addColorStop(1,'rgba(0,0,0,0.5)');
+    ctx.fillStyle=ov; ctx.fillRect(0,0,w,h);
+  } else { fundos[tplIdx](ctx,w,h); }
+  desenharCardFixo(ctx,w,h,nome,frase,sc);
 }
 
-function renderPreviews() {
-  for (var i = 0; i < 3; i++) {
-    desenhar(document.getElementById('prev'+i), i, 'Danilo', 'Deixei ideias de presente aqui!', '', null);
+function renderPreviews(){
+  for(var i=0;i<3;i++){
+    desenhar(document.getElementById('prev'+i),i,'Danilo','Deixei ideias de presente aqui!','',null);
   }
 }
 
-function selecionarTpl(el) {
-  document.querySelectorAll('.tpl-card').forEach(function(c) { c.classList.remove('selected'); });
-  el.classList.add('selected');
-  tplAtivo = parseInt(el.dataset.tpl);
-  if (previewAberto) gerarStory();
+function selecionarTpl(el){
+  document.querySelectorAll('.tpl-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected'); tplAtivo=parseInt(el.dataset.tpl);
+  if(previewAberto) gerarStory();
 }
 
-function usarFrase(el) {
-  document.getElementById('frase').value = el.textContent;
-  if (previewAberto) gerarStory();
+function usarFrase(el){
+  document.getElementById('frase').value=el.textContent;
+  if(previewAberto) gerarStory();
 }
 
-function carregarFoto(e) {
-  var file = e.target.files[0]; if (!file) return;
-  var img = new Image();
-  img.onload = function() { fotoUsuario = img; if (previewAberto) gerarStory(); };
-  img.src = URL.createObjectURL(file);
+function carregarFoto(e){
+  var file=e.target.files[0]; if(!file) return;
+  var img=new Image();
+  img.onload=function(){fotoUsuario=img; if(previewAberto) gerarStory();};
+  img.src=URL.createObjectURL(file);
 }
 
-function atualizar() { if (previewAberto) gerarStory(); }
+function atualizar(){ if(previewAberto) gerarStory(); }
 
-function gerarStory() {
-  var nome = document.getElementById('nome').value;
-  var frase = document.getElementById('frase').value;
-  var link = document.getElementById('link').value;
-  var canvas = document.getElementById('storyFinal');
-  desenhar(canvas, tplAtivo, nome, frase, link, fotoUsuario);
-  previewAberto = true;
-  document.getElementById('preview').classList.add('show');
+function gerarStory(){
+  var nome=document.getElementById('nome').value;
+  var frase=document.getElementById('frase').value;
+  var link=document.getElementById('link').value;
+  var canvas=document.getElementById('storyFinal');
+  desenhar(canvas,tplAtivo,nome,frase,link,fotoUsuario);
+  previewAberto=true;
+  document.getElementById('preview-vazio').style.display='none';
+  document.getElementById('preview-conteudo').style.display='block';
 }
 
-function baixar() {
-  var canvas = document.getElementById('storyFinal');
-  var a = document.createElement('a');
-  a.download = 'story-instagift.png';
-  a.href = canvas.toDataURL('image/png');
+function baixar(){
+  var canvas=document.getElementById('storyFinal');
+  var a=document.createElement('a');
+  a.download='story-instagift.png';
+  a.href=canvas.toDataURL('image/png');
   a.click();
 }
 
-function abrirInstagram() {
-  var link = document.getElementById('link').value;
-  var canvas = document.getElementById('storyFinal');
-  var a = document.createElement('a');
-  a.download = 'story-instagift.png';
-  a.href = canvas.toDataURL('image/png');
+function abrirInstagram(){
+  var link=document.getElementById('link').value;
+  var canvas=document.getElementById('storyFinal');
+  var a=document.createElement('a');
+  a.download='story-instagift.png';
+  a.href=canvas.toDataURL('image/png');
   a.click();
   navigator.clipboard.writeText(link).catch(function(){});
-  document.getElementById('modal-link-texto').textContent = link;
-  document.getElementById('modal-insta').style.display = 'flex';
+  document.getElementById('modal-link-texto').textContent=link;
+  document.getElementById('modal-insta').classList.add('show');
 }
 
-function copiarLinkModal() {
-  var link = document.getElementById('modal-link-texto').textContent;
-  navigator.clipboard.writeText(link).then(function() {
-    alert('Link copiado!');
-  });
+function copiarLinkModal(){
+  var link=document.getElementById('modal-link-texto').textContent;
+  navigator.clipboard.writeText(link).then(function(){alert('Link copiado!');});
 }
 
-function abrirAppInstagram() {
-  window.location.href = 'instagram://story-camera';
-  setTimeout(function() { window.open('https://www.instagram.com', '_blank'); }, 1500);
+function abrirAppInstagram(){
+  window.location.href='instagram://story-camera';
+  setTimeout(function(){window.open('https://www.instagram.com','_blank');},1500);
 }
 
 renderPreviews();
