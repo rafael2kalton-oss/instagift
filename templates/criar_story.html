@@ -21,17 +21,13 @@ body {
 h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
 .sub { font-size: clamp(13px, 2vw, 16px); color: #888; margin-bottom: 28px; }
 .section-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
-
-/* LAYOUT DOIS PAINEIS NO PC */
 .layout { display: flex; gap: 32px; align-items: flex-start; }
 .painel-esq { flex: 1; min-width: 0; }
 .painel-dir { width: 340px; flex-shrink: 0; position: sticky; top: 20px; }
-
 @media (max-width: 700px) {
   .layout { flex-direction: column; }
   .painel-dir { width: 100%; position: static; }
 }
-
 .templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
 .tpl-card { border: 2px solid #222; border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: border-color 0.2s; }
 .tpl-card:hover { border-color: #444; }
@@ -40,13 +36,11 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
 .tpl-label { font-size: 12px; color: #888; padding: 6px; text-align: center; background: #111; }
 .check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: #7F77DD; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 .tpl-card.selected .check { display: flex; }
-
 .upload-box { border: 1.5px dashed #333; border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: background 0.2s; }
 .upload-box:hover { background: #111; }
 .upload-box input { display: none; }
 .upload-text { font-size: 14px; color: #888; }
 .upload-text strong { color: #fff; }
-
 .form-row { margin-bottom: 18px; }
 .form-row label { font-size: 13px; color: #888; display: block; margin-bottom: 6px; }
 .form-row input, .form-row textarea {
@@ -55,29 +49,21 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
   color: #fff; font-family: Arial, sans-serif; resize: none;
 }
 .form-row input:focus, .form-row textarea:focus { outline: none; border-color: #7F77DD; }
-
 .frases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .chip { font-size: 12px; padding: 5px 12px; border: 1px solid #333; border-radius: 20px; cursor: pointer; color: #aaa; background: #111; transition: all 0.15s; }
 .chip:hover { border-color: #7F77DD; color: #7F77DD; }
-
 .btn-gerar { width: 100%; padding: 16px; background: #7F77DD; color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
 .btn-gerar:hover { background: #534AB7; }
-
-/* PAINEL DIREITO — PREVIEW */
 .preview-box { background: #0d0d1a; border: 1px solid #222; border-radius: 16px; padding: 20px; }
 .preview-title { font-size: 14px; color: #aaa; margin-bottom: 14px; text-align: center; }
 .story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 16px; overflow: hidden; }
 .story-frame canvas { width: 100%; display: block; }
-
 .preview-vazio { text-align: center; padding: 40px 20px; color: #444; font-size: 14px; }
 .preview-vazio .icone { font-size: 40px; margin-bottom: 10px; }
-
 .botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
 .btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
 .btn-baixar { width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 14px; cursor: pointer; }
 .btn-baixar:hover { background: #1a1a1a; }
-
-/* MODAL */
 .modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
 .modal-bg.show { display: flex; }
 .modal-box { background:#111; border:1px solid #333; border-radius:16px; padding:28px 22px; max-width:380px; width:90%; text-align:center; margin:20px auto; }
@@ -97,9 +83,7 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
   <p class="sub">Crie seu story de aniversario em segundos</p>
 
   <div class="layout">
-    <!-- PAINEL ESQUERDO — FORMULARIO -->
     <div class="painel-esq">
-
       <p class="section-label">Escolha um template</p>
       <div class="templates-grid">
         <div class="tpl-card selected" data-tpl="0" onclick="selecionarTpl(this)">
@@ -141,13 +125,12 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
       </div>
       <div class="form-row">
         <label>Link da sua vitrine</label>
-        <input type="text" id="link" value="instagift.com/danilo" oninput="atualizar()">
+        <input type="text" id="link" value="" placeholder="Sera preenchido automaticamente" oninput="atualizar()">
       </div>
 
       <button class="btn-gerar" onclick="gerarStory()">Gerar story</button>
     </div>
 
-    <!-- PAINEL DIREITO — PREVIEW -->
     <div class="painel-dir">
       <div class="preview-box">
         <p class="preview-title">Preview do story</p>
@@ -215,6 +198,16 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; margin-bottom: 4px; }
 </div>
 
 <script>
+// Pega o link da vitrine da URL automaticamente
+var params = new URLSearchParams(window.location.search);
+var vitrineId = params.get('vitrine');
+if (vitrineId) {
+  document.addEventListener('DOMContentLoaded', function() {
+    var linkCompleto = window.location.origin + '/vitrine/' + vitrineId;
+    document.getElementById('link').value = linkCompleto;
+  });
+}
+
 var tplAtivo = 0;
 var fotoUsuario = null;
 var previewAberto = false;
@@ -242,6 +235,13 @@ var fundos = [
       ctx.beginPath(); ctx.moveTo(bx,by+br*1.2);
       ctx.quadraticCurveTo(bx+br*0.3,by+br*2,bx,by+br*2.8); ctx.stroke();
     });
+    var cores=['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
+    for(var i=0;i<60;i++){
+      ctx.fillStyle=cores[i%cores.length]; ctx.save(); ctx.globalAlpha=0.7;
+      ctx.translate(Math.random()*w,Math.random()*h*0.65);
+      ctx.rotate(Math.random()*Math.PI*2); ctx.fillRect(0,0,5,2); ctx.restore();
+    }
+    ctx.globalAlpha=1;
   },
   function(ctx, w, h) {
     var g=ctx.createLinearGradient(0,0,w,h);
