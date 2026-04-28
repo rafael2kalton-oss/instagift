@@ -81,12 +81,12 @@ h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
   </div>
   <div class="form-row">
     <label>Sua frase</label>
-    <textarea id="frase" rows="2" oninput="atualizar()">Gratidao por mais um ano!</textarea>
+    <textarea id="frase" rows="2" oninput="atualizar()">Deixei ideias de presente aqui!</textarea>
     <div class="frases">
       <span class="chip" onclick="usarFrase(this)">Pra quem sempre pergunta</span>
-      <span class="chip" onclick="usarFrase(this)">Deixei ideias de mimos aqui</span>
       <span class="chip" onclick="usarFrase(this)">Facilita a vida de quem me ama</span>
       <span class="chip" onclick="usarFrase(this)">Meu aniversario, minhas regras</span>
+      <span class="chip" onclick="usarFrase(this)">Escolhi com carinho cada item</span>
     </div>
   </div>
   <div class="form-row">
@@ -104,253 +104,237 @@ h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
     <div class="botoes-pos">
       <button class="btn-insta" onclick="abrirInstagram()">Compartilhar no Instagram</button>
       <button class="btn-baixar" onclick="baixar()">Baixar imagem</button>
+    </div>
+  </div>
 
-      <!-- Modal instrucoes Instagram -->
-      <div id="modal-insta" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center;">
-        <div style="background:#111; border:1px solid #333; border-radius:16px; padding:28px 22px; max-width:340px; width:90%; text-align:center;">
-          
-          <div style="font-size:36px; margin-bottom:12px;">📱</div>
-          <h3 style="font-size:18px; font-weight:700; margin-bottom:8px; color:#fff;">Quase la!</h3>
-          <p style="font-size:13px; color:#888; margin-bottom:20px;">Sua imagem foi baixada. Agora siga os passos:</p>
-
-          <div style="text-align:left; margin-bottom:20px;">
-            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
-              <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">1</div>
-              <p style="font-size:14px; color:#ccc; padding-top:4px;">Abra o <strong style="color:#fff;">Instagram</strong> e toque em <strong style="color:#fff;">Seu Story</strong></p>
-            </div>
-            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
-              <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">2</div>
-              <p style="font-size:14px; color:#ccc; padding-top:4px;">Escolha a imagem <strong style="color:#fff;">story-instagift.png</strong> da galeria</p>
-            </div>
-            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
-              <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">3</div>
-              <p style="font-size:14px; color:#ccc; padding-top:4px;">Toque no icone de <strong style="color:#fff;">Figurinha</strong> e escolha <strong style="color:#fff;">Link</strong></p>
-            </div>
-            <div style="display:flex; align-items:flex-start; gap:12px;">
-              <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">4</div>
-              <p style="font-size:14px; color:#ccc; padding-top:4px;">Cole o link abaixo no campo de link</p>
-            </div>
-          </div>
-
-          <!-- Link copiado -->
-          <div style="background:#1a1a1a; border:1px solid #333; border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
-            <span id="modal-link-texto" style="font-size:13px; color:#7F77DD; word-break:break-all; text-align:left;"></span>
-            <button onclick="copiarLinkModal()" style="min-width:64px; padding:6px 10px; background:#7F77DD; color:white; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">Copiar</button>
-          </div>
-
-          <p style="font-size:11px; color:#555; margin-bottom:16px;">O link ja foi copiado automaticamente</p>
-
-          <button onclick="abrirAppInstagram()" style="width:100%; padding:13px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;">Abrir Instagram</button>
-          <button onclick="document.getElementById('modal-insta').style.display='none'" style="width:100%; padding:11px; background:transparent; color:#888; border:1px solid #333; border-radius:10px; font-size:14px; cursor:pointer;">Fechar</button>
+  <!-- Modal Instagram -->
+  <div id="modal-insta" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center;">
+    <div style="background:#111; border:1px solid #333; border-radius:16px; padding:28px 22px; max-width:340px; width:90%; text-align:center;">
+      <div style="font-size:36px; margin-bottom:12px;">📱</div>
+      <h3 style="font-size:18px; font-weight:700; margin-bottom:8px; color:#fff;">Quase la!</h3>
+      <p style="font-size:13px; color:#888; margin-bottom:20px;">Sua imagem foi baixada. Siga os passos:</p>
+      <div style="text-align:left; margin-bottom:20px;">
+        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
+          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">1</div>
+          <p style="font-size:14px; color:#ccc; padding-top:4px;">Abra o <strong style="color:#fff;">Instagram</strong> e toque em <strong style="color:#fff;">Seu Story</strong></p>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
+          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">2</div>
+          <p style="font-size:14px; color:#ccc; padding-top:4px;">Escolha a imagem <strong style="color:#fff;">story-instagift.png</strong> da galeria</p>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
+          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">3</div>
+          <p style="font-size:14px; color:#ccc; padding-top:4px;">Toque em <strong style="color:#fff;">Figurinha</strong> e escolha <strong style="color:#fff;">Link</strong></p>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="min-width:26px; height:26px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff;">4</div>
+          <p style="font-size:14px; color:#ccc; padding-top:4px;">Cole o link abaixo no campo de link</p>
         </div>
       </div>
+      <div style="background:#1a1a1a; border:1px solid #333; border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <span id="modal-link-texto" style="font-size:13px; color:#7F77DD; word-break:break-all; text-align:left;"></span>
+        <button onclick="copiarLinkModal()" style="min-width:64px; padding:6px 10px; background:#7F77DD; color:white; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">Copiar</button>
+      </div>
+      <p style="font-size:11px; color:#555; margin-bottom:16px;">O link ja foi copiado automaticamente</p>
+      <button onclick="abrirAppInstagram()" style="width:100%; padding:13px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;">Abrir Instagram</button>
+      <button onclick="document.getElementById('modal-insta').style.display='none'" style="width:100%; padding:11px; background:transparent; color:#888; border:1px solid #333; border-radius:10px; font-size:14px; cursor:pointer;">Fechar</button>
     </div>
   </div>
 </div>
 
 <script>
-let tplAtivo = 0;
-let fotoUsuario = null;
-let previewAberto = false;
+var tplAtivo = 0;
+var fotoUsuario = null;
+var previewAberto = false;
 
-const tpls = [
-  {
-    fundo: function(ctx, w, h) {
-      var g = ctx.createLinearGradient(0, 0, 0, h);
-      g.addColorStop(0, '#0a0a2a');
-      g.addColorStop(1, '#1a0a3a');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-
-      var baloes = [
-        {x:0.12,y:0.10,r:0.07,c:'#e63946'},
-        {x:0.30,y:0.06,r:0.06,c:'#f4a261'},
-        {x:0.55,y:0.08,r:0.07,c:'#2a9d8f'},
-        {x:0.78,y:0.05,r:0.06,c:'#e9c46a'},
-        {x:0.88,y:0.14,r:0.07,c:'#9b5de5'},
-        {x:0.05,y:0.30,r:0.06,c:'#f15bb5'},
-        {x:0.92,y:0.32,r:0.06,c:'#00bbf9'},
-        {x:0.18,y:0.72,r:0.07,c:'#e63946'},
-        {x:0.82,y:0.70,r:0.07,c:'#f4a261'},
-        {x:0.08,y:0.55,r:0.05,c:'#2a9d8f'},
-        {x:0.94,y:0.55,r:0.05,c:'#9b5de5'},
-        {x:0.35,y:0.78,r:0.06,c:'#f15bb5'},
-        {x:0.65,y:0.80,r:0.06,c:'#00bbf9'},
-        {x:0.50,y:0.72,r:0.05,c:'#e9c46a'}
-      ];
-
-      baloes.forEach(function(b) {
-        var bx = b.x * w;
-        var by = b.y * h;
-        var br = b.r * w;
-        var lg = ctx.createRadialGradient(bx - br*0.3, by - br*0.3, br*0.1, bx, by, br);
-        lg.addColorStop(0, b.c + 'ff');
-        lg.addColorStop(1, b.c + '88');
-        ctx.fillStyle = lg;
-        ctx.beginPath();
-        ctx.ellipse(bx, by, br, br * 1.2, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(255,255,255,0.25)';
-        ctx.beginPath();
-        ctx.ellipse(bx - br*0.25, by - br*0.3, br*0.25, br*0.18, -0.5, 0, Math.PI*2);
-        ctx.fill();
-        ctx.strokeStyle = b.c + '99';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(bx, by + br * 1.2);
-        ctx.quadraticCurveTo(bx + br*0.3, by + br*2, bx, by + br*2.5);
-        ctx.stroke();
-      });
-
-      var cores = ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
-      for (var i = 0; i < 60; i++) {
-        ctx.fillStyle = cores[i % cores.length];
-        ctx.save();
-        ctx.translate(Math.random() * w, Math.random() * h);
-        ctx.rotate(Math.random() * Math.PI);
-        ctx.fillRect(0, 0, 5, 2);
-        ctx.restore();
-      }
-    },
-    corTexto: '#ffffff',
-    corAccent: '#FFD60A'
+var fundos = [
+  function(ctx, w, h) {
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#0a0a2a');
+    g.addColorStop(1, '#1a0a3a');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    var baloes = [
+      {x:0.10,y:0.08,r:0.07,c:'#e63946'},
+      {x:0.28,y:0.04,r:0.06,c:'#f4a261'},
+      {x:0.52,y:0.06,r:0.07,c:'#2a9d8f'},
+      {x:0.75,y:0.04,r:0.06,c:'#e9c46a'},
+      {x:0.88,y:0.12,r:0.07,c:'#9b5de5'},
+      {x:0.04,y:0.28,r:0.06,c:'#f15bb5'},
+      {x:0.93,y:0.30,r:0.06,c:'#00bbf9'},
+      {x:0.06,y:0.50,r:0.05,c:'#e63946'},
+      {x:0.93,y:0.50,r:0.05,c:'#f4a261'}
+    ];
+    baloes.forEach(function(b) {
+      var bx = b.x*w, by = b.y*h, br = b.r*w;
+      var lg = ctx.createRadialGradient(bx-br*0.3, by-br*0.3, br*0.1, bx, by, br);
+      lg.addColorStop(0, b.c+'ff');
+      lg.addColorStop(1, b.c+'88');
+      ctx.fillStyle = lg;
+      ctx.beginPath(); ctx.ellipse(bx, by, br, br*1.2, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.28)';
+      ctx.beginPath(); ctx.ellipse(bx-br*0.25, by-br*0.3, br*0.25, br*0.18, -0.5, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = b.c+'99'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(bx, by+br*1.2);
+      ctx.quadraticCurveTo(bx+br*0.3, by+br*2, bx, by+br*2.8); ctx.stroke();
+    });
   },
-  {
-    fundo: function(ctx, w, h) {
-      var g = ctx.createLinearGradient(0, 0, 0, h);
-      g.addColorStop(0, '#1a0a2e');
-      g.addColorStop(1, '#0d1b4b');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = 'rgba(127,119,221,0.15)';
-      ctx.beginPath();
-      ctx.arc(w * 0.8, h * 0.12, 90, 0, Math.PI * 2);
-      ctx.fill();
-    },
-    corTexto: '#ffffff',
-    corAccent: '#7F77DD'
+  function(ctx, w, h) {
+    var g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, '#1a0a2e');
+    g.addColorStop(0.5, '#0d1b4b');
+    g.addColorStop(1, '#2d0a4e');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    for (var i = 0; i < 40; i++) {
+      var sx = Math.random()*w, sy = Math.random()*h*0.65, sr = Math.random()*1.5+0.5;
+      ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(127,119,221,0.2)';
+    ctx.lineWidth = 40;
+    ctx.beginPath(); ctx.arc(w*0.85, h*0.12, 100, 0, Math.PI*2); ctx.stroke();
   },
-  {
-    fundo: function(ctx, w, h) {
-      ctx.fillStyle = '#f5f5f0';
-      ctx.fillRect(0, 0, w, h);
-      ctx.strokeStyle = '#e8e5dc';
-      ctx.lineWidth = 1;
-      for (var y = 0; y < h; y += 28) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      }
-    },
-    corTexto: '#2C2C2A',
-    corAccent: '#534AB7'
+  function(ctx, w, h) {
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#fff0f3');
+    g.addColorStop(1, '#ffd6e0');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    var pts = [
+      {x:0.1,y:0.1,r:0.06,c:'rgba(255,182,193,0.5)'},
+      {x:0.85,y:0.08,r:0.08,c:'rgba(255,182,193,0.4)'},
+      {x:0.05,y:0.35,r:0.04,c:'rgba(255,182,193,0.3)'},
+      {x:0.92,y:0.35,r:0.05,c:'rgba(255,182,193,0.4)'}
+    ];
+    pts.forEach(function(p) {
+      ctx.fillStyle = p.c;
+      ctx.beginPath(); ctx.arc(p.x*w, p.y*h, p.r*w, 0, Math.PI*2); ctx.fill();
+    });
   }
 ];
 
 function quebrarTexto(ctx, texto, x, y, maxW, altLinha) {
   var palavras = texto.split(' ');
-  var linha = '';
-  var yAtual = y;
+  var linha = '', yAtual = y;
   for (var i = 0; i < palavras.length; i++) {
     var teste = linha + palavras[i] + ' ';
     if (ctx.measureText(teste).width > maxW && i > 0) {
       ctx.fillText(linha.trim(), x, yAtual);
       linha = palavras[i] + ' ';
       yAtual += altLinha;
-    } else {
-      linha = teste;
-    }
+    } else { linha = teste; }
   }
   ctx.fillText(linha.trim(), x, yAtual);
 }
 
-function desenharCaixa(ctx, cx, cy, t, sc) {
+function desenharCardFixo(ctx, w, h, nome, frase, sc) {
+  var cores = ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
+  for (var i = 0; i < 70; i++) {
+    ctx.fillStyle = cores[i % cores.length];
+    ctx.save();
+    ctx.globalAlpha = 0.75;
+    ctx.translate(Math.random()*w, Math.random()*h*0.62);
+    ctx.rotate(Math.random()*Math.PI*2);
+    ctx.fillRect(0, 0, 7*sc, 3*sc);
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+
+  var cardX = w*0.05, cardW = w*0.90, cardY = h*0.67, cardH = h*0.29, raio = 20*sc;
+  ctx.shadowColor = 'rgba(0,0,0,0.45)';
+  ctx.shadowBlur = 25*sc;
+  ctx.shadowOffsetY = 8*sc;
+  ctx.fillStyle = 'rgba(255,255,255,0.97)';
+  ctx.beginPath();
+  ctx.moveTo(cardX+raio, cardY);
+  ctx.lineTo(cardX+cardW-raio, cardY);
+  ctx.quadraticCurveTo(cardX+cardW, cardY, cardX+cardW, cardY+raio);
+  ctx.lineTo(cardX+cardW, cardY+cardH-raio);
+  ctx.quadraticCurveTo(cardX+cardW, cardY+cardH, cardX+cardW-raio, cardY+cardH);
+  ctx.lineTo(cardX+raio, cardY+cardH);
+  ctx.quadraticCurveTo(cardX, cardY+cardH, cardX, cardY+cardH-raio);
+  ctx.lineTo(cardX, cardY+raio);
+  ctx.quadraticCurveTo(cardX, cardY, cardX+raio, cardY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+
+  var icX = w/2, icY = cardY, icR = 26*sc;
+  var gradIc = ctx.createRadialGradient(icX-icR*0.2, icY-icR*0.2, 1, icX, icY, icR);
+  gradIc.addColorStop(0, '#6B9FFF');
+  gradIc.addColorStop(1, '#3B5FC0');
+  ctx.fillStyle = gradIc;
+  ctx.beginPath(); ctx.arc(icX, icY, icR, 0, Math.PI*2); ctx.fill();
+
+  var t = icR*0.52, cx = icX, cy = icY;
   ctx.fillStyle = '#e63946';
-  ctx.fillRect(cx - t*0.7, cy - t*0.1, t*1.4, t*1.1);
+  ctx.fillRect(cx-t*0.7, cy-t*0.05, t*1.4, t*1.05);
   ctx.fillStyle = '#c1121f';
-  ctx.fillRect(cx - t*0.75, cy - t*0.45, t*1.5, t*0.38);
+  ctx.fillRect(cx-t*0.75, cy-t*0.44, t*1.5, t*0.40);
   ctx.fillStyle = '#FFD60A';
-  ctx.fillRect(cx - t*0.12, cy - t*0.48, t*0.24, t*1.6);
-  ctx.fillRect(cx - t*0.75, cy - t*0.25, t*1.5, t*0.2);
-  ctx.strokeStyle = '#FFD60A';
-  ctx.lineWidth = sc * 1.5;
+  ctx.fillRect(cx-t*0.11, cy-t*0.46, t*0.22, t*1.52);
+  ctx.fillRect(cx-t*0.75, cy-t*0.25, t*1.5, t*0.18);
+  ctx.strokeStyle = '#FFD60A'; ctx.lineWidth = sc*1.2;
+  ctx.beginPath(); ctx.ellipse(cx-t*0.33, cy-t*0.53, t*0.3, t*0.2, -0.3, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx+t*0.33, cy-t*0.53, t*0.3, t*0.2, 0.3, 0, Math.PI*2); ctx.stroke();
+
+  ctx.textAlign = 'center';
+  var tituloCard = nome ? nome + ' - Desejos de Niver' : 'Meus Desejos de Niver';
+  ctx.font = 'bold ' + Math.round(17*sc) + 'px Arial';
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillText(tituloCard, w/2, cardY+cardH*0.36);
+
+  ctx.font = Math.round(12*sc) + 'px Arial';
+  ctx.fillStyle = '#777';
+  quebrarTexto(ctx, frase || 'Deixei ideias de presente aqui!', w/2, cardY+cardH*0.52, cardW*0.82, 15*sc);
+
+  var btnX = cardX+cardW*0.08, btnW = cardW*0.84;
+  var btnY = cardY+cardH*0.70, btnH = 36*sc, btnR = btnH/2;
+  var gradBtn = ctx.createLinearGradient(btnX, btnY, btnX+btnW, btnY);
+  gradBtn.addColorStop(0, '#7F77DD');
+  gradBtn.addColorStop(1, '#5B8DEF');
+  ctx.fillStyle = gradBtn;
   ctx.beginPath();
-  ctx.ellipse(cx - t*0.35, cy - t*0.55, t*0.32, t*0.22, -0.3, 0, Math.PI*2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.ellipse(cx + t*0.35, cy - t*0.55, t*0.32, t*0.22, 0.3, 0, Math.PI*2);
-  ctx.stroke();
+  ctx.moveTo(btnX+btnR, btnY);
+  ctx.lineTo(btnX+btnW-btnR, btnY);
+  ctx.quadraticCurveTo(btnX+btnW, btnY, btnX+btnW, btnY+btnR);
+  ctx.quadraticCurveTo(btnX+btnW, btnY+btnH, btnX+btnW-btnR, btnY+btnH);
+  ctx.lineTo(btnX+btnR, btnY+btnH);
+  ctx.quadraticCurveTo(btnX, btnY+btnH, btnX, btnY+btnR);
+  ctx.quadraticCurveTo(btnX, btnY, btnX+btnR, btnY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.font = 'bold ' + Math.round(13*sc) + 'px Arial';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('Ver Lista de Presentes', btnX+btnW/2, btnY+btnH*0.65);
 }
 
 function desenhar(canvas, tplIdx, nome, frase, link, foto) {
-  var tpl = tpls[tplIdx];
   var ctx = canvas.getContext('2d');
-  var w = canvas.width;
-  var h = canvas.height;
-  var sc = w / 180;
-
+  var w = canvas.width, h = canvas.height;
+  var sc = w/360;
   if (foto) {
     ctx.drawImage(foto, 0, 0, w, h);
-    ctx.fillStyle = 'rgba(0,0,0,0.52)';
-    ctx.fillRect(0, 0, w, h);
+    var ov = ctx.createLinearGradient(0, 0, 0, h);
+    ov.addColorStop(0, 'rgba(0,0,0,0.3)');
+    ov.addColorStop(0.5, 'rgba(0,0,0,0.1)');
+    ov.addColorStop(1, 'rgba(0,0,0,0.5)');
+    ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
   } else {
-    tpl.fundo(ctx, w, h);
+    fundos[tplIdx](ctx, w, h);
   }
-
-  ctx.textAlign = 'center';
-
-  ctx.font = 'bold ' + Math.round(sc * 18) + 'px Arial';
-  ctx.fillStyle = tpl.corTexto;
-  ctx.fillText(nome || 'Aniversariante', w / 2, h * 0.48);
-
-  ctx.font = Math.round(sc * 11) + 'px Arial';
-  ctx.fillStyle = tpl.corAccent;
-  quebrarTexto(ctx, frase || 'Gratidao por mais um ano!', w / 2, h * 0.54, w * 0.82, sc * 15);
-
-  var cx = w / 2;
-  var cy = h * 0.74;
-  var r = w * 0.14;
-
-  ctx.strokeStyle = tpl.corAccent;
-  ctx.lineWidth = 2 * sc;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r + 5 * sc, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  ctx.beginPath();
-  ctx.arc(cx, cy, r + 5 * sc, 0, Math.PI * 2);
-  ctx.fill();
-
-  desenharCaixa(ctx, cx, cy, r * 0.82, sc);
-
-  ctx.font = Math.round(sc * 9) + 'px Arial';
-  ctx.fillStyle = tpl.corTexto;
-  ctx.globalAlpha = 0.6;
-  ctx.fillText('toque para ver ideias de presente', w / 2, h * 0.90);
-  ctx.globalAlpha = 1;
-
-  if (link) {
-    ctx.font = Math.round(sc * 8) + 'px Arial';
-    ctx.fillStyle = tpl.corAccent;
-    ctx.globalAlpha = 0.5;
-    ctx.fillText(link, w / 2, h * 0.95);
-    ctx.globalAlpha = 1;
-  }
+  desenharCardFixo(ctx, w, h, nome, frase, sc);
 }
 
 function renderPreviews() {
   for (var i = 0; i < 3; i++) {
-    desenhar(document.getElementById('prev' + i), i, 'Danilo', 'Gratidao por mais um ano!', '', null);
+    desenhar(document.getElementById('prev'+i), i, 'Danilo', 'Deixei ideias de presente aqui!', '', null);
   }
 }
 
 function selecionarTpl(el) {
-  var cards = document.querySelectorAll('.tpl-card');
-  for (var i = 0; i < cards.length; i++) {
-    cards[i].classList.remove('selected');
-  }
+  document.querySelectorAll('.tpl-card').forEach(function(c) { c.classList.remove('selected'); });
   el.classList.add('selected');
   tplAtivo = parseInt(el.dataset.tpl);
   if (previewAberto) gerarStory();
@@ -362,19 +346,13 @@ function usarFrase(el) {
 }
 
 function carregarFoto(e) {
-  var file = e.target.files[0];
-  if (!file) return;
+  var file = e.target.files[0]; if (!file) return;
   var img = new Image();
-  img.onload = function() {
-    fotoUsuario = img;
-    if (previewAberto) gerarStory();
-  };
+  img.onload = function() { fotoUsuario = img; if (previewAberto) gerarStory(); };
   img.src = URL.createObjectURL(file);
 }
 
-function atualizar() {
-  if (previewAberto) gerarStory();
-}
+function atualizar() { if (previewAberto) gerarStory(); }
 
 function gerarStory() {
   var nome = document.getElementById('nome').value;
@@ -395,42 +373,27 @@ function baixar() {
 }
 
 function abrirInstagram() {
-  var canvas = document.getElementById('storyFinal');
   var link = document.getElementById('link').value;
-  var nome = document.getElementById('nome').value;
-
-  // Baixa a imagem automaticamente
+  var canvas = document.getElementById('storyFinal');
   var a = document.createElement('a');
   a.download = 'story-instagift.png';
   a.href = canvas.toDataURL('image/png');
   a.click();
-
-  // Copia o link para a area de transferencia
-  navigator.clipboard.writeText(link).catch(function() {});
-
-  // Mostra o modal de instrucoes
-  document.getElementById('modal-insta').style.display = 'flex';
+  navigator.clipboard.writeText(link).catch(function(){});
   document.getElementById('modal-link-texto').textContent = link;
+  document.getElementById('modal-insta').style.display = 'flex';
 }
 
 function copiarLinkModal() {
   var link = document.getElementById('modal-link-texto').textContent;
   navigator.clipboard.writeText(link).then(function() {
-    // Feedback visual moderno sem usar alert
-    const btn = event.target;
-    const textoOriginal = btn.textContent;
-    btn.textContent = 'Copiado!';
-    setTimeout(() => btn.textContent = textoOriginal, 2000);
-  }).catch(function() {
-    alert('Copie o link manualmente.');
+    alert('Link copiado!');
   });
 }
 
 function abrirAppInstagram() {
   window.location.href = 'instagram://story-camera';
-  setTimeout(function() {
-    window.open('https://www.instagram.com', '_blank');
-  }, 1500);
+  setTimeout(function() { window.open('https://www.instagram.com', '_blank'); }, 1500);
 }
 
 renderPreviews();
