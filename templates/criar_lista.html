@@ -39,12 +39,15 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .vazio .icon { font-size: 36px; margin-bottom: 8px; }
 .btn-gerar-vitrine { width: 100%; padding: 16px; background: linear-gradient(135deg, #7F77DD, #5B8DEF); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; display: none; }
 .btn-gerar-vitrine.show { display: block; }
-.link-vitrine { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; margin-top: 16px; display: none; }
-.link-vitrine.show { display: block; }
-.link-vitrine p { font-size: 13px; color: #aaa; margin-bottom: 8px; }
-.link-box { display: flex; gap: 10px; align-items: center; }
+.acoes-vitrine { margin-top: 16px; display: none; gap: 12px; flex-direction: column; }
+.acoes-vitrine.show { display: flex; }
+.link-vitrine-box { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; }
+.link-vitrine-box p { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+.link-box { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
 .link-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
 .btn-copiar { padding: 8px 14px; background: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.btn-ver-vitrine { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px; }
+.btn-criar-story { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; }
 .dica { font-size: 12px; color: #555; margin-top: 6px; }
 </style>
 </head>
@@ -60,16 +63,13 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       <span class="plt-badge">🛍️ Mercado Livre</span>
       <span class="plt-badge">🧡 Shopee</span>
     </div>
-
     <div class="input-group">
       <input type="text" id="input-link" placeholder="Cole o link do produto aqui...">
     </div>
-
     <div class="input-group">
       <input type="text" id="input-nome" placeholder="Nome do produto (ex: Kindle 16GB Preto)">
       <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
     </div>
-
     <p class="dica">Dica: preencha o nome para ficar mais bonito na vitrine</p>
     <div class="loading" id="loading">Buscando produto... aguarde</div>
   </div>
@@ -88,11 +88,15 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
     Gerar minha vitrine de presentes
   </button>
 
-  <div class="link-vitrine" id="link-vitrine">
-    <p>Sua vitrine esta pronta! Copie o link e cole no story:</p>
-    <div class="link-box">
-      <span id="link-gerado"></span>
-      <button class="btn-copiar" onclick="copiarLink()">Copiar</button>
+  <div class="acoes-vitrine" id="acoes-vitrine">
+    <div class="link-vitrine-box">
+      <p>Sua vitrine esta pronta!</p>
+      <div class="link-box">
+        <span id="link-gerado"></span>
+        <button class="btn-copiar" onclick="copiarLink()">Copiar</button>
+      </div>
+      <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
+      <button class="btn-criar-story" onclick="criarStory()">Criar meu story no Instagram</button>
     </div>
   </div>
 </div>
@@ -100,6 +104,7 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 <script>
 var LISTA_ID = "{{ lista_id }}";
 var produtos = [];
+var linkVitrine = '';
 
 function emojiPlataforma(plt) {
   if (plt === 'amazon') return '🛒';
@@ -181,17 +186,25 @@ async function remover(id) {
 }
 
 function gerarVitrine() {
-  var link = window.location.origin + '/vitrine/' + LISTA_ID;
-  document.getElementById('link-gerado').textContent = link;
-  document.getElementById('link-vitrine').classList.add('show');
-  document.getElementById('link-gerado').scrollIntoView({behavior: 'smooth'});
+  linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
+  document.getElementById('link-gerado').textContent = linkVitrine;
+  document.getElementById('btn-vitrine').classList.remove('show');
+  document.getElementById('acoes-vitrine').classList.add('show');
+  document.getElementById('acoes-vitrine').scrollIntoView({behavior: 'smooth'});
 }
 
 function copiarLink() {
-  var link = document.getElementById('link-gerado').textContent;
-  navigator.clipboard.writeText(link).then(function() {
-    alert('Link copiado! Cole no campo "Link da sua vitrine" na pagina de story.');
+  navigator.clipboard.writeText(linkVitrine).then(function() {
+    alert('Link copiado!');
   });
+}
+
+function verVitrine() {
+  window.open(linkVitrine, '_blank');
+}
+
+function criarStory() {
+  window.location.href = '/?vitrine=' + LISTA_ID;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
