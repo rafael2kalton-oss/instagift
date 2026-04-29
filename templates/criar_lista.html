@@ -46,16 +46,12 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .btn-gerar-vitrine.show { display: block; }
 .acoes-vitrine { margin-top: 16px; display: none; flex-direction: column; gap: 12px; }
 .acoes-vitrine.show { display: flex; }
-
-/* Card link permanente */
 .card-salvar { background: #0d1a0d; border: 1px solid #2a9d2a; border-radius: 12px; padding: 16px; }
 .card-salvar .titulo { font-size: 14px; font-weight: 700; color: #2a9d8f; margin-bottom: 4px; }
 .card-salvar .aviso { font-size: 12px; color: #888; margin-bottom: 10px; }
 .link-box { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
 .link-box span { font-size: 12px; color: #2a9d8f; word-break: break-all; flex: 1; background: #0a0a0a; padding: 8px 10px; border-radius: 8px; border: 1px solid #1a3a1a; }
 .btn-copiar { padding: 8px 14px; background: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-
-/* Card vitrine */
 .card-vitrine { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; }
 .card-vitrine .titulo { font-size: 14px; color: #aaa; margin-bottom: 8px; }
 .link-vitrine-box { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
@@ -77,12 +73,19 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       <span class="plt-badge">🛍️ Mercado Livre</span>
       <span class="plt-badge">🧡 Shopee</span>
     </div>
+
     <div class="input-group">
       <input type="text" id="input-link" placeholder="1. Cole o link do produto aqui...">
     </div>
+
     <div class="input-group">
-      <input type="text" id="input-nome" placeholder="2. Nome do produto (ex: iPhone 16 128GB)">
+      <input type="text" id="input-nome" placeholder="2. Nome do produto (ex: iPhone 16 128GB Preto)">
     </div>
+
+    <div class="input-group">
+      <input type="text" id="input-preco" placeholder="3. Preco (ex: 4898,70)">
+    </div>
+
     <div class="instrucao-img">
       <p>📸 Como adicionar a foto — Amazon e Shopee:</p>
       <ol>
@@ -92,12 +95,14 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
         <li>Cole no campo abaixo</li>
       </ol>
     </div>
+
     <div class="input-group">
-      <input type="text" id="input-imagem" placeholder="3. Cole o link da foto aqui (opcional)" oninput="previewImagem()">
+      <input type="text" id="input-imagem" placeholder="4. Cole o link da foto aqui (opcional)" oninput="previewImagem()">
       <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
     </div>
+
     <img id="preview-img" class="preview-img" alt="preview">
-    <p class="dica">Mercado Livre ja pega a foto automaticamente</p>
+    <p class="dica">Mercado Livre ja pega nome, preco e foto automaticamente</p>
     <div class="loading" id="loading">Adicionando produto... aguarde</div>
   </div>
 
@@ -116,8 +121,6 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   </button>
 
   <div class="acoes-vitrine" id="acoes-vitrine">
-
-    <!-- LINK PERMANENTE DA LISTA -->
     <div class="card-salvar">
       <div class="titulo">🔒 Salve este link — sua lista permanente</div>
       <div class="aviso">Use sempre este link para adicionar mais presentes depois. Nao perca!</div>
@@ -127,7 +130,6 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       </div>
     </div>
 
-    <!-- LINK DA VITRINE -->
     <div class="card-vitrine">
       <div class="titulo">Sua vitrine esta pronta! Compartilhe com seus amigos:</div>
       <div class="link-vitrine-box">
@@ -137,7 +139,6 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
       <button class="btn-criar-story" onclick="criarStory()">Criar meu story no Instagram</button>
     </div>
-
   </div>
 </div>
 
@@ -199,15 +200,19 @@ function renderLista() {
 async function adicionarProduto() {
   var link = document.getElementById('input-link').value.trim();
   var nome = document.getElementById('input-nome').value.trim();
+  var preco = document.getElementById('input-preco').value.trim();
   var imagem = document.getElementById('input-imagem').value.trim();
+
   if (!link) { alert('Cole um link de produto!'); return; }
+
   document.getElementById('loading').style.display = 'block';
   document.getElementById('btn-adicionar').disabled = true;
+
   try {
     var res = await fetch('/api/adicionar-produto', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({lista_id: LISTA_ID, link: link, nome: nome, imagem: imagem})
+      body: JSON.stringify({lista_id: LISTA_ID, link: link, nome: nome, preco: preco, imagem: imagem})
     });
     var data = await res.json();
     if (data.ok) {
@@ -215,6 +220,7 @@ async function adicionarProduto() {
       renderLista();
       document.getElementById('input-link').value = '';
       document.getElementById('input-nome').value = '';
+      document.getElementById('input-preco').value = '';
       document.getElementById('input-imagem').value = '';
       document.getElementById('preview-img').style.display = 'none';
     } else {
@@ -236,10 +242,8 @@ async function remover(id) {
 function gerarVitrine() {
   linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
   var linkLista = window.location.origin + '/lista/' + LISTA_ID;
-
   document.getElementById('link-gerado').textContent = linkVitrine;
   document.getElementById('link-lista-permanente').textContent = linkLista;
-
   document.getElementById('btn-vitrine').classList.remove('show');
   document.getElementById('acoes-vitrine').classList.add('show');
   document.getElementById('acoes-vitrine').scrollIntoView({behavior: 'smooth'});
@@ -259,7 +263,6 @@ function copiarLinkLista() {
 }
 
 function verVitrine() { window.open(linkVitrine, '_blank'); }
-
 function criarStory() { window.location.href = '/?vitrine=' + LISTA_ID; }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -267,6 +270,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Enter') document.getElementById('input-nome').focus();
   });
   document.getElementById('input-nome').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') document.getElementById('input-preco').focus();
+  });
+  document.getElementById('input-preco').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') document.getElementById('input-imagem').focus();
   });
   document.getElementById('input-imagem').addEventListener('keypress', function(e) {
