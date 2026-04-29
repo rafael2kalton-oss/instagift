@@ -1,45 +1,59 @@
 from flask import Flask, render_template, request, jsonify
-import sqlite3
 import uuid
 import re
-import urllib.request
-import urllib.parse
+import os
+import json
+
+try:
+    import requests
+    from bs4 import BeautifulSoup
+    REQUESTS_OK = True
+except:
+    REQUESTS_OK = False
 
 app = Flask(__name__)
 
-DB = "banco.db"
+# Supabase config
+SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
+SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
+HEADERS_SB = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json",
+    "Prefer": "return=representation"
+}
 
 # IDs de afiliado
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 
-def init_db():
-    con = sqlite3.connect(DB)
-    cur = con.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS listas (
-            id TEXT PRIMARY KEY,
-            nome TEXT,
-            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS produtos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            lista_id TEXT,
-            nome TEXT,
-            preco TEXT,
-            imagem_url TEXT,
-            link_original TEXT,
-            link_afiliado TEXT,
-            plataforma TEXT,
-            reservado INTEGER DEFAULT 0
-        )
-    """)
-    con.commit()
-    con.close()
+HEADERS_WEB = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+    "Accept-Language": "pt-BR,pt;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+}
 
-init_db()
+def sb_get(tabela, filtro=None):
+    url = f"{SUPABASE_URL}/rest/v1/{tabela}"
+    if filtro:
+        url += f"?{filtro}"
+    r = requests.get(url, headers=HEADERS_SB)
+    return r.json()
+
+def sb_post(tabela, dados):
+    url = f"{SUPABASE_URL}/rest/v1/{tabela}"
+    r = requests.post(url, headers=HEADERS_SB, json=dados)
+    return r.json()
+
+def sb_patch(tabela, filtro, dados):
+    url = f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}"
+    r = requests.patch(url, headers=HEADERS_SB, json=dados)
+    return r.json()
+
+def sb_delete(tabela, filtro):
+    url = f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}"
+    r = requests.delete(url, headers=HEADERS_SB)
+    return r.status_code
 
 def detectar_plataforma(link):
     if "amazon.com.br" in link or "amzn.to" in link:
@@ -53,69 +67,57 @@ def detectar_plataforma(link):
 def limpar_e_injetar(link, plataforma):
     try:
         if plataforma == "amazon":
-            # Remove tag existente e injeta o nosso
             link = re.sub(r'[?&]tag=[^&]+', '', link)
-            if '?' in link:
-                link = link + '&tag=' + AMAZON_TAG
-            else:
-                link = link + '?tag=' + AMAZON_TAG
-            return link
-
+            link = link + ('&' if '?' in link else '?') + 'tag=' + AMAZON_TAG
         elif plataforma == "mercadolivre":
-            # ML usa matt_tool e partner
             link = re.sub(r'[?&]matt_tool=[^&]+', '', link)
             link = re.sub(r'[?&]partner_id=[^&]+', '', link)
-            if '?' in link:
-                link = link + '&matt_tool=97&partner_id=' + ML_ID
-            else:
-                link = link + '?matt_tool=97&partner_id=' + ML_ID
-            return link
-
-        elif plataforma == "shopee":
-            # Shopee — mantém link limpo por enquanto
-            return link
-
+            link = link + ('&' if '?' in link else '?') + 'matt_tool=97&partner_id=' + ML_ID
     except:
-        return link
+        pass
     return link
 
 def extrair_dados_produto(link, plataforma):
-    """Extrai título e imagem do produto via scraping simples"""
-    nome = "Produto"
+    nome = ""
     imagem = ""
     preco = ""
-
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-        req = urllib.request.Request(link, headers=headers)
-        response = urllib.request.urlopen(req, timeout=8)
-        html = response.read().decode('utf-8', errors='ignore')
+        if REQUESTS_OK:
+            session = requests.Session()
+            session.headers.update(HEADERS_WEB)
+            response = session.get(link, timeout=10)
+            html = response.text
+            soup = BeautifulSoup(html, 'html.parser')
 
-        # Extrai título
-        title_match = re.search(r'<title[^>]*>(.*?)</title>', html, re.IGNORECASE | re.DOTALL)
-        if title_match:
-            nome = title_match.group(1).strip()
-            # Limpa o nome
-            nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
-            nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
-            nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
-            nome = nome[:80]  # Limita tamanho
+            img_tag = soup.find("meta", property="og:image")
+            if img_tag and img_tag.get("content"):
+                imagem = img_tag["content"]
 
-        # Extrai imagem og
-        img_match = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', html, re.IGNORECASE)
-        if img_match:
-            imagem = img_match.group(1)
+            title_tag = soup.find("meta", property="og:title")
+            if title_tag and title_tag.get("content"):
+                nome = title_tag["content"].strip()
 
-        # Extrai preço
-        preco_match = re.search(r'R\$\s*[\d.,]+', html)
-        if preco_match:
-            preco = preco_match.group(0).replace('R$', '').strip()
+            if not imagem:
+                if plataforma == "amazon":
+                    img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
+                    if img and img.get("src"):
+                        imagem = img["src"]
+                elif plataforma == "shopee":
+                    img = soup.find("meta", {"name": "twitter:image"})
+                    if img and img.get("content"):
+                        imagem = img["content"]
 
+            if nome:
+                nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
+                nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
+                nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+                nome = nome[:100]
+
+            preco_match = re.search(r'R\$\s*[\d.,]+', html)
+            if preco_match:
+                preco = preco_match.group(0).replace('R$', '').strip()
     except Exception as e:
         print("Erro scraping:", e)
-
     return nome, imagem, preco
 
 # ── ROTAS ──
@@ -138,66 +140,61 @@ def adicionar_produto():
     data = request.json
     lista_id = data.get("lista_id")
     link = data.get("link", "").strip()
-    nome_manual = data.get("nome", "")
+    nome_manual = data.get("nome", "").strip()
 
     if not lista_id or not link:
         return jsonify({"erro": "Dados incompletos"}), 400
 
     plataforma = detectar_plataforma(link)
     link_afiliado = limpar_e_injetar(link, plataforma)
-    nome, imagem, preco = extrair_dados_produto(link_afiliado, plataforma)
+    nome_auto, imagem, preco = extrair_dados_produto(link_afiliado, plataforma)
 
-    if nome_manual:
-        nome = nome_manual
-
-    con = sqlite3.connect(DB)
-    cur = con.cursor()
+    nome = nome_manual if nome_manual else nome_auto
+    if not nome:
+        nome = "Produto"
 
     # Cria lista se não existir
-    cur.execute("SELECT id FROM listas WHERE id = ?", (lista_id,))
-    if not cur.fetchone():
-        cur.execute("INSERT INTO listas (id, nome) VALUES (?, ?)", (lista_id, "Minha Lista"))
+    lista = sb_get("listas", f"id=eq.{lista_id}")
+    if not lista:
+        sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
 
-    cur.execute("""
-        INSERT INTO produtos (lista_id, nome, preco, imagem_url, link_original, link_afiliado, plataforma)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (lista_id, nome, preco, imagem, link, link_afiliado, plataforma))
-    con.commit()
-    produto_id = cur.lastrowid
-    con.close()
-
-    return jsonify({
-        "ok": True,
-        "produto": {
-            "id": produto_id,
-            "nome": nome,
-            "preco": preco,
-            "imagem_url": imagem,
-            "link_afiliado": link_afiliado,
-            "plataforma": plataforma
-        }
+    # Insere produto
+    resultado = sb_post("produtos", {
+        "lista_id": lista_id,
+        "nome": nome,
+        "preco": preco,
+        "imagem_url": imagem,
+        "link_original": link,
+        "link_afiliado": link_afiliado,
+        "plataforma": plataforma,
+        "reservado": 0
     })
+
+    if isinstance(resultado, list) and len(resultado) > 0:
+        p = resultado[0]
+        return jsonify({
+            "ok": True,
+            "produto": {
+                "id": p["id"],
+                "nome": p["nome"],
+                "preco": p.get("preco", ""),
+                "imagem_url": p.get("imagem_url", ""),
+                "link_afiliado": p.get("link_afiliado", ""),
+                "plataforma": p.get("plataforma", "")
+            }
+        })
+    return jsonify({"erro": "Erro ao salvar produto"}), 500
 
 @app.route("/api/produtos/<lista_id>")
 def get_produtos(lista_id):
-    con = sqlite3.connect(DB)
-    cur = con.cursor()
-    cur.execute("SELECT id, nome, preco, imagem_url, link_afiliado, plataforma, reservado FROM produtos WHERE lista_id = ?", (lista_id,))
-    produtos = cur.fetchall()
-    con.close()
-    return jsonify([{
-        "id": p[0], "nome": p[1], "preco": p[2],
-        "imagem_url": p[3], "link_afiliado": p[4],
-        "plataforma": p[5], "reservado": p[6]
-    } for p in produtos])
+    produtos = sb_get("produtos", f"lista_id=eq.{lista_id}&order=id.asc")
+    if isinstance(produtos, list):
+        return jsonify(produtos)
+    return jsonify([])
 
 @app.route("/api/remover-produto/<int:produto_id>", methods=["DELETE"])
 def remover_produto(produto_id):
-    con = sqlite3.connect(DB)
-    cur = con.cursor()
-    cur.execute("DELETE FROM produtos WHERE id = ?", (produto_id,))
-    con.commit()
-    con.close()
+    sb_delete("produtos", f"id=eq.{produto_id}")
     return jsonify({"ok": True})
 
 @app.route("/vitrine/<lista_id>")
@@ -206,17 +203,12 @@ def vitrine(lista_id):
 
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
 def reservar(produto_id):
-    con = sqlite3.connect(DB)
-    cur = con.cursor()
-    cur.execute("SELECT reservado FROM produtos WHERE id = ?", (produto_id,))
-    p = cur.fetchone()
-    if not p:
+    produtos = sb_get("produtos", f"id=eq.{produto_id}")
+    if not produtos or not isinstance(produtos, list):
         return jsonify({"erro": "Produto não encontrado"}), 404
-    if p[0]:
-        return jsonify({"erro": "Já reservado"}), 400
-    cur.execute("UPDATE produtos SET reservado = 1 WHERE id = ?", (produto_id,))
-    con.commit()
-    con.close()
+    if produtos[0].get("reservado"):
+        return jsonify({"erro": "Ja reservado"}), 400
+    sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 1})
     return jsonify({"ok": True})
 
 if __name__ == "__main__":
