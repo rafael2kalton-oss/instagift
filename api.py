@@ -73,26 +73,6 @@ def limpar_e_injetar(link, plataforma):
         pass
     return link
 
-def buscar_imagem_duckduckgo(nome_produto):
-    try:
-        query = nome_produto.replace(' ', '+')
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
-        r = requests.get(f"https://duckduckgo.com/?q={query}", headers=headers, timeout=5)
-        vqd = re.search(r'vqd=([\d-]+)', r.text)
-        if not vqd:
-            return ""
-        vqd_token = vqd.group(1)
-        img_url = f"https://duckduckgo.com/i.js?q={query}&vqd={vqd_token}&f=,,,&p=1"
-        r2 = requests.get(img_url, headers=headers, timeout=5)
-        data = r2.json()
-        if data.get("results"):
-            return data["results"][0]["image"]
-    except Exception as e:
-        print("DuckDuckGo erro:", e)
-    return ""
-
 def extrair_dados_produto(link, plataforma):
     nome = ""
     imagem = ""
@@ -133,9 +113,6 @@ def extrair_dados_produto(link, plataforma):
             if preco_match:
                 preco = preco_match.group(0).replace('R$', '').strip()
 
-            if not imagem and nome:
-                imagem = buscar_imagem_duckduckgo(nome)
-
     except Exception as e:
         print("Erro scraping:", e)
     return nome, imagem, preco
@@ -162,16 +139,19 @@ def adicionar_produto():
     link = data.get("link", "").strip()
     nome_manual = data.get("nome", "").strip()
     imagem_manual = data.get("imagem", "").strip()
+    preco_manual = data.get("preco", "").strip()
 
     if not lista_id or not link:
         return jsonify({"erro": "Dados incompletos"}), 400
 
     plataforma = detectar_plataforma(link)
     link_afiliado = limpar_e_injetar(link, plataforma)
-    nome_auto, imagem_auto, preco = extrair_dados_produto(link_afiliado, plataforma)
+    nome_auto, imagem_auto, preco_auto = extrair_dados_produto(link_afiliado, plataforma)
 
     nome = nome_manual if nome_manual else nome_auto
     imagem = imagem_manual if imagem_manual else imagem_auto
+    preco = preco_manual if preco_manual else preco_auto
+
     if not nome:
         nome = "Produto"
 
