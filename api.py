@@ -27,6 +27,7 @@ HEADERS_WEB = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
     "Accept-Language": "pt-BR,pt;q=0.9",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Referer": "https://www.mercadolivre.com.br/",
 }
 
 def sb_get(tabela, filtro=None):
@@ -54,7 +55,7 @@ def sb_delete(tabela, filtro):
 def detectar_plataforma(link):
     if "amazon.com.br" in link or "amzn.to" in link:
         return "amazon"
-    elif "mercadolivre.com.br" in link or "mercadolibre.com" in link or "meli.com" in link:
+    elif "mercadolivre.com.br" in link or "mercadolibre.com" in link or "meli.com" in link or "produto.mercadolivre" in link:
         return "mercadolivre"
     elif "shopee.com.br" in link:
         return "shopee"
@@ -73,42 +74,85 @@ def limpar_e_injetar(link, plataforma):
         pass
     return link
 
+def resolver_link_ml(link):
+    """Se o link tem /p/ tenta seguir o redirecionamento para pegar o link real do produto"""
+    try:
+        if "/p/" in link:
+            session = requests.Session()
+            session.headers.update(HEADERS_WEB)
+            response = session.get(link, timeout=10, allow_redirects=True)
+            # Pega a URL final após redirecionamentos
+            url_final = response.url
+            if "/p/" not in url_final:
+                return url_final
+            # Tenta achar o link do primeiro produto na pagina
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # Procura link de variacao do produto
+            variacao = soup.find("a", {"class": "ui-pdp-thumbnail"})
+            if not variacao:
+                variacao = soup.find("a", href=re.compile(r'/MLB-\d+'))
+            if variacao and variacao.get("href"):
+                return variacao["href"]
+    except:
+        pass
+    return link
+
 def extrair_dados_produto(link, plataforma):
     nome = ""
     imagem = ""
     preco = ""
     try:
         if REQUESTS_OK:
+            # Para ML com /p/ tenta resolver o link primeiro
+            if plataforma == "mercadolivre" and "/p/" in link:
+                link = resolver_link_ml(link)
+
             session = requests.Session()
             session.headers.update(HEADERS_WEB)
-            response = session.get(link, timeout=10)
+            response = session.get(link, timeout=10, allow_redirects=True)
             html = response.text
             soup = BeautifulSoup(html, 'html.parser')
 
+            # Tenta og:image
             img_tag = soup.find("meta", property="og:image")
             if img_tag and img_tag.get("content"):
                 imagem = img_tag["content"]
 
+            # Tenta og:title
             title_tag = soup.find("meta", property="og:title")
             if title_tag and title_tag.get("content"):
                 nome = title_tag["content"].strip()
 
+            # Fallbacks por plataforma
             if not imagem:
                 if plataforma == "amazon":
                     img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
                     if img and img.get("src"):
                         imagem = img["src"]
+                elif plataforma == "mercadolivre":
+                    # Tenta pegar imagem do ML de outras formas
+                    img = soup.find("img", {"class": "ui-pdp-image"})
+                    if not img:
+                        img = soup.find("figure", {"class": "ui-pdp-gallery__figure"})
+                        if img:
+                            img = img.find("img")
+                    if img and img.get("src") and "http" in img.get("src", ""):
+                        imagem = img["src"]
+                    elif img and img.get("data-zoom"):
+                        imagem = img["data-zoom"]
                 elif plataforma == "shopee":
                     img = soup.find("meta", {"name": "twitter:image"})
                     if img and img.get("content"):
                         imagem = img["content"]
 
+            # Limpa nome
             if nome:
                 nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
                 nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
                 nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
                 nome = nome[:100]
 
+            # Extrai preco
             preco_match = re.search(r'R\$\s*[\d.,]+', html)
             if preco_match:
                 preco = preco_match.group(0).replace('R$', '').strip()
