@@ -46,11 +46,20 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .btn-gerar-vitrine.show { display: block; }
 .acoes-vitrine { margin-top: 16px; display: none; flex-direction: column; gap: 12px; }
 .acoes-vitrine.show { display: flex; }
-.link-vitrine-box { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; }
-.link-vitrine-box p { font-size: 13px; color: #aaa; margin-bottom: 8px; }
-.link-box { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
-.link-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
+
+/* Card link permanente */
+.card-salvar { background: #0d1a0d; border: 1px solid #2a9d2a; border-radius: 12px; padding: 16px; }
+.card-salvar .titulo { font-size: 14px; font-weight: 700; color: #2a9d8f; margin-bottom: 4px; }
+.card-salvar .aviso { font-size: 12px; color: #888; margin-bottom: 10px; }
+.link-box { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+.link-box span { font-size: 12px; color: #2a9d8f; word-break: break-all; flex: 1; background: #0a0a0a; padding: 8px 10px; border-radius: 8px; border: 1px solid #1a3a1a; }
 .btn-copiar { padding: 8px 14px; background: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+
+/* Card vitrine */
+.card-vitrine { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; }
+.card-vitrine .titulo { font-size: 14px; color: #aaa; margin-bottom: 8px; }
+.link-vitrine-box { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+.link-vitrine-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
 .btn-ver-vitrine { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px; }
 .btn-criar-story { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; }
 .preview-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; margin-top: 8px; display: none; border: 1px solid #333; }
@@ -68,15 +77,12 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       <span class="plt-badge">🛍️ Mercado Livre</span>
       <span class="plt-badge">🧡 Shopee</span>
     </div>
-
     <div class="input-group">
       <input type="text" id="input-link" placeholder="1. Cole o link do produto aqui...">
     </div>
-
     <div class="input-group">
       <input type="text" id="input-nome" placeholder="2. Nome do produto (ex: iPhone 16 128GB)">
     </div>
-
     <div class="instrucao-img">
       <p>📸 Como adicionar a foto — Amazon e Shopee:</p>
       <ol>
@@ -86,12 +92,10 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
         <li>Cole no campo abaixo</li>
       </ol>
     </div>
-
     <div class="input-group">
       <input type="text" id="input-imagem" placeholder="3. Cole o link da foto aqui (opcional)" oninput="previewImagem()">
       <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
     </div>
-
     <img id="preview-img" class="preview-img" alt="preview">
     <p class="dica">Mercado Livre ja pega a foto automaticamente</p>
     <div class="loading" id="loading">Adicionando produto... aguarde</div>
@@ -112,15 +116,28 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   </button>
 
   <div class="acoes-vitrine" id="acoes-vitrine">
-    <div class="link-vitrine-box">
-      <p>Sua vitrine esta pronta!</p>
+
+    <!-- LINK PERMANENTE DA LISTA -->
+    <div class="card-salvar">
+      <div class="titulo">🔒 Salve este link — sua lista permanente</div>
+      <div class="aviso">Use sempre este link para adicionar mais presentes depois. Nao perca!</div>
       <div class="link-box">
+        <span id="link-lista-permanente"></span>
+        <button class="btn-copiar" onclick="copiarLinkLista()">Copiar</button>
+      </div>
+    </div>
+
+    <!-- LINK DA VITRINE -->
+    <div class="card-vitrine">
+      <div class="titulo">Sua vitrine esta pronta! Compartilhe com seus amigos:</div>
+      <div class="link-vitrine-box">
         <span id="link-gerado"></span>
         <button class="btn-copiar" onclick="copiarLink()">Copiar</button>
       </div>
       <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
       <button class="btn-criar-story" onclick="criarStory()">Criar meu story no Instagram</button>
     </div>
+
   </div>
 </div>
 
@@ -218,7 +235,11 @@ async function remover(id) {
 
 function gerarVitrine() {
   linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
+  var linkLista = window.location.origin + '/lista/' + LISTA_ID;
+
   document.getElementById('link-gerado').textContent = linkVitrine;
+  document.getElementById('link-lista-permanente').textContent = linkLista;
+
   document.getElementById('btn-vitrine').classList.remove('show');
   document.getElementById('acoes-vitrine').classList.add('show');
   document.getElementById('acoes-vitrine').scrollIntoView({behavior: 'smooth'});
@@ -226,7 +247,14 @@ function gerarVitrine() {
 
 function copiarLink() {
   navigator.clipboard.writeText(linkVitrine).then(function() {
-    alert('Link copiado!');
+    alert('Link da vitrine copiado!');
+  });
+}
+
+function copiarLinkLista() {
+  var link = document.getElementById('link-lista-permanente').textContent;
+  navigator.clipboard.writeText(link).then(function() {
+    alert('Link da sua lista copiado! Salve ele para usar depois.');
   });
 }
 
