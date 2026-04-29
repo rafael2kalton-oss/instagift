@@ -22,10 +22,25 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .plt-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; color: #888; }
 .loading { text-align: center; padding: 16px; color: #7F77DD; font-size: 14px; display: none; }
 .dica { font-size: 12px; color: #555; margin-top: 4px; margin-bottom: 6px; }
+
+/* Preview ML */
+.preview-ml { background: #0d1a0d; border: 1px solid #2a9d2a; border-radius: 12px; padding: 14px; margin-bottom: 10px; display: none; }
+.preview-ml.show { display: flex; gap: 12px; align-items: center; }
+.preview-ml img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.preview-ml-info { flex: 1; }
+.preview-ml-nome { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.preview-ml-preco { font-size: 13px; color: #FFE600; font-weight: 700; }
+.preview-ml-badge { font-size: 11px; background: #FFE600; color: #000; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
+.btn-confirmar-ml { padding: 10px 16px; background: #2a9d8f; color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+
+/* Campos manuais */
+.campos-manuais { display: none; }
+.campos-manuais.show { display: block; }
 .instrucao-img { background: #0d0d1a; border: 1px solid #2a2a4a; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
 .instrucao-img p { font-size: 12px; color: #7F77DD; font-weight: 600; margin-bottom: 6px; }
 .instrucao-img ol { font-size: 12px; color: #888; padding-left: 16px; line-height: 1.8; }
 .instrucao-img ol li strong { color: #ccc; }
+
 .produtos-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
 .produto-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
 .produto-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: #333; flex-shrink: 0; }
@@ -70,40 +85,50 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
     <h2>Adicionar presente</h2>
     <div class="plataformas">
       <span class="plt-badge">🛒 Amazon</span>
-      <span class="plt-badge">🛍️ Mercado Livre</span>
+      <span class="plt-badge">🛍️ Mercado Livre — automatico</span>
       <span class="plt-badge">🧡 Shopee</span>
     </div>
 
     <div class="input-group">
-      <input type="text" id="input-link" placeholder="1. Cole o link do produto aqui...">
+      <input type="text" id="input-link" placeholder="Cole o link do produto aqui..." oninput="detectarLink()">
     </div>
 
-    <div class="input-group">
-      <input type="text" id="input-nome" placeholder="2. Nome do produto (ex: iPhone 16 128GB Preto)">
+    <!-- Preview ML automatico -->
+    <div class="preview-ml" id="preview-ml">
+      <img id="preview-ml-img" src="" alt="">
+      <div class="preview-ml-info">
+        <div class="preview-ml-nome" id="preview-ml-nome"></div>
+        <div class="preview-ml-preco" id="preview-ml-preco"></div>
+        <span class="preview-ml-badge">🛍️ Mercado Livre</span>
+      </div>
+      <button class="btn-confirmar-ml" onclick="confirmarML()">Adicionar</button>
     </div>
 
-    <div class="input-group">
-      <input type="text" id="input-preco" placeholder="3. Preco (ex: 4898,70)">
+    <!-- Campos manuais Amazon/Shopee -->
+    <div class="campos-manuais" id="campos-manuais">
+      <div class="input-group">
+        <input type="text" id="input-nome" placeholder="1. Nome do produto">
+      </div>
+      <div class="input-group">
+        <input type="text" id="input-preco" placeholder="2. Preco (ex: 4898,70)">
+      </div>
+      <div class="instrucao-img">
+        <p>📸 Como adicionar a foto:</p>
+        <ol>
+          <li>Abra o produto no app</li>
+          <li><strong>Toque e segure</strong> na foto principal</li>
+          <li>Toque em <strong>"Copiar link da imagem"</strong></li>
+          <li>Cole abaixo</li>
+        </ol>
+      </div>
+      <div class="input-group">
+        <input type="text" id="input-imagem" placeholder="3. Cole o link da foto aqui (opcional)" oninput="previewImagem()">
+        <button class="btn-add" id="btn-adicionar" onclick="adicionarManual()">Adicionar</button>
+      </div>
+      <img id="preview-img" class="preview-img" alt="preview">
     </div>
 
-    <div class="instrucao-img">
-      <p>📸 Como adicionar a foto — Amazon e Shopee:</p>
-      <ol>
-        <li>Abra o produto no app</li>
-        <li><strong>Toque e segure</strong> na foto principal</li>
-        <li>Toque em <strong>"Copiar link da imagem"</strong></li>
-        <li>Cole no campo abaixo</li>
-      </ol>
-    </div>
-
-    <div class="input-group">
-      <input type="text" id="input-imagem" placeholder="4. Cole o link da foto aqui (opcional)" oninput="previewImagem()">
-      <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
-    </div>
-
-    <img id="preview-img" class="preview-img" alt="preview">
-    <p class="dica">Mercado Livre ja pega nome, preco e foto automaticamente</p>
-    <div class="loading" id="loading">Adicionando produto... aguarde</div>
+    <div class="loading" id="loading">Buscando produto... aguarde</div>
   </div>
 
   <div class="card">
@@ -123,15 +148,14 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   <div class="acoes-vitrine" id="acoes-vitrine">
     <div class="card-salvar">
       <div class="titulo">🔒 Salve este link — sua lista permanente</div>
-      <div class="aviso">Use sempre este link para adicionar mais presentes depois. Nao perca!</div>
+      <div class="aviso">Use sempre este link para adicionar mais presentes depois!</div>
       <div class="link-box">
         <span id="link-lista-permanente"></span>
         <button class="btn-copiar" onclick="copiarLinkLista()">Copiar</button>
       </div>
     </div>
-
     <div class="card-vitrine">
-      <div class="titulo">Sua vitrine esta pronta! Compartilhe com seus amigos:</div>
+      <div class="titulo">Sua vitrine esta pronta!</div>
       <div class="link-vitrine-box">
         <span id="link-gerado"></span>
         <button class="btn-copiar" onclick="copiarLink()">Copiar</button>
@@ -146,6 +170,109 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 var LISTA_ID = "{{ lista_id }}";
 var produtos = [];
 var linkVitrine = '';
+var dadosML = null;
+var timerDetectar = null;
+
+function detectarLink() {
+  var link = document.getElementById('input-link').value.trim();
+
+  // Esconde tudo primeiro
+  document.getElementById('preview-ml').classList.remove('show');
+  document.getElementById('campos-manuais').classList.remove('show');
+  dadosML = null;
+
+  if (!link) return;
+
+  var isML = link.indexOf('mercadolivre.com.br') > -1 ||
+             link.indexOf('mercadolibre.com') > -1 ||
+             link.indexOf('meli.com') > -1;
+
+  if (isML) {
+    // ML — busca automatico
+    clearTimeout(timerDetectar);
+    timerDetectar = setTimeout(function() {
+      buscarDadosML(link);
+    }, 800);
+  } else {
+    // Amazon ou Shopee — campos manuais
+    document.getElementById('campos-manuais').classList.add('show');
+  }
+}
+
+async function buscarDadosML(link) {
+  document.getElementById('loading').style.display = 'block';
+  try {
+    var res = await fetch('/api/preview-produto', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({link: link})
+    });
+    var data = await res.json();
+    if (data.ok) {
+      dadosML = data;
+      document.getElementById('preview-ml-img').src = data.imagem || '';
+      document.getElementById('preview-ml-nome').textContent = data.nome || 'Produto';
+      document.getElementById('preview-ml-preco').textContent = data.preco ? 'R$ ' + data.preco : '';
+      document.getElementById('preview-ml').classList.add('show');
+    } else {
+      document.getElementById('campos-manuais').classList.add('show');
+    }
+  } catch(e) {
+    document.getElementById('campos-manuais').classList.add('show');
+  }
+  document.getElementById('loading').style.display = 'none';
+}
+
+async function confirmarML() {
+  if (!dadosML) return;
+  var link = document.getElementById('input-link').value.trim();
+  await adicionarProduto(link, dadosML.nome, dadosML.preco, dadosML.imagem);
+  document.getElementById('input-link').value = '';
+  document.getElementById('preview-ml').classList.remove('show');
+  dadosML = null;
+}
+
+async function adicionarManual() {
+  var link = document.getElementById('input-link').value.trim();
+  var nome = document.getElementById('input-nome').value.trim();
+  var preco = document.getElementById('input-preco').value.trim();
+  var imagem = document.getElementById('input-imagem').value.trim();
+  if (!link) { alert('Cole um link de produto!'); return; }
+  await adicionarProduto(link, nome, preco, imagem);
+  document.getElementById('input-link').value = '';
+  document.getElementById('input-nome').value = '';
+  document.getElementById('input-preco').value = '';
+  document.getElementById('input-imagem').value = '';
+  document.getElementById('preview-img').style.display = 'none';
+  document.getElementById('campos-manuais').classList.remove('show');
+}
+
+async function adicionarProduto(link, nome, preco, imagem) {
+  document.getElementById('loading').style.display = 'block';
+  if (document.getElementById('btn-adicionar')) {
+    document.getElementById('btn-adicionar').disabled = true;
+  }
+  try {
+    var res = await fetch('/api/adicionar-produto', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({lista_id: LISTA_ID, link: link, nome: nome, preco: preco, imagem: imagem})
+    });
+    var data = await res.json();
+    if (data.ok) {
+      produtos.push(data.produto);
+      renderLista();
+    } else {
+      alert(data.erro || 'Erro ao adicionar produto.');
+    }
+  } catch(e) {
+    alert('Erro de conexao. Tente novamente.');
+  }
+  document.getElementById('loading').style.display = 'none';
+  if (document.getElementById('btn-adicionar')) {
+    document.getElementById('btn-adicionar').disabled = false;
+  }
+}
 
 function previewImagem() {
   var url = document.getElementById('input-imagem').value.trim();
@@ -197,42 +324,6 @@ function renderLista() {
   document.getElementById('btn-vitrine').classList.add('show');
 }
 
-async function adicionarProduto() {
-  var link = document.getElementById('input-link').value.trim();
-  var nome = document.getElementById('input-nome').value.trim();
-  var preco = document.getElementById('input-preco').value.trim();
-  var imagem = document.getElementById('input-imagem').value.trim();
-
-  if (!link) { alert('Cole um link de produto!'); return; }
-
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('btn-adicionar').disabled = true;
-
-  try {
-    var res = await fetch('/api/adicionar-produto', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({lista_id: LISTA_ID, link: link, nome: nome, preco: preco, imagem: imagem})
-    });
-    var data = await res.json();
-    if (data.ok) {
-      produtos.push(data.produto);
-      renderLista();
-      document.getElementById('input-link').value = '';
-      document.getElementById('input-nome').value = '';
-      document.getElementById('input-preco').value = '';
-      document.getElementById('input-imagem').value = '';
-      document.getElementById('preview-img').style.display = 'none';
-    } else {
-      alert(data.erro || 'Erro ao adicionar produto.');
-    }
-  } catch(e) {
-    alert('Erro de conexao. Tente novamente.');
-  }
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('btn-adicionar').disabled = false;
-}
-
 async function remover(id) {
   await fetch('/api/remover-produto/' + id, {method: 'DELETE'});
   produtos = produtos.filter(function(p) { return p.id !== id; });
@@ -250,35 +341,16 @@ function gerarVitrine() {
 }
 
 function copiarLink() {
-  navigator.clipboard.writeText(linkVitrine).then(function() {
-    alert('Link da vitrine copiado!');
-  });
+  navigator.clipboard.writeText(linkVitrine).then(function() { alert('Link da vitrine copiado!'); });
 }
 
 function copiarLinkLista() {
   var link = document.getElementById('link-lista-permanente').textContent;
-  navigator.clipboard.writeText(link).then(function() {
-    alert('Link da sua lista copiado! Salve ele para usar depois.');
-  });
+  navigator.clipboard.writeText(link).then(function() { alert('Link da lista copiado! Salve para usar depois.'); });
 }
 
 function verVitrine() { window.open(linkVitrine, '_blank'); }
 function criarStory() { window.location.href = '/?vitrine=' + LISTA_ID; }
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('input-link').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') document.getElementById('input-nome').focus();
-  });
-  document.getElementById('input-nome').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') document.getElementById('input-preco').focus();
-  });
-  document.getElementById('input-preco').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') document.getElementById('input-imagem').focus();
-  });
-  document.getElementById('input-imagem').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') adicionarProduto();
-  });
-});
 </script>
 </body>
 </html>
