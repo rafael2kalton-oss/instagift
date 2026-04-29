@@ -132,6 +132,19 @@ def criar_lista_page():
 def lista_page(lista_id):
     return render_template("criar_lista.html", lista_id=lista_id)
 
+@app.route("/api/preview-produto", methods=["POST"])
+def preview_produto():
+    data = request.json
+    link = data.get("link", "").strip()
+    if not link:
+        return jsonify({"ok": False}), 400
+    plataforma = detectar_plataforma(link)
+    link_afiliado = limpar_e_injetar(link, plataforma)
+    nome, imagem, preco = extrair_dados_produto(link_afiliado, plataforma)
+    if nome or imagem:
+        return jsonify({"ok": True, "nome": nome, "imagem": imagem, "preco": preco})
+    return jsonify({"ok": False})
+
 @app.route("/api/adicionar-produto", methods=["POST"])
 def adicionar_produto():
     data = request.json
