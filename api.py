@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import uuid
 import re
-import os
-import json
 
 try:
     import requests
@@ -13,7 +11,6 @@ except:
 
 app = Flask(__name__)
 
-# Supabase config
 SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
 SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
 HEADERS_SB = {
@@ -23,7 +20,6 @@ HEADERS_SB = {
     "Prefer": "return=representation"
 }
 
-# IDs de afiliado
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 
@@ -77,6 +73,26 @@ def limpar_e_injetar(link, plataforma):
         pass
     return link
 
+def buscar_imagem_duckduckgo(nome_produto):
+    try:
+        query = nome_produto.replace(' ', '+')
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+        r = requests.get(f"https://duckduckgo.com/?q={query}", headers=headers, timeout=5)
+        vqd = re.search(r'vqd=([\d-]+)', r.text)
+        if not vqd:
+            return ""
+        vqd_token = vqd.group(1)
+        img_url = f"https://duckduckgo.com/i.js?q={query}&vqd={vqd_token}&f=,,,&p=1"
+        r2 = requests.get(img_url, headers=headers, timeout=5)
+        data = r2.json()
+        if data.get("results"):
+            return data["results"][0]["image"]
+    except Exception as e:
+        print("DuckDuckGo erro:", e)
+    return ""
+
 def extrair_dados_produto(link, plataforma):
     nome = ""
     imagem = ""
@@ -116,6 +132,10 @@ def extrair_dados_produto(link, plataforma):
             preco_match = re.search(r'R\$\s*[\d.,]+', html)
             if preco_match:
                 preco = preco_match.group(0).replace('R$', '').strip()
+
+            if not imagem and nome:
+                imagem = buscar_imagem_duckduckgo(nome)
+
     except Exception as e:
         print("Erro scraping:", e)
     return nome, imagem, preco
@@ -141,24 +161,24 @@ def adicionar_produto():
     lista_id = data.get("lista_id")
     link = data.get("link", "").strip()
     nome_manual = data.get("nome", "").strip()
+    imagem_manual = data.get("imagem", "").strip()
 
     if not lista_id or not link:
         return jsonify({"erro": "Dados incompletos"}), 400
 
     plataforma = detectar_plataforma(link)
     link_afiliado = limpar_e_injetar(link, plataforma)
-    nome_auto, imagem, preco = extrair_dados_produto(link_afiliado, plataforma)
+    nome_auto, imagem_auto, preco = extrair_dados_produto(link_afiliado, plataforma)
 
     nome = nome_manual if nome_manual else nome_auto
+    imagem = imagem_manual if imagem_manual else imagem_auto
     if not nome:
         nome = "Produto"
 
-    # Cria lista se não existir
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
 
-    # Insere produto
     resultado = sb_post("produtos", {
         "lista_id": lista_id,
         "nome": nome,
@@ -205,7 +225,7 @@ def vitrine(lista_id):
 def reservar(produto_id):
     produtos = sb_get("produtos", f"id=eq.{produto_id}")
     if not produtos or not isinstance(produtos, list):
-        return jsonify({"erro": "Produto não encontrado"}), 404
+        return jsonify({"erro": "Produto nao encontrado"}), 404
     if produtos[0].get("reservado"):
         return jsonify({"erro": "Ja reservado"}), 400
     sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 1})
