@@ -52,12 +52,23 @@ def sb_delete(tabela, filtro):
     return r.status_code
 
 def detectar_plataforma(link):
+    link = link.lower()
+
     if "amazon.com.br" in link or "amzn.to" in link:
         return "amazon"
-    elif "mercadolivre.com.br" in link or "mercadolibre.com" in link or "meli.com" in link or "produto.mercadolivre" in link:
+
+    elif (
+        "mercadolivre.com.br" in link
+        or "mercadolibre.com" in link
+        or "meli.com" in link
+        or "produto.mercadolivre.com.br" in link
+        or "/p/" in link
+    ):
         return "mercadolivre"
+
     elif "shopee.com.br" in link:
         return "shopee"
+
     return "outro"
 
 def limpar_e_injetar(link, plataforma):
