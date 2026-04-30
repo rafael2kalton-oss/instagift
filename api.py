@@ -23,6 +23,11 @@ HEADERS_SB = {
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
+ML_CLIENT_ID = "5415799706798482"
+ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
+
+# Cache do token ML
+ml_token_cache = {"token": None}
 
 def sb_get(tabela, filtro=None):
     url = f"{SUPABASE_URL}/rest/v1/{tabela}"
@@ -68,6 +73,96 @@ def limpar_e_injetar(link, plataforma):
         pass
     return link
 
+def get_ml_token():
+    """Obtem token de acesso da API oficial do ML"""
+    try:
+        if ml_token_cache["token"]:
+            return ml_token_cache["token"]
+        r = requests.post(
+            "https://api.mercadolibre.com/oauth/token",
+            data={
+                "grant_type": "client_credentials",
+                "client_id": ML_CLIENT_ID,
+                "client_secret": ML_CLIENT_SECRET
+            },
+            timeout=10
+        )
+        data = r.json()
+        if "access_token" in data:
+            ml_token_cache["token"] = data["access_token"]
+            return data["access_token"]
+    except Exception as e:
+        print("ML token erro:", e)
+    return None
+
+def extrair_item_id_ml(link):
+    """Extrai o ID do produto ML do link"""
+    # Tenta pegar MLB seguido de numeros
+    match = re.search(r'MLB[-_]?(\d+)', link, re.IGNORECASE)
+    if match:
+        return f"MLB{match.group(1)}"
+    return None
+
+def extrair_dados_ml_api(link):
+    """Usa API oficial do ML para pegar dados do produto"""
+    nome = ""
+    imagem = ""
+    preco = ""
+    try:
+        token = get_ml_token()
+        if not token:
+            return nome, imagem, preco
+
+        # Tenta pegar item_id do link
+        item_id = extrair_item_id_ml(link)
+
+        # Se link tem /p/ é uma pagina de catalogo
+        if "/p/" in link or not item_id:
+            # Extrai ID do catalogo
+            match = re.search(r'/p/(MLB\w+)', link, re.IGNORECASE)
+            if match:
+                catalog_id = match.group(1)
+                # Busca via catalogo
+                r = requests.get(
+                    f"https://api.mercadolibre.com/products/{catalog_id}",
+                    headers={"Authorization": f"Bearer {token}"},
+                    timeout=10
+                )
+                data = r.json()
+                if "name" in data:
+                    nome = data["name"][:100]
+                if "pictures" in data and data["pictures"]:
+                    imagem = data["pictures"][0].get("url", "")
+                # Busca preco via search
+                r2 = requests.get(
+                    f"https://api.mercadolibre.com/products/{catalog_id}/items",
+                    headers={"Authorization": f"Bearer {token}"},
+                    timeout=10
+                )
+                data2 = r2.json()
+                if "results" in data2 and data2["results"]:
+                    item_id = data2["results"][0]
+
+        if item_id and not nome:
+            # Busca dados do item especifico
+            r = requests.get(
+                f"https://api.mercadolibre.com/items/{item_id}",
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=10
+            )
+            data = r.json()
+            if "title" in data:
+                nome = data["title"][:100]
+            if "pictures" in data and data["pictures"]:
+                imagem = data["pictures"][0].get("url", "")
+            if "price" in data:
+                preco = str(data["price"]).replace(".", ",")
+
+    except Exception as e:
+        print("ML API erro:", e)
+
+    return nome, imagem, preco
+
 def extrair_com_scraperapi(link, plataforma=""):
     """Usa ScraperAPI — render=true apenas para Amazon"""
     try:
@@ -85,44 +180,44 @@ def extrair_dados_produto(link, plataforma):
     preco = ""
 
     try:
-        # Tenta primeiro sem ScraperAPI (mais rapido)
-        html = None
-        try:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-                "Accept-Language": "pt-BR,pt;q=0.9",
-            }
-            r = requests.get(link, headers=headers, timeout=8)
-            if r.status_code == 200:
-                html = r.text
-        except:
-            pass
+        # Para ML usa API oficial primeiro
+        if plataforma == "mercadolivre":
+            nome, imagem, preco = extrair_dados_ml_api(link)
+            if nome:
+                return nome, imagem, preco
 
-        # Se falhou ou nao tem dados usa ScraperAPI
-        if not html or len(html) < 1000:
-            print("Usando ScraperAPI para:", link)
-            html = extrair_com_scraperapi(link, plataforma)
-
-        # Para Amazon sempre usa ScraperAPI para garantir dados completos
+        # Para Amazon usa ScraperAPI com render=true
         if plataforma == "amazon":
             html = extrair_com_scraperapi(link, plataforma)
+        else:
+            # Tenta primeiro sem ScraperAPI
+            html = None
+            try:
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                    "Accept-Language": "pt-BR,pt;q=0.9",
+                }
+                r = requests.get(link, headers=headers, timeout=8)
+                if r.status_code == 200:
+                    html = r.text
+            except:
+                pass
+            if not html or len(html) < 1000:
+                html = extrair_com_scraperapi(link, plataforma)
 
         if not html:
             return nome, imagem, preco
 
         soup = BeautifulSoup(html, 'html.parser')
 
-        # Extrai imagem
         img_tag = soup.find("meta", property="og:image")
         if img_tag and img_tag.get("content"):
             imagem = img_tag["content"]
 
-        # Extrai titulo
         title_tag = soup.find("meta", property="og:title")
         if title_tag and title_tag.get("content"):
             nome = title_tag["content"].strip()
 
-        # Fallbacks por plataforma
         if not imagem:
             if plataforma == "amazon":
                 img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
@@ -132,23 +227,17 @@ def extrair_dados_produto(link, plataforma):
                     img = soup.find("img", {"data-old-hires": True})
                     if img:
                         imagem = img["data-old-hires"]
-            elif plataforma == "mercadolivre":
-                img = soup.find("img", {"class": "ui-pdp-image"})
-                if img and img.get("src") and "http" in img.get("src", ""):
-                    imagem = img["src"]
             elif plataforma == "shopee":
                 img = soup.find("meta", {"name": "twitter:image"})
                 if img and img.get("content"):
                     imagem = img["content"]
 
-        # Limpa nome
         if nome:
             nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
             nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
             nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
             nome = nome[:100]
 
-        # Extrai preco
         if plataforma == "amazon":
             preco_tag = soup.find("span", {"class": "a-price-whole"})
             if preco_tag:
