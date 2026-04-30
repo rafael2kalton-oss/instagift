@@ -107,26 +107,28 @@ def extrair_ml(link):
         if m2:
             item_id = f"MLB{m2.group(1)}"
             r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
-            # Se bloqueou pela API retorna vazio para tentar ScraperAPI
+
+            # Se bloqueou tenta via busca
             if r.get("status") == 403 or "UNAUTHORIZED" in str(r.get("code", "")):
-                print("ML API bloqueou item — sem imagem")
-                nome = ""
-                # Tenta pegar pelo menos o nome via busca
+                print("ML API bloqueou — tentando busca")
                 try:
                     r_search = requests.get(
-                        f"https://api.mercadolibre.com/sites/MLB/search?q={item_id}",
+                        f"https://api.mercadolibre.com/sites/MLB/search?q={item_id}&limit=1",
                         headers=auth, timeout=8
                     ).json()
                     resultados = r_search.get("results", [])
                     if resultados:
-                        nome = resultados[0].get("title", "")[:100]
-                        pics = resultados[0].get("thumbnail", "")
-                        imagem = pics if pics else ""
-                        preco = str(resultados[0].get("price", "")).replace(".", ",")
+                        prod = resultados[0]
+                        nome = prod.get("title", "")[:100]
+                        thumbnail = prod.get("thumbnail", "")
+                        # Melhora qualidade da thumbnail
+                        imagem = thumbnail.replace("-I.jpg", "-O.jpg").replace("http://", "https://") if thumbnail else ""
+                        preco = str(prod.get("price", "")).replace(".", ",")
                         return nome, imagem, preco
-                except:
-                    pass
+                except Exception as e:
+                    print("ML busca erro:", e)
                 return "", "", ""
+
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
