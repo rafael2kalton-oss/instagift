@@ -13,7 +13,8 @@ try:
 except:
     REQUESTS_OK = False
 
-app = Flask(__name__)
+# 🔥 GARANTE QUE O FLASK ENXERGA OS TEMPLATES NO RENDER
+app = Flask(__name__, template_folder="templates")
 
 # ---------------- ENV ----------------
 
@@ -22,7 +23,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 SCRAPER_KEY = os.getenv("SCRAPER_KEY")
 
 if not SUPABASE_KEY:
-    raise Exception("SUPABASE_KEY não definida no .env")
+    raise Exception("SUPABASE_KEY não definida")
 
 HEADERS_SB = {
     "apikey": SUPABASE_KEY,
@@ -127,6 +128,7 @@ def extrair_dados_ml_api(link):
             "Accept": "application/json"
         }
 
+        # catálogo
         if "/p/" in link or not item_id:
             match = re.search(r'/p/(MLB\w+)', link, re.IGNORECASE)
 
@@ -160,6 +162,7 @@ def extrair_dados_ml_api(link):
                 except Exception as e:
                     print("Erro catálogo ML:", e)
 
+        # item direto
         if item_id:
             r = requests.get(
                 f"https://api.mercadolibre.com/items/{item_id}",
@@ -252,6 +255,19 @@ def extrair_dados_produto(link, plataforma):
 @app.route("/")
 def index():
     return render_template("criar_story.html")
+
+@app.route("/criar-lista")
+def criar_lista_page():
+    lista_id = str(uuid.uuid4())[:8]
+    return render_template("criar_lista.html", lista_id=lista_id)
+
+@app.route("/lista/<lista_id>")
+def lista_page(lista_id):
+    return render_template("criar_lista.html", lista_id=lista_id)
+
+@app.route("/vitrine/<lista_id>")
+def vitrine(lista_id):
+    return render_template("vitrine.html", lista_id=lista_id)
 
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
