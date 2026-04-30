@@ -5,10 +5,12 @@ from bs4 import BeautifulSoup
 app = Flask(__name__, template_folder="templates")
 
 SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz")
-SCRAPER_KEY = os.getenv("SCRAPER_KEY", "3388267b140bf86c58e9ab0c2057c124")
+SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
+SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
+ML_CLIENT_ID = "5415799706798482"
+ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 
 HEADERS_SB = {
     "apikey": SUPABASE_KEY,
@@ -16,6 +18,8 @@ HEADERS_SB = {
     "Content-Type": "application/json",
     "Prefer": "return=representation"
 }
+
+ml_token_cache = {"token": None}
 
 def sb_get(tabela, filtro=None):
     url = f"{SUPABASE_URL}/rest/v1/{tabela}"
@@ -36,7 +40,7 @@ def detectar_plataforma(link):
     l = link.lower()
     if "amazon.com.br" in l or "amzn.to" in l:
         return "amazon"
-    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l:
+    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "produto.mercadolivre" in l:
         return "mercadolivre"
     if "shopee.com.br" in l:
         return "shopee"
@@ -51,35 +55,66 @@ def injetar_afiliado(link, plataforma):
         link += ('&' if '?' in link else '?') + f'matt_tool=97&partner_id={ML_ID}'
     return link
 
+def get_ml_token():
+    try:
+        if ml_token_cache["token"]:
+            return ml_token_cache["token"]
+        r = requests.post(
+            "https://api.mercadolibre.com/oauth/token",
+            data={
+                "grant_type": "client_credentials",
+                "client_id": ML_CLIENT_ID,
+                "client_secret": ML_CLIENT_SECRET
+            },
+            timeout=10
+        )
+        data = r.json()
+        if "access_token" in data:
+            ml_token_cache["token"] = data["access_token"]
+            return data["access_token"]
+    except Exception as e:
+        print("ML token erro:", e)
+    return None
+
 def extrair_ml(link):
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        m = re.search(r'/p/(MLB\w+)', link, re.IGNORECASE)
+        token = get_ml_token()
+        auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
+
+        # Remove tudo depois do # para limpar o link
+        link_limpo = link.split('#')[0]
+
+        # Tenta /p/ catalogo
+        m = re.search(r'/p/(MLB\w+)', link_limpo, re.IGNORECASE)
         if m:
             catalog_id = m.group(1)
-            r = requests.get(f"https://api.mercadolibre.com/products/{catalog_id}", headers=headers, timeout=10).json()
+            r = requests.get(f"https://api.mercadolibre.com/products/{catalog_id}", headers=auth, timeout=10).json()
             nome = r.get("name", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
-            r2 = requests.get(f"https://api.mercadolibre.com/products/{catalog_id}/items", headers=headers, timeout=10).json()
+            r2 = requests.get(f"https://api.mercadolibre.com/products/{catalog_id}/items", headers=auth, timeout=10).json()
             resultados = r2.get("results") or []
             if resultados:
                 item_id = resultados[0]
-                r3 = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=headers, timeout=10).json()
+                r3 = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
                 preco = str(r3.get("price", "")).replace(".", ",")
                 if not imagem:
                     pics3 = r3.get("pictures") or []
                     imagem = pics3[0].get("url", "") if pics3 else ""
                 return nome, imagem, preco
             return nome, imagem, ""
-        m2 = re.search(r'(MLB\d+)', link, re.IGNORECASE)
+
+        # Tenta MLB direto no link
+        m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if m2:
-            r = requests.get(f"https://api.mercadolibre.com/items/{m2.group(1)}", headers=headers, timeout=10).json()
+            item_id = f"MLB{m2.group(1)}"
+            r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
             preco = str(r.get("price", "")).replace(".", ",")
             return nome, imagem, preco
+
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
@@ -89,32 +124,57 @@ def extrair_dados(link, plataforma):
         n, i, p = extrair_ml(link)
         if n:
             return n, i, p
+
     try:
         r = requests.get(link, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "pt-BR"}, timeout=8)
         html = r.text if r.status_code == 200 else ""
     except:
         html = ""
+
     if len(html) < 1000 and SCRAPER_KEY:
         try:
             render = "true" if plataforma == "amazon" else "false"
-            html = requests.get(f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}", timeout=30).text
+            html = requests.get(
+                f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}",
+                timeout=60
+            ).text
         except:
             html = ""
+
     if not html:
         return "", "", ""
+
     soup = BeautifulSoup(html, "html.parser")
     nome = ""
     imagem = ""
     preco = ""
+
     t = soup.find("meta", property="og:title")
     if t:
         nome = t.get("content", "")[:100]
+
     i = soup.find("meta", property="og:image")
     if i:
         imagem = i.get("content", "")
-    pm = re.search(r'R\$\s*[\d.,]+', html)
-    if pm:
-        preco = pm.group(0).replace("R$", "").strip()
+
+    if nome:
+        nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+
+    if plataforma == "amazon":
+        preco_tag = soup.find("span", {"class": "a-price-whole"})
+        if preco_tag:
+            preco_frac = soup.find("span", {"class": "a-price-fraction"})
+            preco = preco_tag.text.strip().replace('.', '').replace(',', '')
+            if preco_frac:
+                preco = preco + ',' + preco_frac.text.strip()
+
+    if not preco:
+        pm = re.search(r'R\$\s*[\d.,]+', html)
+        if pm:
+            preco = pm.group(0).replace("R$", "").strip()
+
     return nome, imagem, preco
 
 @app.route("/")
@@ -154,6 +214,8 @@ def adicionar_produto():
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
+    if not nome:
+        nome = "Produto"
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
