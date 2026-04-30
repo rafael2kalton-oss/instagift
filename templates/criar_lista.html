@@ -22,6 +22,10 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .plt-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; color: #888; }
 .loading { text-align: center; padding: 16px; color: #7F77DD; font-size: 14px; display: none; }
 .aviso-link { background: #1a0d00; border: 1px solid #ff9900; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; font-size: 12px; color: #ff9900; display: none; }
+.aviso-btns { display: flex; gap: 10px; margin-top: 10px; }
+.aviso-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; }
+.btn-continuar { background: #7F77DD; color: white; }
+.btn-voltar { background: #333; color: white; }
 .produtos-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
 .produto-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
 .produto-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: #333; flex-shrink: 0; }
@@ -74,6 +78,10 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
     </div>
     <div class="aviso-link" id="aviso-link">
       ⚠️ Link limitado — detalhes do produto não serão exibidos. Use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
+      <div class="aviso-btns">
+        <button class="btn-continuar" onclick="continuarMesmo()">Continuar</button>
+        <button class="btn-voltar" onclick="voltarLink()">Voltar</button>
+      </div>
     </div>
     <div class="loading" id="loading">Buscando produto... aguarde ⏳</div>
   </div>
@@ -124,11 +132,23 @@ function verificarLink() {
   var btn = document.getElementById('btn-adicionar');
   if (link.indexOf('produto.mercadolivre') > -1) {
     aviso.style.display = 'block';
-    btn.disabled = true;
+    btn.style.display = 'none';
   } else {
     aviso.style.display = 'none';
-    btn.disabled = false;
+    btn.style.display = 'block';
   }
+}
+
+function continuarMesmo() {
+  document.getElementById('aviso-link').style.display = 'none';
+  document.getElementById('btn-adicionar').style.display = 'block';
+  adicionarProduto();
+}
+
+function voltarLink() {
+  document.getElementById('input-link').value = '';
+  document.getElementById('aviso-link').style.display = 'none';
+  document.getElementById('btn-adicionar').style.display = 'block';
 }
 
 function emojiPlataforma(plt) {
@@ -186,6 +206,7 @@ async function adicionarProduto() {
       renderLista();
       document.getElementById('input-link').value = '';
       document.getElementById('aviso-link').style.display = 'none';
+      document.getElementById('btn-adicionar').style.display = 'block';
     } else {
       alert(data.erro || 'Erro ao adicionar produto.');
     }
