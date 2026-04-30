@@ -68,10 +68,11 @@ def limpar_e_injetar(link, plataforma):
         pass
     return link
 
-def extrair_com_scraperapi(link):
-    """Usa ScraperAPI para contornar bloqueios"""
+def extrair_com_scraperapi(link, plataforma=""):
+    """Usa ScraperAPI — render=true apenas para Amazon"""
     try:
-        url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=true"
+        render = "true" if plataforma == "amazon" else "false"
+        url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}"
         r = requests.get(url, timeout=60)
         return r.text
     except Exception as e:
@@ -100,7 +101,11 @@ def extrair_dados_produto(link, plataforma):
         # Se falhou ou nao tem dados usa ScraperAPI
         if not html or len(html) < 1000:
             print("Usando ScraperAPI para:", link)
-            html = extrair_com_scraperapi(link)
+            html = extrair_com_scraperapi(link, plataforma)
+
+        # Para Amazon sempre usa ScraperAPI para garantir dados completos
+        if plataforma == "amazon":
+            html = extrair_com_scraperapi(link, plataforma)
 
         if not html:
             return nome, imagem, preco
@@ -123,7 +128,6 @@ def extrair_dados_produto(link, plataforma):
                 img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
                 if img and img.get("src") and "http" in img.get("src", ""):
                     imagem = img["src"]
-                # Tenta data-old-hires
                 if not imagem:
                     img = soup.find("img", {"data-old-hires": True})
                     if img:
@@ -146,14 +150,13 @@ def extrair_dados_produto(link, plataforma):
 
         # Extrai preco
         if plataforma == "amazon":
-            # Tenta seletores especificos da Amazon
             preco_tag = soup.find("span", {"class": "a-price-whole"})
             if preco_tag:
                 preco_frac = soup.find("span", {"class": "a-price-fraction"})
                 preco = preco_tag.text.strip().replace('.', '').replace(',', '')
                 if preco_frac:
                     preco = preco + ',' + preco_frac.text.strip()
-        
+
         if not preco:
             preco_match = re.search(r'R\$\s*[\d.,]+', html)
             if preco_match:
