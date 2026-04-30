@@ -101,6 +101,10 @@ def extrair_item_id_ml(link):
     match = re.search(r'MLB[-_]?(\d+)', link, re.IGNORECASE)
     if match:
         return f"MLB{match.group(1)}"
+    # Tenta pegar ID do formato produto.mercadolivre.com.br/MLB-XXXXXXXXX
+    match2 = re.search(r'/(MLB-\d+)', link, re.IGNORECASE)
+    if match2:
+        return match2.group(1).replace('-', '')
     return None
 
 def extrair_dados_ml_api(link):
