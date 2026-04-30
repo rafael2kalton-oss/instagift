@@ -1,29 +1,14 @@
 from flask import Flask, render_template, request, jsonify
-import uuid
-import re
-import os
+import uuid, re, os, requests
+from bs4 import BeautifulSoup
 
-from dotenv import load_dotenv
-load_dotenv()
-
-try:
-    import requests
-    from bs4 import BeautifulSoup
-    REQUESTS_OK = True
-except:
-    REQUESTS_OK = False
-
-# 🔥 GARANTE QUE O FLASK ENXERGA OS TEMPLATES NO RENDER
 app = Flask(__name__, template_folder="templates")
 
-# ---------------- ENV ----------------
-
 SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-SCRAPER_KEY = os.getenv("SCRAPER_KEY")
-
-if not SUPABASE_KEY:
-    raise Exception("SUPABASE_KEY não definida")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz")
+SCRAPER_KEY  = os.getenv("SCRAPER_KEY", "3388267b140bf86c58e9ab0c2057c124")
+AMAZON_TAG   = "instagift20-20"
+ML_ID        = "DaniloBasilio40"
 
 HEADERS_SB = {
     "apikey": SUPABASE_KEY,
@@ -32,264 +17,130 @@ HEADERS_SB = {
     "Prefer": "return=representation"
 }
 
-AMAZON_TAG = "instagift20-20"
-ML_ID = "DaniloBasilio40"
-
-# ---------------- SUPABASE ----------------
-
 def sb_get(tabela, filtro=None):
-    url = f"{SUPABASE_URL}/rest/v1/{tabela}"
-    if filtro:
-        url += f"?{filtro}"
+    url = f"{SUPABASE_URL}/rest/v1/{tabela}" + (f"?{filtro}" if filtro else "")
     return requests.get(url, headers=HEADERS_SB).json()
 
 def sb_post(tabela, dados):
-    url = f"{SUPABASE_URL}/rest/v1/{tabela}"
-    return requests.post(url, headers=HEADERS_SB, json=dados).json()
+    return requests.post(f"{SUPABASE_URL}/rest/v1/{tabela}", headers=HEADERS_SB, json=dados).json()
 
 def sb_patch(tabela, filtro, dados):
-    url = f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}"
-    return requests.patch(url, headers=HEADERS_SB, json=dados).json()
+    return requests.patch(f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}", headers=HEADERS_SB, json=dados).json()
 
 def sb_delete(tabela, filtro):
-    url = f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}"
-    return requests.delete(url, headers=HEADERS_SB).status_code
-
-# ---------------- DETECÇÃO ----------------
+    return requests.delete(f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}", headers=HEADERS_SB).status_code
 
 def detectar_plataforma(link):
-    link = link.lower()
-
-    if "amazon.com.br" in link or "amzn.to" in link:
-        return "amazon"
-
-    elif (
-        "mercadolivre.com.br" in link
-        or "mercadolibre.com" in link
-        or "meli.com" in link
-        or "produto.mercadolivre.com.br" in link
-        or "/p/" in link
-    ):
-        return "mercadolivre"
-
-    elif "shopee.com.br" in link:
-        return "shopee"
-
+    l = link.lower()
+    if "amazon.com.br" in l or "amzn.to" in l: return "amazon"
+    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l: return "mercadolivre"
+    if "shopee.com.br" in l: return "shopee"
     return "outro"
 
-# ---------------- LINK AFILIADO ----------------
-
-def limpar_e_injetar(link, plataforma):
-    try:
-        if plataforma == "amazon":
-            link = re.sub(r'[?&]tag=[^&]+', '', link)
-            link += ('&' if '?' in link else '?') + 'tag=' + AMAZON_TAG
-
-        elif plataforma == "mercadolivre":
-            link = re.sub(r'[?&]matt_tool=[^&]+', '', link)
-            link = re.sub(r'[?&]partner_id=[^&]+', '', link)
-            link += ('&' if '?' in link else '?') + 'matt_tool=97&partner_id=' + ML_ID
-    except:
-        pass
-
+def injetar_afiliado(link, plataforma):
+    if plataforma == "amazon":
+        link = re.sub(r'[?&]tag=[^&]+', '', link)
+        link += ('&' if '?' in link else '?') + 'tag=' + AMAZON_TAG
+    elif plataforma == "mercadolivre":
+        link = re.sub(r'[?&]matt_tool=[^&]+', '', link)
+        link += ('&' if '?' in link else '?') + f'matt_tool=97&partner_id={ML_ID}'
     return link
 
-# ---------------- ML ID ----------------
-
-def extrair_item_id_ml(link):
+def extrair_ml(link):
     try:
-        link_limpo = link.split('#')[0].split('?')[0]
-
-        match = re.search(r'(MLB[-_]?\d+)', link_limpo, re.IGNORECASE)
-        if match:
-            return match.group(1).replace('-', '').replace('_', '')
-
-        match2 = re.search(r'MLB(\d+)', link_limpo, re.IGNORECASE)
-        if match2:
-            return f"MLB{match2.group(1)}"
-
-    except Exception as e:
-        print("Erro ID ML:", e)
-
-    return None
-
-# ---------------- ML API ----------------
-
-def extrair_dados_ml_api(link):
-    nome = ""
-    imagem = ""
-    preco = ""
-
-    try:
-        item_id = extrair_item_id_ml(link)
-
-        headers = {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json"
-        }
-
-        # catálogo
-        if "/p/" in link or not item_id:
-            match = re.search(r'/p/(MLB\w+)', link, re.IGNORECASE)
-
-            if match:
-                catalog_id = match.group(1)
-
-                try:
-                    r = requests.get(
-                        f"https://api.mercadolibre.com/products/{catalog_id}",
-                        headers=headers,
-                        timeout=10
-                    )
-                    data = r.json()
-
-                    if "name" in data:
-                        nome = data["name"][:100]
-
-                    if "pictures" in data and data["pictures"]:
-                        imagem = data["pictures"][0].get("url", "")
-
-                    r2 = requests.get(
-                        f"https://api.mercadolibre.com/products/{catalog_id}/items",
-                        headers=headers,
-                        timeout=10
-                    )
-                    data2 = r2.json()
-
-                    if "results" in data2 and data2["results"]:
-                        item_id = data2["results"][0]
-
-                except Exception as e:
-                    print("Erro catálogo ML:", e)
-
-        # item direto
-        if item_id:
-            r = requests.get(
-                f"https://api.mercadolibre.com/items/{item_id}",
-                headers=headers,
-                timeout=10
-            )
-            data = r.json()
-
-            if "title" in data:
-                nome = data["title"][:100]
-
-            if "pictures" in data and data["pictures"]:
-                imagem = data["pictures"][0].get("url", "")
-
-            if "price" in data:
-                preco = str(data["price"]).replace(".", ",")
-
+        headers = {"User-Agent": "Mozilla/5.0"}
+        # tenta catálogo /p/
+        m = re.search(r'/p/(MLB\w+)', link, re.IGNORECASE)
+        if m:
+            r = requests.get(f"https://api.mercadolibre.com/products/{m.group(1)}", headers=headers, timeout=10).json()
+            nome   = r.get("name", "")[:100]
+            imagem = (r.get("pictures") or [{}])[0].get("url", "")
+            # pega item para preço
+            r2 = requests.get(f"https://api.mercadolibre.com/products/{m.group(1)}/items", headers=headers, timeout=10).json()
+            item_id = (r2.get("results") or [None])[0]
+            if item_id:
+                r3 = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=headers, timeout=10).json()
+                preco = str(r3.get("price","")).replace(".",",")
+                if not imagem:
+                    imagem = (r3.get("pictures") or [{}])[0].get("url","")
+                return nome, imagem, preco
+            return nome, imagem, ""
+        # tenta item direto MLB
+        m2 = re.search(r'(MLB\d+)', link, re.IGNORECASE)
+        if m2:
+            r = requests.get(f"https://api.mercadolibre.com/items/{m2.group(1)}", headers=headers, timeout=10).json()
+            nome   = r.get("title","")[:100]
+            imagem = (r.get("pictures") or [{}])[0].get("url","")
+            preco  = str(r.get("price","")).replace(".",",")
+            return nome, imagem, preco
     except Exception as e:
         print("ML erro:", e)
+    return "", "", ""
 
-    return nome, imagem, preco
+def extrair_dados(link, plataforma):
+    if plataforma == "mercadolivre":
+        n, i, p = extrair_ml(link)
+        if n: return n, i, p
 
-# ---------------- SCRAPER ----------------
-
-def extrair_com_scraperapi(link, plataforma=""):
-    if not SCRAPER_KEY:
-        return None
-
+    # scraping direto
     try:
-        render = "true" if plataforma == "amazon" else "false"
-        url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}"
-        return requests.get(url, timeout=30).text
-    except Exception as e:
-        print("Scraper erro:", e)
-        return None
+        r = requests.get(link, headers={"User-Agent":"Mozilla/5.0","Accept-Language":"pt-BR"}, timeout=8)
+        html = r.text if r.status_code == 200 else ""
+    except:
+        html = ""
 
-# ---------------- EXTRAÇÃO ----------------
-
-def extrair_dados_produto(link, plataforma):
-    nome = ""
-    imagem = ""
-    preco = ""
-
-    try:
-        if plataforma == "mercadolivre":
-            nome, imagem, preco = extrair_dados_ml_api(link)
-            if nome:
-                return nome, imagem, preco
-
-        html = None
-
+    # ScraperAPI fallback
+    if len(html) < 1000 and SCRAPER_KEY:
         try:
-            headers = {
-                "User-Agent": "Mozilla/5.0",
-                "Accept-Language": "pt-BR"
-            }
-            r = requests.get(link, headers=headers, timeout=8)
-            if r.status_code == 200:
-                html = r.text
+            render = "true" if plataforma == "amazon" else "false"
+            html = requests.get(f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}", timeout=30).text
         except:
-            pass
+            html = ""
 
-        if not html or len(html) < 1000:
-            html = extrair_com_scraperapi(link, plataforma)
+    if not html: return "", "", ""
 
-        if not html:
-            return nome, imagem, preco
-
-        soup = BeautifulSoup(html, 'html.parser')
-
-        img = soup.find("meta", property="og:image")
-        if img:
-            imagem = img.get("content", "")
-
-        title = soup.find("meta", property="og:title")
-        if title:
-            nome = title.get("content", "")[:100]
-
-        preco_match = re.search(r'R\$\s*[\d.,]+', html)
-        if preco_match:
-            preco = preco_match.group(0).replace("R$", "").strip()
-
-    except Exception as e:
-        print("Erro geral:", e)
-
+    soup = BeautifulSoup(html, "html.parser")
+    nome   = (soup.find("meta", property="og:title")  or {}).get("content","")[:100]
+    imagem = (soup.find("meta", property="og:image")  or {}).get("content","")
+    pm     = re.search(r'R\$\s*[\d.,]+', html)
+    preco  = pm.group(0).replace("R$","").strip() if pm else ""
     return nome, imagem, preco
 
-# ---------------- ROTAS ----------------
+# -------- ROTAS --------
 
 @app.route("/")
-def index():
-    return render_template("criar_story.html")
+def index(): return render_template("criar_story.html")
 
 @app.route("/criar-lista")
 def criar_lista_page():
-    lista_id = str(uuid.uuid4())[:8]
-    return render_template("criar_lista.html", lista_id=lista_id)
+    return render_template("criar_lista.html", lista_id=str(uuid.uuid4())[:8])
 
 @app.route("/lista/<lista_id>")
-def lista_page(lista_id):
-    return render_template("criar_lista.html", lista_id=lista_id)
+def lista_page(lista_id): return render_template("criar_lista.html", lista_id=lista_id)
 
 @app.route("/vitrine/<lista_id>")
-def vitrine(lista_id):
-    return render_template("vitrine.html", lista_id=lista_id)
+def vitrine(lista_id): return render_template("vitrine.html", lista_id=lista_id)
 
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
-    data = request.json
-    link = data.get("link", "").strip()
+    link = request.json.get("link","").strip()
+    if not link: return jsonify({"ok":False}), 400
+    plataforma   = detectar_plataforma(link)
+    link_afiliado = injetar_afiliado(link, plataforma)
+    nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
+    return jsonify({"ok": bool(nome or imagem), "nome":nome, "imagem":imagem, "preco":preco})
 
-    if not link:
-        return jsonify({"ok": False}), 400
+@app.route("/api/adicionar-produto", methods=["POST"])
+def adicionar_produto():
+    data        = request.json
+    link        = data.get("link","").strip()
+    lista_id    = data.get("lista_id","").strip()
+    if not link or not lista_id: return jsonify({"erro":"Dados inválidos"}), 400
 
-    plataforma = detectar_plataforma(link)
-    link_afiliado = limpar_e_injetar(link, plataforma)
+    plataforma    = detectar_plataforma(link)
+    link_afiliado = injetar_afiliado(link, plataforma)
+    nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
 
-    nome, imagem, preco = extrair_dados_produto(link_afiliado, plataforma)
-
-    return jsonify({
-        "ok": True if nome or imagem else False,
-        "nome": nome,
-        "imagem": imagem,
-        "preco": preco
-    })
-
-# ---------------- RUN ----------------
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    # garante lista
+    lista = sb_get("listas", f"id=eq.{lista_id}")
+    if not lista or not isinstance(lista, list) or len(lista) == 0:
