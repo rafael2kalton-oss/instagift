@@ -72,7 +72,7 @@ def extrair_com_scraperapi(link):
     """Usa ScraperAPI para contornar bloqueios"""
     try:
         url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=true"
-        r = requests.get(url, timeout=30)
+        r = requests.get(url, timeout=60)
         return r.text
     except Exception as e:
         print("ScraperAPI erro:", e)
