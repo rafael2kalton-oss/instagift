@@ -22,13 +22,7 @@ HEADERS_SB = {
 
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
-
-HEADERS_WEB = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-    "Accept-Language": "pt-BR,pt;q=0.9",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Referer": "https://www.mercadolivre.com.br/",
-}
+SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
 
 def sb_get(tabela, filtro=None):
     url = f"{SUPABASE_URL}/rest/v1/{tabela}"
@@ -74,91 +68,100 @@ def limpar_e_injetar(link, plataforma):
         pass
     return link
 
-def resolver_link_ml(link):
-    """Se o link tem /p/ tenta seguir o redirecionamento para pegar o link real do produto"""
+def extrair_com_scraperapi(link):
+    """Usa ScraperAPI para contornar bloqueios"""
     try:
-        if "/p/" in link:
-            session = requests.Session()
-            session.headers.update(HEADERS_WEB)
-            response = session.get(link, timeout=10, allow_redirects=True)
-            # Pega a URL final após redirecionamentos
-            url_final = response.url
-            if "/p/" not in url_final:
-                return url_final
-            # Tenta achar o link do primeiro produto na pagina
-            soup = BeautifulSoup(response.text, 'html.parser')
-            # Procura link de variacao do produto
-            variacao = soup.find("a", {"class": "ui-pdp-thumbnail"})
-            if not variacao:
-                variacao = soup.find("a", href=re.compile(r'/MLB-\d+'))
-            if variacao and variacao.get("href"):
-                return variacao["href"]
-    except:
-        pass
-    return link
+        url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=true"
+        r = requests.get(url, timeout=30)
+        return r.text
+    except Exception as e:
+        print("ScraperAPI erro:", e)
+        return None
 
 def extrair_dados_produto(link, plataforma):
     nome = ""
     imagem = ""
     preco = ""
+
     try:
-        if REQUESTS_OK:
-            # Para ML com /p/ tenta resolver o link primeiro
-            if plataforma == "mercadolivre" and "/p/" in link:
-                link = resolver_link_ml(link)
+        # Tenta primeiro sem ScraperAPI (mais rapido)
+        html = None
+        try:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                "Accept-Language": "pt-BR,pt;q=0.9",
+            }
+            r = requests.get(link, headers=headers, timeout=8)
+            if r.status_code == 200:
+                html = r.text
+        except:
+            pass
 
-            session = requests.Session()
-            session.headers.update(HEADERS_WEB)
-            response = session.get(link, timeout=10, allow_redirects=True)
-            html = response.text
-            soup = BeautifulSoup(html, 'html.parser')
+        # Se falhou ou nao tem dados usa ScraperAPI
+        if not html or len(html) < 1000:
+            print("Usando ScraperAPI para:", link)
+            html = extrair_com_scraperapi(link)
 
-            # Tenta og:image
-            img_tag = soup.find("meta", property="og:image")
-            if img_tag and img_tag.get("content"):
-                imagem = img_tag["content"]
+        if not html:
+            return nome, imagem, preco
 
-            # Tenta og:title
-            title_tag = soup.find("meta", property="og:title")
-            if title_tag and title_tag.get("content"):
-                nome = title_tag["content"].strip()
+        soup = BeautifulSoup(html, 'html.parser')
 
-            # Fallbacks por plataforma
-            if not imagem:
-                if plataforma == "amazon":
-                    img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
-                    if img and img.get("src"):
-                        imagem = img["src"]
-                elif plataforma == "mercadolivre":
-                    # Tenta pegar imagem do ML de outras formas
-                    img = soup.find("img", {"class": "ui-pdp-image"})
-                    if not img:
-                        img = soup.find("figure", {"class": "ui-pdp-gallery__figure"})
-                        if img:
-                            img = img.find("img")
-                    if img and img.get("src") and "http" in img.get("src", ""):
-                        imagem = img["src"]
-                    elif img and img.get("data-zoom"):
-                        imagem = img["data-zoom"]
-                elif plataforma == "shopee":
-                    img = soup.find("meta", {"name": "twitter:image"})
-                    if img and img.get("content"):
-                        imagem = img["content"]
+        # Extrai imagem
+        img_tag = soup.find("meta", property="og:image")
+        if img_tag and img_tag.get("content"):
+            imagem = img_tag["content"]
 
-            # Limpa nome
-            if nome:
-                nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
-                nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
-                nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
-                nome = nome[:100]
+        # Extrai titulo
+        title_tag = soup.find("meta", property="og:title")
+        if title_tag and title_tag.get("content"):
+            nome = title_tag["content"].strip()
 
-            # Extrai preco
+        # Fallbacks por plataforma
+        if not imagem:
+            if plataforma == "amazon":
+                img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
+                if img and img.get("src") and "http" in img.get("src", ""):
+                    imagem = img["src"]
+                # Tenta data-old-hires
+                if not imagem:
+                    img = soup.find("img", {"data-old-hires": True})
+                    if img:
+                        imagem = img["data-old-hires"]
+            elif plataforma == "mercadolivre":
+                img = soup.find("img", {"class": "ui-pdp-image"})
+                if img and img.get("src") and "http" in img.get("src", ""):
+                    imagem = img["src"]
+            elif plataforma == "shopee":
+                img = soup.find("meta", {"name": "twitter:image"})
+                if img and img.get("content"):
+                    imagem = img["content"]
+
+        # Limpa nome
+        if nome:
+            nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
+            nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
+            nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+            nome = nome[:100]
+
+        # Extrai preco
+        if plataforma == "amazon":
+            # Tenta seletores especificos da Amazon
+            preco_tag = soup.find("span", {"class": "a-price-whole"})
+            if preco_tag:
+                preco_frac = soup.find("span", {"class": "a-price-fraction"})
+                preco = preco_tag.text.strip().replace('.', '').replace(',', '')
+                if preco_frac:
+                    preco = preco + ',' + preco_frac.text.strip()
+        
+        if not preco:
             preco_match = re.search(r'R\$\s*[\d.,]+', html)
             if preco_match:
                 preco = preco_match.group(0).replace('R$', '').strip()
 
     except Exception as e:
         print("Erro scraping:", e)
+
     return nome, imagem, preco
 
 # ── ROTAS ──
