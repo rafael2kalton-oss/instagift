@@ -108,11 +108,16 @@ def extrair_ml(link):
         if m2:
             item_id = f"MLB{m2.group(1)}"
             r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
+            # Se retornou 403 ou erro usa ScraperAPI
+            if r.get("status") == 403 or r.get("code") == "PA_UNAUTHORIZED_RESULT_FROM_POLICIES":
+                print("ML API bloqueou — usando ScraperAPI")
+                return "", "", ""
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
             preco = str(r.get("price", "")).replace(".", ",")
-            return nome, imagem, preco
+            if nome:
+                return nome, imagem, preco
 
     except Exception as e:
         print("ML erro:", e)
@@ -123,6 +128,32 @@ def extrair_dados(link, plataforma):
         n, i, p = extrair_ml(link)
         if n:
             return n, i, p
+        # Fallback ScraperAPI para ML quando API oficial falha
+        print("ML fallback ScraperAPI")
+        try:
+            html = requests.get(
+                f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link.split('#')[0]}&render=false&country_code=br",
+                timeout=60
+            ).text
+            if html and len(html) > 1000:
+                soup = BeautifulSoup(html, "html.parser")
+                nome = ""
+                imagem = ""
+                preco = ""
+                t = soup.find("meta", property="og:title")
+                if t:
+                    nome = t.get("content", "")[:100]
+                    nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
+                i = soup.find("meta", property="og:image")
+                if i:
+                    imagem = i.get("content", "")
+                pm = re.search(r'R\$\s*[\d.,]+', html)
+                if pm:
+                    preco = pm.group(0).replace("R$", "").strip()
+                if nome or imagem:
+                    return nome, imagem, preco
+        except Exception as e:
+            print("ML ScraperAPI erro:", e)
 
     try:
         r = requests.get(link, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "pt-BR"}, timeout=8)
@@ -156,7 +187,6 @@ def extrair_dados(link, plataforma):
     if i:
         imagem = i.get("content", "")
 
-    # Fallback imagem Amazon
     if not imagem and plataforma == "amazon":
         img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
         if img and img.get("src") and "http" in img.get("src", ""):
