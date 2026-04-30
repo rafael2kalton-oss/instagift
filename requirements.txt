@@ -1,5 +1,5 @@
-flask
+Flask
 requests
 beautifulsoup4
-gunicorn
 python-dotenv
+gunicorn
