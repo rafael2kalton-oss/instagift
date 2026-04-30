@@ -13,19 +13,14 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .card { background: #111; border: 1px solid #222; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
 .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #ccc; }
 .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
-.input-group input { flex: 1; padding: 12px 14px; font-size: 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
+.input-group input { flex: 1; padding: 14px; font-size: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
 .input-group input:focus { outline: none; border-color: #7F77DD; }
-.btn-add { padding: 12px 20px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.btn-add { padding: 14px 24px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .btn-add:hover { background: #534AB7; }
 .btn-add:disabled { background: #333; cursor: not-allowed; }
 .plataformas { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 .plt-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; color: #888; }
 .loading { text-align: center; padding: 16px; color: #7F77DD; font-size: 14px; display: none; }
-.dica { font-size: 12px; color: #555; margin-top: 4px; margin-bottom: 6px; }
-.instrucao-img { background: #0d0d1a; border: 1px solid #2a2a4a; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
-.instrucao-img p { font-size: 12px; color: #7F77DD; font-weight: 600; margin-bottom: 6px; }
-.instrucao-img ol { font-size: 12px; color: #888; padding-left: 16px; line-height: 1.8; }
-.instrucao-img ol li strong { color: #ccc; }
 .produtos-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
 .produto-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
 .produto-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: #333; flex-shrink: 0; }
@@ -58,13 +53,12 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .link-vitrine-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
 .btn-ver-vitrine { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px; }
 .btn-criar-story { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; }
-.preview-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; margin-top: 8px; display: none; border: 1px solid #333; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Minha Lista de Presentes</h1>
-  <p class="sub">Cole os links dos produtos que voce quer ganhar</p>
+  <p class="sub">Cole o link do produto que voce quer ganhar</p>
 
   <div class="card">
     <h2>Adicionar presente</h2>
@@ -73,34 +67,11 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
       <span class="plt-badge">🛍️ Mercado Livre</span>
       <span class="plt-badge">🧡 Shopee</span>
     </div>
-
     <div class="input-group">
-      <input type="text" id="input-link" placeholder="1. Cole o link do produto aqui...">
-    </div>
-    <div class="input-group">
-      <input type="text" id="input-nome" placeholder="2. Nome do produto (ex: iPhone 16 128GB Preto)">
-    </div>
-    <div class="input-group">
-      <input type="text" id="input-preco" placeholder="3. Preco (ex: 4898,70)">
-    </div>
-
-    <div class="instrucao-img">
-      <p>📸 Como adicionar a foto do produto:</p>
-      <ol>
-        <li>Abra o produto no app ou site</li>
-        <li><strong>Toque e segure</strong> na foto principal</li>
-        <li>Toque em <strong>"Copiar link da imagem"</strong></li>
-        <li>Cole no campo abaixo</li>
-      </ol>
-    </div>
-
-    <div class="input-group">
-      <input type="text" id="input-imagem" placeholder="4. Cole o link da foto aqui (opcional)" oninput="previewImagem()">
+      <input type="text" id="input-link" placeholder="Cole o link do produto aqui...">
       <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
     </div>
-
-    <img id="preview-img" class="preview-img" alt="preview">
-    <div class="loading" id="loading">Adicionando produto... aguarde</div>
+    <div class="loading" id="loading">Buscando produto... aguarde ⏳</div>
   </div>
 
   <div class="card">
@@ -143,18 +114,6 @@ var LISTA_ID = "{{ lista_id }}";
 var produtos = [];
 var linkVitrine = '';
 
-function previewImagem() {
-  var url = document.getElementById('input-imagem').value.trim();
-  var preview = document.getElementById('preview-img');
-  if (url) {
-    preview.src = url;
-    preview.style.display = 'block';
-    preview.onerror = function() { preview.style.display = 'none'; };
-  } else {
-    preview.style.display = 'none';
-  }
-}
-
 function emojiPlataforma(plt) {
   if (plt === 'amazon') return '🛒';
   if (plt === 'mercadolivre') return '🛍️';
@@ -195,30 +154,20 @@ function renderLista() {
 
 async function adicionarProduto() {
   var link = document.getElementById('input-link').value.trim();
-  var nome = document.getElementById('input-nome').value.trim();
-  var preco = document.getElementById('input-preco').value.trim();
-  var imagem = document.getElementById('input-imagem').value.trim();
-
   if (!link) { alert('Cole um link de produto!'); return; }
-
   document.getElementById('loading').style.display = 'block';
   document.getElementById('btn-adicionar').disabled = true;
-
   try {
     var res = await fetch('/api/adicionar-produto', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({lista_id: LISTA_ID, link: link, nome: nome, preco: preco, imagem: imagem})
+      body: JSON.stringify({lista_id: LISTA_ID, link: link})
     });
     var data = await res.json();
     if (data.ok) {
       produtos.push(data.produto);
       renderLista();
       document.getElementById('input-link').value = '';
-      document.getElementById('input-nome').value = '';
-      document.getElementById('input-preco').value = '';
-      document.getElementById('input-imagem').value = '';
-      document.getElementById('preview-img').style.display = 'none';
     } else {
       alert(data.erro || 'Erro ao adicionar produto.');
     }
@@ -246,16 +195,12 @@ function gerarVitrine() {
 }
 
 function copiarLink() {
-  navigator.clipboard.writeText(linkVitrine).then(function() {
-    alert('Link da vitrine copiado!');
-  });
+  navigator.clipboard.writeText(linkVitrine).then(function() { alert('Link da vitrine copiado!'); });
 }
 
 function copiarLinkLista() {
   var link = document.getElementById('link-lista-permanente').textContent;
-  navigator.clipboard.writeText(link).then(function() {
-    alert('Link da lista copiado! Salve para usar depois.');
-  });
+  navigator.clipboard.writeText(link).then(function() { alert('Link da lista copiado! Salve para usar depois.'); });
 }
 
 function verVitrine() { window.open(linkVitrine, '_blank'); }
@@ -263,15 +208,6 @@ function criarStory() { window.location.href = '/?vitrine=' + LISTA_ID; }
 
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('input-link').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') document.getElementById('input-nome').focus();
-  });
-  document.getElementById('input-nome').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') document.getElementById('input-preco').focus();
-  });
-  document.getElementById('input-preco').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') document.getElementById('input-imagem').focus();
-  });
-  document.getElementById('input-imagem').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') adicionarProduto();
   });
 });
