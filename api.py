@@ -251,7 +251,7 @@ def extrair_dados_produto(link, plataforma):
 
 @app.route("/")
 def index():
-    return "API INSTAGIFT ONLINE 🚀"
+    return render_template("criar_story.html")
 
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
