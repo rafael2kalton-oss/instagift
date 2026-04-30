@@ -124,7 +124,7 @@ def extrair_ml(link):
                         # Melhora qualidade da thumbnail
                         imagem = thumbnail.replace("-I.jpg", "-O.jpg").replace("http://", "https://") if thumbnail else ""
                         preco = str(prod.get("price", "")).replace(".", ",")
-                        return nome, imagem, preco
+                        return return nome, "", preco
                 except Exception as e:
                     print("ML busca erro:", e)
                 return "", "", ""
