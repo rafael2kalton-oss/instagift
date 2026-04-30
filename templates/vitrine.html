@@ -70,8 +70,9 @@ function renderProdutos(produtos) {
     var info = btnInfo[p.plataforma] || btnInfo['outro'];
     return '<div class="card">' +
       (p.imagem_url
-        ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
-        : '<div class="card-sem-img">🎁</div>') +
+        ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.parentElement.querySelector(\'.card-sem-img\').style.display=\'flex\'; this.style.display=\'none\'">'
+        : '') +
+      '<div class="card-sem-img" style="' + (p.imagem_url ? 'display:none;' : '') + 'width:100%; height:180px; background:linear-gradient(135deg,#7F77DD,#5B8DEF); display:flex; align-items:center; justify-content:center; font-size:60px;">🎁</div>' +
       '<div class="card-body">' +
         '<div class="card-nome">' + p.nome + '</div>' +
         (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
