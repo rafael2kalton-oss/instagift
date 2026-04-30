@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import uuid, re, os, requests
+import uuid, re, requests
 from bs4 import BeautifulSoup
 
 app = Flask(__name__, template_folder="templates")
@@ -81,7 +81,6 @@ def extrair_ml(link):
         token = get_ml_token()
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
 
-        # Remove tudo depois do # para limpar o link
         link_limpo = link.split('#')[0]
 
         # Tenta /p/ catalogo
@@ -131,11 +130,11 @@ def extrair_dados(link, plataforma):
     except:
         html = ""
 
-    if len(html) < 1000 and SCRAPER_KEY:
+    if plataforma == "amazon" or len(html) < 1000:
         try:
             render = "true" if plataforma == "amazon" else "false"
             html = requests.get(
-                f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}",
+                f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}&country_code=br&premium=true",
                 timeout=60
             ).text
         except:
@@ -156,6 +155,16 @@ def extrair_dados(link, plataforma):
     i = soup.find("meta", property="og:image")
     if i:
         imagem = i.get("content", "")
+
+    # Fallback imagem Amazon
+    if not imagem and plataforma == "amazon":
+        img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
+        if img and img.get("src") and "http" in img.get("src", ""):
+            imagem = img["src"]
+        if not imagem:
+            img = soup.find("img", {"data-old-hires": True})
+            if img:
+                imagem = img["data-old-hires"]
 
     if nome:
         nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
