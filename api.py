@@ -80,7 +80,6 @@ def extrair_ml(link):
     try:
         token = get_ml_token()
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
-
         link_limpo = link.split('#')[0]
 
         # Tenta /p/ catalogo
@@ -108,9 +107,25 @@ def extrair_ml(link):
         if m2:
             item_id = f"MLB{m2.group(1)}"
             r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
-            # Se retornou 403 ou erro usa ScraperAPI
-            if r.get("status") == 403 or r.get("code") == "PA_UNAUTHORIZED_RESULT_FROM_POLICIES":
-                print("ML API bloqueou — usando ScraperAPI")
+            # Se bloqueou pela API retorna vazio para tentar ScraperAPI
+            if r.get("status") == 403 or "UNAUTHORIZED" in str(r.get("code", "")):
+                print("ML API bloqueou item — sem imagem")
+                nome = ""
+                # Tenta pegar pelo menos o nome via busca
+                try:
+                    r_search = requests.get(
+                        f"https://api.mercadolibre.com/sites/MLB/search?q={item_id}",
+                        headers=auth, timeout=8
+                    ).json()
+                    resultados = r_search.get("results", [])
+                    if resultados:
+                        nome = resultados[0].get("title", "")[:100]
+                        pics = resultados[0].get("thumbnail", "")
+                        imagem = pics if pics else ""
+                        preco = str(resultados[0].get("price", "")).replace(".", ",")
+                        return nome, imagem, preco
+                except:
+                    pass
                 return "", "", ""
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
@@ -128,32 +143,6 @@ def extrair_dados(link, plataforma):
         n, i, p = extrair_ml(link)
         if n:
             return n, i, p
-        # Fallback ScraperAPI para ML quando API oficial falha
-        print("ML fallback ScraperAPI")
-        try:
-            html = requests.get(
-                f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link.split('#')[0]}&render=false&country_code=br",
-                timeout=60
-            ).text
-            if html and len(html) > 1000:
-                soup = BeautifulSoup(html, "html.parser")
-                nome = ""
-                imagem = ""
-                preco = ""
-                t = soup.find("meta", property="og:title")
-                if t:
-                    nome = t.get("content", "")[:100]
-                    nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
-                i = soup.find("meta", property="og:image")
-                if i:
-                    imagem = i.get("content", "")
-                pm = re.search(r'R\$\s*[\d.,]+', html)
-                if pm:
-                    preco = pm.group(0).replace("R$", "").strip()
-                if nome or imagem:
-                    return nome, imagem, preco
-        except Exception as e:
-            print("ML ScraperAPI erro:", e)
 
     try:
         r = requests.get(link, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "pt-BR"}, timeout=8)
@@ -166,9 +155,10 @@ def extrair_dados(link, plataforma):
             render = "true" if plataforma == "amazon" else "false"
             html = requests.get(
                 f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}&country_code=br&premium=true",
-                timeout=60
+                timeout=25
             ).text
-        except:
+        except Exception as e:
+            print("ScraperAPI erro:", e)
             html = ""
 
     if not html:
