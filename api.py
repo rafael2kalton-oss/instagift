@@ -127,7 +127,6 @@ def extrair_dados_ml_api(link):
             "Accept": "application/json"
         }
 
-        # catálogo
         if "/p/" in link or not item_id:
             match = re.search(r'/p/(MLB\w+)', link, re.IGNORECASE)
 
@@ -161,7 +160,6 @@ def extrair_dados_ml_api(link):
                 except Exception as e:
                     print("Erro catálogo ML:", e)
 
-        # item direto
         if item_id:
             r = requests.get(
                 f"https://api.mercadolibre.com/items/{item_id}",
@@ -253,7 +251,7 @@ def extrair_dados_produto(link, plataforma):
 
 @app.route("/")
 def index():
-    return render_template("criar_story.html")
+    return "API INSTAGIFT ONLINE 🚀"
 
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
