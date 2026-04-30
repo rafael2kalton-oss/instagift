@@ -97,12 +97,14 @@ def get_ml_token():
 
 def extrair_item_id_ml(link):
     """Extrai o ID do produto ML do link"""
+    # Remove tudo depois do # primeiro
+    link_limpo = link.split('#')[0]
     # Tenta pegar MLB seguido de numeros
-    match = re.search(r'MLB[-_]?(\d+)', link, re.IGNORECASE)
+    match = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
     if match:
         return f"MLB{match.group(1)}"
     # Tenta pegar ID do formato produto.mercadolivre.com.br/MLB-XXXXXXXXX
-    match2 = re.search(r'/(MLB-\d+)', link, re.IGNORECASE)
+    match2 = re.search(r'/(MLB-\d+)', link_limpo, re.IGNORECASE)
     if match2:
         return match2.group(1).replace('-', '')
     return None
