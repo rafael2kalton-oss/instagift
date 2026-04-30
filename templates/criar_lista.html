@@ -177,7 +177,7 @@ function renderLista() {
     return '<div class="produto-card">' +
       (p.imagem_url
         ? '<img class="produto-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
-        : '') +
+        : '<div class="produto-img-placeholder" style="background:linear-gradient(135deg,#7F77DD,#5B8DEF);">🎁</div>') +
       '<div class="produto-info">' +
         '<div class="produto-nome">' + p.nome + '</div>' +
         (p.preco ? '<div class="produto-preco">R$ ' + p.preco + '</div>' : '') +
