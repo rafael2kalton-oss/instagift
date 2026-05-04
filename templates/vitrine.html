@@ -12,20 +12,41 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 .topo h2 { font-size: 22px; font-weight: 700; }
 .topo p { font-size: 13px; color: #888; margin-top: 4px; }
 .grid { display: flex; flex-direction: column; gap: 14px; }
-.card { background: #111; border: 1px solid #222; border-radius: 14px; overflow: hidden; }
+.card { background: #111; border: 1px solid #222; border-radius: 14px; overflow: hidden; position: relative; }
 .card-img { width: 100%; height: 220px; object-fit: contain; background: #1a1a1a; display: block; }
-.card-sem-img { width: 100%; height: 120px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+.card-sem-img { width: 100%; height: 180px; background: linear-gradient(135deg, #7F77DD, #5B8DEF); display: flex; align-items: center; justify-content: center; font-size: 60px; }
 .card-body { padding: 16px; }
 .card-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
 .card-preco { font-size: 15px; color: #7F77DD; font-weight: 700; margin-bottom: 12px; }
-.btn-comprar { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.btn-comprar { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-amazon { background: #ff9900; color: #000; }
 .btn-mercadolivre { background: #FFE600; color: #000; }
 .btn-shopee { background: #EE4D2D; color: #fff; }
 .btn-outro { background: #7F77DD; color: #fff; }
-.reservado { background: #333; color: #666; cursor: not-allowed; }
+.btn-reservado { background: #333; color: #666; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; }
 .badge-reservado { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
+.btn-excluir { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); border: none; color: #fff; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; }
+.btn-excluir.show { display: flex; }
 .loading { text-align: center; padding: 60px; color: #888; }
+
+/* Popup reserva */
+.popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+.popup-overlay.show { display: flex; }
+.popup { background: #111; border: 1px solid #333; border-radius: 16px; padding: 24px; width: 100%; max-width: 380px; }
+.popup h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.popup p { font-size: 13px; color: #888; margin-bottom: 20px; line-height: 1.5; }
+.popup-btns { display: flex; gap: 10px; margin-bottom: 0; }
+.popup-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.btn-sim { background: #7F77DD; color: white; }
+.btn-nao { background: #333; color: white; }
+
+/* Formulario reserva */
+.form-reserva { display: none; margin-top: 16px; }
+.form-reserva.show { display: block; }
+.form-reserva input { width: 100%; padding: 12px 14px; font-size: 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 10px; }
+.form-reserva input:focus { outline: none; border-color: #7F77DD; }
+.btn-confirmar { width: 100%; padding: 13px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.aviso-reserva { font-size: 11px; color: #888; margin-top: 8px; text-align: center; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -39,8 +60,28 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
   </div>
 </div>
 
+<!-- Popup reserva -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup">
+    <h3>🎁 Reservar este presente?</h3>
+    <p>Ao reservar, o presente fica marcado como escolhido por você. Se a compra não for confirmada em 3 horas o presente volta a ficar disponível.</p>
+    <div class="popup-btns" id="popup-btns">
+      <button class="btn-nao" onclick="naoReservar()">Não, só ver</button>
+      <button class="btn-sim" onclick="mostrarFormulario()">Sim, reservar!</button>
+    </div>
+    <div class="form-reserva" id="form-reserva">
+      <input type="text" id="input-nome" placeholder="Seu nome">
+      <input type="email" id="input-email" placeholder="Seu e-mail">
+      <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar reserva e ir às compras</button>
+      <p class="aviso-reserva">⏰ Se a compra não for confirmada em 3 horas o presente volta a ficar disponível para outros.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 var listaId = "{{ lista_id }}";
+var isAdmin = window.location.search.indexOf('admin=true') > -1;
+var produtoAtual = null;
 
 var btnInfo = {
   amazon: {classe: 'btn-amazon', texto: '🛒 Comprar na Amazon'},
@@ -68,21 +109,79 @@ function renderProdutos(produtos) {
   }
   grid.innerHTML = produtos.map(function(p) {
     var info = btnInfo[p.plataforma] || btnInfo['outro'];
-    return '<div class="card">' +
+    return '<div class="card" id="card-' + p.id + '">' +
+      '<button class="btn-excluir' + (isAdmin ? ' show' : '') + '" onclick="excluirProduto(' + p.id + ')">✕</button>' +
       (p.imagem_url
-        ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.parentElement.querySelector(\'.card-sem-img\').style.display=\'flex\'; this.style.display=\'none\'">'
-        : '') +
-      '<div class="card-sem-img" style="' + (p.imagem_url ? 'display:none;' : '') + 'width:100%; height:180px; background:linear-gradient(135deg,#7F77DD,#5B8DEF); display:flex; align-items:center; justify-content:center; font-size:60px;">🎁</div>' +
+        ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
+        : '<div class="card-sem-img">🎁</div>') +
       '<div class="card-body">' +
         '<div class="card-nome">' + p.nome + '</div>' +
         (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
         (p.reservado
-          ? '<div class="btn-comprar reservado">Presente ja escolhido</div>' +
+          ? '<button class="btn-reservado">🔒 Presente ja escolhido</button>' +
             '<div class="badge-reservado">Alguem ja escolheu este presente</div>'
-          : '<a href="' + p.link_afiliado + '" target="_blank" class="btn-comprar ' + info.classe + '">' + info.texto + '</a>') +
+          : '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>') +
       '</div>' +
     '</div>';
   }).join('');
+}
+
+function abrirPopup(id, link, texto) {
+  produtoAtual = {id: id, link: link, texto: texto};
+  document.getElementById('popup-overlay').classList.add('show');
+  document.getElementById('form-reserva').classList.remove('show');
+  document.getElementById('popup-btns').style.display = 'flex';
+  document.getElementById('input-nome').value = '';
+  document.getElementById('input-email').value = '';
+}
+
+function naoReservar() {
+  document.getElementById('popup-overlay').classList.remove('show');
+  if (produtoAtual) {
+    window.open(produtoAtual.link, '_blank');
+  }
+}
+
+function mostrarFormulario() {
+  document.getElementById('popup-btns').style.display = 'none';
+  document.getElementById('form-reserva').classList.add('show');
+}
+
+async function confirmarReserva() {
+  var nome = document.getElementById('input-nome').value.trim();
+  var email = document.getElementById('input-email').value.trim();
+  if (!nome || !email) {
+    alert('Preencha seu nome e e-mail!');
+    return;
+  }
+  try {
+    await fetch('/api/reservar/' + produtoAtual.id, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({nome: nome, email: email})
+    });
+    document.getElementById('popup-overlay').classList.remove('show');
+    window.open(produtoAtual.link, '_blank');
+    // Atualiza o card
+    var card = document.getElementById('card-' + produtoAtual.id);
+    if (card) {
+      var body = card.querySelector('.card-body');
+      var btnAtual = body.querySelector('.btn-comprar');
+      if (btnAtual) {
+        btnAtual.outerHTML = '<button class="btn-reservado">🔒 Presente ja escolhido</button>' +
+          '<div class="badge-reservado">Alguem ja escolheu este presente</div>';
+      }
+    }
+  } catch(e) {
+    alert('Erro ao reservar. Tente novamente.');
+  }
+}
+
+async function excluirProduto(id) {
+  if (!confirm('Remover este presente da vitrine?')) return;
+  await fetch('/api/remover-produto/' + id, {method: 'DELETE'});
+  var card = document.getElementById('card-' + id);
+  if (card) card.remove();
 }
 
 carregarLista();
