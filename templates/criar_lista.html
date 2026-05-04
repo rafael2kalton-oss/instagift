@@ -26,17 +26,14 @@
         .btn-add:hover { background: #9d7ae0; transform: scale(1.05); }
         .btn-add:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .loading { text-align: center; color: #8A63D2; padding: 12px 0; font-size: 14px; display: none; }
-
-        /* AVISO PRODUTO.ML */
         .aviso-link { background: #1a0d00; border: 1px solid #ff9900; border-radius: 10px; padding: 12px 14px; margin-top: 10px; font-size: 12px; color: #ff9900; display: none; line-height: 1.5; }
         .aviso-btns { display: flex; gap: 10px; margin-top: 10px; }
         .aviso-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; }
         .btn-continuar { background: #8A63D2; color: white; }
         .btn-voltar { background: #333; color: white; }
-
         .list-section h2 span { color: #8A63D2; }
         .product-card { background: #1a1a1a; border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid #2a2a2a; box-shadow: 0 0 10px rgba(138, 99, 210, 0.06); animation: fadeUp 0.3s ease; }
-        .product-img-wrap { background: radial-gradient(circle, #1e1e1e 0%, #121212 100%); text-align: center; padding: 20px; position: relative; }
+        .product-img-wrap { background: radial-gradient(circle, #1e1e1e 0%, #121212 100%); text-align: center; padding: 20px; }
         .product-img-wrap img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 10px; }
         .product-img-placeholder { font-size: 48px; padding: 20px 0; }
         .product-info { padding: 14px 16px; }
@@ -50,17 +47,22 @@
         .badge-outro { background: #333; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #555; font-size: 18px; cursor: pointer; line-height: 1; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
-        .btn-vitrine { display: block; width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 24px; margin-bottom: 10px; font-family: 'Inter', sans-serif; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(138, 99, 210, 0.3); }
-        .btn-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138, 99, 210, 0.45); }
-        .btn-ver-vitrine { display: block; width: 100%; background: transparent; border: 1px solid #8A63D2; border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 30px; font-family: 'Inter', sans-serif; transition: background 0.2s; }
-        .btn-ver-vitrine:hover { background: #8A63D2; color: #fff; }
-        .link-permanente { background: #121212; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px; margin-top: 16px; text-align: center; }
+        .link-permanente { background: #121212; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px; margin-top: 20px; text-align: center; }
         .link-permanente p { font-size: 12px; color: #888; margin-bottom: 8px; }
         .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; }
         .btn-copiar { background: #1a1a1a; border: 1px solid #8A63D2; color: #8A63D2; padding: 8px 16px; border-radius: 8px; margin-top: 10px; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; transition: background 0.2s; }
         .btn-copiar:hover { background: #8A63D2; color: #fff; }
         .empty-state { text-align: center; padding: 30px 0; color: #444; font-size: 14px; }
         .empty-state .emoji { font-size: 40px; margin-bottom: 10px; }
+
+        /* BOTOES ACAO */
+        .acoes { margin-top: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 12px; }
+        .btn-gerar-vitrine { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(138, 99, 210, 0.3); }
+        .btn-gerar-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138, 99, 210, 0.45); }
+        .btn-ver-vitrine { width: 100%; background: transparent; border: 1px solid #8A63D2; border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn-ver-vitrine:hover { background: #8A63D2; color: #fff; }
+        .btn-criar-story { width: 100%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
+        .btn-criar-story:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -111,13 +113,17 @@
         <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
     </div>
 
-    <button class="btn-vitrine" onclick="gerarVitrine()">
-        🎉 Gerar minha vitrine de presentes
-    </button>
-
-    <button class="btn-ver-vitrine" id="btnVerVitrine" style="display:none" onclick="verVitrine()">
-        👁️ Ver minha vitrine
-    </button>
+    <div class="acoes" id="acoesVitrine" style="display:none">
+        <button class="btn-criar-story" onclick="criarStory()">
+            📸 Criar meu story no Instagram
+        </button>
+        <button class="btn-gerar-vitrine" onclick="gerarVitrine()">
+            🎉 Gerar minha vitrine de presentes
+        </button>
+        <button class="btn-ver-vitrine" onclick="verVitrine()">
+            👁️ Ver minha vitrine
+        </button>
+    </div>
 
 </div>
 
@@ -138,19 +144,19 @@
         const el = document.getElementById("listaProdutos");
         const contador = document.getElementById("contador");
         const linkPerm = document.getElementById("linkPermanente");
-        const btnVer = document.getElementById("btnVerVitrine");
+        const acoes = document.getElementById("acoesVitrine");
 
         contador.textContent = `(${produtos.length})`;
 
         if (produtos.length === 0) {
             el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro!</p></div>`;
             linkPerm.style.display = "none";
-            btnVer.style.display = "none";
+            acoes.style.display = "none";
             return;
         }
 
         linkPerm.style.display = "block";
-        btnVer.style.display = "block";
+        acoes.style.display = "flex";
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
 
         el.innerHTML = produtos.map(p => {
@@ -241,6 +247,10 @@
     async function remover(id) {
         await fetch(`${BASE}/api/remover-produto/${id}`, { method: "DELETE" });
         await carregarProdutos();
+    }
+
+    function criarStory() {
+        window.location.href = `/?vitrine=${LISTA_ID}`;
     }
 
     function gerarVitrine() {
