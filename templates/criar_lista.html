@@ -1,255 +1,266 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaGift — Minha Lista</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
-.container { max-width: 600px; margin: 0 auto; }
-h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-.sub { font-size: 14px; color: #888; margin-bottom: 28px; }
-.card { background: #111; border: 1px solid #222; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
-.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #ccc; }
-.input-group { display: flex; gap: 10px; margin-bottom: 10px; }
-.input-group input { flex: 1; padding: 14px; font-size: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
-.input-group input:focus { outline: none; border-color: #7F77DD; }
-.btn-add { padding: 14px 24px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.btn-add:hover { background: #534AB7; }
-.btn-add:disabled { background: #333; cursor: not-allowed; }
-.plataformas { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-.plt-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; color: #888; }
-.loading { text-align: center; padding: 16px; color: #7F77DD; font-size: 14px; display: none; }
-.aviso-link { background: #1a0d00; border: 1px solid #ff9900; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; font-size: 12px; color: #ff9900; display: none; }
-.aviso-btns { display: flex; gap: 10px; margin-top: 10px; }
-.aviso-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; }
-.btn-continuar { background: #7F77DD; color: white; }
-.btn-voltar { background: #333; color: white; }
-.produtos-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
-.produto-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
-.produto-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: #333; flex-shrink: 0; }
-.produto-img-placeholder { width: 64px; height: 64px; border-radius: 8px; background: #222; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
-.produto-info { flex: 1; min-width: 0; }
-.produto-nome { font-size: 14px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.produto-preco { font-size: 13px; color: #7F77DD; margin-bottom: 4px; }
-.produto-plt { font-size: 11px; padding: 2px 8px; border-radius: 10px; display: inline-block; }
-.plt-amazon { background: #ff9900; color: #000; }
-.plt-mercadolivre { background: #FFE600; color: #000; }
-.plt-shopee { background: #EE4D2D; color: #fff; }
-.plt-outro { background: #333; color: #aaa; }
-.btn-remover { background: none; border: none; color: #555; cursor: pointer; font-size: 18px; padding: 4px; flex-shrink: 0; }
-.btn-remover:hover { color: #e63946; }
-.vazio { text-align: center; padding: 30px; color: #444; font-size: 14px; }
-.vazio .icon { font-size: 36px; margin-bottom: 8px; }
-.btn-gerar-vitrine { width: 100%; padding: 16px; background: linear-gradient(135deg, #7F77DD, #5B8DEF); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; display: none; }
-.btn-gerar-vitrine.show { display: block; }
-.acoes-vitrine { margin-top: 16px; display: none; flex-direction: column; gap: 12px; }
-.acoes-vitrine.show { display: flex; }
-.card-salvar { background: #0d1a0d; border: 1px solid #2a9d2a; border-radius: 12px; padding: 16px; }
-.card-salvar .titulo { font-size: 14px; font-weight: 700; color: #2a9d8f; margin-bottom: 4px; }
-.card-salvar .aviso { font-size: 12px; color: #888; margin-bottom: 10px; }
-.link-box { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
-.link-box span { font-size: 12px; color: #2a9d8f; word-break: break-all; flex: 1; background: #0a0a0a; padding: 8px 10px; border-radius: 8px; border: 1px solid #1a3a1a; }
-.btn-copiar { padding: 8px 14px; background: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.card-vitrine { background: #111; border: 1px solid #2a9d8f; border-radius: 12px; padding: 16px; }
-.card-vitrine .titulo { font-size: 14px; color: #aaa; margin-bottom: 8px; }
-.link-vitrine-box { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
-.link-vitrine-box span { font-size: 13px; color: #2a9d8f; word-break: break-all; flex: 1; }
-.btn-ver-vitrine { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px; }
-.btn-criar-story { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InstaGift - Criar Lista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
+        .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 16px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 0 24px 0; border-bottom: 1px solid #1a1a1a; }
+        .logo-box { background-color: #8A63D2; color: #000; font-weight: 800; padding: 6px 14px; font-size: 26px; border-radius: 6px; display: inline-block; letter-spacing: -0.5px; }
+        .tagline { font-size: 13px; color: #A6A6A6; margin-top: 6px; }
+        .header-stars { font-size: 22px; color: #8A63D2; opacity: 0.7; }
+        .card { background-color: #121212; border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid #1a1a1a; box-shadow: 0 0 15px rgba(138, 99, 210, 0.08); animation: fadeUp 0.4s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        h2 { font-size: 15px; margin-bottom: 14px; font-weight: 500; color: #eee; }
+        .platform-chips { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+        .chip { font-size: 11px; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; color: #D4AF37; border: 1px solid #2a2a2a; }
+        .input-group { display: flex; gap: 10px; }
+        input[type="text"] { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 11px 14px; color: #fff; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; }
+        input[type="text"]::placeholder { color: #555; }
+        input[type="text"]:focus { border-color: #8A63D2; }
+        .btn-add { background: #8A63D2; border: none; padding: 11px 18px; border-radius: 10px; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; transition: transform 0.2s, background 0.2s; font-family: 'Inter', sans-serif; }
+        .btn-add:hover { background: #9d7ae0; transform: scale(1.05); }
+        .btn-add:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading { text-align: center; color: #8A63D2; padding: 12px 0; font-size: 14px; display: none; }
+
+        /* AVISO PRODUTO.ML */
+        .aviso-link { background: #1a0d00; border: 1px solid #ff9900; border-radius: 10px; padding: 12px 14px; margin-top: 10px; font-size: 12px; color: #ff9900; display: none; line-height: 1.5; }
+        .aviso-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .aviso-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; }
+        .btn-continuar { background: #8A63D2; color: white; }
+        .btn-voltar { background: #333; color: white; }
+
+        .list-section h2 span { color: #8A63D2; }
+        .product-card { background: #1a1a1a; border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid #2a2a2a; box-shadow: 0 0 10px rgba(138, 99, 210, 0.06); animation: fadeUp 0.3s ease; }
+        .product-img-wrap { background: radial-gradient(circle, #1e1e1e 0%, #121212 100%); text-align: center; padding: 20px; position: relative; }
+        .product-img-wrap img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 10px; }
+        .product-img-placeholder { font-size: 48px; padding: 20px 0; }
+        .product-info { padding: 14px 16px; }
+        .product-nome { font-size: 14px; font-weight: 600; color: #eee; margin-bottom: 6px; line-height: 1.4; }
+        .product-preco { font-size: 16px; font-weight: 700; color: #8A63D2; margin-bottom: 10px; }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; }
+        .platform-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .badge-amazon { background: #FF9900; color: #000; }
+        .badge-mercadolivre { background: #FFE600; color: #000; }
+        .badge-shopee { background: #EE4D2D; color: #fff; }
+        .badge-outro { background: #333; color: #fff; }
+        .btn-remover { background: transparent; border: none; color: #555; font-size: 18px; cursor: pointer; line-height: 1; transition: color 0.2s; }
+        .btn-remover:hover { color: #ff4444; }
+        .btn-vitrine { display: block; width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 24px; margin-bottom: 10px; font-family: 'Inter', sans-serif; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(138, 99, 210, 0.3); }
+        .btn-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138, 99, 210, 0.45); }
+        .btn-ver-vitrine { display: block; width: 100%; background: transparent; border: 1px solid #8A63D2; border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 30px; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn-ver-vitrine:hover { background: #8A63D2; color: #fff; }
+        .link-permanente { background: #121212; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px; margin-top: 16px; text-align: center; }
+        .link-permanente p { font-size: 12px; color: #888; margin-bottom: 8px; }
+        .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; }
+        .btn-copiar { background: #1a1a1a; border: 1px solid #8A63D2; color: #8A63D2; padding: 8px 16px; border-radius: 8px; margin-top: 10px; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn-copiar:hover { background: #8A63D2; color: #fff; }
+        .empty-state { text-align: center; padding: 30px 0; color: #444; font-size: 14px; }
+        .empty-state .emoji { font-size: 40px; margin-bottom: 10px; }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>Minha Lista de Presentes</h1>
-  <p class="sub">Cole o link do produto que voce quer ganhar</p>
+<div class="app-container">
 
-  <div class="card">
-    <h2>Adicionar presente</h2>
-    <div class="plataformas">
-      <span class="plt-badge">🛒 Amazon</span>
-      <span class="plt-badge">🛍️ Mercado Livre</span>
-      <span class="plt-badge">🧡 Shopee</span>
-    </div>
-    <div class="input-group">
-      <input type="text" id="input-link" placeholder="Cole o link do produto aqui..." oninput="verificarLink()">
-      <button class="btn-add" id="btn-adicionar" onclick="adicionarProduto()">Adicionar</button>
-    </div>
-    <div class="aviso-link" id="aviso-link">
-      ⚠️ Link limitado — detalhes do produto não serão exibidos. Use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
-      <div class="aviso-btns">
-        <button class="btn-continuar" onclick="continuarMesmo()">Continuar</button>
-        <button class="btn-voltar" onclick="voltarLink()">Voltar</button>
-      </div>
-    </div>
-    <div class="loading" id="loading">Buscando produto... aguarde ⏳</div>
-  </div>
+    <header class="header">
+        <div>
+            <div class="logo-box">InstaGift</div>
+            <p class="tagline">O seu presente perfeito ✨</p>
+        </div>
+        <div class="header-stars">✦ ✦</div>
+    </header>
 
-  <div class="card">
-    <h2>Seus presentes (<span id="total">0</span>)</h2>
-    <div class="produtos-lista" id="lista">
-      <div class="vazio">
-        <div class="icon">🎁</div>
-        <p>Nenhum presente adicionado ainda</p>
-      </div>
-    </div>
-  </div>
+    <section class="card">
+        <h2>Adicionar presente</h2>
+        <div class="platform-chips">
+            <span class="chip">🛒 Amazon</span>
+            <span class="chip">🛍️ Mercado Livre</span>
+            <span class="chip">🧡 Shopee</span>
+        </div>
+        <div class="input-group">
+            <input type="text" id="inputLink" placeholder="Cole o link do produto aqui..." oninput="verificarLink()">
+            <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
+        </div>
+        <div class="aviso-link" id="avisoLink">
+            ⚠️ Link limitado — detalhes do produto não serão exibidos. Use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
+            <div class="aviso-btns">
+                <button class="btn-voltar" onclick="voltarLink()">Voltar</button>
+                <button class="btn-continuar" onclick="continuarMesmo()">Continuar assim</button>
+            </div>
+        </div>
+        <div class="loading" id="loading">⏳ Buscando produto...</div>
+    </section>
 
-  <button class="btn-gerar-vitrine" id="btn-vitrine" onclick="gerarVitrine()">
-    Gerar minha vitrine de presentes
-  </button>
+    <section class="card list-section">
+        <h2>Seus presentes <span id="contador">(0)</span> ✦</h2>
+        <div id="listaProdutos">
+            <div class="empty-state">
+                <div class="emoji">🎁</div>
+                <p>Nenhum presente ainda.<br>Adicione o primeiro!</p>
+            </div>
+        </div>
+    </section>
 
-  <div class="acoes-vitrine" id="acoes-vitrine">
-    <div class="card-salvar">
-      <div class="titulo">🔒 Salve este link — sua lista permanente</div>
-      <div class="aviso">Use sempre este link para adicionar mais presentes depois!</div>
-      <div class="link-box">
-        <span id="link-lista-permanente"></span>
-        <button class="btn-copiar" onclick="copiarLinkLista()">Copiar</button>
-      </div>
+    <div class="link-permanente" id="linkPermanente" style="display:none">
+        <p>🔗 Seu link permanente para adicionar mais presentes:</p>
+        <code id="textoLink"></code><br>
+        <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
     </div>
-    <div class="card-vitrine">
-      <div class="titulo">Sua vitrine esta pronta!</div>
-      <div class="link-vitrine-box">
-        <span id="link-gerado"></span>
-        <button class="btn-copiar" onclick="copiarLink()">Copiar</button>
-      </div>
-      <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
-      <button class="btn-criar-story" onclick="criarStory()">Criar meu story no Instagram</button>
-    </div>
-  </div>
+
+    <button class="btn-vitrine" onclick="gerarVitrine()">
+        🎉 Gerar minha vitrine de presentes
+    </button>
+
+    <button class="btn-ver-vitrine" id="btnVerVitrine" style="display:none" onclick="verVitrine()">
+        👁️ Ver minha vitrine
+    </button>
+
 </div>
 
 <script>
-var LISTA_ID = "{{ lista_id }}";
-var produtos = [];
-var linkVitrine = '';
+    const LISTA_ID = "{{ lista_id }}";
+    const BASE = "";
+    var linkIgnorado = false;
 
-function verificarLink() {
-  var link = document.getElementById('input-link').value.trim();
-  var aviso = document.getElementById('aviso-link');
-  var btn = document.getElementById('btn-adicionar');
-  if (link.indexOf('produto.mercadolivre') > -1) {
-    aviso.style.display = 'block';
-    btn.style.display = 'none';
-  } else {
-    aviso.style.display = 'none';
-    btn.style.display = 'block';
-  }
-}
-
-function continuarMesmo() {
-  document.getElementById('aviso-link').style.display = 'none';
-  document.getElementById('btn-adicionar').style.display = 'block';
-  adicionarProduto();
-}
-
-function voltarLink() {
-  document.getElementById('input-link').value = '';
-  document.getElementById('aviso-link').style.display = 'none';
-  document.getElementById('btn-adicionar').style.display = 'block';
-}
-
-function emojiPlataforma(plt) {
-  if (plt === 'amazon') return '🛒';
-  if (plt === 'mercadolivre') return '🛍️';
-  if (plt === 'shopee') return '🧡';
-  return '🔗';
-}
-
-function nomePlataforma(plt) {
-  if (plt === 'amazon') return 'Amazon';
-  if (plt === 'mercadolivre') return 'Mercado Livre';
-  if (plt === 'shopee') return 'Shopee';
-  return 'Loja';
-}
-
-function renderLista() {
-  var lista = document.getElementById('lista');
-  document.getElementById('total').textContent = produtos.length;
-  if (!produtos.length) {
-    lista.innerHTML = '<div class="vazio"><div class="icon">🎁</div><p>Nenhum presente adicionado ainda</p></div>';
-    document.getElementById('btn-vitrine').classList.remove('show');
-    return;
-  }
-  lista.innerHTML = produtos.map(function(p) {
-    return '<div class="produto-card">' +
-      (p.imagem_url
-        ? '<img class="produto-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
-        : '<div class="produto-img-placeholder" style="background:linear-gradient(135deg,#7F77DD,#5B8DEF);">🎁</div>') +
-      '<div class="produto-info">' +
-        '<div class="produto-nome">' + p.nome + '</div>' +
-        (p.preco ? '<div class="produto-preco">R$ ' + p.preco + '</div>' : '') +
-        '<span class="produto-plt plt-' + p.plataforma + '">' + emojiPlataforma(p.plataforma) + ' ' + nomePlataforma(p.plataforma) + '</span>' +
-      '</div>' +
-      '<button class="btn-remover" onclick="remover(' + p.id + ')">✕</button>' +
-    '</div>';
-  }).join('');
-  document.getElementById('btn-vitrine').classList.add('show');
-}
-
-async function adicionarProduto() {
-  var link = document.getElementById('input-link').value.trim();
-  if (!link) { alert('Cole um link de produto!'); return; }
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('btn-adicionar').disabled = true;
-  try {
-    var res = await fetch('/api/adicionar-produto', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({lista_id: LISTA_ID, link: link})
-    });
-    var data = await res.json();
-    if (data.ok) {
-      produtos.push(data.produto);
-      renderLista();
-      document.getElementById('input-link').value = '';
-      document.getElementById('aviso-link').style.display = 'none';
-      document.getElementById('btn-adicionar').style.display = 'block';
-    } else {
-      alert(data.erro || 'Erro ao adicionar produto.');
+    async function carregarProdutos() {
+        try {
+            const r = await fetch(`${BASE}/api/produtos/${LISTA_ID}`);
+            const produtos = await r.json();
+            renderizar(produtos);
+        } catch(e) { console.error(e); }
     }
-  } catch(e) {
-    alert('Erro de conexao. Tente novamente.');
-  }
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('btn-adicionar').disabled = false;
-}
 
-async function remover(id) {
-  await fetch('/api/remover-produto/' + id, {method: 'DELETE'});
-  produtos = produtos.filter(function(p) { return p.id !== id; });
-  renderLista();
-}
+    function renderizar(produtos) {
+        const el = document.getElementById("listaProdutos");
+        const contador = document.getElementById("contador");
+        const linkPerm = document.getElementById("linkPermanente");
+        const btnVer = document.getElementById("btnVerVitrine");
 
-function gerarVitrine() {
-  linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
-  var linkLista = window.location.origin + '/lista/' + LISTA_ID;
-  document.getElementById('link-gerado').textContent = linkVitrine;
-  document.getElementById('link-lista-permanente').textContent = linkLista;
-  document.getElementById('btn-vitrine').classList.remove('show');
-  document.getElementById('acoes-vitrine').classList.add('show');
-  document.getElementById('acoes-vitrine').scrollIntoView({behavior: 'smooth'});
-}
+        contador.textContent = `(${produtos.length})`;
 
-function copiarLink() {
-  navigator.clipboard.writeText(linkVitrine).then(function() { alert('Link da vitrine copiado!'); });
-}
+        if (produtos.length === 0) {
+            el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro!</p></div>`;
+            linkPerm.style.display = "none";
+            btnVer.style.display = "none";
+            return;
+        }
 
-function copiarLinkLista() {
-  var link = document.getElementById('link-lista-permanente').textContent;
-  navigator.clipboard.writeText(link).then(function() { alert('Link da lista copiado! Salve para usar depois.'); });
-}
+        linkPerm.style.display = "block";
+        btnVer.style.display = "block";
+        document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
 
-function verVitrine() { window.open(linkVitrine, '_blank'); }
-function criarStory() { window.location.href = '/?vitrine=' + LISTA_ID; }
+        el.innerHTML = produtos.map(p => {
+            const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
+            const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
+            const imgHtml = p.imagem_url
+                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
+                : `<div class="product-img-placeholder">🎁</div>`;
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('input-link').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') adicionarProduto();
-  });
-});
+            return `
+            <div class="product-card" id="prod-${p.id}">
+                <div class="product-img-wrap">${imgHtml}</div>
+                <div class="product-info">
+                    <div class="product-nome">${p.nome || "Produto"}</div>
+                    ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
+                    <div class="product-footer">
+                        <span class="platform-badge ${badge}">${label}</span>
+                        <button class="btn-remover" onclick="remover(${p.id})">✕</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+    }
+
+    function verificarLink() {
+        const link = document.getElementById("inputLink").value.trim();
+        const aviso = document.getElementById("avisoLink");
+        linkIgnorado = false;
+        if (link.indexOf('produto.mercadolivre') > -1) {
+            aviso.style.display = 'block';
+        } else {
+            aviso.style.display = 'none';
+        }
+    }
+
+    function voltarLink() {
+        document.getElementById("inputLink").value = '';
+        document.getElementById("avisoLink").style.display = 'none';
+        linkIgnorado = false;
+    }
+
+    function continuarMesmo() {
+        document.getElementById("avisoLink").style.display = 'none';
+        linkIgnorado = true;
+        adicionarProduto();
+    }
+
+    async function adicionarProduto() {
+        const input = document.getElementById("inputLink");
+        const btn = document.getElementById("btnAdicionar");
+        const loading = document.getElementById("loading");
+        const link = input.value.trim();
+        const aviso = document.getElementById("avisoLink");
+
+        if (!link) return;
+
+        if (link.indexOf('produto.mercadolivre') > -1 && !linkIgnorado) {
+            aviso.style.display = 'block';
+            return;
+        }
+
+        btn.disabled = true;
+        loading.style.display = "block";
+        aviso.style.display = 'none';
+
+        try {
+            const r = await fetch(`${BASE}/api/adicionar-produto`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ link, lista_id: LISTA_ID })
+            });
+            const data = await r.json();
+            if (data.ok) {
+                input.value = "";
+                linkIgnorado = false;
+                await carregarProdutos();
+            } else {
+                alert("Não consegui buscar o produto. Tente outro link.");
+            }
+        } catch(e) {
+            alert("Erro de conexão. Tente novamente.");
+        } finally {
+            btn.disabled = false;
+            loading.style.display = "none";
+        }
+    }
+
+    async function remover(id) {
+        await fetch(`${BASE}/api/remover-produto/${id}`, { method: "DELETE" });
+        await carregarProdutos();
+    }
+
+    function gerarVitrine() {
+        window.location.href = `/vitrine/${LISTA_ID}`;
+    }
+
+    function verVitrine() {
+        window.open(`/vitrine/${LISTA_ID}?admin=true`, '_blank');
+    }
+
+    function copiarLink() {
+        const link = `${window.location.origin}/lista/${LISTA_ID}`;
+        navigator.clipboard.writeText(link).then(() => alert("Link copiado!"));
+    }
+
+    document.getElementById("inputLink").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") adicionarProduto();
+    });
+
+    carregarProdutos();
 </script>
 </body>
 </html>
