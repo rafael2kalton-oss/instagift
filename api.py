@@ -410,18 +410,26 @@ def confirmar_compra(token):
     return render_template("confirmacao.html", status="confirmado", nome_produto=produto.get("nome", "Produto"))
 
 @app.route("/api/limpar-reservas-expiradas", methods=["POST"])
-def limpar_reservas():
+def limpar_reservas_expiradas():
     try:
-        produtos = sb_get("produtos", "reservado=eq.1")
-        if not isinstance(produtos, list):
-            return jsonify({"ok": True})
+        # 1. Define o tempo agora e o limite de 3 horas atrás (padrão UTC para o banco)
         agora = datetime.utcnow()
+        prazo_limite = agora - timedelta(hours=3)
+        
+        # 2. Busca no banco todos os itens reservados (status 1)
+        produtos = sb_get("produtos", "reservado=eq.1")
+        
+        if not isinstance(produtos, list):
+            return jsonify({"status": "sucesso", "liberados": 0}), 200
+
         liberados = 0
         for p in produtos:
             reservado_em = p.get("reservado_em")
             if reservado_em:
-                dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
-                if agora > dt + timedelta(hours=3):
+                # 3. Converte a data e verifica se já passou de 3 horas
+                dt_reserva = datetime.fromisoformat(reservado_em.replace('Z', ''))
+                if dt_reserva < prazo_limite:
+                    # 4. Libera o produto no Supabase voltando para status 0
                     sb_patch("produtos", f"id=eq.{p['id']}", {
                         "reservado": 0,
                         "token_confirmacao": None,
@@ -430,9 +438,10 @@ def limpar_reservas():
                         "email_comprador": None
                     })
                     liberados += 1
-        return jsonify({"ok": True, "liberados": liberados})
+
+        return jsonify({"status": "sucesso", "liberados": liberados}), 200
     except Exception as e:
-        return jsonify({"erro": str(e)}), 500
+        return jsonify({"status": "erro", "mensagem": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
