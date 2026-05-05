@@ -25,6 +25,8 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 .btn-outro { background: #7F77DD; color: #fff; }
 .btn-reservado { background: #333; color: #666; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; }
 .btn-presenteado { background: #1a2a1a; color: #22c55e; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; border: 1px solid #22c55e; }
+.btn-liberar { width: 100%; padding: 10px; background: transparent; border: 1px solid #ff9900; color: #ff9900; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+.btn-liberar:hover { background: #ff9900; color: #000; }
 .badge-status { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
 .btn-excluir { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); border: none; color: #fff; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; }
 .btn-excluir.show { display: flex; }
@@ -109,15 +111,18 @@ function renderProdutos(produtos) {
     var statusBtn = '';
 
     if (p.reservado === 2) {
-      // Compra confirmada
       statusBtn = '<button class="btn-presenteado">🎁 Alguém já presenteou</button>' +
                   '<div class="badge-status">Este presente já foi comprado 💜</div>';
+      if (isAdmin) {
+        statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
+      }
     } else if (p.reservado === 1) {
-      // Reservado aguardando confirmação
       statusBtn = '<button class="btn-reservado">🔒 Presente já escolhido</button>' +
                   '<div class="badge-status">Alguém já escolheu este presente</div>';
+      if (isAdmin) {
+        statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
+      }
     } else {
-      // Disponível
       statusBtn = '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>';
     }
 
@@ -182,6 +187,16 @@ async function confirmarReserva() {
     }
   } catch(e) {
     alert('Erro ao reservar. Tente novamente.');
+  }
+}
+
+async function liberarProduto(id) {
+  if (!confirm('Liberar este presente para compra novamente?')) return;
+  try {
+    await fetch('/api/liberar-produto/' + id, { method: 'POST' });
+    await carregarLista();
+  } catch(e) {
+    alert('Erro ao liberar. Tente novamente.');
   }
 }
 
