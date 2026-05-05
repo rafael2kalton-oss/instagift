@@ -264,7 +264,12 @@ def lista_page(lista_id):
 @app.route("/vitrine/<lista_id>")
 def vitrine(lista_id):
     return render_template("vitrine.html", lista_id=lista_id)
-
+@app.route("/api/lista-info/<lista_id>")
+def lista_info(lista_id):
+    lista = sb_get("listas", f"id=eq.{lista_id}")
+    if lista and isinstance(lista, list):
+        return jsonify(lista[0])
+    return jsonify({})
 @app.route("/api/salvar-email-lista", methods=["POST"])
 def salvar_email_lista():
     data = request.json
