@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-import uuid, re, requests
+import uuid, re, requests, resend
 from bs4 import BeautifulSoup
+from datetime import datetime, timedelta
 
 app = Flask(__name__, template_folder="templates")
 
@@ -11,6 +12,9 @@ AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
+RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
+
+resend.api_key = RESEND_KEY
 
 HEADERS_SB = {
     "apikey": SUPABASE_KEY,
@@ -82,7 +86,6 @@ def extrair_ml(link):
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
 
-        # Tenta /p/ catalogo
         m = re.search(r'/p/(MLB\w+)', link_limpo, re.IGNORECASE)
         if m:
             catalog_id = m.group(1)
@@ -102,15 +105,11 @@ def extrair_ml(link):
                 return nome, imagem, preco
             return nome, imagem, ""
 
-        # Tenta MLB direto no link
         m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if m2:
             item_id = f"MLB{m2.group(1)}"
             r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
-
-            # Se bloqueou tenta via busca
             if r.get("status") == 403 or "UNAUTHORIZED" in str(r.get("code", "")):
-                print("ML API bloqueou — tentando busca")
                 try:
                     r_search = requests.get(
                         f"https://api.mercadolibre.com/sites/MLB/search?q={item_id}&limit=1",
@@ -120,22 +119,17 @@ def extrair_ml(link):
                     if resultados:
                         prod = resultados[0]
                         nome = prod.get("title", "")[:100]
-                        thumbnail = prod.get("thumbnail", "")
-                        # Melhora qualidade da thumbnail
-                        imagem = thumbnail.replace("-I.jpg", "-O.jpg").replace("http://", "https://") if thumbnail else ""
                         preco = str(prod.get("price", "")).replace(".", ",")
                         return nome, "", preco
-                except Exception as e:
-                    print("ML busca erro:", e)
+                except:
+                    pass
                 return "", "", ""
-
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
             preco = str(r.get("price", "")).replace(".", ",")
             if nome:
                 return nome, imagem, preco
-
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
@@ -208,6 +202,52 @@ def extrair_dados(link, plataforma):
 
     return nome, imagem, preco
 
+def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url):
+    link_confirmacao = f"{base_url}/confirmar-compra/{token}"
+    try:
+        resend.Emails.send({
+            "from": "InstaGift <onboarding@resend.dev>",
+            "to": email_comprador,
+            "subject": f"🎁 Confirme que você comprou o presente!",
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
+                <h2 style="color:#8A63D2;margin-bottom:8px;">Olá, {nome_comprador}! 🎁</h2>
+                <p style="color:#aaa;margin-bottom:24px;">Você reservou <strong style="color:#fff;">{nome_produto}</strong>.</p>
+                <p style="color:#aaa;margin-bottom:24px;">Após finalizar a compra, clique no botão abaixo para confirmar:</p>
+                <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:16px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
+                <p style="color:#555;font-size:12px;">⏰ Este link expira em 3 horas. Se não confirmar, o presente voltará a ficar disponível para outros.</p>
+                <p style="color:#555;font-size:12px;margin-top:16px;">Com carinho, InstaGift 💜</p>
+            </div>
+            """
+        })
+    except Exception as e:
+        print("Erro email comprador:", e)
+
+def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produto):
+    try:
+        resend.Emails.send({
+            "from": "InstaGift <onboarding@resend.dev>",
+            "to": email_aniversariante,
+            "subject": "🎉 Presente confirmado! Alguém te ama muito!",
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
+                <h2 style="color:#8A63D2;margin-bottom:8px;">Que surpresa incrível! 🥳</h2>
+                <p style="color:#aaa;margin-bottom:16px;"><strong style="color:#fff;">{nome_comprador}</strong> confirmou a compra de <strong style="color:#fff;">{nome_produto}</strong> para você!</p>
+                <p style="color:#aaa;margin-bottom:24px;">Seu presente está a caminho! Feliz aniversário! 🎂🎁</p>
+                <div style="background:#1a1a1a;border-radius:12px;padding:16px;text-align:center;margin-bottom:24px;">
+                    <p style="color:#8A63D2;font-size:24px;margin-bottom:8px;">🎁</p>
+                    <p style="color:#fff;font-weight:700;">{nome_produto}</p>
+                    <p style="color:#aaa;font-size:13px;">presenteado por {nome_comprador}</p>
+                </div>
+                <p style="color:#555;font-size:12px;">Com carinho, InstaGift 💜</p>
+            </div>
+            """
+        })
+    except Exception as e:
+        print("Erro email aniversariante:", e)
+
+# ── ROTAS ──
+
 @app.route("/")
 def index():
     return render_template("criar_story.html")
@@ -224,6 +264,20 @@ def lista_page(lista_id):
 @app.route("/vitrine/<lista_id>")
 def vitrine(lista_id):
     return render_template("vitrine.html", lista_id=lista_id)
+
+@app.route("/api/salvar-email-lista", methods=["POST"])
+def salvar_email_lista():
+    data = request.json
+    lista_id = data.get("lista_id", "").strip()
+    email = data.get("email", "").strip()
+    if not lista_id or not email:
+        return jsonify({"erro": "Dados incompletos"}), 400
+    lista = sb_get("listas", f"id=eq.{lista_id}")
+    if not lista or not isinstance(lista, list) or len(lista) == 0:
+        sb_post("listas", {"id": lista_id, "nome": "Minha Lista", "email_aniversariante": email})
+    else:
+        sb_patch("listas", f"id=eq.{lista_id}", {"email_aniversariante": email})
+    return jsonify({"ok": True})
 
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
@@ -278,13 +332,102 @@ def remover_produto(produto_id):
 
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
 def reservar(produto_id):
+    data = request.json or {}
+    nome_comprador = data.get("nome", "").strip()
+    email_comprador = data.get("email", "").strip()
+
+    if not nome_comprador or not email_comprador:
+        return jsonify({"erro": "Nome e e-mail obrigatórios"}), 400
+
     produtos = sb_get("produtos", f"id=eq.{produto_id}")
     if not produtos or not isinstance(produtos, list):
-        return jsonify({"erro": "Não encontrado"}), 404
+        return jsonify({"erro": "Produto não encontrado"}), 404
     if produtos[0].get("reservado"):
         return jsonify({"erro": "Já reservado"}), 400
-    sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 1})
+
+    token = str(uuid.uuid4())
+    agora = datetime.utcnow().isoformat()
+
+    sb_patch("produtos", f"id=eq.{produto_id}", {
+        "reservado": 1,
+        "token_confirmacao": token,
+        "reservado_em": agora,
+        "nome_comprador": nome_comprador,
+        "email_comprador": email_comprador
+    })
+
+    # Envia e-mail para o comprador
+    nome_produto = produtos[0].get("nome", "Produto")
+    base_url = request.host_url.rstrip('/')
+    enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url)
+
     return jsonify({"ok": True})
+
+@app.route("/confirmar-compra/<token>")
+def confirmar_compra(token):
+    produtos = sb_get("produtos", f"token_confirmacao=eq.{token}")
+    if not produtos or not isinstance(produtos, list):
+        return "<h2>Link inválido ou expirado.</h2>", 404
+
+    produto = produtos[0]
+    reservado_em = produto.get("reservado_em")
+
+    # Verifica se expirou
+    if reservado_em:
+        dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
+        if datetime.utcnow() > dt + timedelta(hours=3):
+            sb_patch("produtos", f"id=eq.{produto['id']}", {
+                "reservado": 0,
+                "token_confirmacao": None,
+                "reservado_em": None,
+                "nome_comprador": None,
+                "email_comprador": None
+            })
+            return render_template("confirmacao.html", status="expirado")
+
+    # Confirma a compra
+    sb_patch("produtos", f"id=eq.{produto['id']}", {
+        "reservado": 2,
+        "token_confirmacao": None
+    })
+
+    # Busca e-mail do aniversariante
+    lista = sb_get("listas", f"id=eq.{produto['lista_id']}")
+    if lista and isinstance(lista, list):
+        email_aniversariante = lista[0].get("email_aniversariante")
+        if email_aniversariante:
+            enviar_email_aniversariante(
+                email_aniversariante,
+                produto.get("nome_comprador", "Alguém"),
+                produto.get("nome", "Produto")
+            )
+
+    return render_template("confirmacao.html", status="confirmado", nome_produto=produto.get("nome", "Produto"))
+
+@app.route("/api/limpar-reservas-expiradas", methods=["POST"])
+def limpar_reservas():
+    try:
+        produtos = sb_get("produtos", "reservado=eq.1")
+        if not isinstance(produtos, list):
+            return jsonify({"ok": True})
+        agora = datetime.utcnow()
+        liberados = 0
+        for p in produtos:
+            reservado_em = p.get("reservado_em")
+            if reservado_em:
+                dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
+                if agora > dt + timedelta(hours=3):
+                    sb_patch("produtos", f"id=eq.{p['id']}", {
+                        "reservado": 0,
+                        "token_confirmacao": None,
+                        "reservado_em": None,
+                        "nome_comprador": None,
+                        "email_comprador": None
+                    })
+                    liberados += 1
+        return jsonify({"ok": True, "liberados": liberados})
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
