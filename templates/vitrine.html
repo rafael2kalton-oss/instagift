@@ -24,12 +24,11 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 .btn-shopee { background: #EE4D2D; color: #fff; }
 .btn-outro { background: #7F77DD; color: #fff; }
 .btn-reservado { background: #333; color: #666; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; }
-.badge-reservado { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
+.btn-presenteado { background: #1a2a1a; color: #22c55e; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; border: 1px solid #22c55e; }
+.badge-status { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
 .btn-excluir { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); border: none; color: #fff; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; }
 .btn-excluir.show { display: flex; }
 .loading { text-align: center; padding: 60px; color: #888; }
-
-/* Popup reserva */
 .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
 .popup-overlay.show { display: flex; }
 .popup { background: #111; border: 1px solid #333; border-radius: 16px; padding: 24px; width: 100%; max-width: 380px; }
@@ -39,8 +38,6 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 .popup-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
 .btn-sim { background: #7F77DD; color: white; }
 .btn-nao { background: #333; color: white; }
-
-/* Formulario reserva */
 .form-reserva { display: none; margin-top: 16px; }
 .form-reserva.show { display: block; }
 .form-reserva input { width: 100%; padding: 12px 14px; font-size: 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 10px; }
@@ -64,7 +61,7 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 <div class="popup-overlay" id="popup-overlay">
   <div class="popup">
     <h3>🎁 Reservar este presente?</h3>
-    <p>Ao reservar, o presente fica marcado como escolhido por você. Se a compra não for confirmada em 3 horas o presente volta a ficar disponível.</p>
+    <p>Ao reservar, você receberá um e-mail para confirmar a compra. Se não confirmar em até 3 horas, o presente voltará a ficar disponível para outros.</p>
     <div class="popup-btns" id="popup-btns">
       <button class="btn-nao" onclick="naoReservar()">Não, só ver</button>
       <button class="btn-sim" onclick="mostrarFormulario()">Sim, reservar!</button>
@@ -73,7 +70,7 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
       <input type="text" id="input-nome" placeholder="Seu nome">
       <input type="email" id="input-email" placeholder="Seu e-mail">
       <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar reserva e ir às compras</button>
-      <p class="aviso-reserva">⏰ Se a compra não for confirmada em 3 horas o presente volta a ficar disponível para outros.</p>
+      <p class="aviso-reserva">⏰ Você receberá um e-mail para confirmar que comprou. Se não confirmar em 3 horas o presente volta a ficar disponível.</p>
     </div>
   </div>
 </div>
@@ -109,6 +106,21 @@ function renderProdutos(produtos) {
   }
   grid.innerHTML = produtos.map(function(p) {
     var info = btnInfo[p.plataforma] || btnInfo['outro'];
+    var statusBtn = '';
+
+    if (p.reservado === 2) {
+      // Compra confirmada
+      statusBtn = '<button class="btn-presenteado">🎁 Alguém já presenteou</button>' +
+                  '<div class="badge-status">Este presente já foi comprado 💜</div>';
+    } else if (p.reservado === 1) {
+      // Reservado aguardando confirmação
+      statusBtn = '<button class="btn-reservado">🔒 Presente já escolhido</button>' +
+                  '<div class="badge-status">Alguém já escolheu este presente</div>';
+    } else {
+      // Disponível
+      statusBtn = '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>';
+    }
+
     return '<div class="card" id="card-' + p.id + '">' +
       '<button class="btn-excluir' + (isAdmin ? ' show' : '') + '" onclick="excluirProduto(' + p.id + ')">✕</button>' +
       (p.imagem_url
@@ -116,14 +128,8 @@ function renderProdutos(produtos) {
         : '<div class="card-sem-img">🎁</div>') +
       '<div class="card-body">' +
         '<div class="card-nome">' + p.nome + '</div>' +
-       (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
-        (p.pago
-          ? '<button class="btn-reservado" style="background: #1a1a1a; color: #555; cursor: default;">✅ ITEM JÁ ADQUIRIDO</button>' +
-            '<div class="badge-reservado">Este presente já foi confirmado e finalizado</div>'
-          : p.reservado
-            ? '<button class="btn-reservado">🔒 Presente ja escolhido</button>' +
-              '<div class="badge-reservado">Alguem ja escolheu este presente</div>'
-            : '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>') +
+        (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
+        statusBtn +
       '</div>' +
     '</div>';
   }).join('');
@@ -165,14 +171,13 @@ async function confirmarReserva() {
     });
     document.getElementById('popup-overlay').classList.remove('show');
     window.open(produtoAtual.link, '_blank');
-    // Atualiza o card
     var card = document.getElementById('card-' + produtoAtual.id);
     if (card) {
       var body = card.querySelector('.card-body');
       var btnAtual = body.querySelector('.btn-comprar');
       if (btnAtual) {
-        btnAtual.outerHTML = '<button class="btn-reservado">🔒 Presente ja escolhido</button>' +
-          '<div class="badge-reservado">Alguem ja escolheu este presente</div>';
+        btnAtual.outerHTML = '<button class="btn-reservado">🔒 Presente já escolhido</button>' +
+          '<div class="badge-status">Alguém já escolheu este presente</div>';
       }
     }
   } catch(e) {
