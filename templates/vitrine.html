@@ -116,11 +116,14 @@ function renderProdutos(produtos) {
         : '<div class="card-sem-img">🎁</div>') +
       '<div class="card-body">' +
         '<div class="card-nome">' + p.nome + '</div>' +
-        (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
-        (p.reservado
-          ? '<button class="btn-reservado">🔒 Presente ja escolhido</button>' +
-            '<div class="badge-reservado">Alguem ja escolheu este presente</div>'
-          : '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>') +
+       (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
+        (p.pago
+          ? '<button class="btn-reservado" style="background: #1a1a1a; color: #555; cursor: default;">✅ ITEM JÁ ADQUIRIDO</button>' +
+            '<div class="badge-reservado">Este presente já foi confirmado e finalizado</div>'
+          : p.reservado
+            ? '<button class="btn-reservado">🔒 Presente ja escolhido</button>' +
+              '<div class="badge-reservado">Alguem ja escolheu este presente</div>'
+            : '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>') +
       '</div>' +
     '</div>';
   }).join('');
