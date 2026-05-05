@@ -69,3 +69,278 @@
         .btn-gerar-vitrine { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(138, 99, 210, 0.3); }
         .btn-gerar-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138, 99, 210, 0.45); }
         .btn-ver-vitrine { width: 100%; background: transparent; border: 1px solid #8A63D2; border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+        .btn-ver-vitrine:hover { background: #8A63D2; color: #fff; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+
+    <header class="header">
+        <div>
+            <div class="logo-box">InstaGift</div>
+            <p class="tagline">O seu presente perfeito ✨</p>
+        </div>
+        <div class="header-stars">✦ ✦</div>
+    </header>
+
+    <!-- EMAIL OBRIGATORIO -->
+    <div class="email-box" id="emailBox">
+        <p>💜 Para receber notificações quando alguém reservar ou confirmar um presente, informe seu e-mail:</p>
+        <input type="email" id="inputEmail" placeholder="Seu e-mail">
+        <button class="btn-salvar-email" onclick="salvarEmail()">Salvar e-mail</button>
+        <p class="email-salvo" id="emailSalvo">✅ E-mail salvo com sucesso!</p>
+    </div>
+
+    <section class="card">
+        <h2>Adicionar presente</h2>
+        <div class="platform-chips">
+            <span class="chip">🛒 Amazon</span>
+            <span class="chip">🛍️ Mercado Livre</span>
+            <span class="chip">🧡 Shopee</span>
+        </div>
+        <div class="input-group">
+            <input type="text" id="inputLink" placeholder="Cole o link do produto aqui..." oninput="verificarLink()">
+            <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
+        </div>
+        <div class="aviso-link" id="avisoLink">
+            ⚠️ Link limitado — detalhes do produto não serão exibidos. Use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
+            <div class="aviso-btns">
+                <button class="btn-voltar-aviso" onclick="voltarLink()">Voltar</button>
+                <button class="btn-continuar" onclick="continuarMesmo()">Continuar assim</button>
+            </div>
+        </div>
+        <div class="loading" id="loading">⏳ Buscando produto...</div>
+    </section>
+
+    <section class="card list-section">
+        <h2>Seus presentes <span id="contador">(0)</span> ✦</h2>
+        <div id="listaProdutos">
+            <div class="empty-state">
+                <div class="emoji">🎁</div>
+                <p>Nenhum presente ainda.<br>Adicione o primeiro!</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="link-permanente" id="linkPermanente" style="display:none">
+        <p>🔗 Seu link permanente para adicionar mais presentes:</p>
+        <code id="textoLink"></code><br>
+        <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
+    </div>
+
+    <div class="acoes" id="acoesVitrine" style="display:none">
+        <button class="btn-criar-story" onclick="abrirPopupStory()">
+            📸 Criar meu story no Instagram
+        </button>
+        <button class="btn-gerar-vitrine" onclick="gerarVitrine()">
+            🎉 Gerar minha vitrine de presentes
+        </button>
+        <button class="btn-ver-vitrine" onclick="verVitrine()">
+            👁️ Ver minha vitrine
+        </button>
+    </div>
+
+</div>
+
+<!-- Popup recomendacao story -->
+<div id="popupStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#121212; border:1px solid #333; border-radius:20px; padding:28px 22px; max-width:380px; width:100%; text-align:center;">
+        <div style="font-size:44px; margin-bottom:12px;">🎉</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:12px;">Parabéns pelo seu dia!</h3>
+        <p style="font-size:14px; color:#aaa; line-height:1.7; margin-bottom:24px;">Recomendamos compartilhar sua vitrine nos <strong style="color:#8A63D2;">Melhores Amigos</strong>.<br>É o lugar perfeito para celebrar com quem realmente importa! 💜</p>
+        <button onclick="irParaStory()" style="width:100%; padding:15px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">Entendi, vamos lá! 📸</button>
+        <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid #333; border-radius:12px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
+    </div>
+</div>
+
+<script>
+    const LISTA_ID = "{{ lista_id }}";
+    const BASE = "";
+    var linkIgnorado = false;
+    var emailSalvo = false;
+
+    async function salvarEmail() {
+        const email = document.getElementById('inputEmail').value.trim();
+        if (!email || !email.includes('@')) {
+            alert('Por favor insira um e-mail válido!');
+            return;
+        }
+        try {
+            await fetch(`${BASE}/api/salvar-email-lista`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({lista_id: LISTA_ID, email: email})
+            });
+            document.getElementById('emailSalvo').style.display = 'block';
+            document.getElementById('emailBox').style.border = '1px solid #22c55e';
+            emailSalvo = true;
+        } catch(e) {
+            alert('Erro ao salvar e-mail. Tente novamente.');
+        }
+    }
+
+    async function carregarProdutos() {
+        try {
+            const r = await fetch(`${BASE}/api/produtos/${LISTA_ID}`);
+            const produtos = await r.json();
+            renderizar(produtos);
+        } catch(e) { console.error(e); }
+    }
+
+    function renderizar(produtos) {
+        const el = document.getElementById("listaProdutos");
+        const contador = document.getElementById("contador");
+        const linkPerm = document.getElementById("linkPermanente");
+        const acoes = document.getElementById("acoesVitrine");
+
+        contador.textContent = `(${produtos.length})`;
+
+        if (produtos.length === 0) {
+            el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro!</p></div>`;
+            linkPerm.style.display = "none";
+            acoes.style.display = "none";
+            return;
+        }
+
+        linkPerm.style.display = "block";
+        acoes.style.display = "flex";
+        document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
+
+        el.innerHTML = produtos.map(p => {
+            const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
+            const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
+            const imgHtml = p.imagem_url
+                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
+                : `<div class="product-img-placeholder">🎁</div>`;
+
+            return `
+            <div class="product-card" id="prod-${p.id}">
+                <div class="product-img-wrap">${imgHtml}</div>
+                <div class="product-info">
+                    <div class="product-nome">${p.nome || "Produto"}</div>
+                    ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
+                    <div class="product-footer">
+                        <span class="platform-badge ${badge}">${label}</span>
+                        <button class="btn-remover" onclick="remover(${p.id})">✕</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+    }
+
+    function verificarLink() {
+        const link = document.getElementById("inputLink").value.trim();
+        const aviso = document.getElementById("avisoLink");
+        linkIgnorado = false;
+        if (link.indexOf('produto.mercadolivre') > -1) {
+            aviso.style.display = 'block';
+        } else {
+            aviso.style.display = 'none';
+        }
+    }
+
+    function voltarLink() {
+        document.getElementById("inputLink").value = '';
+        document.getElementById("avisoLink").style.display = 'none';
+        linkIgnorado = false;
+    }
+
+    function continuarMesmo() {
+        document.getElementById("avisoLink").style.display = 'none';
+        linkIgnorado = true;
+        adicionarProduto();
+    }
+
+    async function adicionarProduto() {
+        const input = document.getElementById("inputLink");
+        const btn = document.getElementById("btnAdicionar");
+        const loading = document.getElementById("loading");
+        const link = input.value.trim();
+        const aviso = document.getElementById("avisoLink");
+
+        if (!link) return;
+
+        if (link.indexOf('produto.mercadolivre') > -1 && !linkIgnorado) {
+            aviso.style.display = 'block';
+            return;
+        }
+
+        btn.disabled = true;
+        loading.style.display = "block";
+        aviso.style.display = 'none';
+
+        try {
+            const r = await fetch(`${BASE}/api/adicionar-produto`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ link, lista_id: LISTA_ID })
+            });
+            const data = await r.json();
+            if (data.ok) {
+                input.value = "";
+                linkIgnorado = false;
+                await carregarProdutos();
+            } else {
+                alert("Não consegui buscar o produto. Tente outro link.");
+            }
+        } catch(e) {
+            alert("Erro de conexão. Tente novamente.");
+        } finally {
+            btn.disabled = false;
+            loading.style.display = "none";
+        }
+    }
+
+    async function remover(id) {
+        await fetch(`${BASE}/api/remover-produto/${id}`, { method: "DELETE" });
+        await carregarProdutos();
+    }
+
+    function abrirPopupStory() {
+        document.getElementById('popupStory').style.display = 'flex';
+    }
+
+    function fecharPopupStory() {
+        document.getElementById('popupStory').style.display = 'none';
+    }
+
+    function irParaStory() {
+        document.getElementById('popupStory').style.display = 'none';
+        window.location.href = `/?vitrine=${LISTA_ID}`;
+    }
+
+    function gerarVitrine() {
+        window.location.href = `/vitrine/${LISTA_ID}`;
+    }
+
+    function verVitrine() {
+        window.open(`/vitrine/${LISTA_ID}?admin=true`, '_blank');
+    }
+
+    function copiarLink() {
+        const link = `${window.location.origin}/lista/${LISTA_ID}`;
+        navigator.clipboard.writeText(link).then(() => alert("Link copiado!"));
+    }
+
+    document.getElementById("inputLink").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") adicionarProduto();
+    });
+
+    // Verifica se já tem email salvo
+    async function verificarEmailSalvo() {
+        try {
+            const r = await fetch(`${BASE}/api/produtos/${LISTA_ID}`);
+            const lista = await fetch(`${BASE}/api/lista-info/${LISTA_ID}`);
+            const data = await lista.json();
+            if (data.email_aniversariante) {
+                document.getElementById('inputEmail').value = data.email_aniversariante;
+                document.getElementById('emailSalvo').style.display = 'block';
+                document.getElementById('emailBox').style.border = '1px solid #22c55e';
+            }
+        } catch(e) {}
+    }
+
+    carregarProdutos();
+</script>
+</body>
+</html>
