@@ -334,7 +334,16 @@ def listar_produtos(lista_id):
 def remover_produto(produto_id):
     sb_delete("produtos", f"id=eq.{produto_id}")
     return jsonify({"ok": True})
-
+@app.route("/api/liberar-produto/<int:produto_id>", methods=["POST"])
+def liberar_produto(produto_id):
+    sb_patch("produtos", f"id=eq.{produto_id}", {
+        "reservado": 0,
+        "token_confirmacao": None,
+        "reservado_em": None,
+        "nome_comprador": None,
+        "email_comprador": None
+    })
+    return jsonify({"ok": True})
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
 def reservar(produto_id):
     data = request.json or {}
