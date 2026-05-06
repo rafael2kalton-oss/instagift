@@ -13,6 +13,7 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 .btn-voltar:hover { background: #1a1a1a; color: #fff; }
 h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
 .sub { font-size: clamp(13px, 2vw, 16px); color: #888; margin-bottom: 28px; margin-top: 4px; }
+.evento-badge { display: inline-flex; align-items: center; gap: 6px; background: #1a1a2e; border: 1px solid #7F77DD; border-radius: 20px; padding: 4px 14px; font-size: 13px; color: #aaa; margin-bottom: 20px; }
 .section-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 .layout { display: flex; gap: 32px; align-items: flex-start; }
 .painel-esq { flex: 1; min-width: 0; }
@@ -69,26 +70,27 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
     <button class="btn-voltar" onclick="voltarLista()">← Voltar à lista</button>
     <h1>InstaGift</h1>
   </div>
-  <p class="sub">Crie seu story de aniversario em segundos</p>
+  <div class="evento-badge" id="eventoBadge">🎂 Aniversário</div>
+  <p class="sub" id="subTitulo">Crie seu story em segundos</p>
 
   <div class="layout">
     <div class="painel-esq">
       <p class="section-label">Escolha um template</p>
-      <div class="templates-grid">
+      <div class="templates-grid" id="templatesGrid">
         <div class="tpl-card selected" data-tpl="0" onclick="selecionarTpl(this)">
           <canvas id="prev0" width="180" height="320"></canvas>
-          <div class="tpl-label">Festivo</div>
-          <div class="check">v</div>
+          <div class="tpl-label" id="label0">Festivo</div>
+          <div class="check">✓</div>
         </div>
         <div class="tpl-card" data-tpl="1" onclick="selecionarTpl(this)">
           <canvas id="prev1" width="180" height="320"></canvas>
-          <div class="tpl-label">Elegante</div>
-          <div class="check">v</div>
+          <div class="tpl-label" id="label1">Elegante</div>
+          <div class="check">✓</div>
         </div>
         <div class="tpl-card" data-tpl="2" onclick="selecionarTpl(this)">
           <canvas id="prev2" width="180" height="320"></canvas>
-          <div class="tpl-label">Minimalista</div>
-          <div class="check">v</div>
+          <div class="tpl-label" id="label2">Minimalista</div>
+          <div class="check">✓</div>
         </div>
       </div>
 
@@ -99,18 +101,13 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
       </div>
 
       <div class="form-row">
-        <label>Seu nome</label>
-        <input type="text" id="nome" value="Danilo" oninput="atualizar()">
+        <label id="labelNome">Seu nome</label>
+        <input type="text" id="nome" value="" oninput="atualizar()">
       </div>
       <div class="form-row">
         <label>Sua frase</label>
-        <textarea id="frase" rows="2" oninput="atualizar()">Deixei ideias de presente aqui!</textarea>
-        <div class="frases">
-          <span class="chip" onclick="usarFrase(this)">Pra quem sempre pergunta</span>
-          <span class="chip" onclick="usarFrase(this)">Facilita a vida de quem me ama</span>
-          <span class="chip" onclick="usarFrase(this)">Meu aniversario, minhas regras</span>
-          <span class="chip" onclick="usarFrase(this)">Escolhi com carinho cada item</span>
-        </div>
+        <textarea id="frase" rows="2" oninput="atualizar()"></textarea>
+        <div class="frases" id="frasesChips"></div>
       </div>
       <div class="form-row">
         <label>Link da sua vitrine</label>
@@ -124,7 +121,7 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
       <div class="preview-box">
         <p class="preview-title">Preview do story</p>
         <div id="preview-vazio" class="preview-vazio">
-          <div class="icone">🎁</div>
+          <div class="icone" id="previewIcone">🎁</div>
           <p>Clique em "Gerar story"<br>para ver o resultado aqui</p>
         </div>
         <div id="preview-conteudo" style="display:none;">
@@ -144,7 +141,7 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
 <!-- Modal Instagram -->
 <div class="modal-bg" id="modal-insta">
   <div class="modal-box">
-    <div style="font-size:32px; margin-bottom:8px;">🎉</div>
+    <div style="font-size:32px; margin-bottom:8px;" id="modalEmoji">🎉</div>
     <h3 style="font-size:18px; font-weight:700; margin-bottom:6px; color:#fff;">Imagem baixada!</h3>
     <p style="font-size:13px; color:#888; margin-bottom:20px;">Siga os passos para postar no Instagram</p>
     <div class="modal-step">
@@ -168,8 +165,15 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
         <p class="modal-step-sub">Arraste a figurinha sobre o <strong style="color:#ccc;">botao roxo</strong> "Ver Lista de Presentes"</p>
       </div>
     </div>
-    <div class="modal-step" style="margin-bottom:16px;">
+    <div class="modal-step">
       <div class="modal-num">4</div>
+      <div>
+        <p class="modal-step-title">Adicione ao Destaque — Melhores Amigos</p>
+        <p class="modal-step-sub" id="modalDicaDestaque">💡 Adicione ao Destaque para ficar visível até a data do seu evento!</p>
+      </div>
+    </div>
+    <div class="modal-step" style="margin-bottom:16px;">
+      <div class="modal-num">5</div>
       <div style="width:100%;">
         <p class="modal-step-title">Cole o link da vitrine</p>
         <div class="modal-link-box" style="margin-top:8px;">
@@ -187,10 +191,225 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
 <script>
 var params = new URLSearchParams(window.location.search);
 var vitrineId = params.get('vitrine');
+var eventoParam = params.get('evento') || 'aniversario';
+
+// Configurações por evento
+var configEventos = {
+  aniversario: {
+    badge: '🎂 Aniversário',
+    sub: 'Crie seu story de aniversário em segundos',
+    labelNome: 'Seu nome',
+    fraseDefault: 'Deixei ideias de presente aqui!',
+    frases: [
+      'Pra quem sempre pergunta',
+      'Facilita a vida de quem me ama',
+      'Meu aniversário, minhas regras',
+      'Escolhi com carinho cada item'
+    ],
+    templates: ['Festivo', 'Elegante', 'Minimalista'],
+    cardTitulo: function(nome) { return nome ? nome + ' - Desejos de Niver' : 'Meus Desejos de Niver'; },
+    icone: '🎂',
+    modalEmoji: '🎉',
+    dicaDestaque: '💡 Adicione ao Destaque para ficar visível até a data do seu aniversário!',
+    cores: ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'],
+    fundos: [
+      function(ctx,w,h){ // Festivo
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#0a0a2a'); g.addColorStop(1,'#1a0a3a');
+        ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+        var baloes=[{x:0.10,y:0.08,r:0.07,c:'#e63946'},{x:0.28,y:0.04,r:0.06,c:'#f4a261'},{x:0.52,y:0.06,r:0.07,c:'#2a9d8f'},{x:0.75,y:0.04,r:0.06,c:'#e9c46a'},{x:0.88,y:0.12,r:0.07,c:'#9b5de5'},{x:0.04,y:0.28,r:0.06,c:'#f15bb5'},{x:0.93,y:0.30,r:0.06,c:'#00bbf9'}];
+        baloes.forEach(function(b){var bx=b.x*w,by=b.y*h,br=b.r*w;var lg=ctx.createRadialGradient(bx-br*0.3,by-br*0.3,br*0.1,bx,by,br);lg.addColorStop(0,b.c+'ff');lg.addColorStop(1,b.c+'88');ctx.fillStyle=lg;ctx.beginPath();ctx.ellipse(bx,by,br,br*1.2,0,0,Math.PI*2);ctx.fill();});
+        var cores=['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
+        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.7;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}
+        ctx.globalAlpha=1;
+      },
+      function(ctx,w,h){ // Elegante
+        var g=ctx.createLinearGradient(0,0,w,h);
+        g.addColorStop(0,'#1a0a2e');g.addColorStop(0.5,'#0d1b4b');g.addColorStop(1,'#2d0a4e');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(255,255,255,0.6)';
+        for(var i=0;i<40;i++){var sx=Math.random()*w,sy=Math.random()*h*0.65,sr=Math.random()*1.5+0.5;ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();}
+        ctx.strokeStyle='rgba(127,119,221,0.2)';ctx.lineWidth=40;ctx.beginPath();ctx.arc(w*0.85,h*0.12,100,0,Math.PI*2);ctx.stroke();
+      },
+      function(ctx,w,h){ // Minimalista
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#fff0f3');g.addColorStop(1,'#ffd6e0');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var pts=[{x:0.1,y:0.1,r:0.06,c:'rgba(255,182,193,0.5)'},{x:0.85,y:0.08,r:0.08,c:'rgba(255,182,193,0.4)'}];
+        pts.forEach(function(p){ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x*w,p.y*h,p.r*w,0,Math.PI*2);ctx.fill();});
+      }
+    ]
+  },
+  casamento: {
+    badge: '💍 Casamento',
+    sub: 'Crie seu story de casamento em segundos',
+    labelNome: 'Nome do casal',
+    fraseDefault: 'Nossa lista de presentes está aqui!',
+    frases: [
+      'Presentes que vão durar para sempre',
+      'Escolhemos com amor cada item',
+      'Ajude a construir nosso lar',
+      'Cada presente é uma memória'
+    ],
+    templates: ['Romântico', 'Clássico', 'Moderno'],
+    cardTitulo: function(nome) { return nome ? nome + ' - Lista de Casamento' : 'Nossa Lista de Casamento'; },
+    icone: '💍',
+    modalEmoji: '💍',
+    dicaDestaque: '💡 Adicione ao Destaque — assim todos que visitarem seu perfil verão até o dia do casamento!',
+    cores: ['#f8c8d4','#d4af8f','#c9b8e8','#f5e6c8','#e8c8d4','#d4c8f8'],
+    fundos: [
+      function(ctx,w,h){ // Romântico
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#2d0a1e');g.addColorStop(1,'#1a0a2e');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#f8c8d4','#e8a0b4','#d4af8f','#f5e6c8'];
+        for(var i=0;i<50;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.5;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.font='16px Arial';ctx.fillText('♥',0,0);ctx.restore();}
+        ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(248,200,212,0.1)';ctx.beginPath();ctx.arc(w*0.2,h*0.15,w*0.3,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(w*0.8,h*0.1,w*0.25,0,Math.PI*2);ctx.fill();
+      },
+      function(ctx,w,h){ // Clássico
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#f5f0e8');g.addColorStop(1,'#e8dcc8');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle='rgba(180,150,100,0.3)';ctx.lineWidth=2;
+        ctx.strokeRect(w*0.05,h*0.03,w*0.9,h*0.6);
+        ctx.strokeRect(w*0.08,h*0.05,w*0.84,h*0.56);
+        ctx.fillStyle='rgba(180,150,100,0.15)';
+        for(var i=0;i<30;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*3+1,0,Math.PI*2);ctx.fill();}
+      },
+      function(ctx,w,h){ // Moderno
+        var g=ctx.createLinearGradient(0,0,w,h);
+        g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1a2e');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle='rgba(212,175,143,0.4)';ctx.lineWidth=1;
+        for(var i=0;i<5;i++){ctx.beginPath();ctx.moveTo(0,h*0.1*i);ctx.lineTo(w,h*0.1*i+h*0.05);ctx.stroke();}
+        ctx.fillStyle='rgba(212,175,143,0.6)';
+        for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,1,0,Math.PI*2);ctx.fill();}
+      }
+    ]
+  },
+  'casa-nova': {
+    badge: '🏠 Casa Nova',
+    sub: 'Crie seu story de casa nova em segundos',
+    labelNome: 'Seu nome',
+    fraseDefault: 'Ajude a montar nosso novo lar!',
+    frases: [
+      'Novo lar, nova história',
+      'Cada item com muito carinho',
+      'Ajude a construir nosso cantinho',
+      'Nossa casa começa aqui'
+    ],
+    templates: ['Aconchegante', 'Moderno', 'Natural'],
+    cardTitulo: function(nome) { return nome ? nome + ' - Casa Nova' : 'Lista Casa Nova'; },
+    icone: '🏠',
+    modalEmoji: '🏠',
+    dicaDestaque: '💡 Adicione ao Destaque para que todos vejam e ajudem a montar seu novo lar!',
+    cores: ['#a8d8a8','#f8d8a0','#d4b896','#8fbc8f','#deb887','#90ee90'],
+    fundos: [
+      function(ctx,w,h){ // Aconchegante
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#1a0f0a');g.addColorStop(1,'#2a1a0f');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(168,216,168,0.08)';ctx.fillRect(0,0,w,h);
+        var cores=['#a8d8a8','#f8d8a0','#d4b896','#deb887'];
+        for(var i=0;i<40;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.4;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,4,2);ctx.restore();}
+        ctx.globalAlpha=1;
+      },
+      function(ctx,w,h){ // Moderno
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#0f1f0f');g.addColorStop(1,'#1a2f1a');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle='rgba(143,188,143,0.2)';ctx.lineWidth=1;
+        for(var i=0;i<8;i++){ctx.beginPath();ctx.moveTo(w*i/8,0);ctx.lineTo(w*i/8,h*0.65);ctx.stroke();}
+      },
+      function(ctx,w,h){ // Natural
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#e8f5e8');g.addColorStop(1,'#d0ebd0');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(100,160,100,0.1)';
+        for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*20+5,0,Math.PI*2);ctx.fill();}
+      }
+    ]
+  },
+  'cha-bebe': {
+    badge: '👶 Chá de Bebê',
+    sub: 'Crie seu story de chá de bebê em segundos',
+    labelNome: 'Nome dos papais',
+    fraseDefault: 'Nosso bebê está chegando!',
+    frases: [
+      'O pequeno já tem uma lista',
+      'Presentes para o novo amor',
+      'Ajude a receber nosso bebê',
+      'Escolhemos com carinho cada item'
+    ],
+    templates: ['Fofo', 'Delicado', 'Alegre'],
+    cardTitulo: function(nome) { return nome ? 'Bebê de ' + nome : 'Nosso Bebê Chegando!'; },
+    icone: '👶',
+    modalEmoji: '👶',
+    dicaDestaque: '💡 Adicione ao Destaque para que todos vejam até a chegada do bebê!',
+    cores: ['#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8','#d4c8f8','#f8d4c8'],
+    fundos: [
+      function(ctx,w,h){ // Fofo
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#0a1a2e');g.addColorStop(1,'#1a0a2e');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8'];
+        for(var i=0;i<50;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.5;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.font='14px Arial';ctx.fillText(['⭐','✨','💫'][i%3],0,0);ctx.restore();}
+        ctx.globalAlpha=1;
+      },
+      function(ctx,w,h){ // Delicado
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#fff5f8');g.addColorStop(1,'#ffe8f0');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(248,200,212,0.3)';
+        for(var i=0;i<15;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*30+10,0,Math.PI*2);ctx.fill();}
+      },
+      function(ctx,w,h){ // Alegre
+        var g=ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0,'#1a0a2e');g.addColorStop(1,'#0a1a1a');
+        ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8','#d4c8f8'];
+        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,6,3);ctx.restore();}
+        ctx.globalAlpha=1;
+      }
+    ]
+  }
+};
+
+var eventoConfig = configEventos[eventoParam] || configEventos['aniversario'];
+var tplAtivo = 0;
+var fotoUsuario = null;
+var previewAberto = false;
+
+// Aplica configurações do evento
+document.getElementById('eventoBadge').textContent = eventoConfig.badge;
+document.getElementById('subTitulo').textContent = eventoConfig.sub;
+document.getElementById('labelNome').textContent = eventoConfig.labelNome;
+document.getElementById('frase').value = eventoConfig.fraseDefault;
+document.getElementById('previewIcone').textContent = eventoConfig.icone;
+document.getElementById('modalEmoji').textContent = eventoConfig.modalEmoji;
+document.getElementById('modalDicaDestaque').textContent = eventoConfig.dicaDestaque;
+
+// Labels dos templates
+for(var i=0;i<3;i++){
+  document.getElementById('label'+i).textContent = eventoConfig.templates[i];
+}
+
+// Frases chips
+var frasesEl = document.getElementById('frasesChips');
+eventoConfig.frases.forEach(function(f){
+  var span = document.createElement('span');
+  span.className = 'chip';
+  span.textContent = f;
+  span.onclick = function(){ usarFrase(this); };
+  frasesEl.appendChild(span);
+});
+
+// Link da vitrine
 if (vitrineId) {
   document.addEventListener('DOMContentLoaded', function() {
-    var linkCompleto = window.location.origin + '/vitrine/' + vitrineId;
-    document.getElementById('link').value = linkCompleto;
+    document.getElementById('link').value = window.location.origin + '/vitrine/' + vitrineId;
   });
 }
 
@@ -202,67 +421,6 @@ function voltarLista() {
   }
 }
 
-var tplAtivo = 0;
-var fotoUsuario = null;
-var previewAberto = false;
-
-var fundos = [
-  function(ctx, w, h) {
-    var g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#0a0a2a'); g.addColorStop(1, '#1a0a3a');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    var baloes = [
-      {x:0.10,y:0.08,r:0.07,c:'#e63946'},{x:0.28,y:0.04,r:0.06,c:'#f4a261'},
-      {x:0.52,y:0.06,r:0.07,c:'#2a9d8f'},{x:0.75,y:0.04,r:0.06,c:'#e9c46a'},
-      {x:0.88,y:0.12,r:0.07,c:'#9b5de5'},{x:0.04,y:0.28,r:0.06,c:'#f15bb5'},
-      {x:0.93,y:0.30,r:0.06,c:'#00bbf9'},{x:0.06,y:0.50,r:0.05,c:'#e63946'},
-      {x:0.93,y:0.50,r:0.05,c:'#f4a261'}
-    ];
-    baloes.forEach(function(b) {
-      var bx=b.x*w, by=b.y*h, br=b.r*w;
-      var lg=ctx.createRadialGradient(bx-br*0.3,by-br*0.3,br*0.1,bx,by,br);
-      lg.addColorStop(0,b.c+'ff'); lg.addColorStop(1,b.c+'88');
-      ctx.fillStyle=lg; ctx.beginPath(); ctx.ellipse(bx,by,br,br*1.2,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,0.28)';
-      ctx.beginPath(); ctx.ellipse(bx-br*0.25,by-br*0.3,br*0.25,br*0.18,-0.5,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle=b.c+'99'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(bx,by+br*1.2);
-      ctx.quadraticCurveTo(bx+br*0.3,by+br*2,bx,by+br*2.8); ctx.stroke();
-    });
-    var cores=['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
-    for(var i=0;i<60;i++){
-      ctx.fillStyle=cores[i%cores.length]; ctx.save(); ctx.globalAlpha=0.7;
-      ctx.translate(Math.random()*w,Math.random()*h*0.65);
-      ctx.rotate(Math.random()*Math.PI*2); ctx.fillRect(0,0,5,2); ctx.restore();
-    }
-    ctx.globalAlpha=1;
-  },
-  function(ctx, w, h) {
-    var g=ctx.createLinearGradient(0,0,w,h);
-    g.addColorStop(0,'#1a0a2e'); g.addColorStop(0.5,'#0d1b4b'); g.addColorStop(1,'#2d0a4e');
-    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-    ctx.fillStyle='rgba(255,255,255,0.6)';
-    for(var i=0;i<40;i++){
-      var sx=Math.random()*w,sy=Math.random()*h*0.65,sr=Math.random()*1.5+0.5;
-      ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2); ctx.fill();
-    }
-    ctx.strokeStyle='rgba(127,119,221,0.2)'; ctx.lineWidth=40;
-    ctx.beginPath(); ctx.arc(w*0.85,h*0.12,100,0,Math.PI*2); ctx.stroke();
-  },
-  function(ctx, w, h) {
-    var g=ctx.createLinearGradient(0,0,0,h);
-    g.addColorStop(0,'#fff0f3'); g.addColorStop(1,'#ffd6e0');
-    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-    var pts=[
-      {x:0.1,y:0.1,r:0.06,c:'rgba(255,182,193,0.5)'},{x:0.85,y:0.08,r:0.08,c:'rgba(255,182,193,0.4)'},
-      {x:0.05,y:0.35,r:0.04,c:'rgba(255,182,193,0.3)'},{x:0.92,y:0.35,r:0.05,c:'rgba(255,182,193,0.4)'}
-    ];
-    pts.forEach(function(p){
-      ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x*w,p.y*h,p.r*w,0,Math.PI*2); ctx.fill();
-    });
-  }
-];
-
 function quebrarTexto(ctx,texto,x,y,maxW,altLinha){
   var palavras=texto.split(' '),linha='',yAtual=y;
   for(var i=0;i<palavras.length;i++){
@@ -273,82 +431,86 @@ function quebrarTexto(ctx,texto,x,y,maxW,altLinha){
   ctx.fillText(linha.trim(),x,yAtual);
 }
 
-function desenharCardFixo(ctx,w,h,nome,frase,sc){
-  var cores=['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
+function desenharCard(ctx,w,h,nome,frase,sc){
+  var cores = eventoConfig.cores;
   for(var i=0;i<70;i++){
-    ctx.fillStyle=cores[i%cores.length]; ctx.save(); ctx.globalAlpha=0.75;
+    ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.75;
     ctx.translate(Math.random()*w,Math.random()*h*0.62);
-    ctx.rotate(Math.random()*Math.PI*2); ctx.fillRect(0,0,7*sc,3*sc); ctx.restore();
+    ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,7*sc,3*sc);ctx.restore();
   }
   ctx.globalAlpha=1;
   var cardX=w*0.05,cardW=w*0.90,cardY=h*0.67,cardH=h*0.29,raio=20*sc;
-  ctx.shadowColor='rgba(0,0,0,0.45)'; ctx.shadowBlur=25*sc; ctx.shadowOffsetY=8*sc;
+  ctx.shadowColor='rgba(0,0,0,0.45)';ctx.shadowBlur=25*sc;ctx.shadowOffsetY=8*sc;
   ctx.fillStyle='rgba(255,255,255,0.97)';
   ctx.beginPath();
-  ctx.moveTo(cardX+raio,cardY); ctx.lineTo(cardX+cardW-raio,cardY);
+  ctx.moveTo(cardX+raio,cardY);ctx.lineTo(cardX+cardW-raio,cardY);
   ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
   ctx.lineTo(cardX+cardW,cardY+cardH-raio);
   ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
   ctx.lineTo(cardX+raio,cardY+cardH);
   ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
-  ctx.lineTo(cardX,cardY+raio); ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
-  ctx.closePath(); ctx.fill();
-  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+  ctx.lineTo(cardX,cardY+raio);ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
+  ctx.closePath();ctx.fill();
+  ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+
+  // Icone no topo do card
   var icX=w/2,icY=cardY,icR=26*sc;
   var gradIc=ctx.createRadialGradient(icX-icR*0.2,icY-icR*0.2,1,icX,icY,icR);
-  gradIc.addColorStop(0,'#6B9FFF'); gradIc.addColorStop(1,'#3B5FC0');
-  ctx.fillStyle=gradIc; ctx.beginPath(); ctx.arc(icX,icY,icR,0,Math.PI*2); ctx.fill();
-  var t=icR*0.52,cx=icX,cy=icY;
-  ctx.fillStyle='#e63946'; ctx.fillRect(cx-t*0.7,cy-t*0.05,t*1.4,t*1.05);
-  ctx.fillStyle='#c1121f'; ctx.fillRect(cx-t*0.75,cy-t*0.44,t*1.5,t*0.40);
-  ctx.fillStyle='#FFD60A';
-  ctx.fillRect(cx-t*0.11,cy-t*0.46,t*0.22,t*1.52);
-  ctx.fillRect(cx-t*0.75,cy-t*0.25,t*1.5,t*0.18);
-  ctx.strokeStyle='#FFD60A'; ctx.lineWidth=sc*1.2;
-  ctx.beginPath(); ctx.ellipse(cx-t*0.33,cy-t*0.53,t*0.3,t*0.2,-0.3,0,Math.PI*2); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(cx+t*0.33,cy-t*0.53,t*0.3,t*0.2,0.3,0,Math.PI*2); ctx.stroke();
+  gradIc.addColorStop(0,'#6B9FFF');gradIc.addColorStop(1,'#3B5FC0');
+  ctx.fillStyle=gradIc;ctx.beginPath();ctx.arc(icX,icY,icR,0,Math.PI*2);ctx.fill();
+  ctx.font=Math.round(22*sc)+'px Arial';ctx.textAlign='center';
+  ctx.fillText(eventoConfig.icone,icX,icY+8*sc);
+
+  // Titulo
   ctx.textAlign='center';
-  ctx.font='bold '+Math.round(17*sc)+'px Arial';
+  ctx.font='bold '+Math.round(15*sc)+'px Arial';
   ctx.fillStyle='#1a1a1a';
-  ctx.fillText(nome?nome+' - Desejos de Niver':'Meus Desejos de Niver',w/2,cardY+cardH*0.36);
-  ctx.font=Math.round(12*sc)+'px Arial'; ctx.fillStyle='#777';
-  quebrarTexto(ctx,frase||'Deixei ideias de presente aqui!',w/2,cardY+cardH*0.52,cardW*0.82,15*sc);
+  ctx.fillText(eventoConfig.cardTitulo(nome),w/2,cardY+cardH*0.36);
+
+  // Frase
+  ctx.font=Math.round(12*sc)+'px Arial';ctx.fillStyle='#777';
+  quebrarTexto(ctx,frase||eventoConfig.fraseDefault,w/2,cardY+cardH*0.52,cardW*0.82,15*sc);
+
+  // Botao
   var btnX=cardX+cardW*0.08,btnW=cardW*0.84,btnY=cardY+cardH*0.70,btnH=36*sc,btnR=btnH/2;
   var gradBtn=ctx.createLinearGradient(btnX,btnY,btnX+btnW,btnY);
-  gradBtn.addColorStop(0,'#7F77DD'); gradBtn.addColorStop(1,'#5B8DEF');
+  gradBtn.addColorStop(0,'#7F77DD');gradBtn.addColorStop(1,'#5B8DEF');
   ctx.fillStyle=gradBtn;
   ctx.beginPath();
-  ctx.moveTo(btnX+btnR,btnY); ctx.lineTo(btnX+btnW-btnR,btnY);
+  ctx.moveTo(btnX+btnR,btnY);ctx.lineTo(btnX+btnW-btnR,btnY);
   ctx.quadraticCurveTo(btnX+btnW,btnY,btnX+btnW,btnY+btnR);
   ctx.quadraticCurveTo(btnX+btnW,btnY+btnH,btnX+btnW-btnR,btnY+btnH);
   ctx.lineTo(btnX+btnR,btnY+btnH);
   ctx.quadraticCurveTo(btnX,btnY+btnH,btnX,btnY+btnR);
   ctx.quadraticCurveTo(btnX,btnY,btnX+btnR,btnY);
-  ctx.closePath(); ctx.fill();
-  ctx.font='bold '+Math.round(13*sc)+'px Arial'; ctx.fillStyle='#ffffff';
+  ctx.closePath();ctx.fill();
+  ctx.font='bold '+Math.round(13*sc)+'px Arial';ctx.fillStyle='#ffffff';
   ctx.fillText('Ver Lista de Presentes',btnX+btnW/2,btnY+btnH*0.65);
 }
 
-function desenhar(canvas,tplIdx,nome,frase,link,foto){
+function desenhar(canvas,tplIdx,nome,frase,foto){
   var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,sc=w/360;
   if(foto){
     ctx.drawImage(foto,0,0,w,h);
     var ov=ctx.createLinearGradient(0,0,0,h);
-    ov.addColorStop(0,'rgba(0,0,0,0.3)'); ov.addColorStop(0.5,'rgba(0,0,0,0.1)'); ov.addColorStop(1,'rgba(0,0,0,0.5)');
-    ctx.fillStyle=ov; ctx.fillRect(0,0,w,h);
-  } else { fundos[tplIdx](ctx,w,h); }
-  desenharCardFixo(ctx,w,h,nome,frase,sc);
+    ov.addColorStop(0,'rgba(0,0,0,0.3)');ov.addColorStop(0.5,'rgba(0,0,0,0.1)');ov.addColorStop(1,'rgba(0,0,0,0.5)');
+    ctx.fillStyle=ov;ctx.fillRect(0,0,w,h);
+  } else {
+    eventoConfig.fundos[tplIdx](ctx,w,h);
+  }
+  desenharCard(ctx,w,h,nome,frase,sc);
 }
 
 function renderPreviews(){
+  var nomePreview = eventoParam === 'casamento' ? 'Ana & João' : eventoParam === 'cha-bebe' ? 'Os Papais' : 'Danilo';
   for(var i=0;i<3;i++){
-    desenhar(document.getElementById('prev'+i),i,'Danilo','Deixei ideias de presente aqui!','',null);
+    desenhar(document.getElementById('prev'+i),i,nomePreview,eventoConfig.fraseDefault,null);
   }
 }
 
 function selecionarTpl(el){
   document.querySelectorAll('.tpl-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); tplAtivo=parseInt(el.dataset.tpl);
+  el.classList.add('selected');tplAtivo=parseInt(el.dataset.tpl);
   if(previewAberto) gerarStory();
 }
 
@@ -358,9 +520,9 @@ function usarFrase(el){
 }
 
 function carregarFoto(e){
-  var file=e.target.files[0]; if(!file) return;
+  var file=e.target.files[0];if(!file) return;
   var img=new Image();
-  img.onload=function(){fotoUsuario=img; if(previewAberto) gerarStory();};
+  img.onload=function(){fotoUsuario=img;if(previewAberto) gerarStory();};
   img.src=URL.createObjectURL(file);
 }
 
@@ -369,9 +531,8 @@ function atualizar(){ if(previewAberto) gerarStory(); }
 function gerarStory(){
   var nome=document.getElementById('nome').value;
   var frase=document.getElementById('frase').value;
-  var link=document.getElementById('link').value;
   var canvas=document.getElementById('storyFinal');
-  desenhar(canvas,tplAtivo,nome,frase,link,fotoUsuario);
+  desenhar(canvas,tplAtivo,nome,frase,fotoUsuario);
   previewAberto=true;
   document.getElementById('preview-vazio').style.display='none';
   document.getElementById('preview-conteudo').style.display='block';
