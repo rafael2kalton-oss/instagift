@@ -10,6 +10,7 @@ SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
 SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
+SHOPEE_ID = "18374451025"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
@@ -63,7 +64,7 @@ def injetar_afiliado(link, plataforma):
         link += ('&' if '?' in link else '?') + f'matt_tool=97&partner_id={ML_ID}'
     elif plataforma == "shopee":
         link = re.sub(r'[?&]smtt=[^&]+', '', link)
-        link += ('&' if '?' in link else '?') + 'smtt=0.0.9&source_identifier=affiliate&subfolder_id=18374451025'
+        link += ('&' if '?' in link else '?') + f'smtt=0.0.9&source_identifier=affiliate&subfolder_id={SHOPEE_ID}'
     return link
 
 def get_ml_token():
@@ -215,15 +216,24 @@ def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token,
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_comprador,
-            "subject": f"🎁 Confirme que você comprou o presente!",
+            "subject": "🎁 Confirme que você comprou o presente!",
             "html": f"""
             <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
-                <h2 style="color:#8A63D2;margin-bottom:8px;">Olá, {nome_comprador}! 🎁</h2>
-                <p style="color:#aaa;margin-bottom:24px;">Você reservou <strong style="color:#fff;">{nome_produto}</strong>.</p>
-                <p style="color:#aaa;margin-bottom:24px;">Após finalizar a compra, clique no botão abaixo para confirmar:</p>
-                <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:16px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
-                <p style="color:#555;font-size:12px;">⏰ Este link expira em 3 horas. Se não confirmar, o presente voltará a ficar disponível para outros.</p>
-                <p style="color:#555;font-size:12px;margin-top:16px;">Com carinho, InstaGift 💜</p>
+                <div style="text-align:center;margin-bottom:24px;">
+                    <div style="font-size:48px;margin-bottom:8px;">🎁</div>
+                    <h2 style="color:#8A63D2;margin-bottom:4px;">Olá, {nome_comprador}!</h2>
+                    <p style="color:#666;font-size:13px;">Sua reserva está confirmada</p>
+                </div>
+                <div style="background:#1a1a1a;border-radius:12px;padding:16px;margin-bottom:24px;">
+                    <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Presente reservado</p>
+                    <p style="color:#fff;font-weight:700;font-size:16px;">{nome_produto}</p>
+                </div>
+                <p style="color:#aaa;margin-bottom:24px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. Assim a pessoa especial saberá que vai receber esse presente! 💜</p>
+                <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
+                <div style="background:#1a1a1a;border-radius:10px;padding:14px;margin-bottom:24px;">
+                    <p style="color:#666;font-size:12px;line-height:1.6;">⏰ Este link expira em <strong style="color:#aaa;">3 horas</strong>. Se não confirmar dentro do prazo, o presente voltará a ficar disponível para outros.</p>
+                </div>
+                <p style="color:#444;font-size:12px;text-align:center;">Com carinho, InstaGift 💜</p>
             </div>
             """
         })
@@ -235,18 +245,22 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_aniversariante,
-            "subject": "🎉 Presente confirmado! Alguém te ama muito!",
+            "subject": "🎉 Você ganhou um presente! Alguém te surpreendeu!",
             "html": f"""
             <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
-                <h2 style="color:#8A63D2;margin-bottom:8px;">Que surpresa incrível! 🥳</h2>
-                <p style="color:#aaa;margin-bottom:16px;"><strong style="color:#fff;">{nome_comprador}</strong> confirmou a compra de <strong style="color:#fff;">{nome_produto}</strong> para você!</p>
-                <p style="color:#aaa;margin-bottom:24px;">Seu presente está a caminho! Feliz aniversário! 🎂🎁</p>
-                <div style="background:#1a1a1a;border-radius:12px;padding:16px;text-align:center;margin-bottom:24px;">
-                    <p style="color:#8A63D2;font-size:24px;margin-bottom:8px;">🎁</p>
-                    <p style="color:#fff;font-weight:700;">{nome_produto}</p>
-                    <p style="color:#aaa;font-size:13px;">presenteado por {nome_comprador}</p>
+                <div style="text-align:center;margin-bottom:28px;">
+                    <div style="font-size:56px;margin-bottom:12px;">🎉</div>
+                    <h2 style="color:#8A63D2;font-size:22px;margin-bottom:6px;">Que surpresa incrível!</h2>
+                    <p style="color:#888;font-size:13px;">Alguém especial pensou em você 💜</p>
                 </div>
-                <p style="color:#555;font-size:12px;">Com carinho, InstaGift 💜</p>
+                <div style="background:linear-gradient(135deg,rgba(138,99,210,0.15),rgba(176,136,245,0.08));border:1px solid rgba(138,99,210,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px;">
+                    <p style="color:#b088f5;font-size:13px;margin-bottom:8px;">PRESENTE CONFIRMADO</p>
+                    <p style="color:#fff;font-weight:700;font-size:18px;margin-bottom:12px;">{nome_produto}</p>
+                    <p style="color:#888;font-size:13px;">presenteado com carinho por</p>
+                    <p style="color:#fff;font-weight:600;font-size:16px;margin-top:4px;">{nome_comprador}</p>
+                </div>
+                <p style="color:#aaa;text-align:center;line-height:1.7;margin-bottom:24px;">A compra foi confirmada e seu presente está garantido! Que seu evento seja incrível e cheio de momentos especiais. 🎁✨</p>
+                <p style="color:#444;font-size:12px;text-align:center;">Com muito carinho, InstaGift 💜</p>
             </div>
             """
         })
@@ -271,12 +285,14 @@ def lista_page(lista_id):
 @app.route("/vitrine/<lista_id>")
 def vitrine(lista_id):
     return render_template("vitrine.html", lista_id=lista_id)
+
 @app.route("/api/lista-info/<lista_id>")
 def lista_info(lista_id):
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if lista and isinstance(lista, list):
         return jsonify(lista[0])
     return jsonify({})
+
 @app.route("/api/salvar-email-lista", methods=["POST"])
 def salvar_email_lista():
     data = request.json
@@ -341,6 +357,7 @@ def listar_produtos(lista_id):
 def remover_produto(produto_id):
     sb_delete("produtos", f"id=eq.{produto_id}")
     return jsonify({"ok": True})
+
 @app.route("/api/liberar-produto/<int:produto_id>", methods=["POST"])
 def liberar_produto(produto_id):
     sb_patch("produtos", f"id=eq.{produto_id}", {
@@ -351,6 +368,7 @@ def liberar_produto(produto_id):
         "email_comprador": None
     })
     return jsonify({"ok": True})
+
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
 def reservar(produto_id):
     data = request.json or {}
@@ -377,7 +395,6 @@ def reservar(produto_id):
         "email_comprador": email_comprador
     })
 
-    # Envia e-mail para o comprador
     nome_produto = produtos[0].get("nome", "Produto")
     base_url = request.host_url.rstrip('/')
     enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url)
@@ -393,7 +410,6 @@ def confirmar_compra(token):
     produto = produtos[0]
     reservado_em = produto.get("reservado_em")
 
-    # Verifica se expirou
     if reservado_em:
         dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
         if datetime.utcnow() > dt + timedelta(hours=3):
@@ -406,13 +422,11 @@ def confirmar_compra(token):
             })
             return render_template("confirmacao.html", status="expirado")
 
-    # Confirma a compra
     sb_patch("produtos", f"id=eq.{produto['id']}", {
         "reservado": 2,
         "token_confirmacao": None
     })
 
-    # Busca e-mail do aniversariante
     lista = sb_get("listas", f"id=eq.{produto['lista_id']}")
     if lista and isinstance(lista, list):
         email_aniversariante = lista[0].get("email_aniversariante")
@@ -428,24 +442,17 @@ def confirmar_compra(token):
 @app.route("/api/limpar-reservas-expiradas", methods=["POST"])
 def limpar_reservas_expiradas():
     try:
-        # 1. Define o tempo agora e o limite de 3 horas atrás (padrão UTC para o banco)
         agora = datetime.utcnow()
         prazo_limite = agora - timedelta(hours=3)
-        
-        # 2. Busca no banco todos os itens reservados (status 1)
         produtos = sb_get("produtos", "reservado=eq.1")
-        
         if not isinstance(produtos, list):
             return jsonify({"status": "sucesso", "liberados": 0}), 200
-
         liberados = 0
         for p in produtos:
             reservado_em = p.get("reservado_em")
             if reservado_em:
-                # 3. Converte a data e verifica se já passou de 3 horas
                 dt_reserva = datetime.fromisoformat(reservado_em.replace('Z', ''))
                 if dt_reserva < prazo_limite:
-                    # 4. Libera o produto no Supabase voltando para status 0
                     sb_patch("produtos", f"id=eq.{p['id']}", {
                         "reservado": 0,
                         "token_confirmacao": None,
@@ -454,7 +461,6 @@ def limpar_reservas_expiradas():
                         "email_comprador": None
                     })
                     liberados += 1
-
         return jsonify({"status": "sucesso", "liberados": liberados}), 200
     except Exception as e:
         return jsonify({"status": "erro", "mensagem": str(e)}), 500
