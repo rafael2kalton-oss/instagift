@@ -320,8 +320,9 @@ def preview_produto():
     if not link:
         return jsonify({"ok": False}), 400
     plataforma = detectar_plataforma(link)
-    link_afiliado = injetar_afiliado(link, plataforma)
-    nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
+link_resolvido = resolver_redirect(link) if plataforma == "shopee" else link
+link_afiliado = injetar_afiliado(link_resolvido, plataforma)
+nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     return jsonify({"ok": bool(nome or imagem), "nome": nome, "imagem": imagem, "preco": preco})
 
 @app.route("/api/adicionar-produto", methods=["POST"])
