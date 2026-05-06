@@ -9,29 +9,20 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: linear-gradient(135deg, #0a0a0f 0%, #0f0a1a 100%); font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
         .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 20px 16px 48px; }
-
-        /* HEADER */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 28px 0; }
         .logo-box { background: linear-gradient(135deg, #8A63D2, #b088f5); color: #fff; font-weight: 800; padding: 7px 16px; font-size: 22px; border-radius: 10px; letter-spacing: -0.5px; }
         .tagline { font-size: 12px; color: #888; margin-top: 4px; }
         .header-right { text-align: right; }
         .header-right span { font-size: 11px; color: #555; }
-
-        /* WIZARD STEPS */
         .wizard-steps { display: flex; gap: 6px; margin-bottom: 28px; }
         .step { flex: 1; height: 3px; border-radius: 3px; background: #1a1a2e; transition: background 0.4s; }
         .step.active { background: linear-gradient(90deg, #8A63D2, #b088f5); }
         .step.done { background: #5a3d9a; }
-
-        /* SECAO */
         .secao { display: none; animation: fadeUp 0.4s ease; }
         .secao.ativa { display: block; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
         .secao-titulo { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
         .secao-sub { font-size: 13px; color: #888; margin-bottom: 24px; line-height: 1.5; }
-
-        /* EVENTOS */
         .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
         .evento-card { background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.25s; }
         .evento-card:hover { border-color: rgba(138,99,210,0.5); background: rgba(138,99,210,0.08); transform: translateY(-2px); }
@@ -40,27 +31,19 @@
         .evento-nome { font-size: 13px; font-weight: 600; color: #eee; }
         .evento-sub { font-size: 11px; color: #666; margin-top: 3px; }
         .evento-card-full { grid-column: span 2; }
-
-        /* INPUTS ELEGANTES */
         .campo { margin-bottom: 16px; }
         .campo label { font-size: 12px; color: #888; font-weight: 500; display: block; margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
         .campo input { width: 100%; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 13px 16px; color: #fff; font-size: 15px; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
         .campo input:focus { border-color: rgba(138,99,210,0.6); background: rgba(138,99,210,0.05); }
         .campo input::placeholder { color: #444; }
-
-        /* BOTOES NAVEGACAO */
         .btn-proximo { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(138,99,210,0.3); margin-top: 8px; }
         .btn-proximo:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138,99,210,0.45); }
         .btn-pular { width: 100%; background: transparent; border: none; color: #555; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 10px; margin-top: 4px; }
         .btn-pular:hover { color: #888; }
         .btn-voltar-step { background: transparent; border: none; color: #666; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 8px 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
         .btn-voltar-step:hover { color: #aaa; }
-
-        /* EMAIL */
         .email-hint { font-size: 12px; color: #555; margin-top: 8px; line-height: 1.5; }
         .email-salvo { font-size: 12px; color: #22c55e; margin-top: 8px; display: none; }
-
-        /* ADICIONAR PRODUTO */
         .platform-chips { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
         .chip { font-size: 11px; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; color: #888; border: 1px solid rgba(255,255,255,0.08); }
         .input-group { display: flex; gap: 10px; }
@@ -76,8 +59,6 @@
         .aviso-btns button { flex: 1; padding: 9px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; }
         .btn-continuar { background: #8A63D2; color: white; }
         .btn-voltar-aviso { background: rgba(255,255,255,0.08); color: #aaa; }
-
-        /* PRODUTOS */
         .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .section-header h3 { font-size: 15px; font-weight: 600; color: #eee; }
         .section-header span { font-size: 12px; color: #8A63D2; }
@@ -97,13 +78,9 @@
         .badge-outro { background: #333; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
-
-        /* EMPTY STATE */
         .empty-state { text-align: center; padding: 32px 0; color: #333; }
         .empty-state .emoji { font-size: 36px; margin-bottom: 10px; }
         .empty-state p { font-size: 13px; line-height: 1.6; }
-
-        /* ACOES */
         .acoes { margin-top: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
         .btn-criar-story { width: 100%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
         .btn-criar-story:hover { transform: translateY(-2px); }
@@ -111,18 +88,14 @@
         .btn-gerar-vitrine:hover { transform: translateY(-2px); }
         .btn-ver-vitrine { width: 100%; background: transparent; border: 1.5px solid rgba(138,99,210,0.4); border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .btn-ver-vitrine:hover { background: rgba(138,99,210,0.1); border-color: #8A63D2; }
-
-        /* LINK PERMANENTE */
+        .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-whatsapp:hover { transform: translateY(-2px); }
         .link-permanente { background: rgba(138,99,210,0.05); border: 1px solid rgba(138,99,210,0.15); border-radius: 14px; padding: 16px; margin-top: 20px; }
         .link-permanente p { font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
         .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; display: block; margin-bottom: 10px; }
         .btn-copiar { background: rgba(138,99,210,0.15); border: 1px solid rgba(138,99,210,0.3); color: #8A63D2; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .btn-copiar:hover { background: #8A63D2; color: #fff; }
-
-        /* DIVIDER */
         .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 24px 0; }
-
-        /* EVENTO SELECIONADO BADGE */
         .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(138,99,210,0.1); border: 1px solid rgba(138,99,210,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #b088f5; margin-bottom: 20px; }
     </style>
 </head>
@@ -139,7 +112,6 @@
         </div>
     </header>
 
-    <!-- BARRA DE PROGRESSO -->
     <div class="wizard-steps">
         <div class="step active" id="step1"></div>
         <div class="step" id="step2"></div>
@@ -214,17 +186,15 @@
         <button class="btn-pular" onclick="irParaEtapa(4)">Pular por agora</button>
     </div>
 
-    <!-- ETAPA 4 — LISTA DE PRESENTES -->
+    <!-- ETAPA 4 — LISTA -->
     <div class="secao" id="secao4">
         <div class="evento-badge-mini" id="eventoBadgeMini4">🎂 Aniversário</div>
-
         <div class="section-header">
             <div>
                 <h3 id="nomeListaHeader">Minha Lista</h3>
                 <p style="font-size:11px; color:#555; margin-top:2px;" id="dataEventoHeader"></p>
             </div>
         </div>
-
         <div class="platform-chips">
             <span class="chip">🛒 Amazon</span>
             <span class="chip">🛍️ Mercado Livre</span>
@@ -242,9 +212,7 @@
             </div>
         </div>
         <div class="loading" id="loading">⏳ Buscando produto...</div>
-
         <div class="divider"></div>
-
         <div class="section-header">
             <h3>Seus presentes</h3>
             <span id="contador">0 itens</span>
@@ -255,13 +223,11 @@
                 <p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p>
             </div>
         </div>
-
         <div class="link-permanente" id="linkPermanente" style="display:none">
             <p>🔗 Seu link permanente</p>
             <code id="textoLink"></code>
             <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
         </div>
-
         <div class="acoes" id="acoesVitrine" style="display:none">
             <button class="btn-criar-story" onclick="abrirPopupStory()">
                 📸 Criar meu story no Instagram
@@ -271,6 +237,9 @@
             </button>
             <button class="btn-ver-vitrine" onclick="verVitrine()">
                 👁️ Ver minha vitrine
+            </button>
+            <button class="btn-whatsapp" onclick="compartilharWhatsApp()">
+                💚 Compartilhar no WhatsApp
             </button>
         </div>
     </div>
@@ -294,6 +263,7 @@
 <script>
     const LISTA_ID = "{{ lista_id }}";
     const BASE = "";
+    const STORAGE_KEY = "instagift_estado_" + LISTA_ID;
     var linkIgnorado = false;
     var eventoAtual = "aniversario";
     var stepAtual = 1;
@@ -306,10 +276,46 @@
         outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você! 💜" }
     };
 
+    // SALVAR E RESTAURAR ESTADO
+    function salvarEstado() {
+        try {
+            var estado = {
+                evento: eventoAtual,
+                step: stepAtual,
+                nomeEvento: document.getElementById('inputNomeEvento').value,
+                dataEvento: document.getElementById('inputDataEvento').value,
+                email: document.getElementById('inputEmail').value
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+        } catch(e) {}
+    }
+
+    function restaurarEstado() {
+        try {
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return;
+            var estado = JSON.parse(saved);
+            if (estado.evento) {
+                eventoAtual = estado.evento;
+                document.querySelectorAll('.evento-card').forEach(function(c) {
+                    c.classList.remove('selected');
+                    if (c.dataset.evento === eventoAtual) c.classList.add('selected');
+                });
+            }
+            if (estado.nomeEvento) document.getElementById('inputNomeEvento').value = estado.nomeEvento;
+            if (estado.dataEvento) document.getElementById('inputDataEvento').value = estado.dataEvento;
+            if (estado.email) document.getElementById('inputEmail').value = estado.email;
+            if (estado.step && estado.step >= 4) {
+                irParaEtapa(4);
+            }
+        } catch(e) {}
+    }
+
     function selecionarEvento(el) {
         document.querySelectorAll('.evento-card').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
         eventoAtual = el.dataset.evento;
+        salvarEstado();
     }
 
     function irParaEtapa(n) {
@@ -317,16 +323,12 @@
         stepAtual = n;
         document.getElementById('secao' + n).classList.add('ativa');
         document.getElementById('stepIndicator').textContent = n + ' de 4';
-
-        // Atualiza steps
         for(var i=1;i<=4;i++){
             var s = document.getElementById('step'+i);
             s.className = 'step';
             if(i < n) s.classList.add('done');
             else if(i === n) s.classList.add('active');
         }
-
-        // Atualiza badges e labels
         var ev = eventos[eventoAtual] || eventos['aniversario'];
         if(n === 2) {
             document.getElementById('eventoBadgeMini').textContent = ev.badge;
@@ -344,6 +346,7 @@
             }
             carregarProdutos();
         }
+        salvarEstado();
         window.scrollTo(0,0);
     }
 
@@ -375,20 +378,16 @@
         const linkPerm = document.getElementById("linkPermanente");
         const acoes = document.getElementById("acoesVitrine");
         const contador = document.getElementById("contador");
-
         contador.textContent = produtos.length + (produtos.length === 1 ? ' item' : ' itens');
-
         if (produtos.length === 0) {
             el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p></div>`;
             linkPerm.style.display = "none";
             acoes.style.display = "none";
             return;
         }
-
         linkPerm.style.display = "block";
         acoes.style.display = "flex";
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
-
         el.innerHTML = produtos.map(p => {
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
             const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
@@ -482,15 +481,28 @@
 
     function irParaStory() {
         document.getElementById('popupStory').style.display = 'none';
+        salvarEstado();
         window.location.href = `/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
     }
 
     function gerarVitrine() {
+        salvarEstado();
         window.location.href = `/vitrine/${LISTA_ID}`;
     }
 
     function verVitrine() {
+        salvarEstado();
         window.open(`/vitrine/${LISTA_ID}?admin=true`, '_blank');
+    }
+
+    function compartilharWhatsApp() {
+        var nomeEvento = document.getElementById('inputNomeEvento').value.trim() || 'meu evento';
+        var linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
+        var mensagem = 'Oi! 🎉 Preparei tudo para ' + nomeEvento + ' e criei uma lista digital no InstaGift! 🎁\n\n' +
+                      '👉 ESCOLHA O PRESENTE AQUI:\n' + linkVitrine + '\n\n' +
+                      'Valeu pelo carinho! 🙏💜';
+        var url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem);
+        window.open(url, '_blank');
     }
 
     function copiarLink() {
@@ -501,6 +513,7 @@
         document.getElementById("inputLink").addEventListener("keypress", function(e) {
             if (e.key === "Enter") adicionarProduto();
         });
+        restaurarEstado();
     });
 </script>
 </body>
