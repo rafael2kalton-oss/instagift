@@ -149,9 +149,39 @@ def resolver_redirect(link):
     except:
         return link
 
+def extrair_shopee(link):
+    try:
+        m = re.search(r'i\.(\d+)\.(\d+)', link)
+        if not m:
+            return "", "", ""
+        shop_id = m.group(1)
+        item_id = m.group(2)
+        url = f"https://shopee.com.br/api/v4/item/get?itemid={item_id}&shopid={shop_id}"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer": "https://shopee.com.br/",
+            "X-Api-Source": "pc",
+            "If-None-Match-": "",
+            "X-Shopee-Language": "pt-BR"
+        }
+        r = requests.get(url, headers=headers, timeout=10)
+        data = r.json()
+        item = data.get("data") or {}
+        nome = item.get("name", "")[:100]
+        preco_raw = item.get("price") or item.get("price_min") or 0
+        preco = f"{preco_raw / 100000:.2f}".replace(".", ",") if preco_raw else ""
+        imagens = item.get("images") or []
+        imagem = f"https://cf.shopee.com.br/file/{imagens[0]}" if imagens else ""
+        return nome, imagem, preco
+    except Exception as e:
+        print("Shopee API erro:", e)
+        return "", "", ""
+
 def extrair_dados(link, plataforma):
     if plataforma == "shopee":
-        link = resolver_redirect(link)
+        n, i, p = extrair_shopee(link)
+        if n:
+            return n, i, p
     if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
         if n:
@@ -163,9 +193,9 @@ def extrair_dados(link, plataforma):
     except:
         html = ""
 
-    if plataforma in ["amazon", "shopee"] or len(html) < 1000:
+    if plataforma == "amazon" or len(html) < 1000:
         try:
-            render = "true" if plataforma in ["amazon", "shopee"] else "false"
+            render = "true" if plataforma == "amazon" else "false"
             html = requests.get(
                 f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}&country_code=br&premium=true",
                 timeout=25
@@ -324,8 +354,7 @@ def preview_produto():
     if not link:
         return jsonify({"ok": False}), 400
     plataforma = detectar_plataforma(link)
-    link_resolvido = resolver_redirect(link) if plataforma == "shopee" else link
-    link_afiliado = injetar_afiliado(link_resolvido, plataforma)
+    link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     return jsonify({"ok": bool(nome or imagem), "nome": nome, "imagem": imagem, "preco": preco})
 
@@ -337,8 +366,7 @@ def adicionar_produto():
     if not link or not lista_id:
         return jsonify({"erro": "Dados inválidos"}), 400
     plataforma = detectar_plataforma(link)
-    link_resolvido = resolver_redirect(link) if plataforma == "shopee" else link
-    link_afiliado = injetar_afiliado(link_resolvido, plataforma)
+    link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     if not nome:
         nome = "Produto"
