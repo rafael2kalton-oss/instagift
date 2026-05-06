@@ -4,79 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InstaGift - Criar Lista</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
-        .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 16px; }
-        .header { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 0 24px 0; border-bottom: 1px solid #1a1a1a; }
-        .logo-box { background-color: #8A63D2; color: #000; font-weight: 800; padding: 6px 14px; font-size: 26px; border-radius: 6px; display: inline-block; letter-spacing: -0.5px; }
-        .tagline { font-size: 13px; color: #A6A6A6; margin-top: 6px; }
-        .header-stars { font-size: 22px; color: #8A63D2; opacity: 0.7; }
-        .card { background-color: #121212; border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid #1a1a1a; box-shadow: 0 0 15px rgba(138, 99, 210, 0.08); animation: fadeUp 0.4s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        h2 { font-size: 15px; margin-bottom: 14px; font-weight: 500; color: #eee; }
+        body { background: linear-gradient(135deg, #0a0a0f 0%, #0f0a1a 100%); font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
+        .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 20px 16px 48px; }
+
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 28px 0; }
+        .logo-box { background: linear-gradient(135deg, #8A63D2, #b088f5); color: #fff; font-weight: 800; padding: 7px 16px; font-size: 22px; border-radius: 10px; letter-spacing: -0.5px; }
+        .tagline { font-size: 12px; color: #888; margin-top: 4px; }
+        .header-right { text-align: right; }
+        .header-right span { font-size: 11px; color: #555; }
+
+        /* WIZARD STEPS */
+        .wizard-steps { display: flex; gap: 6px; margin-bottom: 28px; }
+        .step { flex: 1; height: 3px; border-radius: 3px; background: #1a1a2e; transition: background 0.4s; }
+        .step.active { background: linear-gradient(90deg, #8A63D2, #b088f5); }
+        .step.done { background: #5a3d9a; }
+
+        /* SECAO */
+        .secao { display: none; animation: fadeUp 0.4s ease; }
+        .secao.ativa { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        .secao-titulo { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+        .secao-sub { font-size: 13px; color: #888; margin-bottom: 24px; line-height: 1.5; }
 
         /* EVENTOS */
-        .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 4px; }
-        .evento-card { background: #1a1a1a; border: 2px solid #2a2a2a; border-radius: 14px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .evento-card:hover { border-color: #8A63D2; background: #1e1a2e; }
-        .evento-card.selected { border-color: #8A63D2; background: #1e1a2e; box-shadow: 0 0 12px rgba(138,99,210,0.3); }
-        .evento-emoji { font-size: 32px; margin-bottom: 6px; }
-        .evento-nome { font-size: 13px; font-weight: 700; color: #eee; }
-        .evento-sub { font-size: 11px; color: #666; margin-top: 2px; }
+        .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+        .evento-card { background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.25s; }
+        .evento-card:hover { border-color: rgba(138,99,210,0.5); background: rgba(138,99,210,0.08); transform: translateY(-2px); }
+        .evento-card.selected { border-color: #8A63D2; background: rgba(138,99,210,0.12); box-shadow: 0 0 20px rgba(138,99,210,0.2); }
+        .evento-emoji { font-size: 30px; margin-bottom: 8px; }
+        .evento-nome { font-size: 13px; font-weight: 600; color: #eee; }
+        .evento-sub { font-size: 11px; color: #666; margin-top: 3px; }
+        .evento-card-full { grid-column: span 2; }
 
-        .platform-chips { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-        .chip { font-size: 11px; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; color: #D4AF37; border: 1px solid #2a2a2a; }
+        /* INPUTS ELEGANTES */
+        .campo { margin-bottom: 16px; }
+        .campo label { font-size: 12px; color: #888; font-weight: 500; display: block; margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
+        .campo input { width: 100%; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 13px 16px; color: #fff; font-size: 15px; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
+        .campo input:focus { border-color: rgba(138,99,210,0.6); background: rgba(138,99,210,0.05); }
+        .campo input::placeholder { color: #444; }
+
+        /* BOTOES NAVEGACAO */
+        .btn-proximo { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(138,99,210,0.3); margin-top: 8px; }
+        .btn-proximo:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138,99,210,0.45); }
+        .btn-pular { width: 100%; background: transparent; border: none; color: #555; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 10px; margin-top: 4px; }
+        .btn-pular:hover { color: #888; }
+        .btn-voltar-step { background: transparent; border: none; color: #666; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 8px 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
+        .btn-voltar-step:hover { color: #aaa; }
+
+        /* EMAIL */
+        .email-hint { font-size: 12px; color: #555; margin-top: 8px; line-height: 1.5; }
+        .email-salvo { font-size: 12px; color: #22c55e; margin-top: 8px; display: none; }
+
+        /* ADICIONAR PRODUTO */
+        .platform-chips { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+        .chip { font-size: 11px; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; color: #888; border: 1px solid rgba(255,255,255,0.08); }
         .input-group { display: flex; gap: 10px; }
-        input[type="text"], input[type="email"] { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 11px 14px; color: #fff; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; width: 100%; }
-        input[type="text"]::placeholder, input[type="email"]::placeholder { color: #555; }
-        input[type="text"]:focus, input[type="email"]:focus { border-color: #8A63D2; }
-        .btn-add { background: #8A63D2; border: none; padding: 11px 18px; border-radius: 10px; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; transition: transform 0.2s, background 0.2s; font-family: 'Inter', sans-serif; }
-        .btn-add:hover { background: #9d7ae0; transform: scale(1.05); }
-        .btn-add:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .loading { text-align: center; color: #8A63D2; padding: 12px 0; font-size: 14px; display: none; }
-        .aviso-link { background: #1a0d00; border: 1px solid #ff9900; border-radius: 10px; padding: 12px 14px; margin-top: 10px; font-size: 12px; color: #ff9900; display: none; line-height: 1.5; }
-        .aviso-btns { display: flex; gap: 10px; margin-top: 10px; }
-        .aviso-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; }
+        .input-group input { flex: 1; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; }
+        .input-group input:focus { border-color: rgba(138,99,210,0.6); }
+        .input-group input::placeholder { color: #444; }
+        .btn-add { background: #8A63D2; border: none; padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
+        .btn-add:hover { background: #9d7ae0; }
+        .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
+        .loading { text-align: center; color: #8A63D2; padding: 10px 0; font-size: 13px; display: none; }
+        .aviso-link { background: rgba(255,153,0,0.08); border: 1px solid rgba(255,153,0,0.3); border-radius: 12px; padding: 12px 14px; margin-top: 10px; font-size: 12px; color: #ff9900; display: none; line-height: 1.5; }
+        .aviso-btns { display: flex; gap: 8px; margin-top: 10px; }
+        .aviso-btns button { flex: 1; padding: 9px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; }
         .btn-continuar { background: #8A63D2; color: white; }
-        .btn-voltar-aviso { background: #333; color: white; }
-        .email-box { background: #0d0d1a; border: 1px solid #8A63D2; border-radius: 14px; padding: 16px; margin-top: 20px; }
-        .email-box p { font-size: 12px; color: #aaa; margin-bottom: 10px; line-height: 1.5; }
-        .email-box input { margin-bottom: 10px; }
-        .btn-salvar-email { width: 100%; background: #8A63D2; border: none; border-radius: 10px; padding: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; }
-        .btn-salvar-email:hover { background: #9d7ae0; }
-        .email-salvo { font-size: 12px; color: #22c55e; margin-top: 8px; text-align: center; display: none; }
-        .list-section h2 span { color: #8A63D2; }
-        .product-card { background: #1a1a1a; border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid #2a2a2a; box-shadow: 0 0 10px rgba(138, 99, 210, 0.06); animation: fadeUp 0.3s ease; }
-        .product-img-wrap { background: radial-gradient(circle, #1e1e1e 0%, #121212 100%); text-align: center; padding: 20px; }
-        .product-img-wrap img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 10px; }
-        .product-img-placeholder { font-size: 48px; padding: 20px 0; }
-        .product-info { padding: 14px 16px; }
-        .product-nome { font-size: 14px; font-weight: 600; color: #eee; margin-bottom: 6px; line-height: 1.4; }
-        .product-preco { font-size: 16px; font-weight: 700; color: #8A63D2; margin-bottom: 10px; }
+        .btn-voltar-aviso { background: rgba(255,255,255,0.08); color: #aaa; }
+
+        /* PRODUTOS */
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .section-header h3 { font-size: 15px; font-weight: 600; color: #eee; }
+        .section-header span { font-size: 12px; color: #8A63D2; }
+        .product-card { background: rgba(255,255,255,0.03); border-radius: 16px; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.2s; }
+        .product-card:hover { border-color: rgba(138,99,210,0.2); }
+        .product-img-wrap { background: rgba(255,255,255,0.02); text-align: center; padding: 16px; }
+        .product-img-wrap img { width: 100%; max-height: 160px; object-fit: contain; border-radius: 8px; }
+        .product-img-placeholder { font-size: 44px; padding: 16px 0; }
+        .product-info { padding: 12px 16px; }
+        .product-nome { font-size: 13px; font-weight: 600; color: #eee; margin-bottom: 4px; line-height: 1.4; }
+        .product-preco { font-size: 15px; font-weight: 700; color: #8A63D2; margin-bottom: 8px; }
         .product-footer { display: flex; justify-content: space-between; align-items: center; }
-        .platform-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .platform-badge { font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
         .badge-amazon { background: #FF9900; color: #000; }
         .badge-mercadolivre { background: #FFE600; color: #000; }
         .badge-shopee { background: #EE4D2D; color: #fff; }
         .badge-outro { background: #333; color: #fff; }
-        .btn-remover { background: transparent; border: none; color: #555; font-size: 18px; cursor: pointer; line-height: 1; transition: color 0.2s; }
+        .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
-        .link-permanente { background: #121212; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px; margin-top: 20px; text-align: center; }
-        .link-permanente p { font-size: 12px; color: #888; margin-bottom: 8px; }
-        .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; }
-        .btn-copiar { background: #1a1a1a; border: 1px solid #8A63D2; color: #8A63D2; padding: 8px 16px; border-radius: 8px; margin-top: 10px; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; transition: background 0.2s; }
-        .btn-copiar:hover { background: #8A63D2; color: #fff; }
-        .empty-state { text-align: center; padding: 30px 0; color: #444; font-size: 14px; }
-        .empty-state .emoji { font-size: 40px; margin-bottom: 10px; }
-        .acoes { margin-top: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 12px; }
-        .btn-criar-story { width: 100%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 32px 0; color: #333; }
+        .empty-state .emoji { font-size: 36px; margin-bottom: 10px; }
+        .empty-state p { font-size: 13px; line-height: 1.6; }
+
+        /* ACOES */
+        .acoes { margin-top: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
+        .btn-criar-story { width: 100%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
         .btn-criar-story:hover { transform: translateY(-2px); }
-        .btn-gerar-vitrine { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(138, 99, 210, 0.3); }
-        .btn-gerar-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138, 99, 210, 0.45); }
-        .btn-ver-vitrine { width: 100%; background: transparent; border: 1px solid #8A63D2; border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; }
-        .btn-ver-vitrine:hover { background: #8A63D2; color: #fff; }
+        .btn-gerar-vitrine { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(138,99,210,0.25); }
+        .btn-gerar-vitrine:hover { transform: translateY(-2px); }
+        .btn-ver-vitrine { width: 100%; background: transparent; border: 1.5px solid rgba(138,99,210,0.4); border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .btn-ver-vitrine:hover { background: rgba(138,99,210,0.1); border-color: #8A63D2; }
+
+        /* LINK PERMANENTE */
+        .link-permanente { background: rgba(138,99,210,0.05); border: 1px solid rgba(138,99,210,0.15); border-radius: 14px; padding: 16px; margin-top: 20px; }
+        .link-permanente p { font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; display: block; margin-bottom: 10px; }
+        .btn-copiar { background: rgba(138,99,210,0.15); border: 1px solid rgba(138,99,210,0.3); color: #8A63D2; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .btn-copiar:hover { background: #8A63D2; color: #fff; }
+
+        /* DIVIDER */
+        .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 24px 0; }
+
+        /* EVENTO SELECIONADO BADGE */
+        .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(138,99,210,0.1); border: 1px solid rgba(138,99,210,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #b088f5; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -85,14 +132,25 @@
     <header class="header">
         <div>
             <div class="logo-box">InstaGift</div>
-            <p class="tagline">O seu presente perfeito ✨</p>
+            <p class="tagline">Presentes que chegam com amor ✨</p>
         </div>
-        <div class="header-stars">✦ ✦</div>
+        <div class="header-right">
+            <span id="stepIndicator">1 de 4</span>
+        </div>
     </header>
 
-    <!-- SELECAO DE EVENTO -->
-    <div class="card">
-        <h2>Qual é o seu evento? ✦</h2>
+    <!-- BARRA DE PROGRESSO -->
+    <div class="wizard-steps">
+        <div class="step active" id="step1"></div>
+        <div class="step" id="step2"></div>
+        <div class="step" id="step3"></div>
+        <div class="step" id="step4"></div>
+    </div>
+
+    <!-- ETAPA 1 — EVENTO -->
+    <div class="secao ativa" id="secao1">
+        <p class="secao-titulo">Qual é o seu evento? 🎉</p>
+        <p class="secao-sub">Escolha o tipo de evento para personalizar sua lista de presentes.</p>
         <div class="eventos-grid">
             <div class="evento-card selected" data-evento="aniversario" onclick="selecionarEvento(this)">
                 <div class="evento-emoji">🎂</div>
@@ -114,19 +172,59 @@
                 <div class="evento-nome">Chá de Bebê</div>
                 <div class="evento-sub">Bem-vindo pequeno!</div>
             </div>
+            <div class="evento-card evento-card-full" data-evento="outros" onclick="selecionarEvento(this)">
+                <div class="evento-emoji">🎁</div>
+                <div class="evento-nome">Outros Eventos</div>
+                <div class="evento-sub">Formatura, Natal, Dia das Mães e mais...</div>
+            </div>
         </div>
+        <button class="btn-proximo" onclick="irParaEtapa(2)">Continuar →</button>
     </div>
 
-    <!-- EMAIL OBRIGATORIO -->
-    <div class="email-box" id="emailBox">
-        <p>💜 Para receber notificações quando alguém reservar ou confirmar um presente, informe seu e-mail:</p>
-        <input type="email" id="inputEmail" placeholder="Seu e-mail">
-        <button class="btn-salvar-email" onclick="salvarEmail()">Salvar e-mail</button>
-        <p class="email-salvo" id="emailSalvo">✅ E-mail salvo com sucesso!</p>
+    <!-- ETAPA 2 — PERSONALIZAR -->
+    <div class="secao" id="secao2">
+        <button class="btn-voltar-step" onclick="irParaEtapa(1)">← Voltar</button>
+        <div class="evento-badge-mini" id="eventoBadgeMini">🎂 Aniversário</div>
+        <p class="secao-titulo">Personalize sua lista ✨</p>
+        <p class="secao-sub">Dê um nome especial e a data do seu evento.</p>
+        <div class="campo">
+            <label id="labelNomeEvento">Nome do evento</label>
+            <input type="text" id="inputNomeEvento" placeholder="Ex: Aniversário da Maria">
+        </div>
+        <div class="campo">
+            <label>Data do evento</label>
+            <input type="date" id="inputDataEvento">
+        </div>
+        <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
+        <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
 
-    <section class="card">
-        <h2>Adicionar presente</h2>
+    <!-- ETAPA 3 — EMAIL -->
+    <div class="secao" id="secao3">
+        <button class="btn-voltar-step" onclick="irParaEtapa(2)">← Voltar</button>
+        <p class="secao-titulo">Seu e-mail 💜</p>
+        <p class="secao-sub">Para receber uma notificação especial quando alguém confirmar um presente para você.</p>
+        <div class="campo">
+            <label>E-mail</label>
+            <input type="email" id="inputEmail" placeholder="seu@email.com">
+            <p class="email-hint">Só enviamos quando uma compra for confirmada. Nada de spam!</p>
+            <p class="email-salvo" id="emailSalvo">✅ E-mail salvo!</p>
+        </div>
+        <button class="btn-proximo" onclick="salvarEmailEAvancar()">Continuar →</button>
+        <button class="btn-pular" onclick="irParaEtapa(4)">Pular por agora</button>
+    </div>
+
+    <!-- ETAPA 4 — LISTA DE PRESENTES -->
+    <div class="secao" id="secao4">
+        <div class="evento-badge-mini" id="eventoBadgeMini4">🎂 Aniversário</div>
+
+        <div class="section-header">
+            <div>
+                <h3 id="nomeListaHeader">Minha Lista</h3>
+                <p style="font-size:11px; color:#555; margin-top:2px;" id="dataEventoHeader"></p>
+            </div>
+        </div>
+
         <div class="platform-chips">
             <span class="chip">🛒 Amazon</span>
             <span class="chip">🛍️ Mercado Livre</span>
@@ -137,54 +235,59 @@
             <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
         </div>
         <div class="aviso-link" id="avisoLink">
-            ⚠️ Link limitado — detalhes do produto não serão exibidos. Use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
+            ⚠️ Link limitado — use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
             <div class="aviso-btns">
                 <button class="btn-voltar-aviso" onclick="voltarLink()">Voltar</button>
                 <button class="btn-continuar" onclick="continuarMesmo()">Continuar assim</button>
             </div>
         </div>
         <div class="loading" id="loading">⏳ Buscando produto...</div>
-    </section>
 
-    <section class="card list-section">
-        <h2>Seus presentes <span id="contador">(0)</span> ✦</h2>
+        <div class="divider"></div>
+
+        <div class="section-header">
+            <h3>Seus presentes</h3>
+            <span id="contador">0 itens</span>
+        </div>
         <div id="listaProdutos">
             <div class="empty-state">
                 <div class="emoji">🎁</div>
-                <p>Nenhum presente ainda.<br>Adicione o primeiro!</p>
+                <p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p>
             </div>
         </div>
-    </section>
 
-    <div class="link-permanente" id="linkPermanente" style="display:none">
-        <p>🔗 Seu link permanente para adicionar mais presentes:</p>
-        <code id="textoLink"></code><br>
-        <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
-    </div>
+        <div class="link-permanente" id="linkPermanente" style="display:none">
+            <p>🔗 Seu link permanente</p>
+            <code id="textoLink"></code>
+            <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
+        </div>
 
-    <div class="acoes" id="acoesVitrine" style="display:none">
-        <button class="btn-criar-story" onclick="abrirPopupStory()">
-            📸 Criar meu story no Instagram
-        </button>
-        <button class="btn-gerar-vitrine" onclick="gerarVitrine()">
-            🎉 Gerar minha vitrine de presentes
-        </button>
-        <button class="btn-ver-vitrine" onclick="verVitrine()">
-            👁️ Ver minha vitrine
-        </button>
+        <div class="acoes" id="acoesVitrine" style="display:none">
+            <button class="btn-criar-story" onclick="abrirPopupStory()">
+                📸 Criar meu story no Instagram
+            </button>
+            <button class="btn-gerar-vitrine" onclick="gerarVitrine()">
+                🎉 Gerar minha vitrine
+            </button>
+            <button class="btn-ver-vitrine" onclick="verVitrine()">
+                👁️ Ver minha vitrine
+            </button>
+        </div>
     </div>
 
 </div>
 
-<!-- Popup recomendacao story -->
-<div id="popupStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#121212; border:1px solid #333; border-radius:20px; padding:28px 22px; max-width:380px; width:100%; text-align:center;">
-        <div id="popupEmoji" style="font-size:44px; margin-bottom:12px;">🎉</div>
-        <h3 id="popupTitulo" style="font-size:20px; font-weight:700; color:#fff; margin-bottom:12px;"></h3>
-        <p id="popupTexto" style="font-size:14px; color:#aaa; line-height:1.7; margin-bottom:12px;"></p>
-        <p style="font-size:13px; color:#aaa; line-height:1.6; margin-bottom:24px;">💡 <strong style="color:#8A63D2;">Dica:</strong> Adicione este story ao seu Destaque para os Melhores Amigos — assim ele fica visível até a data do seu evento e todos que visitarem seu perfil verão!</p>
-        <button onclick="irParaStory()" style="width:100%; padding:15px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">Entendi, vamos lá! 📸</button>
-        <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid #333; border-radius:12px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
+<!-- Popup story -->
+<div id="popupStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#0f0f1a; border:1px solid rgba(138,99,210,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center;">
+        <div id="popupEmoji" style="font-size:48px; margin-bottom:14px;">🎉</div>
+        <h3 id="popupTitulo" style="font-size:20px; font-weight:700; color:#fff; margin-bottom:10px;"></h3>
+        <p id="popupTexto" style="font-size:14px; color:#888; line-height:1.7; margin-bottom:14px;"></p>
+        <div style="background:rgba(138,99,210,0.08); border:1px solid rgba(138,99,210,0.2); border-radius:12px; padding:14px; margin-bottom:24px; text-align:left;">
+            <p style="font-size:13px; color:#b088f5; line-height:1.6;">💡 <strong>Dica:</strong> Adicione este story ao seu Destaque para os Melhores Amigos — assim ele fica visível até a data do seu evento!</p>
+        </div>
+        <button onclick="irParaStory()" style="width:100%; padding:15px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:14px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">Entendi, vamos lá! 📸</button>
+        <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#555; border:1px solid rgba(255,255,255,0.08); border-radius:14px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
     </div>
 </div>
 
@@ -193,28 +296,14 @@
     const BASE = "";
     var linkIgnorado = false;
     var eventoAtual = "aniversario";
+    var stepAtual = 1;
 
     var eventos = {
-        aniversario: {
-            emoji: "🎉",
-            titulo: "Parabéns pelo seu dia!",
-            texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜"
-        },
-        casamento: {
-            emoji: "💍",
-            titulo: "Que comecem as celebrações!",
-            texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais importam saibam o que vocês precisam para esse novo começo! 💜"
-        },
-        "casa-nova": {
-            emoji: "🏠",
-            titulo: "Novo lar, nova vida!",
-            texto: "Compartilhe sua lista nos Melhores Amigos e receba a ajuda de quem você ama para montar seu novo lar com muito carinho! 💜"
-        },
-        "cha-bebe": {
-            emoji: "👶",
-            titulo: "Que chegada especial!",
-            texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais amam você ajudem a receber o pequeno com tudo que ele precisa! 💜"
-        }
+        aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜" },
+        casamento: { emoji: "💍", badge: "💍 Casamento", labelNome: "Nome do casal", placeholder: "Ex: Casamento Ana & João", titulo: "Que comecem as celebrações!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais importam saibam o que vocês precisam para esse novo começo! 💜" },
+        "casa-nova": { emoji: "🏠", badge: "🏠 Casa Nova", labelNome: "Nome do evento", placeholder: "Ex: Casa Nova da Mari", titulo: "Novo lar, nova vida!", texto: "Compartilhe sua lista nos Melhores Amigos e receba a ajuda de quem você ama para montar seu novo lar! 💜" },
+        "cha-bebe": { emoji: "👶", badge: "👶 Chá de Bebê", labelNome: "Nome dos papais", placeholder: "Ex: Bebê da Ana", titulo: "Que chegada especial!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais amam você ajudem a receber o pequeno! 💜" },
+        outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você! 💜" }
     };
 
     function selecionarEvento(el) {
@@ -223,31 +312,54 @@
         eventoAtual = el.dataset.evento;
     }
 
-    function abrirPopupStory() {
-        var ev = eventos[eventoAtual];
-        document.getElementById('popupEmoji').textContent = ev.emoji;
-        document.getElementById('popupTitulo').textContent = ev.titulo;
-        document.getElementById('popupTexto').textContent = ev.texto;
-        document.getElementById('popupStory').style.display = 'flex';
+    function irParaEtapa(n) {
+        document.getElementById('secao' + stepAtual).classList.remove('ativa');
+        stepAtual = n;
+        document.getElementById('secao' + n).classList.add('ativa');
+        document.getElementById('stepIndicator').textContent = n + ' de 4';
+
+        // Atualiza steps
+        for(var i=1;i<=4;i++){
+            var s = document.getElementById('step'+i);
+            s.className = 'step';
+            if(i < n) s.classList.add('done');
+            else if(i === n) s.classList.add('active');
+        }
+
+        // Atualiza badges e labels
+        var ev = eventos[eventoAtual] || eventos['aniversario'];
+        if(n === 2) {
+            document.getElementById('eventoBadgeMini').textContent = ev.badge;
+            document.getElementById('labelNomeEvento').textContent = ev.labelNome;
+            document.getElementById('inputNomeEvento').placeholder = ev.placeholder;
+        }
+        if(n === 4) {
+            document.getElementById('eventoBadgeMini4').textContent = ev.badge;
+            var nomeEvento = document.getElementById('inputNomeEvento').value.trim();
+            var dataEvento = document.getElementById('inputDataEvento').value;
+            document.getElementById('nomeListaHeader').textContent = nomeEvento || 'Minha Lista';
+            if(dataEvento) {
+                var d = new Date(dataEvento + 'T00:00:00');
+                document.getElementById('dataEventoHeader').textContent = '📅 ' + d.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+            }
+            carregarProdutos();
+        }
+        window.scrollTo(0,0);
     }
 
-    async function salvarEmail() {
+    async function salvarEmailEAvancar() {
         const email = document.getElementById('inputEmail').value.trim();
-        if (!email || !email.includes('@')) {
-            alert('Por favor insira um e-mail válido!');
-            return;
+        if (email && email.includes('@')) {
+            try {
+                await fetch(`${BASE}/api/salvar-email-lista`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({lista_id: LISTA_ID, email: email})
+                });
+                document.getElementById('emailSalvo').style.display = 'block';
+            } catch(e) {}
         }
-        try {
-            await fetch(`${BASE}/api/salvar-email-lista`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({lista_id: LISTA_ID, email: email})
-            });
-            document.getElementById('emailSalvo').style.display = 'block';
-            document.getElementById('emailBox').style.border = '1px solid #22c55e';
-        } catch(e) {
-            alert('Erro ao salvar e-mail. Tente novamente.');
-        }
+        irParaEtapa(4);
     }
 
     async function carregarProdutos() {
@@ -260,19 +372,23 @@
 
     function renderizar(produtos) {
         const el = document.getElementById("listaProdutos");
-        const contador = document.getElementById("contador");
         const linkPerm = document.getElementById("linkPermanente");
         const acoes = document.getElementById("acoesVitrine");
-        contador.textContent = `(${produtos.length})`;
+        const contador = document.getElementById("contador");
+
+        contador.textContent = produtos.length + (produtos.length === 1 ? ' item' : ' itens');
+
         if (produtos.length === 0) {
-            el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro!</p></div>`;
+            el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p></div>`;
             linkPerm.style.display = "none";
             acoes.style.display = "none";
             return;
         }
+
         linkPerm.style.display = "block";
         acoes.style.display = "flex";
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
+
         el.innerHTML = produtos.map(p => {
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
             const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
@@ -296,13 +412,8 @@
 
     function verificarLink() {
         const link = document.getElementById("inputLink").value.trim();
-        const aviso = document.getElementById("avisoLink");
         linkIgnorado = false;
-        if (link.indexOf('produto.mercadolivre') > -1) {
-            aviso.style.display = 'block';
-        } else {
-            aviso.style.display = 'none';
-        }
+        document.getElementById("avisoLink").style.display = link.indexOf('produto.mercadolivre') > -1 ? 'block' : 'none';
     }
 
     function voltarLink() {
@@ -322,15 +433,14 @@
         const btn = document.getElementById("btnAdicionar");
         const loading = document.getElementById("loading");
         const link = input.value.trim();
-        const aviso = document.getElementById("avisoLink");
         if (!link) return;
         if (link.indexOf('produto.mercadolivre') > -1 && !linkIgnorado) {
-            aviso.style.display = 'block';
+            document.getElementById("avisoLink").style.display = 'block';
             return;
         }
         btn.disabled = true;
         loading.style.display = "block";
-        aviso.style.display = 'none';
+        document.getElementById("avisoLink").style.display = 'none';
         try {
             const r = await fetch(`${BASE}/api/adicionar-produto`, {
                 method: "POST",
@@ -358,6 +468,14 @@
         await carregarProdutos();
     }
 
+    function abrirPopupStory() {
+        var ev = eventos[eventoAtual] || eventos['aniversario'];
+        document.getElementById('popupEmoji').textContent = ev.emoji;
+        document.getElementById('popupTitulo').textContent = ev.titulo;
+        document.getElementById('popupTexto').textContent = ev.texto;
+        document.getElementById('popupStory').style.display = 'flex';
+    }
+
     function fecharPopupStory() {
         document.getElementById('popupStory').style.display = 'none';
     }
@@ -376,15 +494,14 @@
     }
 
     function copiarLink() {
-        const link = `${window.location.origin}/lista/${LISTA_ID}`;
-        navigator.clipboard.writeText(link).then(() => alert("Link copiado!"));
+        navigator.clipboard.writeText(`${window.location.origin}/lista/${LISTA_ID}`).then(() => alert("Link copiado!"));
     }
 
-    document.getElementById("inputLink").addEventListener("keypress", function(e) {
-        if (e.key === "Enter") adicionarProduto();
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById("inputLink").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") adicionarProduto();
+        });
     });
-
-    carregarProdutos();
 </script>
 </body>
 </html>
