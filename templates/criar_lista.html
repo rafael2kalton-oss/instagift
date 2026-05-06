@@ -16,6 +16,16 @@
         .card { background-color: #121212; border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid #1a1a1a; box-shadow: 0 0 15px rgba(138, 99, 210, 0.08); animation: fadeUp 0.4s ease; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         h2 { font-size: 15px; margin-bottom: 14px; font-weight: 500; color: #eee; }
+
+        /* EVENTOS */
+        .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 4px; }
+        .evento-card { background: #1a1a1a; border: 2px solid #2a2a2a; border-radius: 14px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .evento-card:hover { border-color: #8A63D2; background: #1e1a2e; }
+        .evento-card.selected { border-color: #8A63D2; background: #1e1a2e; box-shadow: 0 0 12px rgba(138,99,210,0.3); }
+        .evento-emoji { font-size: 32px; margin-bottom: 6px; }
+        .evento-nome { font-size: 13px; font-weight: 700; color: #eee; }
+        .evento-sub { font-size: 11px; color: #666; margin-top: 2px; }
+
         .platform-chips { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
         .chip { font-size: 11px; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; color: #D4AF37; border: 1px solid #2a2a2a; }
         .input-group { display: flex; gap: 10px; }
@@ -31,15 +41,12 @@
         .aviso-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; }
         .btn-continuar { background: #8A63D2; color: white; }
         .btn-voltar-aviso { background: #333; color: white; }
-
-        /* EMAIL BOX */
         .email-box { background: #0d0d1a; border: 1px solid #8A63D2; border-radius: 14px; padding: 16px; margin-top: 20px; }
         .email-box p { font-size: 12px; color: #aaa; margin-bottom: 10px; line-height: 1.5; }
         .email-box input { margin-bottom: 10px; }
         .btn-salvar-email { width: 100%; background: #8A63D2; border: none; border-radius: 10px; padding: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; }
         .btn-salvar-email:hover { background: #9d7ae0; }
         .email-salvo { font-size: 12px; color: #22c55e; margin-top: 8px; text-align: center; display: none; }
-
         .list-section h2 span { color: #8A63D2; }
         .product-card { background: #1a1a1a; border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid #2a2a2a; box-shadow: 0 0 10px rgba(138, 99, 210, 0.06); animation: fadeUp 0.3s ease; }
         .product-img-wrap { background: radial-gradient(circle, #1e1e1e 0%, #121212 100%); text-align: center; padding: 20px; }
@@ -82,6 +89,33 @@
         </div>
         <div class="header-stars">✦ ✦</div>
     </header>
+
+    <!-- SELECAO DE EVENTO -->
+    <div class="card">
+        <h2>Qual é o seu evento? ✦</h2>
+        <div class="eventos-grid">
+            <div class="evento-card selected" data-evento="aniversario" onclick="selecionarEvento(this)">
+                <div class="evento-emoji">🎂</div>
+                <div class="evento-nome">Aniversário</div>
+                <div class="evento-sub">Celebre seu dia!</div>
+            </div>
+            <div class="evento-card" data-evento="casamento" onclick="selecionarEvento(this)">
+                <div class="evento-emoji">💍</div>
+                <div class="evento-nome">Casamento</div>
+                <div class="evento-sub">Lista de presentes</div>
+            </div>
+            <div class="evento-card" data-evento="casa-nova" onclick="selecionarEvento(this)">
+                <div class="evento-emoji">🏠</div>
+                <div class="evento-nome">Casa Nova</div>
+                <div class="evento-sub">Novo lar, nova vida!</div>
+            </div>
+            <div class="evento-card" data-evento="cha-bebe" onclick="selecionarEvento(this)">
+                <div class="evento-emoji">👶</div>
+                <div class="evento-nome">Chá de Bebê</div>
+                <div class="evento-sub">Bem-vindo pequeno!</div>
+            </div>
+        </div>
+    </div>
 
     <!-- EMAIL OBRIGATORIO -->
     <div class="email-box" id="emailBox">
@@ -145,9 +179,10 @@
 <!-- Popup recomendacao story -->
 <div id="popupStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#121212; border:1px solid #333; border-radius:20px; padding:28px 22px; max-width:380px; width:100%; text-align:center;">
-        <div style="font-size:44px; margin-bottom:12px;">🎉</div>
-        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:12px;">Parabéns pelo seu dia!</h3>
-        <p style="font-size:14px; color:#aaa; line-height:1.7; margin-bottom:24px;">Recomendamos compartilhar sua vitrine nos <strong style="color:#8A63D2;">Melhores Amigos</strong>.<br>É o lugar perfeito para celebrar com quem realmente importa! 💜</p>
+        <div id="popupEmoji" style="font-size:44px; margin-bottom:12px;">🎉</div>
+        <h3 id="popupTitulo" style="font-size:20px; font-weight:700; color:#fff; margin-bottom:12px;"></h3>
+        <p id="popupTexto" style="font-size:14px; color:#aaa; line-height:1.7; margin-bottom:12px;"></p>
+        <p style="font-size:13px; color:#aaa; line-height:1.6; margin-bottom:24px;">💡 <strong style="color:#8A63D2;">Dica:</strong> Adicione este story ao seu Destaque para os Melhores Amigos — assim ele fica visível até a data do seu evento e todos que visitarem seu perfil verão!</p>
         <button onclick="irParaStory()" style="width:100%; padding:15px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">Entendi, vamos lá! 📸</button>
         <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid #333; border-radius:12px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
     </div>
@@ -157,7 +192,44 @@
     const LISTA_ID = "{{ lista_id }}";
     const BASE = "";
     var linkIgnorado = false;
-    var emailSalvo = false;
+    var eventoAtual = "aniversario";
+
+    var eventos = {
+        aniversario: {
+            emoji: "🎉",
+            titulo: "Parabéns pelo seu dia!",
+            texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜"
+        },
+        casamento: {
+            emoji: "💍",
+            titulo: "Que comecem as celebrações!",
+            texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais importam saibam o que vocês precisam para esse novo começo! 💜"
+        },
+        "casa-nova": {
+            emoji: "🏠",
+            titulo: "Novo lar, nova vida!",
+            texto: "Compartilhe sua lista nos Melhores Amigos e receba a ajuda de quem você ama para montar seu novo lar com muito carinho! 💜"
+        },
+        "cha-bebe": {
+            emoji: "👶",
+            titulo: "Que chegada especial!",
+            texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais amam você ajudem a receber o pequeno com tudo que ele precisa! 💜"
+        }
+    };
+
+    function selecionarEvento(el) {
+        document.querySelectorAll('.evento-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        eventoAtual = el.dataset.evento;
+    }
+
+    function abrirPopupStory() {
+        var ev = eventos[eventoAtual];
+        document.getElementById('popupEmoji').textContent = ev.emoji;
+        document.getElementById('popupTitulo').textContent = ev.titulo;
+        document.getElementById('popupTexto').textContent = ev.texto;
+        document.getElementById('popupStory').style.display = 'flex';
+    }
 
     async function salvarEmail() {
         const email = document.getElementById('inputEmail').value.trim();
@@ -173,7 +245,6 @@
             });
             document.getElementById('emailSalvo').style.display = 'block';
             document.getElementById('emailBox').style.border = '1px solid #22c55e';
-            emailSalvo = true;
         } catch(e) {
             alert('Erro ao salvar e-mail. Tente novamente.');
         }
@@ -192,27 +263,22 @@
         const contador = document.getElementById("contador");
         const linkPerm = document.getElementById("linkPermanente");
         const acoes = document.getElementById("acoesVitrine");
-
         contador.textContent = `(${produtos.length})`;
-
         if (produtos.length === 0) {
             el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro!</p></div>`;
             linkPerm.style.display = "none";
             acoes.style.display = "none";
             return;
         }
-
         linkPerm.style.display = "block";
         acoes.style.display = "flex";
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
-
         el.innerHTML = produtos.map(p => {
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
             const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
             const imgHtml = p.imagem_url
                 ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
                 : `<div class="product-img-placeholder">🎁</div>`;
-
             return `
             <div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
@@ -257,18 +323,14 @@
         const loading = document.getElementById("loading");
         const link = input.value.trim();
         const aviso = document.getElementById("avisoLink");
-
         if (!link) return;
-
         if (link.indexOf('produto.mercadolivre') > -1 && !linkIgnorado) {
             aviso.style.display = 'block';
             return;
         }
-
         btn.disabled = true;
         loading.style.display = "block";
         aviso.style.display = 'none';
-
         try {
             const r = await fetch(`${BASE}/api/adicionar-produto`, {
                 method: "POST",
@@ -296,17 +358,13 @@
         await carregarProdutos();
     }
 
-    function abrirPopupStory() {
-        document.getElementById('popupStory').style.display = 'flex';
-    }
-
     function fecharPopupStory() {
         document.getElementById('popupStory').style.display = 'none';
     }
 
     function irParaStory() {
         document.getElementById('popupStory').style.display = 'none';
-        window.location.href = `/?vitrine=${LISTA_ID}`;
+        window.location.href = `/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
     }
 
     function gerarVitrine() {
@@ -325,20 +383,6 @@
     document.getElementById("inputLink").addEventListener("keypress", function(e) {
         if (e.key === "Enter") adicionarProduto();
     });
-
-    // Verifica se já tem email salvo
-    async function verificarEmailSalvo() {
-        try {
-            const r = await fetch(`${BASE}/api/produtos/${LISTA_ID}`);
-            const lista = await fetch(`${BASE}/api/lista-info/${LISTA_ID}`);
-            const data = await lista.json();
-            if (data.email_aniversariante) {
-                document.getElementById('inputEmail').value = data.email_aniversariante;
-                document.getElementById('emailSalvo').style.display = 'block';
-                document.getElementById('emailBox').style.border = '1px solid #22c55e';
-            }
-        } catch(e) {}
-    }
 
     carregarProdutos();
 </script>
