@@ -142,21 +142,11 @@ def extrair_ml(link):
         print("ML erro:", e)
     return "", "", ""
 
-def resolver_redirect(link):
-    try:
-        r = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
-        return r.url
-    except:
-        return link
-
 def extrair_shopee(link):
     try:
         m = re.search(r'i\.(\d+)\.(\d+)', link)
         if not m:
             return "", "", ""
-        shop_id = m.group(1)
-        item_id = m.group(2)
-        # Tenta extrair nome via og:title com ScraperAPI
         html = requests.get(
             f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
             timeout=20
@@ -368,7 +358,7 @@ def adicionar_produto():
     link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     if not nome:
-        nome = "Produto"
+        nome = "Produto Shopee" if plataforma == "shopee" else "Produto"
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
@@ -407,6 +397,15 @@ def liberar_produto(produto_id):
         "nome_comprador": None,
         "email_comprador": None
     })
+    return jsonify({"ok": True})
+
+@app.route("/api/atualizar-nome-produto/<int:produto_id>", methods=["POST"])
+def atualizar_nome_produto(produto_id):
+    data = request.json or {}
+    nome = data.get("nome", "").strip()
+    if not nome:
+        return jsonify({"erro": "Nome vazio"}), 400
+    sb_patch("produtos", f"id=eq.{produto_id}", {"nome": nome})
     return jsonify({"ok": True})
 
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
