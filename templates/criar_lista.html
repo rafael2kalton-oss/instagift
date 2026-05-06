@@ -97,6 +97,7 @@
         .btn-copiar:hover { background: #8A63D2; color: #fff; }
         .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 24px 0; }
         .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(138,99,210,0.1); border: 1px solid rgba(138,99,210,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #b088f5; margin-bottom: 20px; }
+        .nav-etapa4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -186,11 +187,14 @@
         <button class="btn-pular" onclick="irParaEtapa(4)">Pular por agora</button>
     </div>
 
-    <<!-- ETAPA 4 — LISTA -->
-<div class="secao" id="secao4">
-    <button class="btn-voltar-step" onclick="irParaEtapa(3)">← Voltar</button>
-    <div class="evento-badge-mini" id="eventoBadgeMini4">🎂 Aniversário</div>
-    <div class="section-header">
+    <!-- ETAPA 4 — LISTA -->
+    <div class="secao" id="secao4">
+        <div class="nav-etapa4">
+            <button class="btn-voltar-step" style="margin-bottom:0;" onclick="irParaEtapa(3)">← Voltar</button>
+            <button class="btn-voltar-step" style="margin-bottom:0; color:#8A63D2;" onclick="recomecar()">↺ Trocar evento</button>
+        </div>
+        <div class="evento-badge-mini" id="eventoBadgeMini4">🎂 Aniversário</div>
+        <div class="section-header">
             <div>
                 <h3 id="nomeListaHeader">Minha Lista</h3>
                 <p style="font-size:11px; color:#555; margin-top:2px;" id="dataEventoHeader"></p>
@@ -240,8 +244,8 @@
                 👁️ Ver minha vitrine
             </button>
             <button class="btn-whatsapp" onclick="compartilharWhatsApp()">
-    💚 Avisar Convidados no WhatsApp
-</button>
+                💚 Avisar Convidados no WhatsApp
+            </button>
         </div>
     </div>
 
@@ -277,7 +281,6 @@
         outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você! 💜" }
     };
 
-    // SALVAR E RESTAURAR ESTADO
     function salvarEstado() {
         try {
             var estado = {
@@ -310,6 +313,25 @@
                 irParaEtapa(4);
             }
         } catch(e) {}
+    }
+
+    function recomecar() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        stepAtual = 1;
+        eventoAtual = 'aniversario';
+        document.querySelectorAll('.secao').forEach(function(s) { s.classList.remove('ativa'); });
+        document.getElementById('secao1').classList.add('ativa');
+        document.getElementById('stepIndicator').textContent = '1 de 4';
+        for(var i=1;i<=4;i++){
+            var s = document.getElementById('step'+i);
+            s.className = 'step';
+            if(i === 1) s.classList.add('active');
+        }
+        document.querySelectorAll('.evento-card').forEach(function(c) {
+            c.classList.remove('selected');
+            if(c.dataset.evento === 'aniversario') c.classList.add('selected');
+        });
+        window.scrollTo(0,0);
     }
 
     function selecionarEvento(el) {
