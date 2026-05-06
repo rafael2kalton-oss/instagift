@@ -52,7 +52,6 @@ def detectar_plataforma(link):
 
 def injetar_afiliado(link, plataforma):
     if plataforma == "amazon":
-        # Limpa o link e deixa só o essencial com o ASIN
         asin = re.search(r'/dp/([A-Z0-9]{10})', link)
         if asin:
             link = f"https://www.amazon.com.br/dp/{asin.group(1)}?tag={AMAZON_TAG}"
@@ -62,6 +61,9 @@ def injetar_afiliado(link, plataforma):
     elif plataforma == "mercadolivre":
         link = re.sub(r'[?&]matt_tool=[^&]+', '', link)
         link += ('&' if '?' in link else '?') + f'matt_tool=97&partner_id={ML_ID}'
+    elif plataforma == "shopee":
+        link = re.sub(r'[?&]smtt=[^&]+', '', link)
+        link += ('&' if '?' in link else '?') + 'smtt=0.0.9&source_identifier=affiliate&subfolder_id=18374451025'
     return link
 
 def get_ml_token():
