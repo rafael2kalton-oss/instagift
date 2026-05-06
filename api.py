@@ -141,8 +141,15 @@ def extrair_ml(link):
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
-
+def resolver_redirect(link):
+    try:
+        r = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
+        return r.url
+    except:
+        return link
 def extrair_dados(link, plataforma):
+    if plataforma == "shopee":
+        link = resolver_redirect(link)
     if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
         if n:
