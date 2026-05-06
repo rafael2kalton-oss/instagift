@@ -141,12 +141,14 @@ def extrair_ml(link):
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
+
 def resolver_redirect(link):
     try:
         r = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
         return r.url
     except:
         return link
+
 def extrair_dados(link, plataforma):
     if plataforma == "shopee":
         link = resolver_redirect(link)
@@ -217,8 +219,9 @@ def extrair_dados(link, plataforma):
 
     return nome, imagem, preco
 
-def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url):
+def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto=""):
     link_confirmacao = f"{base_url}/confirmar-compra/{token}"
+    link_btn = f'<a href="{link_produto}" style="display:block;background:#1a1a2e;color:#8A63D2;text-align:center;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px;border:1px solid rgba(138,99,210,0.3);">🛍️ Acessar o presente novamente</a>' if link_produto else ""
     try:
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
@@ -235,7 +238,8 @@ def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token,
                     <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Presente reservado</p>
                     <p style="color:#fff;font-weight:700;font-size:16px;">{nome_produto}</p>
                 </div>
-                <p style="color:#aaa;margin-bottom:24px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. Assim a pessoa especial saberá que vai receber esse presente! 💜</p>
+                <p style="color:#aaa;margin-bottom:16px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. Assim a pessoa especial saberá que vai receber esse presente! 💜</p>
+                {link_btn}
                 <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
                 <div style="background:#1a1a1a;border-radius:10px;padding:14px;margin-bottom:24px;">
                     <p style="color:#666;font-size:12px;line-height:1.6;">⏰ Este link expira em <strong style="color:#aaa;">3 horas</strong>. Se não confirmar dentro do prazo, o presente voltará a ficar disponível para outros.</p>
@@ -320,9 +324,9 @@ def preview_produto():
     if not link:
         return jsonify({"ok": False}), 400
     plataforma = detectar_plataforma(link)
-link_resolvido = resolver_redirect(link) if plataforma == "shopee" else link
-link_afiliado = injetar_afiliado(link_resolvido, plataforma)
-nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
+    link_resolvido = resolver_redirect(link) if plataforma == "shopee" else link
+    link_afiliado = injetar_afiliado(link_resolvido, plataforma)
+    nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     return jsonify({"ok": bool(nome or imagem), "nome": nome, "imagem": imagem, "preco": preco})
 
 @app.route("/api/adicionar-produto", methods=["POST"])
@@ -333,7 +337,8 @@ def adicionar_produto():
     if not link or not lista_id:
         return jsonify({"erro": "Dados inválidos"}), 400
     plataforma = detectar_plataforma(link)
-    link_afiliado = injetar_afiliado(link, plataforma)
+    link_resolvido = resolver_redirect(link) if plataforma == "shopee" else link
+    link_afiliado = injetar_afiliado(link_resolvido, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     if not nome:
         nome = "Produto"
@@ -404,8 +409,9 @@ def reservar(produto_id):
     })
 
     nome_produto = produtos[0].get("nome", "Produto")
+    link_produto = produtos[0].get("link_afiliado", "")
     base_url = request.host_url.rstrip('/')
-    enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url)
+    enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto)
 
     return jsonify({"ok": True})
 
