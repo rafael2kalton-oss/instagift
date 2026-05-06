@@ -156,25 +156,24 @@ def extrair_shopee(link):
             return "", "", ""
         shop_id = m.group(1)
         item_id = m.group(2)
-        url = f"https://shopee.com.br/api/v4/item/get?itemid={item_id}&shopid={shop_id}"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Referer": "https://shopee.com.br/",
-            "X-Api-Source": "pc",
-            "If-None-Match-": "",
-            "X-Shopee-Language": "pt-BR"
-        }
-        r = requests.get(url, headers=headers, timeout=10)
-        data = r.json()
-        item = data.get("data") or {}
-        nome = item.get("name", "")[:100]
-        preco_raw = item.get("price") or item.get("price_min") or 0
-        preco = f"{preco_raw / 100000:.2f}".replace(".", ",") if preco_raw else ""
-        imagens = item.get("images") or []
-        imagem = f"https://cf.shopee.com.br/file/{imagens[0]}" if imagens else ""
-        return nome, imagem, preco
+        # Tenta extrair nome via og:title com ScraperAPI
+        html = requests.get(
+            f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
+            timeout=20
+        ).text
+        soup = BeautifulSoup(html, "html.parser")
+        nome = ""
+        t = soup.find("meta", property="og:title")
+        if t:
+            nome = t.get("content", "")[:100]
+            nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+        imagem = ""
+        i = soup.find("meta", property="og:image")
+        if i:
+            imagem = i.get("content", "")
+        return nome, imagem, ""
     except Exception as e:
-        print("Shopee API erro:", e)
+        print("Shopee erro:", e)
         return "", "", ""
 
 def extrair_dados(link, plataforma):
