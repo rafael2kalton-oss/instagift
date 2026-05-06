@@ -50,6 +50,9 @@ body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-hei
 </head>
 <body>
 <div class="container">
+  <div style="margin-bottom:16px;">
+    <button onclick="voltarLista()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#aaa; padding:8px 16px; border-radius:10px; font-size:13px; cursor:pointer; font-family:Arial,sans-serif;">← Voltar</button>
+  </div>
   <div class="topo">
     <h2>Lista de Presentes</h2>
     <p id="subtitulo">Carregando...</p>
@@ -88,6 +91,10 @@ var btnInfo = {
   shopee: {classe: 'btn-shopee', texto: '🧡 Comprar na Shopee'},
   outro: {classe: 'btn-outro', texto: '🔗 Ver produto'}
 };
+
+function voltarLista() {
+  window.history.back();
+}
 
 async function carregarLista() {
   try {
