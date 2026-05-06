@@ -52,8 +52,13 @@ def detectar_plataforma(link):
 
 def injetar_afiliado(link, plataforma):
     if plataforma == "amazon":
-        link = re.sub(r'[?&]tag=[^&]+', '', link)
-        link += ('&' if '?' in link else '?') + 'tag=' + AMAZON_TAG
+        # Limpa o link e deixa só o essencial com o ASIN
+        asin = re.search(r'/dp/([A-Z0-9]{10})', link)
+        if asin:
+            link = f"https://www.amazon.com.br/dp/{asin.group(1)}?tag={AMAZON_TAG}"
+        else:
+            link = re.sub(r'[?&]tag=[^&]+', '', link)
+            link += ('&' if '?' in link else '?') + 'tag=' + AMAZON_TAG
     elif plataforma == "mercadolivre":
         link = re.sub(r'[?&]matt_tool=[^&]+', '', link)
         link += ('&' if '?' in link else '?') + f'matt_tool=97&partner_id={ML_ID}'
