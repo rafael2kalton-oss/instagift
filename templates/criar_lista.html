@@ -78,6 +78,9 @@
         .badge-outro { background: #333; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
+        .shopee-nome-input { width:100%; background:rgba(238,77,45,0.06); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:8px 12px; color:#fff; font-size:12px; font-family:'Inter',sans-serif; outline:none; margin-top:8px; }
+        .shopee-nome-input:focus { border-color:#EE4D2D; }
+        .shopee-hint { font-size:10px; color:#EE4D2D; margin-top:4px; }
         .empty-state { text-align: center; padding: 32px 0; color: #333; }
         .empty-state .emoji { font-size: 36px; margin-bottom: 10px; }
         .empty-state p { font-size: 13px; line-height: 1.6; }
@@ -120,7 +123,7 @@
         <div class="step" id="step4"></div>
     </div>
 
-    <!-- ETAPA 1 — EVENTO -->
+    <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
         <p class="secao-titulo">Qual é o seu evento? 🎉</p>
         <p class="secao-sub">Escolha o tipo de evento para personalizar sua lista de presentes.</p>
@@ -154,7 +157,7 @@
         <button class="btn-proximo" onclick="irParaEtapa(2)">Continuar →</button>
     </div>
 
-    <!-- ETAPA 2 — PERSONALIZAR -->
+    <!-- ETAPA 2 -->
     <div class="secao" id="secao2">
         <button class="btn-voltar-step" onclick="irParaEtapa(1)">← Voltar</button>
         <div class="evento-badge-mini" id="eventoBadgeMini">🎂 Aniversário</div>
@@ -172,7 +175,7 @@
         <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
 
-    <!-- ETAPA 3 — EMAIL -->
+    <!-- ETAPA 3 -->
     <div class="secao" id="secao3">
         <button class="btn-voltar-step" onclick="irParaEtapa(2)">← Voltar</button>
         <p class="secao-titulo">Seu e-mail 💜</p>
@@ -187,7 +190,7 @@
         <button class="btn-pular" onclick="irParaEtapa(4)">Pular por agora</button>
     </div>
 
-    <!-- ETAPA 4 — LISTA -->
+    <!-- ETAPA 4 -->
     <div class="secao" id="secao4">
         <div class="nav-etapa4">
             <button class="btn-voltar-step" style="margin-bottom:0;" onclick="irParaEtapa(3)">← Voltar</button>
@@ -283,14 +286,12 @@
 
     function salvarEstado() {
         try {
-            var estado = {
-                evento: eventoAtual,
-                step: stepAtual,
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                evento: eventoAtual, step: stepAtual,
                 nomeEvento: document.getElementById('inputNomeEvento').value,
                 dataEvento: document.getElementById('inputDataEvento').value,
                 email: document.getElementById('inputEmail').value
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+            }));
         } catch(e) {}
     }
 
@@ -309,9 +310,7 @@
             if (estado.nomeEvento) document.getElementById('inputNomeEvento').value = estado.nomeEvento;
             if (estado.dataEvento) document.getElementById('inputDataEvento').value = estado.dataEvento;
             if (estado.email) document.getElementById('inputEmail').value = estado.email;
-            if (estado.step && estado.step >= 4) {
-                irParaEtapa(4);
-            }
+            if (estado.step && estado.step >= 4) irParaEtapa(4);
         } catch(e) {}
     }
 
@@ -415,14 +414,21 @@
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
             const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
             const imgHtml = p.imagem_url
-                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
-                : `<div class="product-img-placeholder">🎁</div>`;
+                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🧡</div>'">`
+                : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : '🎁'}</div>`;
+            const shopeeEdit = p.plataforma === 'shopee' ? `
+                <input type="text" class="shopee-nome-input" id="nome-shopee-${p.id}"
+                    value="${p.nome === 'Produto Shopee' || !p.nome ? '' : p.nome}"
+                    placeholder="✏️ Digite o nome do produto Shopee"
+                    onblur="salvarNomeShopee(${p.id}, this.value)">
+                <p class="shopee-hint">👆 Digite o nome do produto acima para identificar na lista</p>` : '';
             return `
             <div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
                 <div class="product-info">
                     <div class="product-nome">${p.nome || "Produto"}</div>
                     ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
+                    ${shopeeEdit}
                     <div class="product-footer">
                         <span class="platform-badge ${badge}">${label}</span>
                         <button class="btn-remover" onclick="remover(${p.id})">✕</button>
@@ -430,6 +436,18 @@
                 </div>
             </div>`;
         }).join("");
+    }
+
+    async function salvarNomeShopee(id, nome) {
+        if (!nome.trim()) return;
+        try {
+            await fetch(`${BASE}/api/atualizar-nome-produto/${id}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({nome: nome.trim()})
+            });
+            await carregarProdutos();
+        } catch(e) {}
     }
 
     function verificarLink() {
@@ -524,8 +542,7 @@
         var mensagem = 'Oi! 🎉 Preparei tudo para ' + nomeEvento + ' e criei uma lista digital no InstaGift! 🎁\n\n' +
                       '👉 ESCOLHA O PRESENTE AQUI:\n' + linkVitrine + '\n\n' +
                       'Valeu pelo carinho! 🙏💜';
-        var url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem);
-        window.open(url, '_blank');
+        window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
     }
 
     function copiarLink() {
