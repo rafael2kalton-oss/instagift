@@ -154,9 +154,9 @@ def extrair_dados(link, plataforma):
     except:
         html = ""
 
-    if plataforma == "amazon" or len(html) < 1000:
+    if plataforma in ["amazon", "shopee"] or len(html) < 1000:
         try:
-            render = "true" if plataforma == "amazon" else "false"
+            render = "true" if plataforma in ["amazon", "shopee"] else "false"
             html = requests.get(
                 f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}&country_code=br&premium=true",
                 timeout=25
