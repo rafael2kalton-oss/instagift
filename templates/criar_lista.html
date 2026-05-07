@@ -10,7 +10,7 @@
         body { background: linear-gradient(135deg, #0a0a0f 0%, #0f0a1a 100%); font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
         .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 20px 16px 48px; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 28px 0; }
-        .logo-box { background: linear-gradient(135deg, #8A63D2, #b088f5); color: #fff; font-weight: 800; padding: 7px 16px; font-size: 22px; border-radius: 10px; letter-spacing: -0.5px; }
+        .logo-box { background: linear-gradient(135deg, #8A63D2, #b088f5); color: #fff; font-weight: 800; padding: 7px 16px; font-size: 22px; border-radius: 10px; letter-spacing: -0.5px; cursor: pointer; }
         .tagline { font-size: 12px; color: #888; margin-top: 4px; }
         .header-right { text-align: right; }
         .header-right span { font-size: 11px; color: #555; }
@@ -78,9 +78,23 @@
         .badge-outro { background: #333; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
-        .shopee-nome-input { width:100%; background:rgba(238,77,45,0.06); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:8px 12px; color:#fff; font-size:12px; font-family:'Inter',sans-serif; outline:none; margin-top:8px; }
-        .shopee-nome-input:focus { border-color:#EE4D2D; }
+        /* SHOPEE MANUAL */
+        .shopee-manual-card { background: rgba(238,77,45,0.05); border: 1.5px solid rgba(238,77,45,0.2); border-radius: 12px; padding: 14px; margin-top: 8px; }
+        .shopee-manual-card label { font-size: 11px; color: #EE4D2D; font-weight: 600; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.03em; }
+        .shopee-manual-input { width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:9px 12px; color:#fff; font-size:13px; font-family:'Inter',sans-serif; outline:none; margin-bottom:8px; }
+        .shopee-manual-input:focus { border-color:#EE4D2D; }
+        .shopee-upload-label { display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.08); border:1.5px dashed rgba(238,77,45,0.3); border-radius:8px; padding:10px 12px; cursor:pointer; font-size:12px; color:#EE4D2D; margin-bottom:8px; }
+        .shopee-upload-label:hover { background:rgba(238,77,45,0.12); }
+        .shopee-preview-img { width:100%; max-height:120px; object-fit:contain; border-radius:8px; margin-bottom:8px; display:none; }
+        .btn-salvar-shopee { width:100%; background:#EE4D2D; border:none; border-radius:8px; padding:10px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
+        .btn-salvar-shopee:hover { background:#d44426; }
         .shopee-hint { font-size:10px; color:#EE4D2D; margin-top:4px; }
+        /* WHATSAPP BLOQUEADO */
+        .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-whatsapp:hover:not(:disabled) { transform: translateY(-2px); }
+        .btn-whatsapp:disabled { background: rgba(255,255,255,0.06); color: #444; cursor: not-allowed; border: 1.5px solid rgba(255,255,255,0.06); }
+        .whatsapp-hint { font-size: 11px; color: #555; text-align: center; margin-top: 4px; line-height: 1.5; }
+        .whatsapp-hint.liberado { color: #22c55e; }
         .empty-state { text-align: center; padding: 32px 0; color: #333; }
         .empty-state .emoji { font-size: 36px; margin-bottom: 10px; }
         .empty-state p { font-size: 13px; line-height: 1.6; }
@@ -91,8 +105,6 @@
         .btn-gerar-vitrine:hover { transform: translateY(-2px); }
         .btn-ver-vitrine { width: 100%; background: transparent; border: 1.5px solid rgba(138,99,210,0.4); border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .btn-ver-vitrine:hover { background: rgba(138,99,210,0.1); border-color: #8A63D2; }
-        .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-whatsapp:hover { transform: translateY(-2px); }
         .link-permanente { background: rgba(138,99,210,0.05); border: 1px solid rgba(138,99,210,0.15); border-radius: 14px; padding: 16px; margin-top: 20px; }
         .link-permanente p { font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
         .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; display: block; margin-bottom: 10px; }
@@ -108,7 +120,7 @@
 
     <header class="header">
         <div>
-            <div class="logo-box" onclick="recomecar()" style="cursor:pointer;">InstaGift</div>
+            <div class="logo-box" onclick="recomecar()">InstaGift</div>
             <p class="tagline">Presentes que chegam com amor ✨</p>
         </div>
         <div class="header-right">
@@ -246,9 +258,10 @@
             <button class="btn-ver-vitrine" onclick="verVitrine()">
                 👁️ Ver minha vitrine
             </button>
-            <button class="btn-whatsapp" onclick="compartilharWhatsApp()">
+            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>
                 💚 Avisar Convidados no WhatsApp
             </button>
+            <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
         </div>
     </div>
 
@@ -268,13 +281,54 @@
     </div>
 </div>
 
+<!-- Popup Shopee -->
+<div id="popupShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#0f0f1a; border:1px solid rgba(238,77,45,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
+        <div style="font-size:40px; margin-bottom:12px;">🧡</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:10px;">Produto Shopee detectado</h3>
+        <p style="font-size:13px; color:#888; line-height:1.7; margin-bottom:24px;">Devido às políticas de privacidade da Shopee, não conseguimos buscar as informações do produto automaticamente. Deseja personalizar sua lista manualmente?</p>
+        <button onclick="aceitarPersonalizarShopee()" style="width:100%; padding:14px; background:#EE4D2D; color:white; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Sim, quero personalizar</button>
+        <button onclick="recusarPersonalizarShopee()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid rgba(255,255,255,0.08); border-radius:12px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Não, adicionar assim mesmo</button>
+    </div>
+</div>
+
+<!-- Card manual Shopee -->
+<div id="cardManualShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#0f0f1a; border:1px solid rgba(238,77,45,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="font-size:17px; font-weight:700; color:#fff;">🧡 Personalizar produto Shopee</h3>
+            <button onclick="fecharCardManualShopee()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+        </div>
+        <div style="margin-bottom:14px;">
+            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Nome do produto</label>
+            <input type="text" id="shopeeNomeManual" placeholder="Ex: Tênis Nike Air Max" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(238,77,45,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:14px;">
+            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Preço (opcional)</label>
+            <input type="text" id="shopeePrecoManual" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(238,77,45,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
+            <label for="shopeeImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.06); border:1.5px dashed rgba(238,77,45,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#EE4D2D; font-size:13px;">
+                📸 Tirar print ou escolher da galeria
+            </label>
+            <input type="file" id="shopeeImagemManual" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
+            <img id="shopeePreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+        </div>
+        <button onclick="salvarProdutoShopeeManual()" style="width:100%; padding:14px; background:#EE4D2D; color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto 🧡</button>
+    </div>
+</div>
+
 <script>
     const LISTA_ID = "{{ lista_id }}";
     const BASE = "";
     const STORAGE_KEY = "instagift_estado_" + LISTA_ID;
+    const WHATSAPP_KEY = "instagift_story_" + LISTA_ID;
     var linkIgnorado = false;
     var eventoAtual = "aniversario";
     var stepAtual = 1;
+    var linkShopeeAtual = "";
+    var imagemShopeeBase64 = "";
 
     var eventos = {
         aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜" },
@@ -283,6 +337,24 @@
         "cha-bebe": { emoji: "👶", badge: "👶 Chá de Bebê", labelNome: "Nome dos papais", placeholder: "Ex: Bebê da Ana", titulo: "Que chegada especial!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais amam você ajudem a receber o pequeno! 💜" },
         outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você! 💜" }
     };
+
+    // WHATSAPP — verifica se story foi compartilhado
+    function verificarWhatsapp() {
+        try {
+            var compartilhou = localStorage.getItem(WHATSAPP_KEY);
+            var btn = document.getElementById('btnWhatsapp');
+            var hint = document.getElementById('whatsappHint');
+            if (compartilhou === 'true') {
+                btn.disabled = false;
+                hint.textContent = '✅ WhatsApp liberado! Avise seus convidados.';
+                hint.className = 'whatsapp-hint liberado';
+            } else {
+                btn.disabled = true;
+                hint.textContent = '📸 Compartilhe nos Stories primeiro para liberar o WhatsApp';
+                hint.className = 'whatsapp-hint';
+            }
+        } catch(e) {}
+    }
 
     function salvarEstado() {
         try {
@@ -367,6 +439,7 @@
                 document.getElementById('dataEventoHeader').textContent = '📅 ' + d.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
             }
             carregarProdutos();
+            verificarWhatsapp();
         }
         salvarEstado();
         window.scrollTo(0,0);
@@ -409,6 +482,7 @@
         }
         linkPerm.style.display = "block";
         acoes.style.display = "flex";
+        verificarWhatsapp();
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
@@ -416,19 +490,12 @@
             const imgHtml = p.imagem_url
                 ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🧡</div>'">`
                 : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : '🎁'}</div>`;
-            const shopeeEdit = p.plataforma === 'shopee' ? `
-                <input type="text" class="shopee-nome-input" id="nome-shopee-${p.id}"
-                    value="${p.nome === 'Produto Shopee' || !p.nome ? '' : p.nome}"
-                    placeholder="✏️ Digite o nome do produto Shopee"
-                    onblur="salvarNomeShopee(${p.id}, this.value)">
-                <p class="shopee-hint">👆 Digite o nome do produto acima para identificar na lista</p>` : '';
             return `
             <div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
                 <div class="product-info">
                     <div class="product-nome">${p.nome || "Produto"}</div>
                     ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
-                    ${shopeeEdit}
                     <div class="product-footer">
                         <span class="platform-badge ${badge}">${label}</span>
                         <button class="btn-remover" onclick="remover(${p.id})">✕</button>
@@ -436,18 +503,6 @@
                 </div>
             </div>`;
         }).join("");
-    }
-
-    async function salvarNomeShopee(id, nome) {
-        if (!nome.trim()) return;
-        try {
-            await fetch(`${BASE}/api/atualizar-nome-produto/${id}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({nome: nome.trim()})
-            });
-            await carregarProdutos();
-        } catch(e) {}
     }
 
     function verificarLink() {
@@ -468,6 +523,75 @@
         adicionarProduto();
     }
 
+    // SHOPEE POPUP
+    function abrirPopupShopee(link) {
+        linkShopeeAtual = link;
+        document.getElementById('popupShopee').style.display = 'flex';
+    }
+
+    function aceitarPersonalizarShopee() {
+        document.getElementById('popupShopee').style.display = 'none';
+        document.getElementById('shopeeNomeManual').value = '';
+        document.getElementById('shopeePrecoManual').value = '';
+        document.getElementById('shopeePreviewImg').style.display = 'none';
+        imagemShopeeBase64 = '';
+        document.getElementById('cardManualShopee').style.display = 'flex';
+    }
+
+    function recusarPersonalizarShopee() {
+        document.getElementById('popupShopee').style.display = 'none';
+        adicionarProdutoShopee(linkShopeeAtual, '', '', '');
+    }
+
+    function fecharCardManualShopee() {
+        document.getElementById('cardManualShopee').style.display = 'none';
+        recusarPersonalizarShopee();
+    }
+
+    function previewImagemShopee(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            imagemShopeeBase64 = ev.target.result;
+            var img = document.getElementById('shopeePreviewImg');
+            img.src = imagemShopeeBase64;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function salvarProdutoShopeeManual() {
+        var nome = document.getElementById('shopeeNomeManual').value.trim();
+        var preco = document.getElementById('shopeePrecoManual').value.trim();
+        document.getElementById('cardManualShopee').style.display = 'none';
+        await adicionarProdutoShopee(linkShopeeAtual, nome, preco, imagemShopeeBase64);
+    }
+
+    async function adicionarProdutoShopee(link, nome, preco, imagem) {
+        const btn = document.getElementById("btnAdicionar");
+        const loading = document.getElementById("loading");
+        btn.disabled = true;
+        loading.style.display = "block";
+        try {
+            const r = await fetch(`${BASE}/api/adicionar-produto-manual`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ link, lista_id: LISTA_ID, nome: nome || "Produto Shopee", preco, imagem_base64: imagem, plataforma: "shopee" })
+            });
+            const data = await r.json();
+            if (data.ok) {
+                document.getElementById("inputLink").value = "";
+                await carregarProdutos();
+            }
+        } catch(e) {
+            alert("Erro de conexão. Tente novamente.");
+        } finally {
+            btn.disabled = false;
+            loading.style.display = "none";
+        }
+    }
+
     async function adicionarProduto() {
         const input = document.getElementById("inputLink");
         const btn = document.getElementById("btnAdicionar");
@@ -476,6 +600,11 @@
         if (!link) return;
         if (link.indexOf('produto.mercadolivre') > -1 && !linkIgnorado) {
             document.getElementById("avisoLink").style.display = 'block';
+            return;
+        }
+        // Detecta Shopee e abre popup
+        if (link.toLowerCase().indexOf('shopee.com.br') > -1 || link.toLowerCase().indexOf('s.shopee') > -1) {
+            abrirPopupShopee(link);
             return;
         }
         btn.disabled = true;
@@ -522,6 +651,8 @@
 
     function irParaStory() {
         document.getElementById('popupStory').style.display = 'none';
+        // Marca que o story foi compartilhado — libera WhatsApp
+        try { localStorage.setItem(WHATSAPP_KEY, 'true'); } catch(e) {}
         salvarEstado();
         window.location.href = `/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
     }
