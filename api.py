@@ -399,14 +399,34 @@ def liberar_produto(produto_id):
     })
     return jsonify({"ok": True})
 
-@app.route("/api/atualizar-nome-produto/<int:produto_id>", methods=["POST"])
-def atualizar_nome_produto(produto_id):
-    data = request.json or {}
-    nome = data.get("nome", "").strip()
-    if not nome:
-        return jsonify({"erro": "Nome vazio"}), 400
-    sb_patch("produtos", f"id=eq.{produto_id}", {"nome": nome})
-    return jsonify({"ok": True})
+@app.route("/api/adicionar-produto-manual", methods=["POST"])
+def adicionar_produto_manual():
+    data = request.json
+    link = data.get("link", "").strip()
+    lista_id = data.get("lista_id", "").strip()
+    nome = data.get("nome", "Produto Shopee").strip()
+    preco = data.get("preco", "").strip()
+    imagem_base64 = data.get("imagem_base64", "")
+    plataforma = data.get("plataforma", "shopee")
+    if not link or not lista_id:
+        return jsonify({"erro": "Dados inválidos"}), 400
+    link_afiliado = injetar_afiliado(link, plataforma)
+    lista = sb_get("listas", f"id=eq.{lista_id}")
+    if not lista or not isinstance(lista, list) or len(lista) == 0:
+        sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
+    produto = sb_post("produtos", {
+        "lista_id": lista_id,
+        "nome": nome,
+        "preco": preco,
+        "imagem_url": imagem_base64,
+        "link_original": link,
+        "link_afiliado": link_afiliado,
+        "plataforma": plataforma,
+        "reservado": 0
+    })
+    if isinstance(produto, list):
+        return jsonify({"ok": True, "produto": produto[0]})
+    return jsonify({"ok": True, "produto": produto})
 
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
 def reservar(produto_id):
