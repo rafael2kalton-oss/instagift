@@ -506,8 +506,8 @@
         verificarWhatsapp();
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
-            const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee" }[p.plataforma] || "badge-outro";
-            const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee" }[p.plataforma] || p.plataforma;
+            const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee", magalu: "badge-magalu" }[p.plataforma] || "badge-outro";
+            const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee", magalu: "🛍️ Magalu" }[p.plataforma] || p.plataforma;
             const imgHtml = p.imagem_url
                 ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🧡</div>'">`
                 : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : '🎁'}</div>`;
