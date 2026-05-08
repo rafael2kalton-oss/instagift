@@ -578,6 +578,21 @@ def limpar_reservas_expiradas():
         return jsonify({"status": "sucesso", "liberados": liberados}), 200
     except Exception as e:
         return jsonify({"status": "erro", "mensagem": str(e)}), 500
-
+@app.route("/api/editar-produto/<int:produto_id>", methods=["POST"])
+def editar_produto(produto_id):
+    data = request.json or {}
+    nome = data.get("nome", "").strip()
+    preco = data.get("preco", "").strip()
+    imagem_base64 = data.get("imagem_base64", "")
+    atualizacao = {}
+    if nome:
+        atualizacao["nome"] = nome
+    if preco:
+        atualizacao["preco"] = preco
+    if imagem_base64:
+        atualizacao["imagem_url"] = imagem_base64
+    if atualizacao:
+        sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
+    return jsonify({"ok": True})
 if __name__ == "__main__":
     app.run(debug=True)
