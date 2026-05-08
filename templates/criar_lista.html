@@ -74,6 +74,8 @@
         .badge-magalu { background: #0086FF; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
+        .btn-editar { background: transparent; border: none; color: #8A63D2; font-size: 15px; cursor: pointer; transition: color 0.2s; margin-right: 4px; }
+        .btn-editar:hover { color: #b088f5; }
         .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-whatsapp:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-whatsapp:disabled { background: rgba(255,255,255,0.06); color: #444; cursor: not-allowed; border: 1.5px solid rgba(255,255,255,0.06); }
@@ -310,7 +312,7 @@
     </div>
 </div>
 
-<!-- Popup ML produto.mercadolivre -->
+<!-- Popup ML -->
 <div id="popupML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#0f0f1a; border:1px solid rgba(255,230,0,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
         <div style="font-size:40px; margin-bottom:12px;">🛍️</div>
@@ -344,6 +346,33 @@
     </div>
 </div>
 
+<!-- Card editar produto -->
+<div id="cardEditarProduto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#0f0f1a; border:1px solid rgba(138,99,210,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="font-size:17px; font-weight:700; color:#fff;">✏️ Editar produto</h3>
+            <button onclick="fecharEditarProduto()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+        </div>
+        <div style="margin-bottom:14px;">
+            <label style="font-size:11px; color:#8A63D2; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Nome do produto</label>
+            <input type="text" id="editarNome" placeholder="Nome do produto" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:14px;" id="editarPrecoWrap">
+            <label style="font-size:11px; color:#8A63D2; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Preço (opcional)</label>
+            <input type="text" id="editarPreco" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="font-size:11px; color:#8A63D2; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
+            <label for="editarImagem" style="display:flex; align-items:center; gap:8px; background:rgba(138,99,210,0.06); border:1.5px dashed rgba(138,99,210,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#8A63D2; font-size:13px; margin-bottom:8px;">
+                📸 Trocar imagem
+            </label>
+            <input type="file" id="editarImagem" accept="image/*" style="display:none;" onchange="previewEditarImagem(event)">
+            <img id="editarPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+        </div>
+        <button onclick="salvarEdicaoProduto()" style="width:100%; padding:14px; background:linear-gradient(135deg,#8A63D2,#6a43b2); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar alterações 💜</button>
+    </div>
+</div>
+
 <script>
     const LISTA_ID = "{{ lista_id }}";
     const BASE = "";
@@ -355,6 +384,9 @@
     var imagemShopeeBase64 = "";
     var linkMLAtual = "";
     var imagemMLBase64 = "";
+    var editarProdutoId = null;
+    var editarImagemBase64 = "";
+    var editarPlataforma = "";
 
     var eventos = {
         aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜" },
@@ -515,6 +547,11 @@
             const imgHtml = p.imagem_url
                 ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
                 : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : '🎁'}</div>`;
+            const nomeEscapado = (p.nome || '').replace(/'/g, "\\'");
+            const precoEscapado = (p.preco || '').replace(/'/g, "\\'");
+            const editBtn = (p.plataforma === 'shopee' || p.plataforma === 'mercadolivre')
+                ? `<button class="btn-editar" onclick="abrirEditarProduto(${p.id}, '${nomeEscapado}', '${precoEscapado}', '${p.plataforma}')">✏️</button>`
+                : '';
             return `
             <div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
@@ -523,12 +560,58 @@
                     ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
                     <div class="product-footer">
                         <span class="platform-badge ${badge}">${label}</span>
-                        ${(p.plataforma === 'shopee' || p.plataforma === 'mercadolivre') ? `<button class="btn-editar" onclick="abrirEditarProduto(${p.id}, '${p.nome}', '${p.preco || ''}', '${p.plataforma}')">✏️</button>` : ''}
-<button class="btn-remover" onclick="remover(${p.id})">✕</button>
+                        <div style="display:flex;align-items:center;gap:4px;">
+                            ${editBtn}
+                            <button class="btn-remover" onclick="remover(${p.id})">✕</button>
+                        </div>
                     </div>
                 </div>
             </div>`;
         }).join("");
+    }
+
+    // EDITAR PRODUTO
+    function abrirEditarProduto(id, nome, preco, plataforma) {
+        editarProdutoId = id;
+        editarPlataforma = plataforma;
+        editarImagemBase64 = "";
+        document.getElementById('editarNome').value = nome || '';
+        document.getElementById('editarPreco').value = preco || '';
+        document.getElementById('editarPreviewImg').style.display = 'none';
+        document.getElementById('editarPrecoWrap').style.display = plataforma === 'mercadolivre' ? 'none' : 'block';
+        document.getElementById('cardEditarProduto').style.display = 'flex';
+    }
+    function fecharEditarProduto() {
+        document.getElementById('cardEditarProduto').style.display = 'none';
+        editarProdutoId = null;
+    }
+    function previewEditarImagem(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            editarImagemBase64 = ev.target.result;
+            var img = document.getElementById('editarPreviewImg');
+            img.src = editarImagemBase64;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+    async function salvarEdicaoProduto() {
+        if (!editarProdutoId) return;
+        var nome = document.getElementById('editarNome').value.trim();
+        var preco = document.getElementById('editarPreco').value.trim();
+        document.getElementById('cardEditarProduto').style.display = 'none';
+        try {
+            await fetch(`${BASE}/api/editar-produto/${editarProdutoId}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ nome, preco, imagem_base64: editarImagemBase64 })
+            });
+            await carregarProdutos();
+        } catch(e) {
+            alert("Erro ao salvar. Tente novamente.");
+        }
     }
 
     // SHOPEE
@@ -609,7 +692,6 @@
         await adicionarProdutoManual(linkMLAtual, nome, '', imagemMLBase64, 'mercadolivre');
     }
 
-    // FUNÇÃO GENÉRICA MANUAL
     async function adicionarProdutoManual(link, nome, preco, imagem, plataforma) {
         const btn = document.getElementById("btnAdicionar");
         const loading = document.getElementById("loading");
@@ -634,7 +716,6 @@
         }
     }
 
-    // FUNÇÃO NORMAL (tenta extrair automaticamente)
     async function adicionarProdutoNormal(link) {
         const btn = document.getElementById("btnAdicionar");
         const loading = document.getElementById("loading");
@@ -665,18 +746,14 @@
         const input = document.getElementById("inputLink");
         const link = input.value.trim();
         if (!link) return;
-
-        // Detecta produto.mercadolivre e abre popup manual
         if (link.indexOf('produto.mercadolivre') > -1) {
             abrirPopupML(link);
             return;
         }
-        // Detecta Shopee e abre popup
         if (link.toLowerCase().indexOf('shopee.com.br') > -1 || link.toLowerCase().indexOf('s.shopee') > -1) {
             abrirPopupShopee(link);
             return;
         }
-        // Demais plataformas — extração automática
         await adicionarProdutoNormal(link);
     }
 
