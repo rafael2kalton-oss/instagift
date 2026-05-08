@@ -218,7 +218,34 @@ def extrair_magalu(link):
     except Exception as e:
         print("Magalu erro:", e)
         return "", "", ""
-
+def extrair_shein(link):
+    try:
+        # Resolve link encurtado do app
+        if "onelink.shein.com" in link:
+            r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
+            link = r_red.url
+        html = requests.get(
+            f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
+            timeout=20
+        ).text
+        soup = BeautifulSoup(html, "html.parser")
+        nome = ""
+        imagem = ""
+        preco = ""
+        t = soup.find("meta", property="og:title")
+        if t:
+            nome = t.get("content", "")[:100]
+            nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
+        i = soup.find("meta", property="og:image")
+        if i:
+            imagem = i.get("content", "")
+        pm = re.search(r'R\$\s*[\d.,]+', html)
+        if pm:
+            preco = pm.group(0).replace("R$", "").strip()
+        return nome, imagem, preco
+    except Exception as e:
+        print("Shein erro:", e)
+        return "", "", ""
 def extrair_dados(link, plataforma):
     # Resolve links encurtados Amazon (amzn.to)
     if plataforma == "amazon" and ("amzn.to" in link or "amzn.com" in link):
