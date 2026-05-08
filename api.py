@@ -82,7 +82,9 @@ def injetar_afiliado(link, plataforma):
             # Fallback: redireciona para vitrine principal
             link = f"https://www.magazinevoce.com.br/{MAGALU_ID}/"
     return link
-
+elif plataforma == "shein":
+    link = re.sub(r'[?&]url_from=[^&]+', '', link)
+    link += ('&' if '?' in link else '?') + f'url_from=affiliate_koc_6312284765'
 def get_ml_token():
     try:
         if ml_token_cache["token"]:
