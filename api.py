@@ -285,7 +285,7 @@ def extrair_dados(link, plataforma):
             if preco_frac:
                 preco = preco + ',' + preco_frac.text.strip()
 
-    if not preco:
+    if not preco and plataforma != "mercadolivre":
         pm = re.search(r'R\$\s*[\d.,]+', html)
         if pm:
             preco = pm.group(0).replace("R$", "").strip()
