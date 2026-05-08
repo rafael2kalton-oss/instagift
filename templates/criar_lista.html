@@ -54,11 +54,6 @@
         .btn-add:hover { background: #9d7ae0; }
         .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
         .loading { text-align: center; color: #8A63D2; padding: 10px 0; font-size: 13px; display: none; }
-        .aviso-link { background: rgba(255,153,0,0.08); border: 1px solid rgba(255,153,0,0.3); border-radius: 12px; padding: 12px 14px; margin-top: 10px; font-size: 12px; color: #ff9900; display: none; line-height: 1.5; }
-        .aviso-btns { display: flex; gap: 8px; margin-top: 10px; }
-        .aviso-btns button { flex: 1; padding: 9px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; }
-        .btn-continuar { background: #8A63D2; color: white; }
-        .btn-voltar-aviso { background: rgba(255,255,255,0.08); color: #aaa; }
         .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .section-header h3 { font-size: 15px; font-weight: 600; color: #eee; }
         .section-header span { font-size: 12px; color: #8A63D2; }
@@ -79,18 +74,6 @@
         .badge-magalu { background: #0086FF; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
-        /* SHOPEE MANUAL */
-        .shopee-manual-card { background: rgba(238,77,45,0.05); border: 1.5px solid rgba(238,77,45,0.2); border-radius: 12px; padding: 14px; margin-top: 8px; }
-        .shopee-manual-card label { font-size: 11px; color: #EE4D2D; font-weight: 600; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.03em; }
-        .shopee-manual-input { width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:9px 12px; color:#fff; font-size:13px; font-family:'Inter',sans-serif; outline:none; margin-bottom:8px; }
-        .shopee-manual-input:focus { border-color:#EE4D2D; }
-        .shopee-upload-label { display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.08); border:1.5px dashed rgba(238,77,45,0.3); border-radius:8px; padding:10px 12px; cursor:pointer; font-size:12px; color:#EE4D2D; margin-bottom:8px; }
-        .shopee-upload-label:hover { background:rgba(238,77,45,0.12); }
-        .shopee-preview-img { width:100%; max-height:120px; object-fit:contain; border-radius:8px; margin-bottom:8px; display:none; }
-        .btn-salvar-shopee { width:100%; background:#EE4D2D; border:none; border-radius:8px; padding:10px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
-        .btn-salvar-shopee:hover { background:#d44426; }
-        .shopee-hint { font-size:10px; color:#EE4D2D; margin-top:4px; }
-        /* WHATSAPP BLOQUEADO */
         .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-whatsapp:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-whatsapp:disabled { background: rgba(255,255,255,0.06); color: #444; cursor: not-allowed; border: 1.5px solid rgba(255,255,255,0.06); }
@@ -217,21 +200,14 @@
             </div>
         </div>
         <div class="platform-chips">
-    <span class="chip">🛒 Amazon</span>
-    <span class="chip">🛍️ Mercado Livre</span>
-    <span class="chip">🧡 Shopee</span>
-    <span class="chip">🛍️ Magalu</span>
-</div>
-        <div class="input-group">
-            <input type="text" id="inputLink" placeholder="Cole o link do produto aqui..." oninput="verificarLink()">
-            <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
+            <span class="chip">🛒 Amazon</span>
+            <span class="chip">🛍️ Mercado Livre</span>
+            <span class="chip">🧡 Shopee</span>
+            <span class="chip">🛍️ Magalu</span>
         </div>
-        <div class="aviso-link" id="avisoLink">
-            ⚠️ Link limitado — use <strong>www.mercadolivre.com.br</strong> para melhor resultado.
-            <div class="aviso-btns">
-                <button class="btn-voltar-aviso" onclick="voltarLink()">Voltar</button>
-                <button class="btn-continuar" onclick="continuarMesmo()">Continuar assim</button>
-            </div>
+        <div class="input-group">
+            <input type="text" id="inputLink" placeholder="Cole o link do produto aqui...">
+            <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
         </div>
         <div class="loading" id="loading">⏳ Buscando produto...</div>
         <div class="divider"></div>
@@ -311,32 +287,60 @@
         </div>
         <div style="margin-bottom:20px;">
             <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
-          <!-- Opção 1: Print ou galeria -->
-<label for="shopeeImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.06); border:1.5px dashed rgba(238,77,45,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#EE4D2D; font-size:13px; margin-bottom:8px;">
-    📸 Tirar print ou escolher da galeria
-</label>
-<input type="file" id="shopeeImagemManual" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
-
-<!-- Divisor -->
-<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-    <div style="flex:1; height:1px; background:rgba(238,77,45,0.15);"></div>
-    <span style="font-size:11px; color:#555;">ou</span>
-    <div style="flex:1; height:1px; background:rgba(238,77,45,0.15);"></div>
-</div>
-
-<!-- Opção 2: Imagem baixada da Shopee -->
-<div style="background:rgba(238,77,45,0.04); border:1px solid rgba(238,77,45,0.15); border-radius:10px; padding:12px; margin-bottom:8px;">
-    <p style="font-size:12px; color:#EE4D2D; font-weight:600; margin-bottom:6px;">📥 Já baixou a imagem da Shopee?</p>
-    <p style="font-size:11px; color:#666; line-height:1.6; margin-bottom:10px;">No app Shopee toque em <strong style="color:#aaa;">Compartilhar → Baixar imagem</strong>, volte aqui e faça o upload.</p>
-    <label for="shopeeImagemBaixada" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(238,77,45,0.1); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:10px; cursor:pointer; color:#EE4D2D; font-size:13px; font-weight:600;">
-        📂 Fazer upload da imagem
-    </label>
-    <input type="file" id="shopeeImagemBaixada" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
-</div>
-
-<img id="shopeePreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+            <label for="shopeeImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.06); border:1.5px dashed rgba(238,77,45,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#EE4D2D; font-size:13px; margin-bottom:8px;">
+                📸 Tirar print ou escolher da galeria
+            </label>
+            <input type="file" id="shopeeImagemManual" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <div style="flex:1; height:1px; background:rgba(238,77,45,0.15);"></div>
+                <span style="font-size:11px; color:#555;">ou</span>
+                <div style="flex:1; height:1px; background:rgba(238,77,45,0.15);"></div>
+            </div>
+            <div style="background:rgba(238,77,45,0.04); border:1px solid rgba(238,77,45,0.15); border-radius:10px; padding:12px; margin-bottom:8px;">
+                <p style="font-size:12px; color:#EE4D2D; font-weight:600; margin-bottom:6px;">📥 Já baixou a imagem da Shopee?</p>
+                <p style="font-size:11px; color:#666; line-height:1.6; margin-bottom:10px;">No app Shopee toque em <strong style="color:#aaa;">Compartilhar → Baixar imagem</strong>, volte aqui e faça o upload.</p>
+                <label for="shopeeImagemBaixada" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(238,77,45,0.1); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:10px; cursor:pointer; color:#EE4D2D; font-size:13px; font-weight:600;">
+                    📂 Fazer upload da imagem
+                </label>
+                <input type="file" id="shopeeImagemBaixada" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
+            </div>
+            <img id="shopeePreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
         </div>
         <button onclick="salvarProdutoShopeeManual()" style="width:100%; padding:14px; background:#EE4D2D; color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto 🧡</button>
+    </div>
+</div>
+
+<!-- Popup ML produto.mercadolivre -->
+<div id="popupML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#0f0f1a; border:1px solid rgba(255,230,0,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
+        <div style="font-size:40px; margin-bottom:12px;">🛍️</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:10px;">Link do site detectado</h3>
+        <p style="font-size:13px; color:#888; line-height:1.7; margin-bottom:24px;">Links do site do Mercado Livre têm limitações de acesso. Para melhor resultado, use o link do <strong style="color:#FFE600;">app do Mercado Livre</strong> ou preencha as informações manualmente.</p>
+        <button onclick="aceitarPersonalizarML()" style="width:100%; padding:14px; background:#FFE600; color:#000; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Preencher manualmente</button>
+        <button onclick="recusarPersonalizarML()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid rgba(255,255,255,0.08); border-radius:12px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Tentar assim mesmo</button>
+    </div>
+</div>
+
+<!-- Card manual ML -->
+<div id="cardManualML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#0f0f1a; border:1px solid rgba(255,230,0,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="font-size:17px; font-weight:700; color:#fff;">🛍️ Adicionar produto ML</h3>
+            <button onclick="fecharCardManualML()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+        </div>
+        <div style="margin-bottom:14px;">
+            <label style="font-size:11px; color:#FFE600; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Nome do produto</label>
+            <input type="text" id="mlNomeManual" placeholder="Ex: Tênis Adidas Ultraboost" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,230,0,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="font-size:11px; color:#FFE600; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
+            <label for="mlImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(255,230,0,0.06); border:1.5px dashed rgba(255,230,0,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#FFE600; font-size:13px; margin-bottom:8px;">
+                📸 Escolher imagem da galeria
+            </label>
+            <input type="file" id="mlImagemManual" accept="image/*" style="display:none;" onchange="previewImagemML(event)">
+            <img id="mlPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+        </div>
+        <button onclick="salvarProdutoMLManual()" style="width:100%; padding:14px; background:#FFE600; color:#000; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto 🛍️</button>
     </div>
 </div>
 
@@ -345,11 +349,12 @@
     const BASE = "";
     const STORAGE_KEY = "instagift_estado_" + LISTA_ID;
     const WHATSAPP_KEY = "instagift_story_" + LISTA_ID;
-    var linkIgnorado = false;
     var eventoAtual = "aniversario";
     var stepAtual = 1;
     var linkShopeeAtual = "";
     var imagemShopeeBase64 = "";
+    var linkMLAtual = "";
+    var imagemMLBase64 = "";
 
     var eventos = {
         aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜" },
@@ -359,7 +364,6 @@
         outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você! 💜" }
     };
 
-    // WHATSAPP — verifica se story foi compartilhado
     function verificarWhatsapp() {
         try {
             var compartilhou = localStorage.getItem(WHATSAPP_KEY);
@@ -509,7 +513,7 @@
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee", magalu: "badge-magalu" }[p.plataforma] || "badge-outro";
             const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee", magalu: "🛍️ Magalu" }[p.plataforma] || p.plataforma;
             const imgHtml = p.imagem_url
-                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🧡</div>'">`
+                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
                 : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : '🎁'}</div>`;
             return `
             <div class="product-card" id="prod-${p.id}">
@@ -526,30 +530,11 @@
         }).join("");
     }
 
-    function verificarLink() {
-        const link = document.getElementById("inputLink").value.trim();
-        linkIgnorado = false;
-        document.getElementById("avisoLink").style.display = link.indexOf('produto.mercadolivre') > -1 ? 'block' : 'none';
-    }
-
-    function voltarLink() {
-        document.getElementById("inputLink").value = '';
-        document.getElementById("avisoLink").style.display = 'none';
-        linkIgnorado = false;
-    }
-
-    function continuarMesmo() {
-        document.getElementById("avisoLink").style.display = 'none';
-        linkIgnorado = true;
-        adicionarProduto();
-    }
-
-    // SHOPEE POPUP
+    // SHOPEE
     function abrirPopupShopee(link) {
         linkShopeeAtual = link;
         document.getElementById('popupShopee').style.display = 'flex';
     }
-
     function aceitarPersonalizarShopee() {
         document.getElementById('popupShopee').style.display = 'none';
         document.getElementById('shopeeNomeManual').value = '';
@@ -558,17 +543,14 @@
         imagemShopeeBase64 = '';
         document.getElementById('cardManualShopee').style.display = 'flex';
     }
-
     function recusarPersonalizarShopee() {
         document.getElementById('popupShopee').style.display = 'none';
-        adicionarProdutoShopee(linkShopeeAtual, '', '', '');
+        adicionarProdutoManual(linkShopeeAtual, '', '', '', 'shopee');
     }
-
     function fecharCardManualShopee() {
         document.getElementById('cardManualShopee').style.display = 'none';
-        recusarPersonalizarShopee();
+        adicionarProdutoManual(linkShopeeAtual, '', '', '', 'shopee');
     }
-
     function previewImagemShopee(e) {
         var file = e.target.files[0];
         if (!file) return;
@@ -581,15 +563,53 @@
         };
         reader.readAsDataURL(file);
     }
-
     async function salvarProdutoShopeeManual() {
         var nome = document.getElementById('shopeeNomeManual').value.trim();
         var preco = document.getElementById('shopeePrecoManual').value.trim();
         document.getElementById('cardManualShopee').style.display = 'none';
-        await adicionarProdutoShopee(linkShopeeAtual, nome, preco, imagemShopeeBase64);
+        await adicionarProdutoManual(linkShopeeAtual, nome, preco, imagemShopeeBase64, 'shopee');
     }
 
-    async function adicionarProdutoShopee(link, nome, preco, imagem) {
+    // ML MANUAL
+    function abrirPopupML(link) {
+        linkMLAtual = link;
+        document.getElementById('popupML').style.display = 'flex';
+    }
+    function aceitarPersonalizarML() {
+        document.getElementById('popupML').style.display = 'none';
+        document.getElementById('mlNomeManual').value = '';
+        document.getElementById('mlPreviewImg').style.display = 'none';
+        imagemMLBase64 = '';
+        document.getElementById('cardManualML').style.display = 'flex';
+    }
+    function recusarPersonalizarML() {
+        document.getElementById('popupML').style.display = 'none';
+        adicionarProdutoNormal(linkMLAtual);
+    }
+    function fecharCardManualML() {
+        document.getElementById('cardManualML').style.display = 'none';
+        adicionarProdutoNormal(linkMLAtual);
+    }
+    function previewImagemML(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            imagemMLBase64 = ev.target.result;
+            var img = document.getElementById('mlPreviewImg');
+            img.src = imagemMLBase64;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+    async function salvarProdutoMLManual() {
+        var nome = document.getElementById('mlNomeManual').value.trim();
+        document.getElementById('cardManualML').style.display = 'none';
+        await adicionarProdutoManual(linkMLAtual, nome, '', imagemMLBase64, 'mercadolivre');
+    }
+
+    // FUNÇÃO GENÉRICA MANUAL
+    async function adicionarProdutoManual(link, nome, preco, imagem, plataforma) {
         const btn = document.getElementById("btnAdicionar");
         const loading = document.getElementById("loading");
         btn.disabled = true;
@@ -598,7 +618,7 @@
             const r = await fetch(`${BASE}/api/adicionar-produto-manual`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ link, lista_id: LISTA_ID, nome: nome || "Produto Shopee", preco, imagem_base64: imagem, plataforma: "shopee" })
+                body: JSON.stringify({ link, lista_id: LISTA_ID, nome: nome || (plataforma === 'shopee' ? 'Produto Shopee' : 'Produto Mercado Livre'), preco, imagem_base64: imagem, plataforma })
             });
             const data = await r.json();
             if (data.ok) {
@@ -613,24 +633,12 @@
         }
     }
 
-    async function adicionarProduto() {
-        const input = document.getElementById("inputLink");
+    // FUNÇÃO NORMAL (tenta extrair automaticamente)
+    async function adicionarProdutoNormal(link) {
         const btn = document.getElementById("btnAdicionar");
         const loading = document.getElementById("loading");
-        const link = input.value.trim();
-        if (!link) return;
-        if (link.indexOf('produto.mercadolivre') > -1 && !linkIgnorado) {
-            document.getElementById("avisoLink").style.display = 'block';
-            return;
-        }
-        // Detecta Shopee e abre popup
-        if (link.toLowerCase().indexOf('shopee.com.br') > -1 || link.toLowerCase().indexOf('s.shopee') > -1) {
-            abrirPopupShopee(link);
-            return;
-        }
         btn.disabled = true;
         loading.style.display = "block";
-        document.getElementById("avisoLink").style.display = 'none';
         try {
             const r = await fetch(`${BASE}/api/adicionar-produto`, {
                 method: "POST",
@@ -639,8 +647,7 @@
             });
             const data = await r.json();
             if (data.ok) {
-                input.value = "";
-                linkIgnorado = false;
+                document.getElementById("inputLink").value = "";
                 await carregarProdutos();
             } else {
                 alert("Não consegui buscar o produto. Tente outro link.");
@@ -651,6 +658,25 @@
             btn.disabled = false;
             loading.style.display = "none";
         }
+    }
+
+    async function adicionarProduto() {
+        const input = document.getElementById("inputLink");
+        const link = input.value.trim();
+        if (!link) return;
+
+        // Detecta produto.mercadolivre e abre popup manual
+        if (link.indexOf('produto.mercadolivre') > -1) {
+            abrirPopupML(link);
+            return;
+        }
+        // Detecta Shopee e abre popup
+        if (link.toLowerCase().indexOf('shopee.com.br') > -1 || link.toLowerCase().indexOf('s.shopee') > -1) {
+            abrirPopupShopee(link);
+            return;
+        }
+        // Demais plataformas — extração automática
+        await adicionarProdutoNormal(link);
     }
 
     async function remover(id) {
@@ -665,29 +691,23 @@
         document.getElementById('popupTexto').textContent = ev.texto;
         document.getElementById('popupStory').style.display = 'flex';
     }
-
     function fecharPopupStory() {
         document.getElementById('popupStory').style.display = 'none';
     }
-
     function irParaStory() {
         document.getElementById('popupStory').style.display = 'none';
-        // Marca que o story foi compartilhado — libera WhatsApp
         try { localStorage.setItem(WHATSAPP_KEY, 'true'); } catch(e) {}
         salvarEstado();
         window.location.href = `/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
     }
-
     function gerarVitrine() {
         salvarEstado();
         window.location.href = `/vitrine/${LISTA_ID}`;
     }
-
     function verVitrine() {
         salvarEstado();
         window.open(`/vitrine/${LISTA_ID}?admin=true`, '_blank');
     }
-
     function compartilharWhatsApp() {
         var nomeEvento = document.getElementById('inputNomeEvento').value.trim() || 'meu evento';
         var linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
@@ -696,7 +716,6 @@
                       'Valeu pelo carinho! 🙏💜';
         window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
     }
-
     function copiarLink() {
         navigator.clipboard.writeText(`${window.location.origin}/lista/${LISTA_ID}`).then(() => alert("Link copiado!"));
     }
