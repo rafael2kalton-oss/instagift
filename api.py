@@ -52,7 +52,7 @@ def detectar_plataforma(link):
         return "mercadolivre"
     if "shopee.com.br" in l:
         return "shopee"
-    if "shein.com" in l or "onelink.shein.com" in l:
+    if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l:
         return "shein"
     return "outro"
 
