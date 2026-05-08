@@ -216,9 +216,20 @@ def extrair_magalu(link):
 
 def extrair_shein(link):
     try:
-        if "onelink.shein.com" in link:
-            r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
-            link = r_red.url
+        # Resolve qualquer link encurtado ou do app da Shein
+        if "onelink.shein.com" in link or "api-shein.shein.com" in link or "sharejump" in link:
+            try:
+                r_red = requests.get(
+                    link,
+                    headers={"User-Agent": "Mozilla/5.0"},
+                    timeout=10,
+                    allow_redirects=True
+                )
+                link = r_red.url
+                print("Shein redirect resolvido:", link)
+            except Exception as e:
+                print("Shein redirect erro:", e)
+
         html = requests.get(
             f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
             timeout=20
