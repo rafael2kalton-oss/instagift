@@ -523,7 +523,8 @@
                     ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
                     <div class="product-footer">
                         <span class="platform-badge ${badge}">${label}</span>
-                        <button class="btn-remover" onclick="remover(${p.id})">✕</button>
+                        ${(p.plataforma === 'shopee' || p.plataforma === 'mercadolivre') ? `<button class="btn-editar" onclick="abrirEditarProduto(${p.id}, '${p.nome}', '${p.preco || ''}', '${p.plataforma}')">✏️</button>` : ''}
+<button class="btn-remover" onclick="remover(${p.id})">✕</button>
                     </div>
                 </div>
             </div>`;
