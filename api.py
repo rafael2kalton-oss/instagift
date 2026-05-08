@@ -216,15 +216,14 @@ def extrair_magalu(link):
         return "", "", ""
 
 def extrair_dados(link, plataforma):
+    # Resolve links encurtados Amazon (amzn.to)
+    if plataforma == "amazon" and ("amzn.to" in link or "amzn.com" in link):
+        try:
+            r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
+            link = r_red.url
+        except:
+            pass
     if plataforma == "shopee":
-        n, i, p = extrair_shopee(link)
-        if n:
-            return n, i, p
-    if plataforma == "magalu":
-        n, i, p = extrair_magalu(link)
-        if n:
-            return n, i, p
-    if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
         if n:
             return n, i, p
