@@ -108,10 +108,9 @@ def extrair_ml(link):
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
 
-        # Tenta extrair MLB direto do link (funciona para produto.mercadolivre e meli.la)
+        # Resolve redirect para links curtos tipo meli.la
         m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if not m2:
-            # Resolve redirect para links curtos tipo meli.la
             try:
                 r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
                 link_limpo = r_red.url
@@ -131,11 +130,10 @@ def extrair_ml(link):
             if resultados:
                 item_id = resultados[0]
                 r3 = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
-                preco = str(r3.get("price", "")).replace(".", ",")
                 if not imagem:
                     pics3 = r3.get("pictures") or []
                     imagem = pics3[0].get("url", "") if pics3 else ""
-                return nome, imagem, preco
+                return nome, imagem, ""  # preço removido
             return nome, imagem, ""
 
         if m2:
@@ -151,21 +149,18 @@ def extrair_ml(link):
                     if resultados:
                         prod = resultados[0]
                         nome = prod.get("title", "")[:100]
-                        preco = str(prod.get("price", "")).replace(".", ",")
-                        return nome, "", preco
+                        return nome, "", ""  # preço removido
                 except:
                     pass
                 return "", "", ""
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
-            preco = str(r.get("price", "")).replace(".", ",")
             if nome:
-                return nome, imagem, preco
+                return nome, imagem, ""  # preço removido
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
-
 def extrair_shopee(link):
     try:
         m = re.search(r'i\.(\d+)\.(\d+)', link)
