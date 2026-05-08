@@ -11,6 +11,7 @@ SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 SHOPEE_ID = "18374451025"
+MAGALU_ID = "magazinevitrinedodanilo"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
@@ -45,7 +46,9 @@ def detectar_plataforma(link):
     l = link.lower()
     if "amazon.com.br" in l or "amzn.to" in l:
         return "amazon"
-    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "produto.mercadolivre" in l:
+    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l:
+        return "magalu"
+    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l:
         return "mercadolivre"
     if "shopee.com.br" in l:
         return "shopee"
@@ -65,6 +68,17 @@ def injetar_afiliado(link, plataforma):
     elif plataforma == "shopee":
         link = re.sub(r'[?&]smtt=[^&]+', '', link)
         link += ('&' if '?' in link else '?') + f'smtt=0.0.9&source_identifier=affiliate&subfolder_id={SHOPEE_ID}'
+    elif plataforma == "magalu":
+        # Converte qualquer link Magalu para link da vitrine afiliada
+        m = re.search(r'/([^/]+)/p/', link)
+        if m:
+            slug = m.group(1)
+            sku = re.search(r'/p/([^/?]+)', link)
+            if sku:
+                link = f"https://www.magazinevoce.com.br/{MAGALU_ID}/{slug}/p/{sku.group(1)}/"
+        elif "magazineluiza.com.br" in link or "magalu.com.br" in link:
+            # Fallback: redireciona para vitrine principal
+            link = f"https://www.magazinevoce.com.br/{MAGALU_ID}/"
     return link
 
 def get_ml_token():
@@ -94,6 +108,17 @@ def extrair_ml(link):
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
 
+        # Tenta extrair MLB direto do link (funciona para produto.mercadolivre e meli.la)
+        m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
+        if not m2:
+            # Resolve redirect para links curtos tipo meli.la
+            try:
+                r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
+                link_limpo = r_red.url
+                m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
+            except:
+                pass
+
         m = re.search(r'/p/(MLB\w+)', link_limpo, re.IGNORECASE)
         if m:
             catalog_id = m.group(1)
@@ -113,7 +138,6 @@ def extrair_ml(link):
                 return nome, imagem, preco
             return nome, imagem, ""
 
-        m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if m2:
             item_id = f"MLB{m2.group(1)}"
             r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
@@ -166,9 +190,43 @@ def extrair_shopee(link):
         print("Shopee erro:", e)
         return "", "", ""
 
+def extrair_magalu(link):
+    try:
+        html = requests.get(
+            f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
+            timeout=20
+        ).text
+        soup = BeautifulSoup(html, "html.parser")
+        nome = ""
+        imagem = ""
+        preco = ""
+
+        t = soup.find("meta", property="og:title")
+        if t:
+            nome = t.get("content", "")[:100]
+            nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
+            nome = re.sub(r'\s*[:|]\s*Magalu.*$', '', nome)
+
+        i = soup.find("meta", property="og:image")
+        if i:
+            imagem = i.get("content", "")
+
+        pm = re.search(r'R\$\s*[\d.,]+', html)
+        if pm:
+            preco = pm.group(0).replace("R$", "").strip()
+
+        return nome, imagem, preco
+    except Exception as e:
+        print("Magalu erro:", e)
+        return "", "", ""
+
 def extrair_dados(link, plataforma):
     if plataforma == "shopee":
         n, i, p = extrair_shopee(link)
+        if n:
+            return n, i, p
+    if plataforma == "magalu":
+        n, i, p = extrair_magalu(link)
         if n:
             return n, i, p
     if plataforma == "mercadolivre":
@@ -222,6 +280,7 @@ def extrair_dados(link, plataforma):
         nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
         nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
         nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
 
     if plataforma == "amazon":
         preco_tag = soup.find("span", {"class": "a-price-whole"})
