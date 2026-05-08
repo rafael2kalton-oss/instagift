@@ -53,7 +53,7 @@ def detectar_plataforma(link):
     if "shopee.com.br" in l:
         return "shopee"
     if "shein.com" in l or "onelink.shein.com" in l:
-    return "shein"
+        return "shein"
     return "outro"
 
 def injetar_afiliado(link, plataforma):
@@ -71,7 +71,6 @@ def injetar_afiliado(link, plataforma):
         link = re.sub(r'[?&]smtt=[^&]+', '', link)
         link += ('&' if '?' in link else '?') + f'smtt=0.0.9&source_identifier=affiliate&subfolder_id={SHOPEE_ID}'
     elif plataforma == "magalu":
-        # Converte qualquer link Magalu para link da vitrine afiliada
         m = re.search(r'/([^/]+)/p/', link)
         if m:
             slug = m.group(1)
@@ -79,12 +78,12 @@ def injetar_afiliado(link, plataforma):
             if sku:
                 link = f"https://www.magazinevoce.com.br/{MAGALU_ID}/{slug}/p/{sku.group(1)}/"
         elif "magazineluiza.com.br" in link or "magalu.com.br" in link:
-            # Fallback: redireciona para vitrine principal
             link = f"https://www.magazinevoce.com.br/{MAGALU_ID}/"
+    elif plataforma == "shein":
+        link = re.sub(r'[?&]url_from=[^&]+', '', link)
+        link += ('&' if '?' in link else '?') + 'url_from=affiliate_koc_6312284765'
     return link
-elif plataforma == "shein":
-    link = re.sub(r'[?&]url_from=[^&]+', '', link)
-    link += ('&' if '?' in link else '?') + f'url_from=affiliate_koc_6312284765'
+
 def get_ml_token():
     try:
         if ml_token_cache["token"]:
@@ -112,7 +111,6 @@ def extrair_ml(link):
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
 
-        # Resolve redirect para links curtos tipo meli.la
         m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if not m2:
             try:
@@ -137,7 +135,7 @@ def extrair_ml(link):
                 if not imagem:
                     pics3 = r3.get("pictures") or []
                     imagem = pics3[0].get("url", "") if pics3 else ""
-                return nome, imagem, ""  # preço removido
+                return nome, imagem, ""
             return nome, imagem, ""
 
         if m2:
@@ -153,7 +151,7 @@ def extrair_ml(link):
                     if resultados:
                         prod = resultados[0]
                         nome = prod.get("title", "")[:100]
-                        return nome, "", ""  # preço removido
+                        return nome, "", ""
                 except:
                     pass
                 return "", "", ""
@@ -161,10 +159,11 @@ def extrair_ml(link):
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
             if nome:
-                return nome, imagem, ""  # preço removido
+                return nome, imagem, ""
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
+
 def extrair_shopee(link):
     try:
         m = re.search(r'i\.(\d+)\.(\d+)', link)
@@ -199,28 +198,24 @@ def extrair_magalu(link):
         nome = ""
         imagem = ""
         preco = ""
-
         t = soup.find("meta", property="og:title")
         if t:
             nome = t.get("content", "")[:100]
             nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
             nome = re.sub(r'\s*[:|]\s*Magalu.*$', '', nome)
-
         i = soup.find("meta", property="og:image")
         if i:
             imagem = i.get("content", "")
-
         pm = re.search(r'R\$\s*[\d.,]+', html)
         if pm:
             preco = pm.group(0).replace("R$", "").strip()
-
         return nome, imagem, preco
     except Exception as e:
         print("Magalu erro:", e)
         return "", "", ""
+
 def extrair_shein(link):
     try:
-        # Resolve link encurtado do app
         if "onelink.shein.com" in link:
             r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
             link = r_red.url
@@ -246,22 +241,30 @@ def extrair_shein(link):
     except Exception as e:
         print("Shein erro:", e)
         return "", "", ""
+
 def extrair_dados(link, plataforma):
-    # Resolve links encurtados Amazon (amzn.to)
     if plataforma == "amazon" and ("amzn.to" in link or "amzn.com" in link):
         try:
             r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
             link = r_red.url
         except:
             pass
+
     if plataforma == "shopee":
         n, i, p = extrair_shopee(link)
         if n:
             return n, i, p
+
     if plataforma == "magalu":
         n, i, p = extrair_magalu(link)
         if n:
             return n, i, p
+
+    if plataforma == "shein":
+        n, i, p = extrair_shein(link)
+        if n:
+            return n, i, p
+
     if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
         if n:
@@ -525,19 +528,15 @@ def reservar(produto_id):
     data = request.json or {}
     nome_comprador = data.get("nome", "").strip()
     email_comprador = data.get("email", "").strip()
-
     if not nome_comprador or not email_comprador:
         return jsonify({"erro": "Nome e e-mail obrigatórios"}), 400
-
     produtos = sb_get("produtos", f"id=eq.{produto_id}")
     if not produtos or not isinstance(produtos, list):
         return jsonify({"erro": "Produto não encontrado"}), 404
     if produtos[0].get("reservado"):
         return jsonify({"erro": "Já reservado"}), 400
-
     token = str(uuid.uuid4())
     agora = datetime.utcnow().isoformat()
-
     sb_patch("produtos", f"id=eq.{produto_id}", {
         "reservado": 1,
         "token_confirmacao": token,
@@ -545,12 +544,10 @@ def reservar(produto_id):
         "nome_comprador": nome_comprador,
         "email_comprador": email_comprador
     })
-
     nome_produto = produtos[0].get("nome", "Produto")
     link_produto = produtos[0].get("link_afiliado", "")
     base_url = request.host_url.rstrip('/')
     enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto)
-
     return jsonify({"ok": True})
 
 @app.route("/confirmar-compra/<token>")
@@ -558,10 +555,8 @@ def confirmar_compra(token):
     produtos = sb_get("produtos", f"token_confirmacao=eq.{token}")
     if not produtos or not isinstance(produtos, list):
         return "<h2>Link inválido ou expirado.</h2>", 404
-
     produto = produtos[0]
     reservado_em = produto.get("reservado_em")
-
     if reservado_em:
         dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
         if datetime.utcnow() > dt + timedelta(hours=3):
@@ -573,12 +568,10 @@ def confirmar_compra(token):
                 "email_comprador": None
             })
             return render_template("confirmacao.html", status="expirado")
-
     sb_patch("produtos", f"id=eq.{produto['id']}", {
         "reservado": 2,
         "token_confirmacao": None
     })
-
     lista = sb_get("listas", f"id=eq.{produto['lista_id']}")
     if lista and isinstance(lista, list):
         email_aniversariante = lista[0].get("email_aniversariante")
@@ -588,7 +581,6 @@ def confirmar_compra(token):
                 produto.get("nome_comprador", "Alguém"),
                 produto.get("nome", "Produto")
             )
-
     return render_template("confirmacao.html", status="confirmado", nome_produto=produto.get("nome", "Produto"))
 
 @app.route("/api/limpar-reservas-expiradas", methods=["POST"])
@@ -616,6 +608,7 @@ def limpar_reservas_expiradas():
         return jsonify({"status": "sucesso", "liberados": liberados}), 200
     except Exception as e:
         return jsonify({"status": "erro", "mensagem": str(e)}), 500
+
 @app.route("/api/editar-produto/<int:produto_id>", methods=["POST"])
 def editar_produto(produto_id):
     data = request.json or {}
@@ -632,5 +625,6 @@ def editar_produto(produto_id):
     if atualizacao:
         sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
     return jsonify({"ok": True})
+
 if __name__ == "__main__":
     app.run(debug=True)
