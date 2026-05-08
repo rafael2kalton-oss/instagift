@@ -224,6 +224,14 @@ def extrair_dados(link, plataforma):
         except:
             pass
     if plataforma == "shopee":
+        n, i, p = extrair_shopee(link)
+        if n:
+            return n, i, p
+    if plataforma == "magalu":
+        n, i, p = extrair_magalu(link)
+        if n:
+            return n, i, p
+    if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
         if n:
             return n, i, p
