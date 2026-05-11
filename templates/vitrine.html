@@ -4,106 +4,123 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InstaGift — Vitrine</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
+body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
 .container { max-width: 500px; margin: 0 auto; }
 
-.header-vitrine { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.12); margin-bottom: 28px; }
-.logo-vitrine { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #C9A84C; }
-.logo-vitrine span { color: #F5F0E8; }
-.btn-voltar { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); color: #C9A84C; padding: 8px 16px; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-.btn-voltar:hover { background: rgba(201,168,76,0.12); }
+.header-vitrine { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.3); margin-bottom: 32px; }
+.logo-vitrine { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #C9A84C; letter-spacing: 0.3px; }
+.btn-voltar { background: transparent; border: 1px solid rgba(201,168,76,0.4); color: #C9A84C; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-voltar:hover { background: rgba(201,168,76,0.08); }
 
-.topo { text-align: center; margin-bottom: 32px; }
-.topo-icone { font-size: 40px; margin-bottom: 12px; }
-.topo h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #F5F0E8; margin-bottom: 6px; }
-.topo-linha { width: 40px; height: 2px; background: linear-gradient(90deg, #C9A84C, #E8C96A); margin: 12px auto; border-radius: 2px; }
-.topo p { font-size: 13px; color: #666; letter-spacing: 0.03em; }
+.topo { text-align: center; margin-bottom: 36px; }
+.topo-ornamento { color: #C9A84C; font-size: 20px; margin-bottom: 12px; letter-spacing: 8px; }
+.topo h2 { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; line-height: 1.2; }
+.topo-linha { display: flex; align-items: center; gap: 12px; margin: 16px auto; max-width: 200px; }
+.topo-linha-barra { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #C9A84C, transparent); }
+.topo-linha-diamante { color: #C9A84C; font-size: 10px; }
+.topo p { font-size: 13px; color: #888; letter-spacing: 0.05em; }
 
-.grid { display: flex; flex-direction: column; gap: 16px; }
+.grid { display: flex; flex-direction: column; gap: 24px; }
 
-.card { background: #141414; border: 1px solid rgba(201,168,76,0.1); border-radius: 18px; overflow: hidden; position: relative; transition: border-color 0.3s, transform 0.2s; animation: fadeUp 0.4s ease; }
-.card:hover { border-color: rgba(201,168,76,0.25); transform: translateY(-2px); }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; overflow: hidden; position: relative; transition: all 0.3s; animation: fadeUp 0.5s ease; box-shadow: 0 2px 20px rgba(0,0,0,0.04); }
+.card:hover { border-color: rgba(201,168,76,0.5); box-shadow: 0 8px 40px rgba(201,168,76,0.12); transform: translateY(-3px); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-.card-img { width: 100%; height: 220px; object-fit: contain; background: #0a0a0a; display: block; padding: 12px; }
-.card-sem-img { width: 100%; height: 180px; background: linear-gradient(135deg, #1a1a0a, #0a0a1a); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+.card-img { width: 100%; height: 240px; object-fit: cover; display: block; }
+.card-img-contain { width: 100%; height: 240px; object-fit: contain; display: block; background: #fafaf8; padding: 16px; }
+.card-sem-img { width: 100%; height: 200px; background: linear-gradient(135deg, #FFF8EC, #f5edd8); display: flex; align-items: center; justify-content: center; }
+.card-sem-img-icon { font-size: 48px; opacity: 0.4; }
 
-.card-body { padding: 18px 20px; }
-.card-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: #F5F0E8; line-height: 1.4; }
-.card-preco { font-size: 18px; color: #C9A84C; font-weight: 700; margin-bottom: 14px; font-family: 'Playfair Display', serif; }
+.card-body { padding: 20px 24px 24px; }
+.card-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 4px; margin-bottom: 8px; text-align: center; }
+.card-nome { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #2C2C2C; line-height: 1.3; text-align: center; }
+.card-preco { font-family: 'Playfair Display', serif; font-size: 22px; color: #C9A84C; font-weight: 700; margin-bottom: 18px; text-align: center; }
 
-.btn-comprar { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; letter-spacing: 0.02em; }
-.btn-comprar:hover { transform: translateY(-1px); }
-.btn-amazon { background: linear-gradient(135deg, #FF9900, #e68a00); color: #000; }
-.btn-mercadolivre { background: linear-gradient(135deg, #FFE600, #e6cf00); color: #000; }
-.btn-shopee { background: linear-gradient(135deg, #EE4D2D, #d43f20); color: #fff; }
-.btn-magalu { background: linear-gradient(135deg, #0086FF, #006ed4); color: #fff; }
-.btn-shein { background: linear-gradient(135deg, #1a1a1a, #2a2a2a); color: #C9A84C; border: 1px solid rgba(201,168,76,0.3); }
-.btn-outro { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; }
+.btn-comprar { width: 100%; padding: 15px; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; letter-spacing: 0.05em; }
+.btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201,168,76,0.3); }
+.btn-amazon { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; }
+.btn-mercadolivre { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; }
+.btn-shopee { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; }
+.btn-magalu { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; }
+.btn-shein { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; }
+.btn-outro { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; }
 
-.btn-reservado { background: #1a1a1a; color: #444; cursor: not-allowed; width: 100%; padding: 14px; border: 1px solid #222; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif; }
-.btn-presenteado { background: rgba(34,197,94,0.08); color: #22c55e; cursor: not-allowed; width: 100%; padding: 14px; border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif; }
-.btn-liberar { width: 100%; padding: 10px; background: transparent; border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-reservado { background: #f5f5f0; color: #aaa; cursor: not-allowed; width: 100%; padding: 15px; border: 1px solid #e8e8e0; border-radius: 50px; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; }
+.btn-presenteado { background: rgba(34,197,94,0.06); color: #16a34a; cursor: not-allowed; width: 100%; padding: 15px; border: 1px solid rgba(34,197,94,0.2); border-radius: 50px; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; }
+.btn-liberar { width: 100%; padding: 10px; background: transparent; border: 1px solid rgba(201,168,76,0.4); color: #C9A84C; border-radius: 50px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
 .btn-liberar:hover { background: rgba(201,168,76,0.08); }
 
-.badge-status { text-align: center; font-size: 12px; color: #555; margin-top: 8px; }
+.badge-status { text-align: center; font-size: 12px; color: #aaa; margin-top: 8px; }
 
-.btn-excluir { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08); color: #888; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
+.btn-excluir { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.08); color: #aaa; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
 .btn-excluir.show { display: flex; }
-.btn-excluir:hover { background: rgba(255,50,50,0.3); color: #ff4444; border-color: rgba(255,50,50,0.3); }
+.btn-excluir:hover { background: #fff; color: #ff4444; border-color: rgba(255,50,50,0.2); }
 
-.loading { text-align: center; padding: 60px; color: #444; }
-.loading-spinner { font-size: 32px; margin-bottom: 12px; }
+.separador { display: flex; align-items: center; gap: 12px; margin: 4px 0; }
+.separador-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
+.separador-icon { color: #C9A84C; font-size: 10px; }
+
+.loading { text-align: center; padding: 80px 20px; color: #C9A84C; }
+.loading-ornamento { font-size: 28px; margin-bottom: 16px; letter-spacing: 8px; }
+.loading p { font-family: 'Playfair Display', serif; font-size: 18px; color: #888; }
+
+.empty-state { text-align: center; padding: 80px 20px; }
+.empty-state-ornamento { font-size: 32px; color: #C9A84C; margin-bottom: 20px; letter-spacing: 8px; }
+.empty-state h3 { font-family: 'Playfair Display', serif; font-size: 22px; color: #2C2C2C; margin-bottom: 8px; }
+.empty-state p { font-size: 14px; color: #aaa; line-height: 1.7; }
 
 /* POPUP */
-.popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+.popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44,44,44,0.6); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
 .popup-overlay.show { display: flex; }
-.popup { background: #141414; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 380px; }
-.popup-icone { font-size: 40px; text-align: center; margin-bottom: 14px; }
-.popup h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #F5F0E8; text-align: center; }
-.popup p { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; text-align: center; }
+.popup { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 32px 28px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.popup-ornamento { text-align: center; color: #C9A84C; font-size: 14px; letter-spacing: 6px; margin-bottom: 12px; }
+.popup h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 10px; color: #2C2C2C; text-align: center; }
+.popup p { font-size: 13px; color: #888; margin-bottom: 24px; line-height: 1.7; text-align: center; }
+.popup-linha { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.popup-linha-barra { flex: 1; height: 1px; background: rgba(201,168,76,0.3); }
+.popup-linha-icon { color: #C9A84C; font-size: 10px; }
 .popup-btns { display: flex; gap: 10px; }
-.popup-btns button { flex: 1; padding: 13px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-.btn-sim { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; }
-.btn-sim:hover { transform: translateY(-1px); }
-.btn-nao { background: rgba(255,255,255,0.04); color: #888; border: 1px solid rgba(255,255,255,0.06) !important; }
-.btn-nao:hover { background: rgba(255,255,255,0.07); color: #aaa; }
+.popup-btns button { flex: 1; padding: 14px; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-sim { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+.btn-sim:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.4); }
+.btn-nao { background: #f5f5f0; color: #888; border: 1px solid #e8e8e0 !important; }
+.btn-nao:hover { background: #eeede8; color: #666; }
 
 .form-reserva { display: none; margin-top: 20px; }
 .form-reserva.show { display: block; }
-.form-reserva input { width: 100%; padding: 12px 14px; font-size: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); border-radius: 10px; color: #F5F0E8; margin-bottom: 10px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
-.form-reserva input:focus { border-color: rgba(201,168,76,0.5); }
-.form-reserva input::placeholder { color: #333; }
-.btn-confirmar { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.2); }
-.btn-confirmar:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(201,168,76,0.3); }
-.aviso-reserva { font-size: 11px; color: #444; margin-top: 10px; text-align: center; line-height: 1.6; }
-
-.empty-state { text-align: center; padding: 60px 20px; color: #333; }
-.empty-state .emoji { font-size: 48px; margin-bottom: 16px; }
-.empty-state p { font-size: 14px; line-height: 1.7; }
+.form-reserva input { width: 100%; padding: 13px 16px; font-size: 14px; background: #fff; border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; color: #2C2C2C; margin-bottom: 12px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+.form-reserva input:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+.form-reserva input::placeholder { color: #bbb; }
+.btn-confirmar { width: 100%; padding: 15px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); letter-spacing: 0.02em; }
+.btn-confirmar:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
+.aviso-reserva { font-size: 11px; color: #aaa; margin-top: 12px; text-align: center; line-height: 1.7; }
 </style>
 </head>
 <body>
 <div class="container">
 
   <div class="header-vitrine">
-    <div class="logo-vitrine">Insta<span>Gift</span></div>
+    <div class="logo-vitrine">InstaGift</div>
     <button class="btn-voltar" onclick="voltarLista()">← Voltar</button>
   </div>
 
   <div class="topo">
-    <div class="topo-icone" id="topoIcone">🎁</div>
+    <div class="topo-ornamento">✦ ✦ ✦</div>
     <h2>Lista de Presentes</h2>
-    <div class="topo-linha"></div>
+    <div class="topo-linha">
+      <div class="topo-linha-barra"></div>
+      <div class="topo-linha-diamante">✦</div>
+      <div class="topo-linha-barra"></div>
+    </div>
     <p id="subtitulo">Carregando...</p>
   </div>
 
   <div class="grid" id="grid">
     <div class="loading">
-      <div class="loading-spinner">✦</div>
+      <div class="loading-ornamento">✦ ✦ ✦</div>
       <p>Buscando presentes...</p>
     </div>
   </div>
@@ -112,9 +129,14 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
 <!-- Popup reserva -->
 <div class="popup-overlay" id="popup-overlay">
   <div class="popup">
-    <div class="popup-icone">🎁</div>
+    <div class="popup-ornamento">✦ ✦ ✦</div>
     <h3>Reservar este presente?</h3>
     <p>Ao reservar, você receberá um e-mail para confirmar a compra. Se não confirmar em até 3 horas, o presente voltará a ficar disponível.</p>
+    <div class="popup-linha">
+      <div class="popup-linha-barra"></div>
+      <div class="popup-linha-icon">✦</div>
+      <div class="popup-linha-barra"></div>
+    </div>
     <div class="popup-btns" id="popup-btns">
       <button class="btn-nao" onclick="naoReservar()">Só ver</button>
       <button class="btn-sim" onclick="mostrarFormulario()">Sim, reservar!</button>
@@ -134,12 +156,12 @@ var isAdmin = window.location.search.indexOf('admin=true') > -1;
 var produtoAtual = null;
 
 var btnInfo = {
-  amazon: { classe: 'btn-amazon', texto: '🛒 Comprar na Amazon' },
-  mercadolivre: { classe: 'btn-mercadolivre', texto: '🛍️ Comprar no Mercado Livre' },
-  shopee: { classe: 'btn-shopee', texto: '🧡 Comprar na Shopee' },
-  magalu: { classe: 'btn-magalu', texto: '🛍️ Comprar no Magalu' },
-  shein: { classe: 'btn-shein', texto: '✨ Comprar na Shein' },
-  outro: { classe: 'btn-outro', texto: '✦ Ver produto' }
+  amazon: { classe: 'btn-amazon', texto: 'Comprar na Amazon' },
+  mercadolivre: { classe: 'btn-mercadolivre', texto: 'Comprar no Mercado Livre' },
+  shopee: { classe: 'btn-shopee', texto: 'Comprar na Shopee' },
+  magalu: { classe: 'btn-magalu', texto: 'Comprar no Magalu' },
+  shein: { classe: 'btn-shein', texto: 'Comprar na Shein' },
+  outro: { classe: 'btn-outro', texto: 'Ver produto' }
 };
 
 function voltarLista() { window.history.back(); }
@@ -151,38 +173,46 @@ async function carregarLista() {
     document.getElementById('subtitulo').textContent = produtos.length + ' presente(s) na lista';
     renderProdutos(produtos);
   } catch(e) {
-    document.getElementById('grid').innerHTML = '<div class="empty-state"><div class="emoji">🎁</div><p>Lista não encontrada.</p></div>';
+    document.getElementById('grid').innerHTML = '<div class="empty-state"><div class="empty-state-ornamento">✦ ✦ ✦</div><h3>Lista não encontrada</h3><p>Verifique o link e tente novamente.</p></div>';
   }
 }
 
 function renderProdutos(produtos) {
   var grid = document.getElementById('grid');
   if (!produtos.length) {
-    grid.innerHTML = '<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum produto na lista ainda.<br>Volte em breve!</p></div>';
+    grid.innerHTML = '<div class="empty-state"><div class="empty-state-ornamento">✦ ✦ ✦</div><h3>Nenhum presente ainda</h3><p>A lista ainda está sendo preparada.<br>Volte em breve!</p></div>';
     return;
   }
-  grid.innerHTML = produtos.map(function(p) {
+  grid.innerHTML = produtos.map(function(p, idx) {
     var info = btnInfo[p.plataforma] || btnInfo['outro'];
     var statusBtn = '';
 
     if (p.reservado === 2) {
       statusBtn = '<button class="btn-presenteado">🎁 Alguém já presenteou</button>' +
                   '<div class="badge-status">Este presente já foi comprado ✦</div>';
-      if (isAdmin) statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
+      if (isAdmin) statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">Liberar presente</button>';
     } else if (p.reservado === 1) {
       statusBtn = '<button class="btn-reservado">🔒 Presente já escolhido</button>' +
                   '<div class="badge-status">Alguém já escolheu este presente</div>';
-      if (isAdmin) statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
+      if (isAdmin) statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">Liberar presente</button>';
     } else {
-      statusBtn = '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>';
+      statusBtn = '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">✦ ' + info.texto + '</button>';
     }
 
-    return '<div class="card" id="card-' + p.id + '">' +
+    var imgHtml = '';
+    if (p.imagem_url) {
+      imgHtml = '<img class="card-img-contain" src="' + p.imagem_url + '" onerror="this.outerHTML=\'<div class=\\\'card-sem-img\\\'><div class=\\\'card-sem-img-icon\\\'>🎁</div></div>\'">';
+    } else {
+      imgHtml = '<div class="card-sem-img"><div class="card-sem-img-icon">🎁</div></div>';
+    }
+
+    var separador = idx > 0 ? '<div class="separador"><div class="separador-linha"></div><div class="separador-icon">✦</div><div class="separador-linha"></div></div>' : '';
+
+    return separador + '<div class="card" id="card-' + p.id + '">' +
       '<button class="btn-excluir' + (isAdmin ? ' show' : '') + '" onclick="excluirProduto(' + p.id + ')">✕</button>' +
-      (p.imagem_url
-        ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
-        : '<div class="card-sem-img">🎁</div>') +
+      imgHtml +
       '<div class="card-body">' +
+        '<div class="card-ornamento">✦ ✦ ✦</div>' +
         '<div class="card-nome">' + (p.nome || 'Produto') + '</div>' +
         (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
         statusBtn +
@@ -224,8 +254,7 @@ async function confirmarReserva() {
     window.open(produtoAtual.link, '_blank');
     var card = document.getElementById('card-' + produtoAtual.id);
     if (card) {
-      var body = card.querySelector('.card-body');
-      var btnAtual = body.querySelector('.btn-comprar');
+      var btnAtual = card.querySelector('.btn-comprar');
       if (btnAtual) {
         btnAtual.outerHTML = '<button class="btn-reservado">🔒 Presente já escolhido</button>' +
           '<div class="badge-status">Alguém já escolheu este presente</div>';
