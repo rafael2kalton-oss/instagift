@@ -9,66 +9,44 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; min-height: 100vh; }
         .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 20px 16px 48px; }
-
-        /* HEADER */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 24px 0; border-bottom: 1px solid rgba(201,168,76,0.25); margin-bottom: 28px; }
         .logo-box { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; cursor: pointer; letter-spacing: 0.3px; }
         .tagline { font-size: 11px; color: #aaa; margin-top: 3px; letter-spacing: 0.06em; font-style: italic; }
         .header-right span { font-size: 11px; color: #aaa; }
-
-        /* WIZARD */
         .wizard-steps { display: flex; gap: 6px; margin-bottom: 28px; }
         .step { flex: 1; height: 2px; border-radius: 2px; background: rgba(201,168,76,0.15); transition: background 0.4s; }
         .step.active { background: linear-gradient(90deg, #C9A84C, #E8C96A); }
         .step.done { background: rgba(201,168,76,0.4); }
-
-        /* SEÇÕES */
         .secao { display: none; animation: fadeUp 0.4s ease; }
         .secao.ativa { display: block; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         .secao-titulo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; margin-bottom: 6px; color: #2C2C2C; }
         .secao-sub { font-size: 13px; color: #aaa; margin-bottom: 24px; line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; }
-
-        /* EVENTOS */
         .eventos-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-        .evento-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .evento-card { background: #fff; border: 1.5px solid rgba(201,168,76,0.2); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.04); position: relative; }
         .evento-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(201,168,76,0.15); }
-        .evento-card.selected { border-color: #C9A84C; border-width: 2.5px; box-shadow: 0 0 0 4px rgba(201,168,76,0.2), 0 8px 28px rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); }
+        .evento-card.selected { border-color: #C9A84C; border-width: 2.5px; box-shadow: 0 0 0 4px rgba(201,168,76,0.15), 0 8px 28px rgba(201,168,76,0.2); background: rgba(201,168,76,0.02); }
         .evento-foto { width: 100%; height: 130px; object-fit: cover; display: block; }
-        .evento-foto-placeholder { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 36px; background: linear-gradient(135deg, #FFF8EC, #F5EDD8); }
-        .evento-info { padding: 12px; }
-        .evento-nome { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #2C2C2C; margin-bottom: 2px; }
+        .evento-info { padding: 12px 14px; }
+        .evento-nome { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #2C2C2C; margin-bottom: 2px; }
         .evento-sub { font-size: 11px; color: #aaa; font-style: italic; }
-        .evento-check { display: none; position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; background: linear-gradient(135deg, #C9A84C, #A8722A); border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 700; box-shadow: 0 2px 8px rgba(201,168,76,0.4); z-index: 10; }
+        .evento-check { display: none; position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; background: linear-gradient(135deg, #C9A84C, #A8722A); border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 700; box-shadow: 0 2px 10px rgba(201,168,76,0.5); z-index: 10; }
         .evento-card.selected .evento-check { display: flex; }
-        .evento-card { position: relative; }
-        .evento-card.selected .evento-check { display: flex; }
-        .evento-card-full { grid-column: span 2; }
-
-        /* CAMPOS */
         .campo { margin-bottom: 16px; }
         .campo label { font-size: 11px; color: #aaa; font-weight: 500; display: block; margin-bottom: 8px; letter-spacing: 0.07em; text-transform: uppercase; }
         .campo input { width: 100%; background: #fff; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 13px 16px; color: #2C2C2C; font-size: 15px; outline: none; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .campo input:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
         .campo input::placeholder { color: #ccc; }
-
-        /* BOTÕES */
         .btn-proximo { width: 100%; background: linear-gradient(135deg, #C9A84C, #A8722A); border: none; border-radius: 50px; padding: 15px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); margin-top: 8px; letter-spacing: 0.03em; }
         .btn-proximo:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
         .btn-pular { width: 100%; background: transparent; border: none; color: #bbb; font-size: 13px; cursor: pointer; font-family: 'Playfair Display', serif; font-style: italic; padding: 10px; margin-top: 4px; }
         .btn-pular:hover { color: #888; }
         .btn-voltar-step { background: transparent; border: none; color: #aaa; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 8px 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
         .btn-voltar-step:hover { color: #C9A84C; }
-
-        /* EMAIL */
         .email-hint { font-size: 12px; color: #bbb; margin-top: 8px; line-height: 1.6; font-style: italic; }
         .email-salvo { font-size: 12px; color: #C9A84C; margin-top: 8px; display: none; }
-
-        /* CHIPS PLATAFORMAS */
         .platform-chips { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
         .chip { font-size: 11px; background: rgba(201,168,76,0.07); padding: 4px 12px; border-radius: 20px; color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); font-style: italic; font-family: 'Playfair Display', serif; }
-
-        /* INPUT LINK */
         .input-group { display: flex; gap: 10px; }
         .input-group input { flex: 1; background: #fff; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 14px; color: #2C2C2C; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .input-group input:focus { border-color: #C9A84C; }
@@ -77,13 +55,9 @@
         .btn-add:hover { transform: scale(1.03); }
         .btn-add:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
         .loading { text-align: center; color: #C9A84C; padding: 10px 0; font-size: 13px; display: none; font-style: italic; font-family: 'Playfair Display', serif; }
-
-        /* SECTION HEADER */
         .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .section-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; }
         .section-header span { font-size: 12px; color: #C9A84C; font-style: italic; }
-
-        /* PRODUCT CARDS */
         .product-card { background: #fff; border-radius: 16px; margin-bottom: 16px; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); transition: all 0.2s; animation: fadeUp 0.3s ease; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
         .product-card:hover { border-color: rgba(201,168,76,0.35); box-shadow: 0 6px 24px rgba(201,168,76,0.1); }
         .product-img-wrap { background: #fafaf8; text-align: center; padding: 16px; }
@@ -105,15 +79,13 @@
         .btn-remover:hover { color: #ff4444; }
         .btn-editar { background: transparent; border: none; color: #C9A84C; font-size: 15px; cursor: pointer; transition: opacity 0.2s; margin-right: 4px; opacity: 0.6; }
         .btn-editar:hover { opacity: 1; }
-
-        /* AÇÕES */
         .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 50px; padding: 15px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-whatsapp:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-whatsapp:disabled { background: rgba(0,0,0,0.06); color: #ccc; cursor: not-allowed; border: 1px solid rgba(0,0,0,0.06); }
         .whatsapp-hint { font-size: 11px; color: #bbb; text-align: center; margin-top: 4px; line-height: 1.5; font-style: italic; }
         .whatsapp-hint.liberado { color: #C9A84C; }
-        .empty-state { text-align: center; padding: 40px 0; color: #ccc; }
-        .empty-state .ornamento { font-size: 28px; margin-bottom: 12px; color: rgba(201,168,76,0.3); letter-spacing: 6px; }
+        .empty-state { text-align: center; padding: 40px 0; }
+        .empty-state .ornamento { font-size: 24px; margin-bottom: 12px; color: rgba(201,168,76,0.3); letter-spacing: 6px; }
         .empty-state p { font-size: 13px; line-height: 1.7; font-family: 'Playfair Display', serif; font-style: italic; color: #bbb; }
         .acoes { margin-top: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 12px; }
         .btn-criar-story { width: 100%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 50px; padding: 16px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; letter-spacing: 0.02em; }
@@ -122,18 +94,14 @@
         .btn-gerar-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.35); }
         .btn-ver-vitrine { width: 100%; background: transparent; border: 1px solid rgba(201,168,76,0.35); border-radius: 50px; padding: 14px; color: #C9A84C; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .btn-ver-vitrine:hover { background: rgba(201,168,76,0.06); border-color: #C9A84C; }
-
-        /* LINK PERMANENTE */
         .link-permanente { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 14px; padding: 16px; margin-top: 20px; }
         .link-permanente p { font-size: 11px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
         .link-permanente code { font-size: 11px; color: #C9A84C; word-break: break-all; display: block; margin-bottom: 10px; }
         .btn-copiar { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); color: #C9A84C; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
         .btn-copiar:hover { background: #C9A84C; color: #fff; }
-
         .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
         .divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); }
         .divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
-
         .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #C9A84C; margin-bottom: 20px; font-style: italic; font-family: 'Playfair Display', serif; }
         .nav-etapa4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     </style>
@@ -164,9 +132,9 @@
         <p class="secao-sub">Escolha o tipo de evento para personalizar sua lista.</p>
         <div class="eventos-grid">
             <div class="evento-card selected" data-evento="aniversario" onclick="selecionarEvento(this)">
-               <img class="evento-foto" src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
-               <div class="evento-check">✓</div>
-               <div class="evento-info">
+                <img class="evento-foto" src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
+                <div class="evento-check">✓</div>
+                <div class="evento-info">
                     <div class="evento-nome">Aniversário</div>
                     <div class="evento-sub">Celebre seu dia!</div>
                 </div>
@@ -195,8 +163,8 @@
                     <div class="evento-sub">Bem-vindo pequeno!</div>
                 </div>
             </div>
-            <div class="evento-card evento-card-full" data-evento="outros" onclick="selecionarEvento(this)">
-                <img class="evento-foto" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&q=80&fit=crop" crossorigin="anonymous" style="height:80px;" onerror="this.style.display='none'">
+            <div class="evento-card" data-evento="outros" onclick="selecionarEvento(this)">
+                <img class="evento-foto" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
                 <div class="evento-check">✓</div>
                 <div class="evento-info">
                     <div class="evento-nome">Outros Eventos</div>
@@ -207,23 +175,23 @@
         <button class="btn-proximo" onclick="irParaEtapa(2)">Continuar →</button>
     </div>
 
-   <!-- ETAPA 2 -->
-<div class="secao" id="secao2">
-    <button class="btn-voltar-step" onclick="irParaEtapa(1)">← Voltar</button>
-    <div class="evento-badge-mini" id="eventoBadgeMini">🎂 Aniversário</div>
-    <p class="secao-titulo">Personalize sua lista</p>
-    <p class="secao-sub">Dê um nome especial e a data do seu evento.</p>
-    <div class="campo">
-        <label id="labelNomeEvento">Nome do evento</label>
-        <input type="text" id="inputNomeEvento" placeholder="Ex: Aniversário da Maria">
+    <!-- ETAPA 2 -->
+    <div class="secao" id="secao2">
+        <button class="btn-voltar-step" onclick="irParaEtapa(1)">← Voltar</button>
+        <div class="evento-badge-mini" id="eventoBadgeMini">🎂 Aniversário</div>
+        <p class="secao-titulo">Personalize sua lista</p>
+        <p class="secao-sub">Dê um nome especial e a data do seu evento.</p>
+        <div class="campo">
+            <label id="labelNomeEvento">Nome do evento</label>
+            <input type="text" id="inputNomeEvento" placeholder="Ex: Aniversário da Maria">
+        </div>
+        <div class="campo">
+            <label>Data do evento</label>
+            <input type="date" id="inputDataEvento">
+        </div>
+        <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
+        <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
-    <div class="campo">
-        <label>Data do evento</label>
-        <input type="date" id="inputDataEvento">
-    </div>
-    <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
-    <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
-</div>
 
     <!-- ETAPA 3 -->
     <div class="secao" id="secao3">
@@ -286,18 +254,10 @@
             <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
         </div>
         <div class="acoes" id="acoesVitrine" style="display:none">
-            <button class="btn-criar-story" onclick="abrirPopupStory()">
-                📸 Criar meu story no Instagram
-            </button>
-            <button class="btn-gerar-vitrine" onclick="gerarVitrine()">
-                ✦ Gerar minha vitrine
-            </button>
-            <button class="btn-ver-vitrine" onclick="verVitrine()">
-                Ver minha vitrine
-            </button>
-            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>
-                💚 Avisar Convidados no WhatsApp
-            </button>
+            <button class="btn-criar-story" onclick="abrirPopupStory()">📸 Criar meu story no Instagram</button>
+            <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
+            <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
+            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
             <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
         </div>
     </div>
@@ -311,7 +271,7 @@
         <h3 id="popupTitulo" style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:10px;"></h3>
         <p id="popupTexto" style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:16px; font-style:italic;"></p>
         <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:12px; padding:14px; margin-bottom:24px; text-align:left;">
-            <p style="font-size:13px; color:#C9A84C; line-height:1.6; font-style:italic;">✦ <strong>Dica:</strong> Adicione ao Destaque para os Melhores Amigos — assim fica visível até a data do seu evento!</p>
+            <p style="font-size:13px; color:#C9A84C; line-height:1.6; font-style:italic;">✦ <strong>Dica:</strong> Adicione ao Destaque para os Melhores Amigos!</p>
         </div>
         <button onclick="irParaStory()" style="width:100%; padding:15px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:50px; font-size:15px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">Entendi, vamos lá! 📸</button>
         <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.2); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
@@ -320,10 +280,10 @@
 
 <!-- Popup Shopee -->
 <div id="popupShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#FFF8EC; border:1px solid rgba(238,77,45,0.25); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.12);">
+    <div style="background:#FFF8EC; border:1px solid rgba(238,77,45,0.25); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
         <div style="font-size:36px; margin-bottom:12px;">🧡</div>
         <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Produto Shopee</h3>
-        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:24px; font-style:italic;">Devido às políticas da Shopee, não conseguimos buscar as informações automaticamente. Deseja personalizar manualmente?</p>
+        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:24px; font-style:italic;">Não conseguimos buscar as informações automaticamente. Deseja personalizar manualmente?</p>
         <button onclick="aceitarPersonalizarShopee()" style="width:100%; padding:14px; background:#EE4D2D; color:white; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Sim, personalizar</button>
         <button onclick="recusarPersonalizarShopee()" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(0,0,0,0.08); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Adicionar assim mesmo</button>
     </div>
@@ -345,7 +305,7 @@
             <input type="text" id="shopeePrecoManual" placeholder="Ex: 159,90" style="width:100%; background:#fff; border:1px solid rgba(238,77,45,0.25); border-radius:10px; padding:12px 14px; color:#2C2C2C; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:20px;">
-            <label style="font-size:11px; color:#aaa; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.06em;">Foto do produto (opcional)</label>
+            <label style="font-size:11px; color:#aaa; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.06em;">Foto (opcional)</label>
             <label for="shopeeImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.04); border:1px dashed rgba(238,77,45,0.25); border-radius:10px; padding:12px; cursor:pointer; color:#EE4D2D; font-size:13px; margin-bottom:8px;">📸 Escolher da galeria</label>
             <input type="file" id="shopeeImagemManual" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
             <label for="shopeeImagemBaixada" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(238,77,45,0.06); border:1px solid rgba(238,77,45,0.2); border-radius:8px; padding:10px; cursor:pointer; color:#EE4D2D; font-size:13px; font-weight:600;">📂 Upload da imagem</label>
@@ -358,10 +318,10 @@
 
 <!-- Popup ML -->
 <div id="popupML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.25); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.12);">
+    <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.25); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
         <div style="font-size:36px; margin-bottom:12px;">🛍️</div>
         <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Link detectado</h3>
-        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:24px; font-style:italic;">Links do site do Mercado Livre têm limitações. Use o link do <strong style="color:#C9A84C;">app do ML</strong> ou preencha manualmente.</p>
+        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:24px; font-style:italic;">Use o link do <strong style="color:#C9A84C;">app do ML</strong> ou preencha manualmente.</p>
         <button onclick="aceitarPersonalizarML()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Preencher manualmente</button>
         <button onclick="recusarPersonalizarML()" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(0,0,0,0.08); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Tentar assim mesmo</button>
     </div>
@@ -390,7 +350,7 @@
 
 <!-- Popup Manual Universal -->
 <div id="popupManualUniversal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:#FFF8EC; border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto; box-shadow:0 20px 60px rgba(0,0,0,0.12);" id="popupManualInner">
+    <div style="background:#FFF8EC; border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto; box-shadow:0 20px 60px rgba(0,0,0,0.12); border:1px solid rgba(201,168,76,0.2);" id="popupManualInner">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <h3 id="manualTitulo" style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#2C2C2C;">✏️ Completar produto</h3>
             <button onclick="fecharPopupManualUniversal()" style="background:transparent; border:none; color:#aaa; font-size:20px; cursor:pointer;">✕</button>
@@ -459,20 +419,20 @@
     var manualLinkAtual = "";
 
     var textosPorPlataforma = {
-        amazon: { titulo: "🛒 Imagem não encontrada", texto: "Não conseguimos buscar a imagem deste produto da Amazon automaticamente. Preencha as informações manualmente.", cor: "rgba(255,153,0,0.25)" },
-        mercadolivre: { titulo: "🛍️ Link com limitações", texto: "Links do site do Mercado Livre têm limitações. Use o link do app do ML ou preencha manualmente.", cor: "rgba(201,168,76,0.25)" },
-        shopee: { titulo: "🧡 Produto Shopee", texto: "Não conseguimos buscar a imagem da Shopee automaticamente. Preencha manualmente.", cor: "rgba(238,77,45,0.2)" },
-        magalu: { titulo: "🛍️ Imagem não encontrada", texto: "Não conseguimos buscar a imagem do Magalu automaticamente. Preencha manualmente.", cor: "rgba(0,134,255,0.2)" },
-        shein: { titulo: "✨ Produto Shein", texto: "Não conseguimos buscar a imagem da Shein automaticamente. Preencha manualmente.", cor: "rgba(201,168,76,0.2)" },
-        outro: { titulo: "🎁 Produto não encontrado", texto: "Não conseguimos buscar as informações automaticamente. Preencha manualmente.", cor: "rgba(201,168,76,0.2)" }
+        amazon: { titulo: "🛒 Imagem não encontrada", texto: "Não conseguimos buscar a imagem da Amazon. Preencha manualmente.", cor: "rgba(255,153,0,0.25)" },
+        mercadolivre: { titulo: "🛍️ Link com limitações", texto: "Use o link do app do ML ou preencha manualmente.", cor: "rgba(201,168,76,0.25)" },
+        shopee: { titulo: "🧡 Produto Shopee", texto: "Não conseguimos buscar a imagem da Shopee. Preencha manualmente.", cor: "rgba(238,77,45,0.2)" },
+        magalu: { titulo: "🛍️ Imagem não encontrada", texto: "Não conseguimos buscar a imagem do Magalu. Preencha manualmente.", cor: "rgba(0,134,255,0.2)" },
+        shein: { titulo: "✨ Produto Shein", texto: "Não conseguimos buscar a imagem da Shein. Preencha manualmente.", cor: "rgba(201,168,76,0.2)" },
+        outro: { titulo: "🎁 Produto não encontrado", texto: "Não conseguimos buscar as informações. Preencha manualmente.", cor: "rgba(201,168,76,0.2)" }
     };
 
     var eventos = {
-        aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa!" },
-        casamento: { emoji: "💍", badge: "💍 Casamento", labelNome: "Nome do casal", placeholder: "Ex: Casamento Ana & João", titulo: "Que comecem as celebrações!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais importam saibam o que vocês precisam!" },
-        "casa-nova": { emoji: "🏠", badge: "🏠 Casa Nova", labelNome: "Nome do evento", placeholder: "Ex: Casa Nova da Mari", titulo: "Novo lar, nova vida!", texto: "Compartilhe sua lista e receba a ajuda de quem você ama para montar seu novo lar!" },
-        "cha-bebe": { emoji: "👶", badge: "👶 Chá de Bebê", labelNome: "Nome dos papais", placeholder: "Ex: Bebê da Ana", titulo: "Que chegada especial!", texto: "Compartilhe sua lista e deixe que as pessoas que mais amam você ajudem a receber o pequeno!" },
-        outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine com quem realmente importa para você!" }
+        aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar!" },
+        casamento: { emoji: "💍", badge: "💍 Casamento", labelNome: "Nome do casal", placeholder: "Ex: Casamento Ana & João", titulo: "Que comecem as celebrações!", texto: "Compartilhe sua lista nos Melhores Amigos!" },
+        "casa-nova": { emoji: "🏠", badge: "🏠 Casa Nova", labelNome: "Nome do evento", placeholder: "Ex: Casa Nova da Mari", titulo: "Novo lar, nova vida!", texto: "Compartilhe sua lista e receba a ajuda de quem você ama!" },
+        "cha-bebe": { emoji: "👶", badge: "👶 Chá de Bebê", labelNome: "Nome dos papais", placeholder: "Ex: Bebê da Ana", titulo: "Que chegada especial!", texto: "Compartilhe sua lista e ajudem a receber o pequeno!" },
+        outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine com quem importa!" }
     };
 
     function verificarWhatsapp() {
