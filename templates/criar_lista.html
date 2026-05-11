@@ -30,7 +30,7 @@
         .secao-sub { font-size: 13px; color: #aaa; margin-bottom: 24px; line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; }
 
         /* EVENTOS */
-        .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+        .eventos-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
         .evento-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
         .evento-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(201,168,76,0.15); }
         .evento-card.selected { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.12), 0 8px 28px rgba(201,168,76,0.15); }
