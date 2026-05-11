@@ -4,77 +4,125 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InstaGift — Vitrine</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
+body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px 16px 48px; }
 .container { max-width: 500px; margin: 0 auto; }
-.topo { text-align: center; margin-bottom: 28px; }
-.topo h2 { font-size: 22px; font-weight: 700; }
-.topo p { font-size: 13px; color: #888; margin-top: 4px; }
-.grid { display: flex; flex-direction: column; gap: 14px; }
-.card { background: #111; border: 1px solid #222; border-radius: 14px; overflow: hidden; position: relative; }
-.card-img { width: 100%; height: 220px; object-fit: contain; background: #1a1a1a; display: block; }
-.card-sem-img { width: 100%; height: 180px; background: linear-gradient(135deg, #7F77DD, #5B8DEF); display: flex; align-items: center; justify-content: center; font-size: 60px; }
-.card-body { padding: 16px; }
-.card-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-.card-preco { font-size: 15px; color: #7F77DD; font-weight: 700; margin-bottom: 12px; }
-.btn-comprar { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-amazon { background: #ff9900; color: #000; }
-.btn-mercadolivre { background: #FFE600; color: #000; }
-.btn-shopee { background: #EE4D2D; color: #fff; }
-.btn-outro { background: #7F77DD; color: #fff; }
-.btn-reservado { background: #333; color: #666; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; }
-.btn-presenteado { background: #1a2a1a; color: #22c55e; cursor: not-allowed; width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; border: 1px solid #22c55e; }
-.btn-liberar { width: 100%; padding: 10px; background: transparent; border: 1px solid #ff9900; color: #ff9900; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px; }
-.btn-liberar:hover { background: #ff9900; color: #000; }
-.badge-status { text-align: center; font-size: 12px; color: #888; margin-top: 6px; }
-.btn-excluir { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); border: none; color: #fff; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; }
+
+.header-vitrine { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.12); margin-bottom: 28px; }
+.logo-vitrine { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #C9A84C; }
+.logo-vitrine span { color: #F5F0E8; }
+.btn-voltar { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); color: #C9A84C; padding: 8px 16px; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-voltar:hover { background: rgba(201,168,76,0.12); }
+
+.topo { text-align: center; margin-bottom: 32px; }
+.topo-icone { font-size: 40px; margin-bottom: 12px; }
+.topo h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #F5F0E8; margin-bottom: 6px; }
+.topo-linha { width: 40px; height: 2px; background: linear-gradient(90deg, #C9A84C, #E8C96A); margin: 12px auto; border-radius: 2px; }
+.topo p { font-size: 13px; color: #666; letter-spacing: 0.03em; }
+
+.grid { display: flex; flex-direction: column; gap: 16px; }
+
+.card { background: #141414; border: 1px solid rgba(201,168,76,0.1); border-radius: 18px; overflow: hidden; position: relative; transition: border-color 0.3s, transform 0.2s; animation: fadeUp 0.4s ease; }
+.card:hover { border-color: rgba(201,168,76,0.25); transform: translateY(-2px); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.card-img { width: 100%; height: 220px; object-fit: contain; background: #0a0a0a; display: block; padding: 12px; }
+.card-sem-img { width: 100%; height: 180px; background: linear-gradient(135deg, #1a1a0a, #0a0a1a); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+
+.card-body { padding: 18px 20px; }
+.card-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: #F5F0E8; line-height: 1.4; }
+.card-preco { font-size: 18px; color: #C9A84C; font-weight: 700; margin-bottom: 14px; font-family: 'Playfair Display', serif; }
+
+.btn-comprar { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; letter-spacing: 0.02em; }
+.btn-comprar:hover { transform: translateY(-1px); }
+.btn-amazon { background: linear-gradient(135deg, #FF9900, #e68a00); color: #000; }
+.btn-mercadolivre { background: linear-gradient(135deg, #FFE600, #e6cf00); color: #000; }
+.btn-shopee { background: linear-gradient(135deg, #EE4D2D, #d43f20); color: #fff; }
+.btn-magalu { background: linear-gradient(135deg, #0086FF, #006ed4); color: #fff; }
+.btn-shein { background: linear-gradient(135deg, #1a1a1a, #2a2a2a); color: #C9A84C; border: 1px solid rgba(201,168,76,0.3); }
+.btn-outro { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; }
+
+.btn-reservado { background: #1a1a1a; color: #444; cursor: not-allowed; width: 100%; padding: 14px; border: 1px solid #222; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif; }
+.btn-presenteado { background: rgba(34,197,94,0.08); color: #22c55e; cursor: not-allowed; width: 100%; padding: 14px; border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif; }
+.btn-liberar { width: 100%; padding: 10px; background: transparent; border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-liberar:hover { background: rgba(201,168,76,0.08); }
+
+.badge-status { text-align: center; font-size: 12px; color: #555; margin-top: 8px; }
+
+.btn-excluir { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08); color: #888; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
 .btn-excluir.show { display: flex; }
-.loading { text-align: center; padding: 60px; color: #888; }
-.popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+.btn-excluir:hover { background: rgba(255,50,50,0.3); color: #ff4444; border-color: rgba(255,50,50,0.3); }
+
+.loading { text-align: center; padding: 60px; color: #444; }
+.loading-spinner { font-size: 32px; margin-bottom: 12px; }
+
+/* POPUP */
+.popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
 .popup-overlay.show { display: flex; }
-.popup { background: #111; border: 1px solid #333; border-radius: 16px; padding: 24px; width: 100%; max-width: 380px; }
-.popup h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-.popup p { font-size: 13px; color: #888; margin-bottom: 20px; line-height: 1.5; }
-.popup-btns { display: flex; gap: 10px; margin-bottom: 0; }
-.popup-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
-.btn-sim { background: #7F77DD; color: white; }
-.btn-nao { background: #333; color: white; }
-.form-reserva { display: none; margin-top: 16px; }
+.popup { background: #141414; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 380px; }
+.popup-icone { font-size: 40px; text-align: center; margin-bottom: 14px; }
+.popup h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #F5F0E8; text-align: center; }
+.popup p { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; text-align: center; }
+.popup-btns { display: flex; gap: 10px; }
+.popup-btns button { flex: 1; padding: 13px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-sim { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; }
+.btn-sim:hover { transform: translateY(-1px); }
+.btn-nao { background: rgba(255,255,255,0.04); color: #888; border: 1px solid rgba(255,255,255,0.06) !important; }
+.btn-nao:hover { background: rgba(255,255,255,0.07); color: #aaa; }
+
+.form-reserva { display: none; margin-top: 20px; }
 .form-reserva.show { display: block; }
-.form-reserva input { width: 100%; padding: 12px 14px; font-size: 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 10px; }
-.form-reserva input:focus { outline: none; border-color: #7F77DD; }
-.btn-confirmar { width: 100%; padding: 13px; background: #7F77DD; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
-.aviso-reserva { font-size: 11px; color: #888; margin-top: 8px; text-align: center; line-height: 1.5; }
+.form-reserva input { width: 100%; padding: 12px 14px; font-size: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); border-radius: 10px; color: #F5F0E8; margin-bottom: 10px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+.form-reserva input:focus { border-color: rgba(201,168,76,0.5); }
+.form-reserva input::placeholder { color: #333; }
+.btn-confirmar { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.2); }
+.btn-confirmar:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(201,168,76,0.3); }
+.aviso-reserva { font-size: 11px; color: #444; margin-top: 10px; text-align: center; line-height: 1.6; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #333; }
+.empty-state .emoji { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { font-size: 14px; line-height: 1.7; }
 </style>
 </head>
 <body>
 <div class="container">
-  <div style="margin-bottom:16px;">
-    <button onclick="voltarLista()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#aaa; padding:8px 16px; border-radius:10px; font-size:13px; cursor:pointer; font-family:Arial,sans-serif;">← Voltar</button>
+
+  <div class="header-vitrine">
+    <div class="logo-vitrine">Insta<span>Gift</span></div>
+    <button class="btn-voltar" onclick="voltarLista()">← Voltar</button>
   </div>
+
   <div class="topo">
+    <div class="topo-icone" id="topoIcone">🎁</div>
     <h2>Lista de Presentes</h2>
+    <div class="topo-linha"></div>
     <p id="subtitulo">Carregando...</p>
   </div>
+
   <div class="grid" id="grid">
-    <div class="loading">Buscando presentes...</div>
+    <div class="loading">
+      <div class="loading-spinner">✦</div>
+      <p>Buscando presentes...</p>
+    </div>
   </div>
 </div>
 
 <!-- Popup reserva -->
 <div class="popup-overlay" id="popup-overlay">
   <div class="popup">
-    <h3>🎁 Reservar este presente?</h3>
-    <p>Ao reservar, você receberá um e-mail para confirmar a compra. Se não confirmar em até 3 horas, o presente voltará a ficar disponível para outros.</p>
+    <div class="popup-icone">🎁</div>
+    <h3>Reservar este presente?</h3>
+    <p>Ao reservar, você receberá um e-mail para confirmar a compra. Se não confirmar em até 3 horas, o presente voltará a ficar disponível.</p>
     <div class="popup-btns" id="popup-btns">
-      <button class="btn-nao" onclick="naoReservar()">Não, só ver</button>
+      <button class="btn-nao" onclick="naoReservar()">Só ver</button>
       <button class="btn-sim" onclick="mostrarFormulario()">Sim, reservar!</button>
     </div>
     <div class="form-reserva" id="form-reserva">
       <input type="text" id="input-nome" placeholder="Seu nome">
       <input type="email" id="input-email" placeholder="Seu e-mail">
-      <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar reserva e ir às compras</button>
+      <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar e ir às compras ✦</button>
       <p class="aviso-reserva">⏰ Você receberá um e-mail para confirmar que comprou. Se não confirmar em 3 horas o presente volta a ficar disponível.</p>
     </div>
   </div>
@@ -86,15 +134,15 @@ var isAdmin = window.location.search.indexOf('admin=true') > -1;
 var produtoAtual = null;
 
 var btnInfo = {
-  amazon: {classe: 'btn-amazon', texto: '🛒 Comprar na Amazon'},
-  mercadolivre: {classe: 'btn-mercadolivre', texto: '🛍️ Comprar no Mercado Livre'},
-  shopee: {classe: 'btn-shopee', texto: '🧡 Comprar na Shopee'},
-  outro: {classe: 'btn-outro', texto: '🔗 Ver produto'}
+  amazon: { classe: 'btn-amazon', texto: '🛒 Comprar na Amazon' },
+  mercadolivre: { classe: 'btn-mercadolivre', texto: '🛍️ Comprar no Mercado Livre' },
+  shopee: { classe: 'btn-shopee', texto: '🧡 Comprar na Shopee' },
+  magalu: { classe: 'btn-magalu', texto: '🛍️ Comprar no Magalu' },
+  shein: { classe: 'btn-shein', texto: '✨ Comprar na Shein' },
+  outro: { classe: 'btn-outro', texto: '✦ Ver produto' }
 };
 
-function voltarLista() {
-  window.history.back();
-}
+function voltarLista() { window.history.back(); }
 
 async function carregarLista() {
   try {
@@ -103,14 +151,14 @@ async function carregarLista() {
     document.getElementById('subtitulo').textContent = produtos.length + ' presente(s) na lista';
     renderProdutos(produtos);
   } catch(e) {
-    document.getElementById('grid').innerHTML = '<div class="loading">Lista nao encontrada.</div>';
+    document.getElementById('grid').innerHTML = '<div class="empty-state"><div class="emoji">🎁</div><p>Lista não encontrada.</p></div>';
   }
 }
 
 function renderProdutos(produtos) {
   var grid = document.getElementById('grid');
   if (!produtos.length) {
-    grid.innerHTML = '<div class="loading">Nenhum produto na lista ainda.</div>';
+    grid.innerHTML = '<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum produto na lista ainda.<br>Volte em breve!</p></div>';
     return;
   }
   grid.innerHTML = produtos.map(function(p) {
@@ -119,16 +167,12 @@ function renderProdutos(produtos) {
 
     if (p.reservado === 2) {
       statusBtn = '<button class="btn-presenteado">🎁 Alguém já presenteou</button>' +
-                  '<div class="badge-status">Este presente já foi comprado 💜</div>';
-      if (isAdmin) {
-        statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
-      }
+                  '<div class="badge-status">Este presente já foi comprado ✦</div>';
+      if (isAdmin) statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
     } else if (p.reservado === 1) {
       statusBtn = '<button class="btn-reservado">🔒 Presente já escolhido</button>' +
                   '<div class="badge-status">Alguém já escolheu este presente</div>';
-      if (isAdmin) {
-        statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
-      }
+      if (isAdmin) statusBtn += '<button class="btn-liberar" onclick="liberarProduto(' + p.id + ')">🔓 Liberar presente</button>';
     } else {
       statusBtn = '<button class="btn-comprar ' + info.classe + '" onclick="abrirPopup(' + p.id + ', \'' + p.link_afiliado + '\', \'' + info.texto + '\')">' + info.texto + '</button>';
     }
@@ -139,7 +183,7 @@ function renderProdutos(produtos) {
         ? '<img class="card-img" src="' + p.imagem_url + '" onerror="this.style.display=\'none\'">'
         : '<div class="card-sem-img">🎁</div>') +
       '<div class="card-body">' +
-        '<div class="card-nome">' + p.nome + '</div>' +
+        '<div class="card-nome">' + (p.nome || 'Produto') + '</div>' +
         (p.preco ? '<div class="card-preco">R$ ' + p.preco + '</div>' : '') +
         statusBtn +
       '</div>' +
@@ -148,7 +192,7 @@ function renderProdutos(produtos) {
 }
 
 function abrirPopup(id, link, texto) {
-  produtoAtual = {id: id, link: link, texto: texto};
+  produtoAtual = { id: id, link: link, texto: texto };
   document.getElementById('popup-overlay').classList.add('show');
   document.getElementById('form-reserva').classList.remove('show');
   document.getElementById('popup-btns').style.display = 'flex';
@@ -158,9 +202,7 @@ function abrirPopup(id, link, texto) {
 
 function naoReservar() {
   document.getElementById('popup-overlay').classList.remove('show');
-  if (produtoAtual) {
-    window.open(produtoAtual.link, '_blank');
-  }
+  if (produtoAtual) window.open(produtoAtual.link, '_blank');
 }
 
 function mostrarFormulario() {
@@ -171,15 +213,12 @@ function mostrarFormulario() {
 async function confirmarReserva() {
   var nome = document.getElementById('input-nome').value.trim();
   var email = document.getElementById('input-email').value.trim();
-  if (!nome || !email) {
-    alert('Preencha seu nome e e-mail!');
-    return;
-  }
+  if (!nome || !email) { alert('Preencha seu nome e e-mail!'); return; }
   try {
     await fetch('/api/reservar/' + produtoAtual.id, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({nome: nome, email: email})
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: nome, email: email })
     });
     document.getElementById('popup-overlay').classList.remove('show');
     window.open(produtoAtual.link, '_blank');
@@ -192,9 +231,7 @@ async function confirmarReserva() {
           '<div class="badge-status">Alguém já escolheu este presente</div>';
       }
     }
-  } catch(e) {
-    alert('Erro ao reservar. Tente novamente.');
-  }
+  } catch(e) { alert('Erro ao reservar. Tente novamente.'); }
 }
 
 async function liberarProduto(id) {
@@ -202,14 +239,12 @@ async function liberarProduto(id) {
   try {
     await fetch('/api/liberar-produto/' + id, { method: 'POST' });
     await carregarLista();
-  } catch(e) {
-    alert('Erro ao liberar. Tente novamente.');
-  }
+  } catch(e) { alert('Erro ao liberar. Tente novamente.'); }
 }
 
 async function excluirProduto(id) {
   if (!confirm('Remover este presente da vitrine?')) return;
-  await fetch('/api/remover-produto/' + id, {method: 'DELETE'});
+  await fetch('/api/remover-produto/' + id, { method: 'DELETE' });
   var card = document.getElementById('card-' + id);
   if (card) card.remove();
 }
