@@ -238,34 +238,96 @@ def extrair_magalu(link):
 
 def extrair_shein(link):
     try:
+        # Resolve link do app/encurtado
         if "onelink.shein.com" in link or "api-shein.shein.com" in link or "sharejump" in link:
             try:
-                r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
+                r_red = requests.get(
+                    link,
+                    headers={"User-Agent": "Mozilla/5.0"},
+                    timeout=10,
+                    allow_redirects=True
+                )
                 link = r_red.url
                 print("Shein redirect resolvido:", link)
             except Exception as e:
                 print("Shein redirect erro:", e)
-        html = requests.get(
-            f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
-            timeout=20
-        ).text
-        soup = BeautifulSoup(html, "html.parser")
+
         nome = ""
         imagem = ""
         preco = ""
-        t = soup.find("meta", property="og:title")
-        if t:
-            nome = t.get("content", "")[:100]
-            nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
-        i = soup.find("meta", property="og:image")
-        if i:
-            imagem = i.get("content", "")
-        pm = re.search(r'R\$\s*[\d.,]+', html)
-        if pm:
-            preco = pm.group(0).replace("R$", "").strip()
+
+        # Tenta extrair goods_id da URL
+        goods_id = None
+        m = re.search(r'goods[_-]id[=/-](\d+)', link, re.IGNORECASE)
+        if not m:
+            m = re.search(r'/(\d{6,12})\.html', link)
+        if not m:
+            m = re.search(r'[?&]goods_id=(\d+)', link)
+        if m:
+            goods_id = m.group(1)
+
+        # Tenta API pública da Shein
+        if goods_id:
+            try:
+                api_url = f"https://api-shein.shein.com/v2/goods/detail?goods_id={goods_id}&currency=BRL&lang=pt"
+                r_api = requests.get(
+                    api_url,
+                    headers={
+                        "User-Agent": "Mozilla/5.0",
+                        "Accept": "application/json"
+                    },
+                    timeout=10
+                )
+                data = r_api.json()
+                info = data.get("info", {}) or {}
+                detail = info.get("goods_info", {}) or {}
+                if detail.get("goods_name"):
+                    nome = detail["goods_name"][:100]
+                if detail.get("goods_img"):
+                    imagem = "https:" + detail["goods_img"] if detail["goods_img"].startswith("//") else detail["goods_img"]
+                preco_info = detail.get("retailPrice", {}) or {}
+                if preco_info.get("amountWithSymbol"):
+                    preco = preco_info["amountWithSymbol"].replace("R$", "").strip()
+            except Exception as e:
+                print("Shein API erro:", e)
+
+        # Fallback: ScraperAPI
+        if not nome or not imagem:
+            try:
+                html = requests.get(
+                    f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=true&country_code=br",
+                    timeout=25
+                ).text
+                soup = BeautifulSoup(html, "html.parser")
+
+                if not nome:
+                    t = soup.find("meta", property="og:title")
+                    if t:
+                        nome = t.get("content", "")[:100]
+                        nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
+
+                if not imagem:
+                    i = soup.find("meta", property="og:image")
+                    if i:
+                        imagem = i.get("content", "")
+
+                # Tenta pegar imagem direto do HTML
+                if not imagem:
+                    img = soup.find("img", {"class": re.compile(r'crop-image-container|goods-img', re.I)})
+                    if img:
+                        imagem = img.get("src", "") or img.get("data-src", "")
+
+                if not preco:
+                    pm = re.search(r'R\$\s*[\d.,]+', html)
+                    if pm:
+                        preco = pm.group(0).replace("R$", "").strip()
+            except Exception as e:
+                print("Shein ScraperAPI erro:", e)
+
         return nome, imagem, preco
+
     except Exception as e:
-        print("Shein erro:", e)
+        print("Shein erro geral:", e)
         return "", "", ""
 
 def extrair_dados(link, plataforma):
