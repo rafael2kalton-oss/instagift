@@ -212,13 +212,66 @@ var vitrineId = params.get('vitrine');
 var eventoParam = params.get('evento') || 'aniversario';
 
 // URLs de fotos reais do Unsplash por evento
-var fotosEventos = {
-  aniversario: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=720&q=80&fit=crop',
-  casamento: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=720&q=80&fit=crop',
-  'casa-nova': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=720&q=80&fit=crop',
-  'cha-bebe': 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=720&q=80&fit=crop',
-  outros: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=720&q=80&fit=crop'
-};
+function desenharFundo(ctx, w, h, tplIdx, foto) {
+  if (foto) {
+    ctx.drawImage(foto, 0, 0, w, h);
+    var ov = ctx.createLinearGradient(0, 0, 0, h);
+    ov.addColorStop(0, 'rgba(255,248,236,0.3)');
+    ov.addColorStop(0.5, 'rgba(255,248,236,0.1)');
+    ov.addColorStop(1, 'rgba(255,248,236,0.6)');
+    ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
+    return;
+  }
+
+  // TODOS os 3 templates usam a foto real do evento
+  if (imgFotoEvento) {
+    ctx.drawImage(imgFotoEvento, 0, 0, w, h);
+    var overlay;
+    if (tplIdx === 0) {
+      // Template Claro — overlay suave
+      overlay = ctx.createLinearGradient(0, 0, 0, h);
+      overlay.addColorStop(0, 'rgba(255,248,236,0.25)');
+      overlay.addColorStop(0.5, 'rgba(255,248,236,0.05)');
+      overlay.addColorStop(1, 'rgba(255,248,236,0.65)');
+    } else if (tplIdx === 1) {
+      // Template Elegante — overlay com moldura
+      overlay = ctx.createLinearGradient(0, 0, 0, h);
+      overlay.addColorStop(0, 'rgba(44,30,10,0.35)');
+      overlay.addColorStop(0.5, 'rgba(44,30,10,0.1)');
+      overlay.addColorStop(1, 'rgba(44,30,10,0.55)');
+    } else {
+      // Template Foto Real — overlay mínimo
+      overlay = ctx.createLinearGradient(0, 0, 0, h);
+      overlay.addColorStop(0, 'rgba(255,248,236,0.1)');
+      overlay.addColorStop(0.5, 'rgba(255,248,236,0.0)');
+      overlay.addColorStop(1, 'rgba(255,248,236,0.5)');
+    }
+    ctx.fillStyle = overlay;
+    ctx.fillRect(0, 0, w, h);
+
+    // Moldura dourada no template Elegante
+    if (tplIdx === 1) {
+      ctx.strokeStyle = 'rgba(201,168,76,0.5)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(w * 0.04, h * 0.025, w * 0.92, h * 0.62);
+      ctx.strokeStyle = 'rgba(201,168,76,0.25)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(w * 0.06, h * 0.038, w * 0.88, h * 0.595);
+    }
+    return;
+  }
+
+  // Fallback sem foto — gradiente creme
+  var g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, '#FFF8EC');
+  g.addColorStop(1, '#F5EDD8');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = 'rgba(201,168,76,0.08)';
+  ctx.beginPath(); ctx.arc(w * 0.85, h * 0.08, w * 0.35, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(201,168,76,0.05)';
+  ctx.beginPath(); ctx.arc(w * 0.1, h * 0.55, w * 0.28, 0, Math.PI * 2); ctx.fill();
+}
 
 var configEventos = {
   aniversario: {
@@ -578,3 +631,4 @@ if (vitrineId) {
 </script>
 </body>
 </html>
+
