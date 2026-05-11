@@ -591,6 +591,10 @@ function gerarStory() {
   var nome = document.getElementById('nome').value;
   var frase = document.getElementById('frase').value;
   var canvas = document.getElementById('storyFinal');
+  
+  // Força recarregar a foto se não carregou
+  imgFotoEvento = null;
+  
   preCarregarFotoEvento(function() {
     desenhar(canvas, tplAtivo, nome, frase, fotoUsuario);
     previewAberto = true;
@@ -637,5 +641,6 @@ if (vitrineId) {
 </script>
 </body>
 </html>
+
 
 
