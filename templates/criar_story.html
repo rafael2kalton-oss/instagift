@@ -4,71 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InstaGift — Criar Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #060612; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; padding: 20px 16px 40px 16px; }
+body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 20px 16px 40px; }
 .container { width: 100%; max-width: 900px; margin: 0 auto; }
-.topo { display: flex; align-items: center; gap: 16px; margin-bottom: 4px; }
-.btn-voltar { background: #111; border: 1px solid #333; color: #aaa; padding: 8px 16px; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.2s; white-space: nowrap; }
-.btn-voltar:hover { background: #1a1a1a; color: #fff; }
-h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
-.sub { font-size: clamp(13px, 2vw, 16px); color: #888; margin-bottom: 28px; margin-top: 4px; }
-.evento-badge { display: inline-flex; align-items: center; gap: 6px; background: #1a1a2e; border: 1px solid #7F77DD; border-radius: 20px; padding: 4px 14px; font-size: 13px; color: #aaa; margin-bottom: 20px; }
-.section-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+
+.topo { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+.btn-voltar { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); color: #C9A84C; padding: 8px 16px; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
+.btn-voltar:hover { background: rgba(201,168,76,0.12); }
+.logo-topo { font-family: 'Playfair Display', serif; font-size: clamp(22px, 5vw, 32px); font-weight: 700; color: #C9A84C; }
+.logo-topo span { color: #F5F0E8; }
+
+.evento-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: #C9A84C; margin-bottom: 16px; letter-spacing: 0.03em; }
+.sub { font-size: clamp(13px, 2vw, 15px); color: #555; margin-bottom: 28px; margin-top: 4px; }
+
+.section-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+
 .layout { display: flex; gap: 32px; align-items: flex-start; }
 .painel-esq { flex: 1; min-width: 0; }
 .painel-dir { width: 340px; flex-shrink: 0; position: sticky; top: 20px; }
 @media (max-width: 700px) { .layout { flex-direction: column; } .painel-dir { width: 100%; position: static; } }
-.templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-.tpl-card { border: 2px solid #222; border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: border-color 0.2s; }
-.tpl-card:hover { border-color: #444; }
-.tpl-card.selected { border-color: #7F77DD; }
+
+.templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+.tpl-card { border: 2px solid rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: border-color 0.2s, transform 0.2s; }
+.tpl-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-2px); }
+.tpl-card.selected { border-color: #C9A84C; box-shadow: 0 0 16px rgba(201,168,76,0.15); }
 .tpl-card canvas { width: 100%; display: block; }
-.tpl-label { font-size: 12px; color: #888; padding: 6px; text-align: center; background: #111; }
-.check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: #7F77DD; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+.tpl-label { font-size: 11px; color: #666; padding: 7px; text-align: center; background: #111; letter-spacing: 0.03em; }
+.tpl-card.selected .tpl-label { color: #C9A84C; }
+.check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #C9A84C, #A8722A); display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #0D0D0D; }
 .tpl-card.selected .check { display: flex; }
-.upload-box { border: 1.5px dashed #333; border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: background 0.2s; }
-.upload-box:hover { background: #111; }
+
+.upload-box { border: 1px dashed rgba(201,168,76,0.25); border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s; background: rgba(201,168,76,0.02); }
+.upload-box:hover { background: rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.4); }
 .upload-box input { display: none; }
-.upload-text { font-size: 14px; color: #888; }
-.upload-text strong { color: #fff; }
+.upload-text { font-size: 13px; color: #555; }
+.upload-text strong { color: #C9A84C; }
+
 .form-row { margin-bottom: 18px; }
-.form-row label { font-size: 13px; color: #888; display: block; margin-bottom: 6px; }
-.form-row input, .form-row textarea { width: 100%; padding: 12px 14px; font-size: 15px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-family: Arial, sans-serif; resize: none; }
-.form-row input:focus, .form-row textarea:focus { outline: none; border-color: #7F77DD; }
+.form-row label { font-size: 11px; color: #555; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.06em; }
+.form-row input, .form-row textarea { width: 100%; padding: 12px 14px; font-size: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; color: #F5F0E8; font-family: 'Inter', sans-serif; resize: none; outline: none; transition: border-color 0.2s; }
+.form-row input:focus, .form-row textarea:focus { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.02); }
+.form-row input::placeholder, .form-row textarea::placeholder { color: #333; }
+
 .frases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.chip { font-size: 12px; padding: 5px 12px; border: 1px solid #333; border-radius: 20px; cursor: pointer; color: #aaa; background: #111; transition: all 0.15s; }
-.chip:hover { border-color: #7F77DD; color: #7F77DD; }
-.btn-gerar { width: 100%; padding: 16px; background: #7F77DD; color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
-.btn-gerar:hover { background: #534AB7; }
-.preview-box { background: #0d0d1a; border: 1px solid #222; border-radius: 16px; padding: 20px; }
-.preview-title { font-size: 14px; color: #aaa; margin-bottom: 14px; text-align: center; }
-.story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 16px; overflow: hidden; }
+.chip { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; cursor: pointer; color: #666; background: rgba(201,168,76,0.03); transition: all 0.15s; }
+.chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.07); }
+
+.btn-gerar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.25); font-family: 'Inter', sans-serif; letter-spacing: 0.02em; }
+.btn-gerar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.35); }
+
+.preview-box { background: #111; border: 1px solid rgba(201,168,76,0.12); border-radius: 18px; padding: 20px; }
+.preview-title { font-size: 12px; color: #555; margin-bottom: 14px; text-align: center; text-transform: uppercase; letter-spacing: 0.06em; }
+.story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
 .story-frame canvas { width: 100%; display: block; }
-.preview-vazio { text-align: center; padding: 40px 20px; color: #444; font-size: 14px; }
-.preview-vazio .icone { font-size: 40px; margin-bottom: 10px; }
-.botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-.btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
-.btn-baixar { width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 14px; cursor: pointer; }
-.btn-baixar:hover { background: #1a1a1a; }
-.modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
+.preview-vazio { text-align: center; padding: 40px 20px; color: #333; }
+.preview-vazio .icone { font-size: 40px; margin-bottom: 12px; }
+.preview-vazio p { font-size: 13px; line-height: 1.6; }
+
+.botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
+.btn-insta:hover { transform: translateY(-1px); }
+.btn-baixar { width: 100%; padding: 12px; background: rgba(201,168,76,0.06); color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-baixar:hover { background: rgba(201,168,76,0.1); }
+
+/* MODAL */
+.modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
 .modal-bg.show { display: flex; }
-.modal-box { background:#111; border:1px solid #333; border-radius:16px; padding:28px 22px; max-width:380px; width:90%; text-align:center; margin:20px auto; }
-.modal-step { background:#1a1a1a; border-radius:12px; padding:14px; margin-bottom:10px; text-align:left; display:flex; gap:12px; align-items:flex-start; }
-.modal-num { min-width:28px; height:28px; border-radius:50%; background:#7F77DD; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; }
-.modal-step-title { font-size:14px; color:#fff; font-weight:600; margin-bottom:3px; }
-.modal-step-sub { font-size:12px; color:#888; }
-.modal-link-box { background:#0a0a0a; border:1px solid #333; border-radius:8px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.btn-copiar { min-width:64px; padding:7px 12px; background:#7F77DD; color:white; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; }
-.btn-abrir-insta { width:100%; padding:14px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px; }
-.btn-fechar { width:100%; padding:12px; background:transparent; color:#888; border:1px solid #333; border-radius:12px; font-size:14px; cursor:pointer; }
+.modal-box { background:#141414; border:1px solid rgba(201,168,76,0.2); border-radius:20px; padding:28px 22px; max-width:380px; width:90%; text-align:center; margin:20px auto; }
+.modal-step { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:14px; margin-bottom:10px; text-align:left; display:flex; gap:12px; align-items:flex-start; }
+.modal-num { min-width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#C9A84C,#A8722A); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#0D0D0D; flex-shrink:0; }
+.modal-step-title { font-size:14px; color:#F5F0E8; font-weight:600; margin-bottom:3px; }
+.modal-step-sub { font-size:12px; color:#555; line-height:1.5; }
+.modal-link-box { background:#0a0a0a; border:1px solid rgba(201,168,76,0.2); border-radius:8px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.btn-copiar { min-width:64px; padding:7px 12px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#0D0D0D; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
+.btn-abrir-insta { width:100%; padding:14px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px; font-family:'Inter',sans-serif; }
+.btn-fechar { width:100%; padding:12px; background:transparent; color:#555; border:1px solid rgba(255,255,255,0.06); border-radius:12px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif; transition: all 0.2s; }
+.btn-fechar:hover { color: #888; border-color: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="topo">
-    <button class="btn-voltar" onclick="voltarLista()">← Voltar à lista</button>
-    <h1>InstaGift</h1>
+    <button class="btn-voltar" onclick="voltarLista()">← Voltar</button>
+    <div class="logo-topo">Insta<span>Gift</span></div>
   </div>
   <div class="evento-badge" id="eventoBadge">🎂 Aniversário</div>
   <p class="sub" id="subTitulo">Crie seu story em segundos</p>
@@ -94,7 +114,7 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
         </div>
       </div>
 
-      <p class="section-label">Ou use sua propria foto</p>
+      <p class="section-label">Ou use sua própria foto</p>
       <div class="upload-box" onclick="document.getElementById('fileInput').click()">
         <input type="file" id="fileInput" accept="image/*" onchange="carregarFoto(event)">
         <p class="upload-text"><strong>Clique aqui</strong> para escolher da galeria</p>
@@ -111,10 +131,10 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
       </div>
       <div class="form-row">
         <label>Link da sua vitrine</label>
-        <input type="text" id="link" value="" placeholder="Sera preenchido automaticamente" oninput="atualizar()">
+        <input type="text" id="link" value="" placeholder="Será preenchido automaticamente" oninput="atualizar()">
       </div>
 
-      <button class="btn-gerar" onclick="gerarStory()">Gerar story</button>
+      <button class="btn-gerar" onclick="gerarStory()">✦ Gerar story</button>
     </div>
 
     <div class="painel-dir">
@@ -142,34 +162,34 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
 <div class="modal-bg" id="modal-insta">
   <div class="modal-box">
     <div style="font-size:32px; margin-bottom:8px;" id="modalEmoji">🎉</div>
-    <h3 style="font-size:18px; font-weight:700; margin-bottom:6px; color:#fff;">Imagem baixada!</h3>
-    <p style="font-size:13px; color:#888; margin-bottom:20px;">Siga os passos para postar no Instagram</p>
+    <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:6px; color:#F5F0E8;">Imagem baixada!</h3>
+    <p style="font-size:13px; color:#555; margin-bottom:20px; line-height:1.6;">Siga os passos para postar no Instagram</p>
     <div class="modal-step">
       <div class="modal-num">1</div>
       <div>
         <p class="modal-step-title">Clique em Abrir Instagram</p>
-        <p class="modal-step-sub">O app vai abrir direto na camera de <strong style="color:#ccc;">Stories</strong></p>
+        <p class="modal-step-sub">O app vai abrir direto na câmera de <strong style="color:#C9A84C;">Stories</strong></p>
       </div>
     </div>
     <div class="modal-step">
       <div class="modal-num">2</div>
       <div>
         <p class="modal-step-title">Escolha a imagem da galeria</p>
-        <p class="modal-step-sub">Selecione <strong style="color:#ccc;">story-instagift.png</strong> que foi baixada</p>
+        <p class="modal-step-sub">Selecione <strong style="color:#C9A84C;">story-instagift.png</strong> que foi baixada</p>
       </div>
     </div>
     <div class="modal-step">
       <div class="modal-num">3</div>
       <div>
         <p class="modal-step-title">Toque em Figurinha e escolha Link</p>
-        <p class="modal-step-sub">Arraste a figurinha sobre o <strong style="color:#ccc;">botao roxo</strong> "Ver Lista de Presentes"</p>
+        <p class="modal-step-sub">Arraste a figurinha sobre o botão <strong style="color:#C9A84C;">Ver Lista de Presentes</strong></p>
       </div>
     </div>
     <div class="modal-step">
       <div class="modal-num">4</div>
       <div>
         <p class="modal-step-title">Adicione ao Destaque — Melhores Amigos</p>
-        <p class="modal-step-sub" id="modalDicaDestaque">💡 Adicione ao Destaque para ficar visível até a data do seu evento!</p>
+        <p class="modal-step-sub" id="modalDicaDestaque">✦ Adicione ao Destaque para ficar visível até a data do seu evento!</p>
       </div>
     </div>
     <div class="modal-step" style="margin-bottom:16px;">
@@ -177,10 +197,10 @@ h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 700; }
       <div style="width:100%;">
         <p class="modal-step-title">Cole o link da vitrine</p>
         <div class="modal-link-box" style="margin-top:8px;">
-          <span id="modal-link-texto" style="font-size:12px; color:#7F77DD; word-break:break-all;"></span>
+          <span id="modal-link-texto" style="font-size:12px; color:#C9A84C; word-break:break-all;"></span>
           <button class="btn-copiar" onclick="copiarLinkModal()">Copiar</button>
         </div>
-        <p style="font-size:11px; color:#555;">Link ja copiado automaticamente</p>
+        <p style="font-size:11px; color:#444;">Link já copiado automaticamente</p>
       </div>
     </div>
     <button class="btn-abrir-insta" onclick="abrirAppInstagram()">Abrir Instagram agora</button>
@@ -193,18 +213,17 @@ var params = new URLSearchParams(window.location.search);
 var vitrineId = params.get('vitrine');
 var eventoParam = params.get('evento') || 'aniversario';
 
-// Detecta tipo de evento para "outros" baseado no nome digitado
 function detectarIconeOutros(nomeEvento) {
     var nome = (nomeEvento || '').toLowerCase();
-    if (nome.indexOf('formatura') > -1 || nome.indexOf('forma') > -1) return { icone: '🎓', cor1: '#1a1a3e', cor2: '#2a1a4e', cores: ['#9b5de5','#f15bb5','#FFD60A','#00bbf9','#4cc9f0'] };
-    if (nome.indexOf('natal') > -1) return { icone: '🎄', cor1: '#0a1a0a', cor2: '#1a2a1a', cores: ['#22c55e','#ef4444','#FFD60A','#fff','#16a34a'] };
-    if (nome.indexOf('mae') > -1 || nome.indexOf('mãe') > -1 || nome.indexOf('mamae') > -1 || nome.indexOf('mamãe') > -1) return { icone: '💐', cor1: '#2a0a1e', cor2: '#1a0a2e', cores: ['#f8c8d4','#e8a0b4','#f5e6c8','#d4af8f','#ffd6e0'] };
-    if (nome.indexOf('pai') > -1 || nome.indexOf('papai') > -1) return { icone: '👔', cor1: '#0a1a2e', cor2: '#1a2a3e', cores: ['#3b82f6','#1d4ed8','#93c5fd','#bfdbfe','#dbeafe'] };
-    if (nome.indexOf('pascoa') > -1 || nome.indexOf('páscoa') > -1) return { icone: '🐣', cor1: '#1a1a0a', cor2: '#2a2a1a', cores: ['#fbbf24','#f59e0b','#86efac','#f8c8d4','#bef264'] };
-    if (nome.indexOf('aposentadoria') > -1 || nome.indexOf('aposent') > -1) return { icone: '🏖️', cor1: '#0a1a2e', cor2: '#1a2a3e', cores: ['#38bdf8','#0ea5e9','#fbbf24','#86efac','#f8c8d4'] };
-    if (nome.indexOf('noivado') > -1) return { icone: '💑', cor1: '#2d0a1e', cor2: '#1a0a2e', cores: ['#f8c8d4','#e8a0b4','#d4af8f','#f5e6c8','#ffd6e0'] };
-    if (nome.indexOf('15') > -1 || nome.indexOf('quinze') > -1 || nome.indexOf('debutante') > -1) return { icone: '👑', cor1: '#1a0a2e', cor2: '#2d0a1e', cores: ['#f8c8d4','#9b5de5','#FFD60A','#f15bb5','#c9b8e8'] };
-    return { icone: '🎁', cor1: '#0a0a2a', cor2: '#1a0a3a', cores: ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'] };
+    if (nome.indexOf('formatura') > -1 || nome.indexOf('forma') > -1) return { icone: '🎓', cor1: '#1a1a3e', cor2: '#2a1a4e', cores: ['#C9A84C','#E8C96A','#f15bb5','#9b5de5','#4cc9f0'] };
+    if (nome.indexOf('natal') > -1) return { icone: '🎄', cor1: '#0a1a0a', cor2: '#1a2a1a', cores: ['#22c55e','#ef4444','#C9A84C','#fff','#16a34a'] };
+    if (nome.indexOf('mae') > -1 || nome.indexOf('mãe') > -1 || nome.indexOf('mamae') > -1 || nome.indexOf('mamãe') > -1) return { icone: '💐', cor1: '#2a0a1e', cor2: '#1a0a2e', cores: ['#f8c8d4','#e8a0b4','#C9A84C','#d4af8f','#ffd6e0'] };
+    if (nome.indexOf('pai') > -1 || nome.indexOf('papai') > -1) return { icone: '👔', cor1: '#0a1a2e', cor2: '#1a2a3e', cores: ['#3b82f6','#C9A84C','#93c5fd','#bfdbfe','#dbeafe'] };
+    if (nome.indexOf('pascoa') > -1 || nome.indexOf('páscoa') > -1) return { icone: '🐣', cor1: '#1a1a0a', cor2: '#2a2a1a', cores: ['#C9A84C','#f59e0b','#86efac','#f8c8d4','#bef264'] };
+    if (nome.indexOf('aposentadoria') > -1) return { icone: '🏖️', cor1: '#0a1a2e', cor2: '#1a2a3e', cores: ['#38bdf8','#C9A84C','#fbbf24','#86efac','#f8c8d4'] };
+    if (nome.indexOf('noivado') > -1) return { icone: '💑', cor1: '#2d0a1e', cor2: '#1a0a2e', cores: ['#f8c8d4','#e8a0b4','#C9A84C','#f5e6c8','#ffd6e0'] };
+    if (nome.indexOf('15') > -1 || nome.indexOf('quinze') > -1 || nome.indexOf('debutante') > -1) return { icone: '👑', cor1: '#1a0a2e', cor2: '#2d0a1e', cores: ['#C9A84C','#E8C96A','#9b5de5','#f15bb5','#c9b8e8'] };
+    return { icone: '🎁', cor1: '#0a0a1a', cor2: '#1a0a2a', cores: ['#C9A84C','#E8C96A','#A8722A','#F5F0E8','#888'] };
 }
 
 var configEventos = {
@@ -212,28 +231,27 @@ var configEventos = {
     badge: '🎂 Aniversário', sub: 'Crie seu story de aniversário em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Deixei ideias de presente aqui!',
     frases: ['Pra quem sempre pergunta','Facilita a vida de quem me ama','Meu aniversário, minhas regras','Escolhi com carinho cada item'],
-    templates: ['Festivo', 'Elegante', 'Minimalista'],
-    cardTitulo: function(nome) { return nome ? nome + ' - Desejos de Niver' : 'Meus Desejos de Niver'; },
+    templates: ['Festivo', 'Elegante', 'Gold'],
+    cardTitulo: function(nome) { return nome ? nome + ' — Desejos de Niver' : 'Meus Desejos de Niver'; },
     icone: '🎂', modalEmoji: '🎉',
-    dicaDestaque: '💡 Adicione ao Destaque para ficar visível até a data do seu aniversário!',
-    cores: ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'],
+    dicaDestaque: '✦ Adicione ao Destaque para ficar visível até a data do seu aniversário!',
+    cores: ['#C9A84C','#E8C96A','#F5F0E8','#A8722A','#888'],
     fundos: [
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a2a');g.addColorStop(1,'#1a0a3a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var baloes=[{x:0.10,y:0.08,r:0.07,c:'#e63946'},{x:0.28,y:0.04,r:0.06,c:'#f4a261'},{x:0.52,y:0.06,r:0.07,c:'#2a9d8f'},{x:0.75,y:0.04,r:0.06,c:'#e9c46a'},{x:0.88,y:0.12,r:0.07,c:'#9b5de5'},{x:0.04,y:0.28,r:0.06,c:'#f15bb5'},{x:0.93,y:0.30,r:0.06,c:'#00bbf9'}];
-        baloes.forEach(function(b){var bx=b.x*w,by=b.y*h,br=b.r*w;var lg=ctx.createRadialGradient(bx-br*0.3,by-br*0.3,br*0.1,bx,by,br);lg.addColorStop(0,b.c+'ff');lg.addColorStop(1,b.c+'88');ctx.fillStyle=lg;ctx.beginPath();ctx.ellipse(bx,by,br,br*1.2,0,0,Math.PI*2);ctx.fill();});
-        var cores=['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'];
-        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.7;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}ctx.globalAlpha=1;
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#C9A84C','#E8C96A','#A8722A','#F5F0E8'];
+        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}ctx.globalAlpha=1;
+        ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=60;ctx.beginPath();ctx.arc(w*0.85,h*0.1,120,0,Math.PI*2);ctx.stroke();
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#1a0a2e');g.addColorStop(0.5,'#0d1b4b');g.addColorStop(1,'#2d0a4e');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(255,255,255,0.6)';for(var i=0;i<40;i++){var sx=Math.random()*w,sy=Math.random()*h*0.65,sr=Math.random()*1.5+0.5;ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();}
-        ctx.strokeStyle='rgba(127,119,221,0.2)';ctx.lineWidth=40;ctx.beginPath();ctx.arc(w*0.85,h*0.12,100,0,Math.PI*2);ctx.stroke();
+        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(0.5,'#0d0d0d');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(201,168,76,0.4)';for(var i=0;i<30;i++){var sx=Math.random()*w,sy=Math.random()*h*0.65,sr=Math.random()*1.5+0.5;ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();}
+        ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=2;ctx.strokeRect(w*0.05,h*0.03,w*0.9,h*0.6);ctx.strokeRect(w*0.08,h*0.05,w*0.84,h*0.56);
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#fff0f3');g.addColorStop(1,'#ffd6e0');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var pts=[{x:0.1,y:0.1,r:0.06,c:'rgba(255,182,193,0.5)'},{x:0.85,y:0.08,r:0.08,c:'rgba(255,182,193,0.4)'}];
-        pts.forEach(function(p){ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x*w,p.y*h,p.r*w,0,Math.PI*2);ctx.fill();});
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.7);grad.addColorStop(0,'rgba(201,168,76,0.12)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(201,168,76,0.5)';for(var i=0;i<25;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*2,0,Math.PI*2);ctx.fill();}
       }
     ]
   },
@@ -241,28 +259,26 @@ var configEventos = {
     badge: '💍 Casamento', sub: 'Crie seu story de casamento em segundos',
     labelNome: 'Nome do casal', fraseDefault: 'Nossa lista de presentes está aqui!',
     frases: ['Presentes que vão durar para sempre','Escolhemos com amor cada item','Ajude a construir nosso lar','Cada presente é uma memória'],
-    templates: ['Romântico', 'Clássico', 'Moderno'],
-    cardTitulo: function(nome) { return nome ? nome + ' - Lista de Casamento' : 'Nossa Lista de Casamento'; },
+    templates: ['Romântico', 'Clássico', 'Gold'],
+    cardTitulo: function(nome) { return nome ? nome + ' — Lista de Casamento' : 'Nossa Lista de Casamento'; },
     icone: '💍', modalEmoji: '💍',
-    dicaDestaque: '💡 Adicione ao Destaque — assim todos que visitarem seu perfil verão até o dia do casamento!',
-    cores: ['#f8c8d4','#d4af8f','#c9b8e8','#f5e6c8','#e8c8d4','#d4c8f8'],
+    dicaDestaque: '✦ Adicione ao Destaque — assim todos que visitarem seu perfil verão até o dia do casamento!',
+    cores: ['#C9A84C','#E8C96A','#F5F0E8','#f8c8d4','#d4af8f'],
     fundos: [
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2d0a1e');g.addColorStop(1,'#1a0a2e');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#f8c8d4','#e8a0b4','#d4af8f','#f5e6c8'];
-        for(var i=0;i<50;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.5;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.font='16px Arial';ctx.fillText('♥',0,0);ctx.restore();}ctx.globalAlpha=1;
-        ctx.fillStyle='rgba(248,200,212,0.1)';ctx.beginPath();ctx.arc(w*0.2,h*0.15,w*0.3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(w*0.8,h*0.1,w*0.25,0,Math.PI*2);ctx.fill();
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a0a0a');g.addColorStop(1,'#0a0a1a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#C9A84C','#E8C96A','#f8c8d4','#F5F0E8'];
+        for(var i=0;i<40;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.4;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.font='14px Arial';ctx.fillText('♥',0,0);ctx.restore();}ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(201,168,76,0.06)';ctx.beginPath();ctx.arc(w*0.2,h*0.15,w*0.3,0,Math.PI*2);ctx.fill();
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#f5f0e8');g.addColorStop(1,'#e8dcc8');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.strokeStyle='rgba(180,150,100,0.3)';ctx.lineWidth=2;ctx.strokeRect(w*0.05,h*0.03,w*0.9,h*0.6);ctx.strokeRect(w*0.08,h*0.05,w*0.84,h*0.56);
-        ctx.fillStyle='rgba(180,150,100,0.15)';for(var i=0;i<30;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*3+1,0,Math.PI*2);ctx.fill();}
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0f0f0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle='rgba(201,168,76,0.12)';ctx.lineWidth=2;ctx.strokeRect(w*0.05,h*0.03,w*0.9,h*0.6);ctx.strokeRect(w*0.08,h*0.05,w*0.84,h*0.56);
+        ctx.fillStyle='rgba(201,168,76,0.3)';for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*2+0.5,0,Math.PI*2);ctx.fill();}
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1a2e');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.strokeStyle='rgba(212,175,143,0.4)';ctx.lineWidth=1;
-        for(var i=0;i<5;i++){ctx.beginPath();ctx.moveTo(0,h*0.1*i);ctx.lineTo(w,h*0.1*i+h*0.05);ctx.stroke();}
-        ctx.fillStyle='rgba(212,175,143,0.6)';for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,1,0,Math.PI*2);ctx.fill();}
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.6);grad.addColorStop(0,'rgba(201,168,76,0.1)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
       }
     ]
   },
@@ -270,25 +286,25 @@ var configEventos = {
     badge: '🏠 Casa Nova', sub: 'Crie seu story de casa nova em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Ajude a montar nosso novo lar!',
     frases: ['Novo lar, nova história','Cada item com muito carinho','Ajude a construir nosso cantinho','Nossa casa começa aqui'],
-    templates: ['Aconchegante', 'Moderno', 'Natural'],
-    cardTitulo: function(nome) { return nome ? nome + ' - Casa Nova' : 'Lista Casa Nova'; },
+    templates: ['Aconchegante', 'Moderno', 'Gold'],
+    cardTitulo: function(nome) { return nome ? nome + ' — Casa Nova' : 'Lista Casa Nova'; },
     icone: '🏠', modalEmoji: '🏠',
-    dicaDestaque: '💡 Adicione ao Destaque para que todos vejam e ajudem a montar seu novo lar!',
-    cores: ['#a8d8a8','#f8d8a0','#d4b896','#8fbc8f','#deb887','#90ee90'],
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam e ajudem a montar seu novo lar!',
+    cores: ['#C9A84C','#E8C96A','#a8d8a8','#f8d8a0','#d4b896'],
     fundos: [
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a0f0a');g.addColorStop(1,'#2a1a0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#a8d8a8','#f8d8a0','#d4b896','#deb887'];
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#C9A84C','#E8C96A','#a8d8a8','#f8d8a0'];
         for(var i=0;i<40;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.4;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,4,2);ctx.restore();}ctx.globalAlpha=1;
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0f1f0f');g.addColorStop(1,'#1a2f1a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.strokeStyle='rgba(143,188,143,0.2)';ctx.lineWidth=1;
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0f0f0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle='rgba(201,168,76,0.1)';ctx.lineWidth=1;
         for(var i=0;i<8;i++){ctx.beginPath();ctx.moveTo(w*i/8,0);ctx.lineTo(w*i/8,h*0.65);ctx.stroke();}
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#e8f5e8');g.addColorStop(1,'#d0ebd0');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(100,160,100,0.1)';for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*20+5,0,Math.PI*2);ctx.fill();}
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.7);grad.addColorStop(0,'rgba(201,168,76,0.1)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
       }
     ]
   },
@@ -296,25 +312,24 @@ var configEventos = {
     badge: '👶 Chá de Bebê', sub: 'Crie seu story de chá de bebê em segundos',
     labelNome: 'Nome dos papais', fraseDefault: 'Nosso bebê está chegando!',
     frases: ['O pequeno já tem uma lista','Presentes para o novo amor','Ajude a receber nosso bebê','Escolhemos com carinho cada item'],
-    templates: ['Fofo', 'Delicado', 'Alegre'],
+    templates: ['Fofo', 'Delicado', 'Gold'],
     cardTitulo: function(nome) { return nome ? 'Bebê de ' + nome : 'Nosso Bebê Chegando!'; },
     icone: '👶', modalEmoji: '👶',
-    dicaDestaque: '💡 Adicione ao Destaque para que todos vejam até a chegada do bebê!',
-    cores: ['#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8','#d4c8f8','#f8d4c8'],
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a chegada do bebê!',
+    cores: ['#C9A84C','#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8'],
     fundos: [
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a1a2e');g.addColorStop(1,'#1a0a2e');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8'];
-        for(var i=0;i<50;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.5;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.font='14px Arial';ctx.fillText(['⭐','✨','💫'][i%3],0,0);ctx.restore();}ctx.globalAlpha=1;
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0a0a1a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#C9A84C','#b8d4f8','#f8c8d4','#c8e8c8'];
+        for(var i=0;i<50;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.5;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.font='14px Arial';ctx.fillText(['⭐','✦','✨'][i%3],0,0);ctx.restore();}ctx.globalAlpha=1;
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#fff5f8');g.addColorStop(1,'#ffe8f0');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(248,200,212,0.3)';for(var i=0;i<15;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*30+10,0,Math.PI*2);ctx.fill();}
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0f0f0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(201,168,76,0.08)';for(var i=0;i<12;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*25+8,0,Math.PI*2);ctx.fill();}
       },
       function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a0a2e');g.addColorStop(1,'#0a1a1a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8','#d4c8f8'];
-        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,6,3);ctx.restore();}ctx.globalAlpha=1;
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.6);grad.addColorStop(0,'rgba(201,168,76,0.1)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
       }
     ]
   },
@@ -322,29 +337,27 @@ var configEventos = {
     badge: '🎁 Outro Evento', sub: 'Crie seu story personalizado em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Preparei uma lista especial para você!',
     frases: ['Escolhi com carinho cada item','Sua presença já é o maior presente','Compartilhe esse momento comigo','Cada presente conta muito!'],
-    templates: ['Festivo', 'Elegante', 'Colorido'],
-    cardTitulo: function(nome) { return nome ? nome + ' - Lista de Presentes' : 'Minha Lista de Presentes'; },
+    templates: ['Festivo', 'Elegante', 'Gold'],
+    cardTitulo: function(nome) { return nome ? nome + ' — Lista de Presentes' : 'Minha Lista de Presentes'; },
     icone: '🎁', modalEmoji: '🎉',
-    dicaDestaque: '💡 Adicione ao Destaque para que todos vejam até a data do seu evento!',
-    cores: ['#FFD60A','#e63946','#7F77DD','#2a9d8f','#f15bb5','#f4a261'],
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a data do seu evento!',
+    cores: ['#C9A84C','#E8C96A','#A8722A','#F5F0E8','#888'],
     fundos: [
       function(ctx,w,h){
-        var info = detectarIconeOutros(document.getElementById('nome') ? document.getElementById('nome').value : '');
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,info.cor1||'#0a0a2a');g.addColorStop(1,info.cor2||'#1a0a3a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=info.cores||['#FFD60A','#e63946','#7F77DD'];
-        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.7;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}ctx.globalAlpha=1;
+        var info=detectarIconeOutros(document.getElementById('nome')?document.getElementById('nome').value:'');
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var cores=['#C9A84C','#E8C96A','#A8722A','#F5F0E8'];
+        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}ctx.globalAlpha=1;
       },
       function(ctx,w,h){
-        var info = detectarIconeOutros(document.getElementById('nome') ? document.getElementById('nome').value : '');
-        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#1a0a2e');g.addColorStop(0.5,'#0d1b4b');g.addColorStop(1,'#2d0a4e');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(255,255,255,0.5)';for(var i=0;i<50;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*2,0,Math.PI*2);ctx.fill();}
-        var cores=info.cores||['#7F77DD'];ctx.strokeStyle=cores[0]+'44';ctx.lineWidth=60;ctx.beginPath();ctx.arc(w*0.85,h*0.1,120,0,Math.PI*2);ctx.stroke();
+        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(0.5,'#0d0d0d');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(201,168,76,0.4)';for(var i=0;i<40;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*1.5,0,Math.PI*2);ctx.fill();}
+        ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=60;ctx.beginPath();ctx.arc(w*0.85,h*0.1,120,0,Math.PI*2);ctx.stroke();
       },
       function(ctx,w,h){
-        var info = detectarIconeOutros(document.getElementById('nome') ? document.getElementById('nome').value : '');
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a1a');g.addColorStop(1,'#1a1a2a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=info.cores||['#FFD60A','#e63946','#7F77DD'];
-        for(var i=0;i<80;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,6,3);ctx.restore();}ctx.globalAlpha=1;
+        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.7);grad.addColorStop(0,'rgba(201,168,76,0.12)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='rgba(201,168,76,0.5)';for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*2,0,Math.PI*2);ctx.fill();}
       }
     ]
   }
@@ -352,7 +365,6 @@ var configEventos = {
 
 var eventoConfig = configEventos[eventoParam] || configEventos['aniversario'];
 
-// Para "outros", atualiza ícone dinamicamente
 function getIconeAtual() {
     if (eventoParam === 'outros') {
         var nome = document.getElementById('nome') ? document.getElementById('nome').value : '';
@@ -393,11 +405,8 @@ if (vitrineId) {
 }
 
 function voltarLista() {
-  if (vitrineId) {
-    window.location.href = '/lista/' + vitrineId;
-  } else {
-    window.history.back();
-  }
+  if (vitrineId) window.location.href = '/lista/' + vitrineId;
+  else window.history.back();
 }
 
 function quebrarTexto(ctx,texto,x,y,maxW,altLinha){
@@ -411,16 +420,9 @@ function quebrarTexto(ctx,texto,x,y,maxW,altLinha){
 }
 
 function desenharCard(ctx,w,h,nome,frase,sc){
-  var cores = eventoConfig.cores;
-  for(var i=0;i<70;i++){
-    ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.75;
-    ctx.translate(Math.random()*w,Math.random()*h*0.62);
-    ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,7*sc,3*sc);ctx.restore();
-  }
-  ctx.globalAlpha=1;
   var cardX=w*0.05,cardW=w*0.90,cardY=h*0.67,cardH=h*0.29,raio=20*sc;
-  ctx.shadowColor='rgba(0,0,0,0.45)';ctx.shadowBlur=25*sc;ctx.shadowOffsetY=8*sc;
-  ctx.fillStyle='rgba(255,255,255,0.97)';
+  ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=30*sc;ctx.shadowOffsetY=10*sc;
+  ctx.fillStyle='rgba(20,20,14,0.97)';
   ctx.beginPath();
   ctx.moveTo(cardX+raio,cardY);ctx.lineTo(cardX+cardW-raio,cardY);
   ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
@@ -431,21 +433,45 @@ function desenharCard(ctx,w,h,nome,frase,sc){
   ctx.lineTo(cardX,cardY+raio);ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
   ctx.closePath();ctx.fill();
   ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+
+  // Borda dourada
+  ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1.5*sc;
+  ctx.beginPath();
+  ctx.moveTo(cardX+raio,cardY);ctx.lineTo(cardX+cardW-raio,cardY);
+  ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
+  ctx.lineTo(cardX+cardW,cardY+cardH-raio);
+  ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
+  ctx.lineTo(cardX+raio,cardY+cardH);
+  ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
+  ctx.lineTo(cardX,cardY+raio);ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
+  ctx.closePath();ctx.stroke();
+
+  // Ícone
   var icX=w/2,icY=cardY,icR=26*sc;
   var gradIc=ctx.createRadialGradient(icX-icR*0.2,icY-icR*0.2,1,icX,icY,icR);
-  gradIc.addColorStop(0,'#6B9FFF');gradIc.addColorStop(1,'#3B5FC0');
+  gradIc.addColorStop(0,'#E8C96A');gradIc.addColorStop(1,'#A8722A');
   ctx.fillStyle=gradIc;ctx.beginPath();ctx.arc(icX,icY,icR,0,Math.PI*2);ctx.fill();
   ctx.font=Math.round(22*sc)+'px Arial';ctx.textAlign='center';
   ctx.fillText(getIconeAtual(),icX,icY+8*sc);
+
+  // Nome
   ctx.textAlign='center';
-  ctx.font='bold '+Math.round(15*sc)+'px Arial';
-  ctx.fillStyle='#1a1a1a';
-  ctx.fillText(eventoConfig.cardTitulo(nome),w/2,cardY+cardH*0.36);
-  ctx.font=Math.round(12*sc)+'px Arial';ctx.fillStyle='#777';
-  quebrarTexto(ctx,frase||eventoConfig.fraseDefault,w/2,cardY+cardH*0.52,cardW*0.82,15*sc);
+  ctx.font='bold '+Math.round(14*sc)+'px Arial';
+  ctx.fillStyle='#C9A84C';
+  ctx.fillText(eventoConfig.cardTitulo(nome),w/2,cardY+cardH*0.34);
+
+  // Linha dourada decorativa
+  ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1*sc;
+  ctx.beginPath();ctx.moveTo(w*0.3,cardY+cardH*0.42);ctx.lineTo(w*0.7,cardY+cardH*0.42);ctx.stroke();
+
+  // Frase
+  ctx.font=Math.round(11*sc)+'px Arial';ctx.fillStyle='#888';
+  quebrarTexto(ctx,frase||eventoConfig.fraseDefault,w/2,cardY+cardH*0.52,cardW*0.82,14*sc);
+
+  // Botão
   var btnX=cardX+cardW*0.08,btnW=cardW*0.84,btnY=cardY+cardH*0.70,btnH=36*sc,btnR=btnH/2;
   var gradBtn=ctx.createLinearGradient(btnX,btnY,btnX+btnW,btnY);
-  gradBtn.addColorStop(0,'#7F77DD');gradBtn.addColorStop(1,'#5B8DEF');
+  gradBtn.addColorStop(0,'#C9A84C');gradBtn.addColorStop(1,'#A8722A');
   ctx.fillStyle=gradBtn;
   ctx.beginPath();
   ctx.moveTo(btnX+btnR,btnY);ctx.lineTo(btnX+btnW-btnR,btnY);
@@ -455,8 +481,8 @@ function desenharCard(ctx,w,h,nome,frase,sc){
   ctx.quadraticCurveTo(btnX,btnY+btnH,btnX,btnY+btnR);
   ctx.quadraticCurveTo(btnX,btnY,btnX+btnR,btnY);
   ctx.closePath();ctx.fill();
-  ctx.font='bold '+Math.round(13*sc)+'px Arial';ctx.fillStyle='#ffffff';
-  ctx.fillText('Ver Lista de Presentes',btnX+btnW/2,btnY+btnH*0.65);
+  ctx.font='bold '+Math.round(12*sc)+'px Arial';ctx.fillStyle='#0D0D0D';
+  ctx.fillText('✦ Ver Lista de Presentes',btnX+btnW/2,btnY+btnH*0.65);
 }
 
 function desenhar(canvas,tplIdx,nome,frase,foto){
@@ -464,7 +490,7 @@ function desenhar(canvas,tplIdx,nome,frase,foto){
   if(foto){
     ctx.drawImage(foto,0,0,w,h);
     var ov=ctx.createLinearGradient(0,0,0,h);
-    ov.addColorStop(0,'rgba(0,0,0,0.3)');ov.addColorStop(0.5,'rgba(0,0,0,0.1)');ov.addColorStop(1,'rgba(0,0,0,0.5)');
+    ov.addColorStop(0,'rgba(0,0,0,0.4)');ov.addColorStop(0.5,'rgba(0,0,0,0.15)');ov.addColorStop(1,'rgba(0,0,0,0.6)');
     ctx.fillStyle=ov;ctx.fillRect(0,0,w,h);
   } else {
     eventoConfig.fundos[tplIdx](ctx,w,h);
