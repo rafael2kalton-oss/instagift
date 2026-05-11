@@ -4,22 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InstaGift — Criar Story</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 20px 16px 40px; }
+body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 20px 16px 40px; }
 .container { width: 100%; max-width: 900px; margin: 0 auto; }
 
 .topo { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
-.btn-voltar { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); color: #C9A84C; padding: 8px 16px; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
-.btn-voltar:hover { background: rgba(201,168,76,0.12); }
-.logo-topo { font-family: 'Playfair Display', serif; font-size: clamp(22px, 5vw, 32px); font-weight: 700; color: #C9A84C; }
-.logo-topo span { color: #F5F0E8; }
+.btn-voltar { background: transparent; border: 1px solid rgba(201,168,76,0.4); color: #C9A84C; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
+.btn-voltar:hover { background: rgba(201,168,76,0.08); }
+.logo-topo { font-family: 'Playfair Display', serif; font-size: clamp(22px, 5vw, 30px); font-weight: 700; color: #C9A84C; }
 
-.evento-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: #C9A84C; margin-bottom: 16px; letter-spacing: 0.03em; }
-.sub { font-size: clamp(13px, 2vw, 15px); color: #555; margin-bottom: 28px; margin-top: 4px; }
+.evento-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: #C9A84C; margin-bottom: 16px; letter-spacing: 0.03em; }
+.sub { font-size: 14px; color: #888; margin-bottom: 28px; margin-top: 4px; font-style: italic; font-family: 'Playfair Display', serif; }
 
-.section-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.section-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
 
 .layout { display: flex; gap: 32px; align-items: flex-start; }
 .painel-esq { flex: 1; min-width: 0; }
@@ -27,68 +26,68 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
 @media (max-width: 700px) { .layout { flex-direction: column; } .painel-dir { width: 100%; position: static; } }
 
 .templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
-.tpl-card { border: 2px solid rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: border-color 0.2s, transform 0.2s; }
-.tpl-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-2px); }
-.tpl-card.selected { border-color: #C9A84C; box-shadow: 0 0 16px rgba(201,168,76,0.15); }
+.tpl-card { border: 1.5px solid rgba(201,168,76,0.2); border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: all 0.2s; background: #fff; }
+.tpl-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(201,168,76,0.15); }
+.tpl-card.selected { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
 .tpl-card canvas { width: 100%; display: block; }
-.tpl-label { font-size: 11px; color: #666; padding: 7px; text-align: center; background: #111; letter-spacing: 0.03em; }
+.tpl-label { font-size: 11px; color: #aaa; padding: 7px; text-align: center; background: #fff; letter-spacing: 0.04em; font-family: 'Playfair Display', serif; }
 .tpl-card.selected .tpl-label { color: #C9A84C; }
-.check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #C9A84C, #A8722A); display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #0D0D0D; }
+.check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #C9A84C, #A8722A); display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
 .tpl-card.selected .check { display: flex; }
 
-.upload-box { border: 1px dashed rgba(201,168,76,0.25); border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s; background: rgba(201,168,76,0.02); }
-.upload-box:hover { background: rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.4); }
+.upload-box { border: 1px dashed rgba(201,168,76,0.35); border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s; background: rgba(201,168,76,0.02); }
+.upload-box:hover { background: rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.5); }
 .upload-box input { display: none; }
-.upload-text { font-size: 13px; color: #555; }
-.upload-text strong { color: #C9A84C; }
+.upload-text { font-size: 13px; color: #aaa; font-style: italic; font-family: 'Playfair Display', serif; }
+.upload-text strong { color: #C9A84C; font-style: normal; }
 
 .form-row { margin-bottom: 18px; }
-.form-row label { font-size: 11px; color: #555; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.06em; }
-.form-row input, .form-row textarea { width: 100%; padding: 12px 14px; font-size: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; color: #F5F0E8; font-family: 'Inter', sans-serif; resize: none; outline: none; transition: border-color 0.2s; }
-.form-row input:focus, .form-row textarea:focus { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.02); }
-.form-row input::placeholder, .form-row textarea::placeholder { color: #333; }
+.form-row label { font-size: 11px; color: #aaa; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.07em; }
+.form-row input, .form-row textarea { width: 100%; padding: 12px 16px; font-size: 15px; background: #fff; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; color: #2C2C2C; font-family: 'Inter', sans-serif; resize: none; outline: none; transition: all 0.2s; }
+.form-row input:focus, .form-row textarea:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+.form-row input::placeholder, .form-row textarea::placeholder { color: #ccc; }
 
 .frases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.chip { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; cursor: pointer; color: #666; background: rgba(201,168,76,0.03); transition: all 0.15s; }
-.chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.07); }
+.chip { font-size: 12px; padding: 5px 14px; border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; cursor: pointer; color: #aaa; background: #fff; transition: all 0.15s; font-family: 'Playfair Display', serif; font-style: italic; }
+.chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.04); }
 
-.btn-gerar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #0D0D0D; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.25); font-family: 'Inter', sans-serif; letter-spacing: 0.02em; }
-.btn-gerar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.35); }
+.btn-gerar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); font-family: 'Inter', sans-serif; letter-spacing: 0.04em; }
+.btn-gerar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
 
-.preview-box { background: #111; border: 1px solid rgba(201,168,76,0.12); border-radius: 18px; padding: 20px; }
-.preview-title { font-size: 12px; color: #555; margin-bottom: 14px; text-align: center; text-transform: uppercase; letter-spacing: 0.06em; }
-.story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+.preview-box { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+.preview-title { font-size: 11px; color: #aaa; margin-bottom: 14px; text-align: center; text-transform: uppercase; letter-spacing: 0.08em; }
+.story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
 .story-frame canvas { width: 100%; display: block; }
-.preview-vazio { text-align: center; padding: 40px 20px; color: #333; }
-.preview-vazio .icone { font-size: 40px; margin-bottom: 12px; }
-.preview-vazio p { font-size: 13px; line-height: 1.6; }
+.preview-vazio { text-align: center; padding: 48px 20px; }
+.preview-vazio .icone { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+.preview-vazio p { font-size: 13px; color: #aaa; line-height: 1.7; font-family: 'Playfair Display', serif; font-style: italic; }
 
 .botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-.btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
+.btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; letter-spacing: 0.03em; }
 .btn-insta:hover { transform: translateY(-1px); }
-.btn-baixar { width: 100%; padding: 12px; background: rgba(201,168,76,0.06); color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-.btn-baixar:hover { background: rgba(201,168,76,0.1); }
+.btn-baixar { width: 100%; padding: 12px; background: transparent; color: #C9A84C; border: 1px solid rgba(201,168,76,0.35); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-baixar:hover { background: rgba(201,168,76,0.06); }
 
-/* MODAL */
-.modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
+.modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
 .modal-bg.show { display: flex; }
-.modal-box { background:#141414; border:1px solid rgba(201,168,76,0.2); border-radius:20px; padding:28px 22px; max-width:380px; width:90%; text-align:center; margin:20px auto; }
-.modal-step { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:14px; margin-bottom:10px; text-align:left; display:flex; gap:12px; align-items:flex-start; }
-.modal-num { min-width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#C9A84C,#A8722A); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#0D0D0D; flex-shrink:0; }
-.modal-step-title { font-size:14px; color:#F5F0E8; font-weight:600; margin-bottom:3px; }
-.modal-step-sub { font-size:12px; color:#555; line-height:1.5; }
-.modal-link-box { background:#0a0a0a; border:1px solid rgba(201,168,76,0.2); border-radius:8px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.btn-copiar { min-width:64px; padding:7px 12px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#0D0D0D; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
-.btn-abrir-insta { width:100%; padding:14px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px; font-family:'Inter',sans-serif; }
-.btn-fechar { width:100%; padding:12px; background:transparent; color:#555; border:1px solid rgba(255,255,255,0.06); border-radius:12px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif; transition: all 0.2s; }
-.btn-fechar:hover { color: #888; border-color: rgba(255,255,255,0.1); }
+.modal-box { background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:20px; padding:32px 24px; max-width:380px; width:90%; text-align:center; margin:20px auto; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
+.modal-ornamento { color:#C9A84C; font-size:14px; letter-spacing:6px; margin-bottom:12px; }
+.modal-step { background:#fff; border:1px solid rgba(201,168,76,0.15); border-radius:12px; padding:14px; margin-bottom:10px; text-align:left; display:flex; gap:12px; align-items:flex-start; }
+.modal-num { min-width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#C9A84C,#A8722A); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+.modal-step-title { font-size:14px; color:#2C2C2C; font-weight:600; margin-bottom:3px; }
+.modal-step-sub { font-size:12px; color:#aaa; line-height:1.5; }
+.modal-link-box { background:#fff; border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.btn-copiar { min-width:64px; padding:7px 12px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
+.btn-abrir-insta { width:100%; padding:14px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:50px; font-size:15px; font-weight:600; cursor:pointer; margin-bottom:10px; font-family:'Inter',sans-serif; }
+.btn-fechar { width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.2); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; }
+.btn-fechar:hover { color:#C9A84C; border-color:#C9A84C; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="topo">
     <button class="btn-voltar" onclick="voltarLista()">← Voltar</button>
-    <div class="logo-topo">Insta<span>Gift</span></div>
+    <div class="logo-topo">InstaGift</div>
   </div>
   <div class="evento-badge" id="eventoBadge">🎂 Aniversário</div>
   <p class="sub" id="subTitulo">Crie seu story em segundos</p>
@@ -99,17 +98,17 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
       <div class="templates-grid" id="templatesGrid">
         <div class="tpl-card selected" data-tpl="0" onclick="selecionarTpl(this)">
           <canvas id="prev0" width="180" height="320"></canvas>
-          <div class="tpl-label" id="label0">Template 1</div>
+          <div class="tpl-label" id="label0">Claro</div>
           <div class="check">✓</div>
         </div>
         <div class="tpl-card" data-tpl="1" onclick="selecionarTpl(this)">
           <canvas id="prev1" width="180" height="320"></canvas>
-          <div class="tpl-label" id="label1">Template 2</div>
+          <div class="tpl-label" id="label1">Elegante</div>
           <div class="check">✓</div>
         </div>
         <div class="tpl-card" data-tpl="2" onclick="selecionarTpl(this)">
           <canvas id="prev2" width="180" height="320"></canvas>
-          <div class="tpl-label" id="label2">Template 3</div>
+          <div class="tpl-label" id="label2">Foto Real</div>
           <div class="check">✓</div>
         </div>
       </div>
@@ -139,7 +138,7 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
 
     <div class="painel-dir">
       <div class="preview-box">
-        <p class="preview-title">Preview do story</p>
+        <p class="preview-title">✦ Preview do story ✦</p>
         <div id="preview-vazio" class="preview-vazio">
           <div class="icone" id="previewIcone">🎁</div>
           <p>Clique em "Gerar story"<br>para ver o resultado aqui</p>
@@ -161,9 +160,9 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
 <!-- Modal Instagram -->
 <div class="modal-bg" id="modal-insta">
   <div class="modal-box">
-    <div style="font-size:32px; margin-bottom:8px;" id="modalEmoji">🎉</div>
-    <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:6px; color:#F5F0E8;">Imagem baixada!</h3>
-    <p style="font-size:13px; color:#555; margin-bottom:20px; line-height:1.6;">Siga os passos para postar no Instagram</p>
+    <div class="modal-ornamento">✦ ✦ ✦</div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px; color:#2C2C2C;" id="modalTitulo">Imagem baixada!</h3>
+    <p style="font-size:13px; color:#aaa; margin-bottom:20px; line-height:1.7; font-style:italic;">Siga os passos para postar no Instagram</p>
     <div class="modal-step">
       <div class="modal-num">1</div>
       <div>
@@ -182,14 +181,14 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
       <div class="modal-num">3</div>
       <div>
         <p class="modal-step-title">Toque em Figurinha e escolha Link</p>
-        <p class="modal-step-sub">Arraste a figurinha sobre o botão <strong style="color:#C9A84C;">Ver Lista de Presentes</strong></p>
+        <p class="modal-step-sub">Arraste sobre o botão <strong style="color:#C9A84C;">Ver Lista de Presentes</strong></p>
       </div>
     </div>
     <div class="modal-step">
       <div class="modal-num">4</div>
       <div>
-        <p class="modal-step-title">Adicione ao Destaque — Melhores Amigos</p>
-        <p class="modal-step-sub" id="modalDicaDestaque">✦ Adicione ao Destaque para ficar visível até a data do seu evento!</p>
+        <p class="modal-step-title">Adicione ao Destaque</p>
+        <p class="modal-step-sub" id="modalDicaDestaque">✦ Adicione ao Destaque para ficar visível até a data do evento!</p>
       </div>
     </div>
     <div class="modal-step" style="margin-bottom:16px;">
@@ -200,7 +199,6 @@ body { background: #0D0D0D; color: #F5F0E8; font-family: 'Inter', sans-serif; mi
           <span id="modal-link-texto" style="font-size:12px; color:#C9A84C; word-break:break-all;"></span>
           <button class="btn-copiar" onclick="copiarLinkModal()">Copiar</button>
         </div>
-        <p style="font-size:11px; color:#444;">Link já copiado automaticamente</p>
       </div>
     </div>
     <button class="btn-abrir-insta" onclick="abrirAppInstagram()">Abrir Instagram agora</button>
@@ -213,188 +211,97 @@ var params = new URLSearchParams(window.location.search);
 var vitrineId = params.get('vitrine');
 var eventoParam = params.get('evento') || 'aniversario';
 
-function detectarIconeOutros(nomeEvento) {
-    var nome = (nomeEvento || '').toLowerCase();
-    if (nome.indexOf('formatura') > -1 || nome.indexOf('forma') > -1) return { icone: '🎓', cor1: '#1a1a3e', cor2: '#2a1a4e', cores: ['#C9A84C','#E8C96A','#f15bb5','#9b5de5','#4cc9f0'] };
-    if (nome.indexOf('natal') > -1) return { icone: '🎄', cor1: '#0a1a0a', cor2: '#1a2a1a', cores: ['#22c55e','#ef4444','#C9A84C','#fff','#16a34a'] };
-    if (nome.indexOf('mae') > -1 || nome.indexOf('mãe') > -1 || nome.indexOf('mamae') > -1 || nome.indexOf('mamãe') > -1) return { icone: '💐', cor1: '#2a0a1e', cor2: '#1a0a2e', cores: ['#f8c8d4','#e8a0b4','#C9A84C','#d4af8f','#ffd6e0'] };
-    if (nome.indexOf('pai') > -1 || nome.indexOf('papai') > -1) return { icone: '👔', cor1: '#0a1a2e', cor2: '#1a2a3e', cores: ['#3b82f6','#C9A84C','#93c5fd','#bfdbfe','#dbeafe'] };
-    if (nome.indexOf('pascoa') > -1 || nome.indexOf('páscoa') > -1) return { icone: '🐣', cor1: '#1a1a0a', cor2: '#2a2a1a', cores: ['#C9A84C','#f59e0b','#86efac','#f8c8d4','#bef264'] };
-    if (nome.indexOf('aposentadoria') > -1) return { icone: '🏖️', cor1: '#0a1a2e', cor2: '#1a2a3e', cores: ['#38bdf8','#C9A84C','#fbbf24','#86efac','#f8c8d4'] };
-    if (nome.indexOf('noivado') > -1) return { icone: '💑', cor1: '#2d0a1e', cor2: '#1a0a2e', cores: ['#f8c8d4','#e8a0b4','#C9A84C','#f5e6c8','#ffd6e0'] };
-    if (nome.indexOf('15') > -1 || nome.indexOf('quinze') > -1 || nome.indexOf('debutante') > -1) return { icone: '👑', cor1: '#1a0a2e', cor2: '#2d0a1e', cores: ['#C9A84C','#E8C96A','#9b5de5','#f15bb5','#c9b8e8'] };
-    return { icone: '🎁', cor1: '#0a0a1a', cor2: '#1a0a2a', cores: ['#C9A84C','#E8C96A','#A8722A','#F5F0E8','#888'] };
-}
+// URLs de fotos reais do Unsplash por evento
+var fotosEventos = {
+  aniversario: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=720&q=80&fit=crop',
+  casamento: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=720&q=80&fit=crop',
+  'casa-nova': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=720&q=80&fit=crop',
+  'cha-bebe': 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=720&q=80&fit=crop',
+  outros: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=720&q=80&fit=crop'
+};
 
 var configEventos = {
   aniversario: {
     badge: '🎂 Aniversário', sub: 'Crie seu story de aniversário em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Deixei ideias de presente aqui!',
-    frases: ['Pra quem sempre pergunta','Facilita a vida de quem me ama','Meu aniversário, minhas regras','Escolhi com carinho cada item'],
-    templates: ['Festivo', 'Elegante', 'Gold'],
+    frases: ['Pra quem sempre pergunta', 'Facilita a vida de quem me ama', 'Meu aniversário, minhas regras', 'Escolhi com carinho cada item'],
+    templates: ['Claro', 'Elegante', 'Foto Real'],
     cardTitulo: function(nome) { return nome ? nome + ' — Desejos de Niver' : 'Meus Desejos de Niver'; },
     icone: '🎂', modalEmoji: '🎉',
-    dicaDestaque: '✦ Adicione ao Destaque para ficar visível até a data do seu aniversário!',
-    cores: ['#C9A84C','#E8C96A','#F5F0E8','#A8722A','#888'],
-    fundos: [
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#C9A84C','#E8C96A','#A8722A','#F5F0E8'];
-        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}ctx.globalAlpha=1;
-        ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=60;ctx.beginPath();ctx.arc(w*0.85,h*0.1,120,0,Math.PI*2);ctx.stroke();
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(0.5,'#0d0d0d');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(201,168,76,0.4)';for(var i=0;i<30;i++){var sx=Math.random()*w,sy=Math.random()*h*0.65,sr=Math.random()*1.5+0.5;ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();}
-        ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=2;ctx.strokeRect(w*0.05,h*0.03,w*0.9,h*0.6);ctx.strokeRect(w*0.08,h*0.05,w*0.84,h*0.56);
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.7);grad.addColorStop(0,'rgba(201,168,76,0.12)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(201,168,76,0.5)';for(var i=0;i<25;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*2,0,Math.PI*2);ctx.fill();}
-      }
-    ]
+    dicaDestaque: '✦ Adicione ao Destaque para ficar visível até a data do seu aniversário!'
   },
   casamento: {
     badge: '💍 Casamento', sub: 'Crie seu story de casamento em segundos',
     labelNome: 'Nome do casal', fraseDefault: 'Nossa lista de presentes está aqui!',
-    frases: ['Presentes que vão durar para sempre','Escolhemos com amor cada item','Ajude a construir nosso lar','Cada presente é uma memória'],
-    templates: ['Romântico', 'Clássico', 'Gold'],
+    frases: ['Presentes que vão durar para sempre', 'Escolhemos com amor cada item', 'Ajude a construir nosso lar', 'Cada presente é uma memória'],
+    templates: ['Claro', 'Elegante', 'Foto Real'],
     cardTitulo: function(nome) { return nome ? nome + ' — Lista de Casamento' : 'Nossa Lista de Casamento'; },
     icone: '💍', modalEmoji: '💍',
-    dicaDestaque: '✦ Adicione ao Destaque — assim todos que visitarem seu perfil verão até o dia do casamento!',
-    cores: ['#C9A84C','#E8C96A','#F5F0E8','#f8c8d4','#d4af8f'],
-    fundos: [
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a0a0a');g.addColorStop(1,'#0a0a1a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#C9A84C','#E8C96A','#f8c8d4','#F5F0E8'];
-        for(var i=0;i<40;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.4;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.font='14px Arial';ctx.fillText('♥',0,0);ctx.restore();}ctx.globalAlpha=1;
-        ctx.fillStyle='rgba(201,168,76,0.06)';ctx.beginPath();ctx.arc(w*0.2,h*0.15,w*0.3,0,Math.PI*2);ctx.fill();
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0f0f0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.strokeStyle='rgba(201,168,76,0.12)';ctx.lineWidth=2;ctx.strokeRect(w*0.05,h*0.03,w*0.9,h*0.6);ctx.strokeRect(w*0.08,h*0.05,w*0.84,h*0.56);
-        ctx.fillStyle='rgba(201,168,76,0.3)';for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*2+0.5,0,Math.PI*2);ctx.fill();}
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.6);grad.addColorStop(0,'rgba(201,168,76,0.1)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
-      }
-    ]
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até o dia do casamento!'
   },
   'casa-nova': {
     badge: '🏠 Casa Nova', sub: 'Crie seu story de casa nova em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Ajude a montar nosso novo lar!',
-    frases: ['Novo lar, nova história','Cada item com muito carinho','Ajude a construir nosso cantinho','Nossa casa começa aqui'],
-    templates: ['Aconchegante', 'Moderno', 'Gold'],
+    frases: ['Novo lar, nova história', 'Cada item com muito carinho', 'Ajude a construir nosso cantinho', 'Nossa casa começa aqui'],
+    templates: ['Claro', 'Elegante', 'Foto Real'],
     cardTitulo: function(nome) { return nome ? nome + ' — Casa Nova' : 'Lista Casa Nova'; },
     icone: '🏠', modalEmoji: '🏠',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam e ajudem a montar seu novo lar!',
-    cores: ['#C9A84C','#E8C96A','#a8d8a8','#f8d8a0','#d4b896'],
-    fundos: [
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#C9A84C','#E8C96A','#a8d8a8','#f8d8a0'];
-        for(var i=0;i<40;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.4;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,4,2);ctx.restore();}ctx.globalAlpha=1;
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0f0f0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.strokeStyle='rgba(201,168,76,0.1)';ctx.lineWidth=1;
-        for(var i=0;i<8;i++){ctx.beginPath();ctx.moveTo(w*i/8,0);ctx.lineTo(w*i/8,h*0.65);ctx.stroke();}
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.7);grad.addColorStop(0,'rgba(201,168,76,0.1)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
-      }
-    ]
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam e ajudem a montar seu novo lar!'
   },
   'cha-bebe': {
     badge: '👶 Chá de Bebê', sub: 'Crie seu story de chá de bebê em segundos',
     labelNome: 'Nome dos papais', fraseDefault: 'Nosso bebê está chegando!',
-    frases: ['O pequeno já tem uma lista','Presentes para o novo amor','Ajude a receber nosso bebê','Escolhemos com carinho cada item'],
-    templates: ['Fofo', 'Delicado', 'Gold'],
+    frases: ['O pequeno já tem uma lista', 'Presentes para o novo amor', 'Ajude a receber nosso bebê', 'Escolhemos com carinho cada item'],
+    templates: ['Claro', 'Elegante', 'Foto Real'],
     cardTitulo: function(nome) { return nome ? 'Bebê de ' + nome : 'Nosso Bebê Chegando!'; },
     icone: '👶', modalEmoji: '👶',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a chegada do bebê!',
-    cores: ['#C9A84C','#b8d4f8','#f8c8d4','#c8e8c8','#f8e8c8'],
-    fundos: [
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0a0a1a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#C9A84C','#b8d4f8','#f8c8d4','#c8e8c8'];
-        for(var i=0;i<50;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.5;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.font='14px Arial';ctx.fillText(['⭐','✦','✨'][i%3],0,0);ctx.restore();}ctx.globalAlpha=1;
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#0f0f0f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(201,168,76,0.08)';for(var i=0;i<12;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.6,Math.random()*25+8,0,Math.PI*2);ctx.fill();}
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.6);grad.addColorStop(0,'rgba(201,168,76,0.1)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
-      }
-    ]
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a chegada do bebê!'
   },
   outros: {
     badge: '🎁 Outro Evento', sub: 'Crie seu story personalizado em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Preparei uma lista especial para você!',
-    frases: ['Escolhi com carinho cada item','Sua presença já é o maior presente','Compartilhe esse momento comigo','Cada presente conta muito!'],
-    templates: ['Festivo', 'Elegante', 'Gold'],
+    frases: ['Escolhi com carinho cada item', 'Sua presença já é o maior presente', 'Compartilhe esse momento comigo', 'Cada presente conta muito!'],
+    templates: ['Claro', 'Elegante', 'Foto Real'],
     cardTitulo: function(nome) { return nome ? nome + ' — Lista de Presentes' : 'Minha Lista de Presentes'; },
     icone: '🎁', modalEmoji: '🎉',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a data do seu evento!',
-    cores: ['#C9A84C','#E8C96A','#A8722A','#F5F0E8','#888'],
-    fundos: [
-      function(ctx,w,h){
-        var info=detectarIconeOutros(document.getElementById('nome')?document.getElementById('nome').value:'');
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var cores=['#C9A84C','#E8C96A','#A8722A','#F5F0E8'];
-        for(var i=0;i<60;i++){ctx.fillStyle=cores[i%cores.length];ctx.save();ctx.globalAlpha=0.6;ctx.translate(Math.random()*w,Math.random()*h*0.65);ctx.rotate(Math.random()*Math.PI*2);ctx.fillRect(0,0,5,2);ctx.restore();}ctx.globalAlpha=1;
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#0a0a0a');g.addColorStop(0.5,'#0d0d0d');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(201,168,76,0.4)';for(var i=0;i<40;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*1.5,0,Math.PI*2);ctx.fill();}
-        ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=60;ctx.beginPath();ctx.arc(w*0.85,h*0.1,120,0,Math.PI*2);ctx.stroke();
-      },
-      function(ctx,w,h){
-        var g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0D0D0D');g.addColorStop(1,'#1a1000');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-        var grad=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,w*0.7);grad.addColorStop(0,'rgba(201,168,76,0.12)');grad.addColorStop(1,'rgba(201,168,76,0)');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='rgba(201,168,76,0.5)';for(var i=0;i<20;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*0.65,Math.random()*2,0,Math.PI*2);ctx.fill();}
-      }
-    ]
+    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a data do seu evento!'
   }
 };
 
 var eventoConfig = configEventos[eventoParam] || configEventos['aniversario'];
-
-function getIconeAtual() {
-    if (eventoParam === 'outros') {
-        var nome = document.getElementById('nome') ? document.getElementById('nome').value : '';
-        return detectarIconeOutros(nome).icone;
-    }
-    return eventoConfig.icone;
-}
-
+var fotoEvento = fotosEventos[eventoParam] || fotosEventos['outros'];
+var imgFotoEvento = null;
 var tplAtivo = 0;
 var fotoUsuario = null;
 var previewAberto = false;
+
+// Pré-carrega foto do evento
+function preCarregarFotoEvento(cb) {
+  if (imgFotoEvento) { cb(); return; }
+  var img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() { imgFotoEvento = img; cb(); };
+  img.onerror = function() { imgFotoEvento = null; cb(); };
+  img.src = fotoEvento;
+}
 
 document.getElementById('eventoBadge').textContent = eventoConfig.badge;
 document.getElementById('subTitulo').textContent = eventoConfig.sub;
 document.getElementById('labelNome').textContent = eventoConfig.labelNome;
 document.getElementById('frase').value = eventoConfig.fraseDefault;
 document.getElementById('previewIcone').textContent = eventoConfig.icone;
-document.getElementById('modalEmoji').textContent = eventoConfig.modalEmoji;
 document.getElementById('modalDicaDestaque').textContent = eventoConfig.dicaDestaque;
 
-for(var i=0;i<3;i++){
-  document.getElementById('label'+i).textContent = eventoConfig.templates[i];
+for (var i = 0; i < 3; i++) {
+  document.getElementById('label' + i).textContent = eventoConfig.templates[i];
 }
 
 var frasesEl = document.getElementById('frasesChips');
-eventoConfig.frases.forEach(function(f){
+eventoConfig.frases.forEach(function(f) {
   var span = document.createElement('span');
   span.className = 'chip';
   span.textContent = f;
-  span.onclick = function(){ usarFrase(this); };
+  span.onclick = function() { usarFrase(this); };
   frasesEl.appendChild(span);
 });
 
@@ -409,163 +316,265 @@ function voltarLista() {
   else window.history.back();
 }
 
-function quebrarTexto(ctx,texto,x,y,maxW,altLinha){
-  var palavras=texto.split(' '),linha='',yAtual=y;
-  for(var i=0;i<palavras.length;i++){
-    var teste=linha+palavras[i]+' ';
-    if(ctx.measureText(teste).width>maxW&&i>0){ctx.fillText(linha.trim(),x,yAtual);linha=palavras[i]+' ';yAtual+=altLinha;}
-    else{linha=teste;}
+function quebrarTexto(ctx, texto, x, y, maxW, altLinha) {
+  var palavras = texto.split(' '), linha = '', yAtual = y;
+  for (var i = 0; i < palavras.length; i++) {
+    var teste = linha + palavras[i] + ' ';
+    if (ctx.measureText(teste).width > maxW && i > 0) {
+      ctx.fillText(linha.trim(), x, yAtual);
+      linha = palavras[i] + ' ';
+      yAtual += altLinha;
+    } else { linha = teste; }
   }
-  ctx.fillText(linha.trim(),x,yAtual);
+  ctx.fillText(linha.trim(), x, yAtual);
 }
 
-function desenharCard(ctx,w,h,nome,frase,sc){
-  var cardX=w*0.05,cardW=w*0.90,cardY=h*0.67,cardH=h*0.29,raio=20*sc;
-  ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=30*sc;ctx.shadowOffsetY=10*sc;
-  ctx.fillStyle='rgba(20,20,14,0.97)';
+function desenharFundo(ctx, w, h, tplIdx, foto) {
+  if (foto) {
+    // Foto do usuário
+    ctx.drawImage(foto, 0, 0, w, h);
+    var ov = ctx.createLinearGradient(0, 0, 0, h);
+    ov.addColorStop(0, 'rgba(255,248,236,0.3)');
+    ov.addColorStop(0.5, 'rgba(255,248,236,0.1)');
+    ov.addColorStop(1, 'rgba(255,248,236,0.6)');
+    ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
+    return;
+  }
+  if (tplIdx === 2 && imgFotoEvento) {
+    // Foto real do evento
+    ctx.drawImage(imgFotoEvento, 0, 0, w, h);
+    var ov2 = ctx.createLinearGradient(0, 0, 0, h);
+    ov2.addColorStop(0, 'rgba(255,248,236,0.2)');
+    ov2.addColorStop(0.5, 'rgba(255,248,236,0.05)');
+    ov2.addColorStop(1, 'rgba(255,248,236,0.7)');
+    ctx.fillStyle = ov2; ctx.fillRect(0, 0, w, h);
+    return;
+  }
+  if (tplIdx === 0) {
+    // Template Claro — creme puro com detalhes dourados
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#FFF8EC');
+    g.addColorStop(1, '#F5EDD8');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    // Círculo decorativo top
+    ctx.fillStyle = 'rgba(201,168,76,0.08)';
+    ctx.beginPath(); ctx.arc(w * 0.85, h * 0.08, w * 0.35, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(201,168,76,0.05)';
+    ctx.beginPath(); ctx.arc(w * 0.1, h * 0.55, w * 0.28, 0, Math.PI * 2); ctx.fill();
+    // Pontos dourados
+    ctx.fillStyle = 'rgba(201,168,76,0.25)';
+    for (var i = 0; i < 20; i++) {
+      ctx.beginPath();
+      ctx.arc(Math.random() * w, Math.random() * h * 0.6, Math.random() * 2 + 0.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Linhas decorativas
+    ctx.strokeStyle = 'rgba(201,168,76,0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(w * 0.1, h * 0.04); ctx.lineTo(w * 0.9, h * 0.04); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w * 0.1, h * 0.065); ctx.lineTo(w * 0.9, h * 0.065); ctx.stroke();
+  } else {
+    // Template Elegante — creme mais escuro com textura
+    var g2 = ctx.createLinearGradient(0, 0, w, h);
+    g2.addColorStop(0, '#F5EDD8');
+    g2.addColorStop(0.5, '#EDE0C4');
+    g2.addColorStop(1, '#F5EDD8');
+    ctx.fillStyle = g2; ctx.fillRect(0, 0, w, h);
+    // Moldura elegante
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(w * 0.04, h * 0.025, w * 0.92, h * 0.62);
+    ctx.strokeStyle = 'rgba(201,168,76,0.15)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(w * 0.06, h * 0.035, w * 0.88, h * 0.60);
+    // Cantos decorativos
+    var cs = 16;
+    ctx.strokeStyle = 'rgba(201,168,76,0.5)';
+    ctx.lineWidth = 2;
+    [[w*0.04, h*0.025], [w*0.96, h*0.025], [w*0.04, h*0.645], [w*0.96, h*0.645]].forEach(function(pt) {
+      ctx.beginPath();
+      ctx.arc(pt[0], pt[1], cs * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    // Pontos dourados
+    ctx.fillStyle = 'rgba(201,168,76,0.2)';
+    for (var j = 0; j < 15; j++) {
+      ctx.beginPath();
+      ctx.arc(Math.random() * w, Math.random() * h * 0.6, Math.random() * 1.5 + 0.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+function desenharCard(ctx, w, h, nome, frase, sc) {
+  var cardX = w * 0.04, cardW = w * 0.92, cardY = h * 0.66, cardH = h * 0.31, raio = 18 * sc;
+
+  // Sombra suave
+  ctx.shadowColor = 'rgba(0,0,0,0.1)';
+  ctx.shadowBlur = 20 * sc;
+  ctx.shadowOffsetY = 6 * sc;
+
+  // Card branco
+  ctx.fillStyle = 'rgba(255,255,255,0.97)';
   ctx.beginPath();
-  ctx.moveTo(cardX+raio,cardY);ctx.lineTo(cardX+cardW-raio,cardY);
-  ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
-  ctx.lineTo(cardX+cardW,cardY+cardH-raio);
-  ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
-  ctx.lineTo(cardX+raio,cardY+cardH);
-  ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
-  ctx.lineTo(cardX,cardY+raio);ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
-  ctx.closePath();ctx.fill();
-  ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+  ctx.moveTo(cardX + raio, cardY);
+  ctx.lineTo(cardX + cardW - raio, cardY);
+  ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + raio);
+  ctx.lineTo(cardX + cardW, cardY + cardH - raio);
+  ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - raio, cardY + cardH);
+  ctx.lineTo(cardX + raio, cardY + cardH);
+  ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - raio);
+  ctx.lineTo(cardX, cardY + raio);
+  ctx.quadraticCurveTo(cardX, cardY, cardX + raio, cardY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
 
-  // Borda dourada
-  ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1.5*sc;
+  // Borda dourada fina
+  ctx.strokeStyle = 'rgba(201,168,76,0.35)';
+  ctx.lineWidth = 1 * sc;
   ctx.beginPath();
-  ctx.moveTo(cardX+raio,cardY);ctx.lineTo(cardX+cardW-raio,cardY);
-  ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
-  ctx.lineTo(cardX+cardW,cardY+cardH-raio);
-  ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
-  ctx.lineTo(cardX+raio,cardY+cardH);
-  ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
-  ctx.lineTo(cardX,cardY+raio);ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
-  ctx.closePath();ctx.stroke();
+  ctx.moveTo(cardX + raio, cardY);
+  ctx.lineTo(cardX + cardW - raio, cardY);
+  ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + raio);
+  ctx.lineTo(cardX + cardW, cardY + cardH - raio);
+  ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - raio, cardY + cardH);
+  ctx.lineTo(cardX + raio, cardY + cardH);
+  ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - raio);
+  ctx.lineTo(cardX, cardY + raio);
+  ctx.quadraticCurveTo(cardX, cardY, cardX + raio, cardY);
+  ctx.closePath();
+  ctx.stroke();
 
-  // Ícone
-  var icX=w/2,icY=cardY,icR=26*sc;
-  var gradIc=ctx.createRadialGradient(icX-icR*0.2,icY-icR*0.2,1,icX,icY,icR);
-  gradIc.addColorStop(0,'#E8C96A');gradIc.addColorStop(1,'#A8722A');
-  ctx.fillStyle=gradIc;ctx.beginPath();ctx.arc(icX,icY,icR,0,Math.PI*2);ctx.fill();
-  ctx.font=Math.round(22*sc)+'px Arial';ctx.textAlign='center';
-  ctx.fillText(getIconeAtual(),icX,icY+8*sc);
+  // Ornamento topo do card
+  ctx.textAlign = 'center';
+  ctx.font = Math.round(9 * sc) + 'px Arial';
+  ctx.fillStyle = '#C9A84C';
+  ctx.fillText('✦  ✦  ✦', w / 2, cardY + 16 * sc);
 
-  // Nome
-  ctx.textAlign='center';
-  ctx.font='bold '+Math.round(14*sc)+'px Arial';
-  ctx.fillStyle='#C9A84C';
-  ctx.fillText(eventoConfig.cardTitulo(nome),w/2,cardY+cardH*0.34);
+  // Nome do evento
+  ctx.font = 'bold ' + Math.round(13 * sc) + 'px Georgia';
+  ctx.fillStyle = '#2C2C2C';
+  ctx.fillText(eventoConfig.cardTitulo(nome), w / 2, cardY + cardH * 0.30);
 
-  // Linha dourada decorativa
-  ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1*sc;
-  ctx.beginPath();ctx.moveTo(w*0.3,cardY+cardH*0.42);ctx.lineTo(w*0.7,cardY+cardH*0.42);ctx.stroke();
+  // Linha dourada
+  var lx1 = w * 0.28, lx2 = w * 0.72, ly = cardY + cardH * 0.38;
+  ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+  ctx.lineWidth = 0.8 * sc;
+  ctx.beginPath(); ctx.moveTo(lx1, ly); ctx.lineTo(lx2, ly); ctx.stroke();
 
   // Frase
-  ctx.font=Math.round(11*sc)+'px Arial';ctx.fillStyle='#888';
-  quebrarTexto(ctx,frase||eventoConfig.fraseDefault,w/2,cardY+cardH*0.52,cardW*0.82,14*sc);
+  ctx.font = Math.round(10 * sc) + 'px Georgia';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'center';
+  quebrarTexto(ctx, frase || eventoConfig.fraseDefault, w / 2, cardY + cardH * 0.48, cardW * 0.80, 13 * sc);
 
-  // Botão
-  var btnX=cardX+cardW*0.08,btnW=cardW*0.84,btnY=cardY+cardH*0.70,btnH=36*sc,btnR=btnH/2;
-  var gradBtn=ctx.createLinearGradient(btnX,btnY,btnX+btnW,btnY);
-  gradBtn.addColorStop(0,'#C9A84C');gradBtn.addColorStop(1,'#A8722A');
-  ctx.fillStyle=gradBtn;
+  // Botão dourado
+  var btnX = cardX + cardW * 0.08, btnW = cardW * 0.84;
+  var btnY = cardY + cardH * 0.68, btnH = 34 * sc, btnR = btnH / 2;
+  var gradBtn = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY);
+  gradBtn.addColorStop(0, '#C9A84C');
+  gradBtn.addColorStop(1, '#A8722A');
+  ctx.fillStyle = gradBtn;
   ctx.beginPath();
-  ctx.moveTo(btnX+btnR,btnY);ctx.lineTo(btnX+btnW-btnR,btnY);
-  ctx.quadraticCurveTo(btnX+btnW,btnY,btnX+btnW,btnY+btnR);
-  ctx.quadraticCurveTo(btnX+btnW,btnY+btnH,btnX+btnW-btnR,btnY+btnH);
-  ctx.lineTo(btnX+btnR,btnY+btnH);
-  ctx.quadraticCurveTo(btnX,btnY+btnH,btnX,btnY+btnR);
-  ctx.quadraticCurveTo(btnX,btnY,btnX+btnR,btnY);
-  ctx.closePath();ctx.fill();
-  ctx.font='bold '+Math.round(12*sc)+'px Arial';ctx.fillStyle='#0D0D0D';
-  ctx.fillText('✦ Ver Lista de Presentes',btnX+btnW/2,btnY+btnH*0.65);
+  ctx.moveTo(btnX + btnR, btnY);
+  ctx.lineTo(btnX + btnW - btnR, btnY);
+  ctx.quadraticCurveTo(btnX + btnW, btnY, btnX + btnW, btnY + btnR);
+  ctx.quadraticCurveTo(btnX + btnW, btnY + btnH, btnX + btnW - btnR, btnY + btnH);
+  ctx.lineTo(btnX + btnR, btnY + btnH);
+  ctx.quadraticCurveTo(btnX, btnY + btnH, btnX, btnY + btnR);
+  ctx.quadraticCurveTo(btnX, btnY, btnX + btnR, btnY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.font = 'bold ' + Math.round(11 * sc) + 'px Arial';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.fillText('✦ Ver Lista de Presentes', btnX + btnW / 2, btnY + btnH * 0.64);
 }
 
-function desenhar(canvas,tplIdx,nome,frase,foto){
-  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,sc=w/360;
-  if(foto){
-    ctx.drawImage(foto,0,0,w,h);
-    var ov=ctx.createLinearGradient(0,0,0,h);
-    ov.addColorStop(0,'rgba(0,0,0,0.4)');ov.addColorStop(0.5,'rgba(0,0,0,0.15)');ov.addColorStop(1,'rgba(0,0,0,0.6)');
-    ctx.fillStyle=ov;ctx.fillRect(0,0,w,h);
-  } else {
-    eventoConfig.fundos[tplIdx](ctx,w,h);
-  }
-  desenharCard(ctx,w,h,nome,frase,sc);
+function desenhar(canvas, tplIdx, nome, frase, foto) {
+  var ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height, sc = w / 360;
+  desenharFundo(ctx, w, h, tplIdx, foto);
+  desenharCard(ctx, w, h, nome, frase, sc);
 }
 
-function renderPreviews(){
-  var nomePreview = eventoParam==='casamento'?'Ana & João':eventoParam==='cha-bebe'?'Os Papais':eventoParam==='outros'?'Seu Nome':'Danilo';
-  for(var i=0;i<3;i++){
-    desenhar(document.getElementById('prev'+i),i,nomePreview,eventoConfig.fraseDefault,null);
-  }
+function renderPreviews() {
+  var nomePreview = eventoParam === 'casamento' ? 'Ana & João' : eventoParam === 'cha-bebe' ? 'Os Papais' : 'Seu Nome';
+  preCarregarFotoEvento(function() {
+    for (var i = 0; i < 3; i++) {
+      desenhar(document.getElementById('prev' + i), i, nomePreview, eventoConfig.fraseDefault, null);
+    }
+  });
 }
 
-function selecionarTpl(el){
-  document.querySelectorAll('.tpl-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected');tplAtivo=parseInt(el.dataset.tpl);
-  if(previewAberto) gerarStory();
+function selecionarTpl(el) {
+  document.querySelectorAll('.tpl-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  tplAtivo = parseInt(el.dataset.tpl);
+  if (previewAberto) gerarStory();
 }
 
-function usarFrase(el){
-  document.getElementById('frase').value=el.textContent;
-  if(previewAberto) gerarStory();
+function usarFrase(el) {
+  document.getElementById('frase').value = el.textContent;
+  if (previewAberto) gerarStory();
 }
 
-function carregarFoto(e){
-  var file=e.target.files[0];if(!file) return;
-  var img=new Image();
-  img.onload=function(){fotoUsuario=img;if(previewAberto) gerarStory();};
-  img.src=URL.createObjectURL(file);
+function carregarFoto(e) {
+  var file = e.target.files[0]; if (!file) return;
+  var img = new Image();
+  img.onload = function() { fotoUsuario = img; if (previewAberto) gerarStory(); };
+  img.src = URL.createObjectURL(file);
 }
 
-function atualizar(){ if(previewAberto) gerarStory(); }
+function atualizar() { if (previewAberto) gerarStory(); }
 
-function gerarStory(){
-  var nome=document.getElementById('nome').value;
-  var frase=document.getElementById('frase').value;
-  var canvas=document.getElementById('storyFinal');
-  desenhar(canvas,tplAtivo,nome,frase,fotoUsuario);
-  previewAberto=true;
-  document.getElementById('preview-vazio').style.display='none';
-  document.getElementById('preview-conteudo').style.display='block';
+function gerarStory() {
+  var nome = document.getElementById('nome').value;
+  var frase = document.getElementById('frase').value;
+  var canvas = document.getElementById('storyFinal');
+  preCarregarFotoEvento(function() {
+    desenhar(canvas, tplAtivo, nome, frase, fotoUsuario);
+    previewAberto = true;
+    document.getElementById('preview-vazio').style.display = 'none';
+    document.getElementById('preview-conteudo').style.display = 'block';
+  });
 }
 
-function baixar(){
-  var canvas=document.getElementById('storyFinal');
-  var a=document.createElement('a');
-  a.download='story-instagift.png';
-  a.href=canvas.toDataURL('image/png');
+function baixar() {
+  var canvas = document.getElementById('storyFinal');
+  var a = document.createElement('a');
+  a.download = 'story-instagift.png';
+  a.href = canvas.toDataURL('image/png');
   a.click();
 }
 
-function abrirInstagram(){
-  var link=document.getElementById('link').value;
-  var canvas=document.getElementById('storyFinal');
-  var a=document.createElement('a');
-  a.download='story-instagift.png';
-  a.href=canvas.toDataURL('image/png');
+function abrirInstagram() {
+  var link = document.getElementById('link').value;
+  var canvas = document.getElementById('storyFinal');
+  var a = document.createElement('a');
+  a.download = 'story-instagift.png';
+  a.href = canvas.toDataURL('image/png');
   a.click();
-  navigator.clipboard.writeText(link).catch(function(){});
-  document.getElementById('modal-link-texto').textContent=link;
+  navigator.clipboard.writeText(link).catch(function() {});
+  document.getElementById('modal-link-texto').textContent = link;
   document.getElementById('modal-insta').classList.add('show');
 }
 
-function copiarLinkModal(){
-  var link=document.getElementById('modal-link-texto').textContent;
-  navigator.clipboard.writeText(link).then(function(){alert('Link copiado!');});
+function copiarLinkModal() {
+  var link = document.getElementById('modal-link-texto').textContent;
+  navigator.clipboard.writeText(link).then(function() { alert('Link copiado!'); });
 }
 
-function abrirAppInstagram(){
-  window.location.href='instagram://story-camera';
-  setTimeout(function(){window.open('https://www.instagram.com','_blank');},1500);
+function abrirAppInstagram() {
+  window.location.href = 'instagram://story-camera';
+  setTimeout(function() { window.open('https://www.instagram.com', '_blank'); }, 1500);
 }
 
 renderPreviews();
+
+if (vitrineId) {
+  document.getElementById('link').value = window.location.origin + '/vitrine/' + vitrineId;
+}
 </script>
 </body>
 </html>
