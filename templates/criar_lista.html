@@ -33,13 +33,14 @@
         .eventos-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
         .evento-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
         .evento-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(201,168,76,0.15); }
-        .evento-card.selected { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.12), 0 8px 28px rgba(201,168,76,0.15); }
+        .evento-card.selected { border-color: #C9A84C; border-width: 2.5px; box-shadow: 0 0 0 4px rgba(201,168,76,0.2), 0 8px 28px rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); }
         .evento-foto { width: 100%; height: 130px; object-fit: cover; display: block; }
         .evento-foto-placeholder { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 36px; background: linear-gradient(135deg, #FFF8EC, #F5EDD8); }
         .evento-info { padding: 12px; }
         .evento-nome { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #2C2C2C; margin-bottom: 2px; }
         .evento-sub { font-size: 11px; color: #aaa; font-style: italic; }
-        .evento-check { display: none; position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; background: linear-gradient(135deg, #C9A84C, #A8722A); border-radius: 50%; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 700; }
+        .evento-check { display: none; position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; background: linear-gradient(135deg, #C9A84C, #A8722A); border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 700; box-shadow: 0 2px 8px rgba(201,168,76,0.4); z-index: 10; }
+        .evento-card.selected .evento-check { display: flex; }
         .evento-card { position: relative; }
         .evento-card.selected .evento-check { display: flex; }
         .evento-card-full { grid-column: span 2; }
