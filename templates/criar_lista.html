@@ -70,6 +70,7 @@
         .badge-amazon { background: #FF9900; color: #000; }
         .badge-mercadolivre { background: #FFE600; color: #000; }
         .badge-shopee { background: #EE4D2D; color: #fff; }
+        .badge-shein { background: #000000; color: #fff; }
         .badge-outro { background: #333; color: #fff; }
         .badge-magalu { background: #0086FF; color: #fff; }
         .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
@@ -347,6 +348,34 @@
     </div>
 </div>
 
+<!-- Popup Manual Universal — aparece quando imagem não é encontrada -->
+<div id="popupManualUniversal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:1000; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#0f0f1a; border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;" id="popupManualInner">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 id="manualTitulo" style="font-size:17px; font-weight:700; color:#fff;">✏️ Completar produto</h3>
+            <button onclick="fecharPopupManualUniversal()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+        </div>
+        <p id="manualTexto" style="font-size:13px; color:#888; line-height:1.6; margin-bottom:20px;"></p>
+        <div style="margin-bottom:14px;">
+            <label id="manualLabelNome" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; color:#8A63D2;">Nome do produto</label>
+            <input type="text" id="manualNomeInput" placeholder="Ex: Tênis Nike Air Max" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:14px;" id="manualPrecoWrap">
+            <label id="manualLabelPreco" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; color:#8A63D2;">Preço (opcional)</label>
+            <input type="text" id="manualPrecoInput" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label id="manualLabelImagem" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; color:#8A63D2;">Foto do produto (opcional)</label>
+            <label for="manualImagemInput" style="display:flex; align-items:center; gap:8px; background:rgba(138,99,210,0.06); border:1.5px dashed rgba(138,99,210,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#8A63D2; font-size:13px; margin-bottom:8px;">
+                📸 Escolher imagem da galeria
+            </label>
+            <input type="file" id="manualImagemInput" accept="image/*" style="display:none;" onchange="previewImagemManualUniversal(event)">
+            <img id="manualPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+        </div>
+        <button id="manualSalvarBtn" onclick="salvarManualUniversal()" style="width:100%; padding:14px; background:linear-gradient(135deg,#8A63D2,#6a43b2); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto 💜</button>
+    </div>
+</div>
+
 <!-- Card editar produto -->
 <div id="cardEditarProduto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
     <div style="background:#0f0f1a; border:1px solid rgba(138,99,210,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
@@ -388,6 +417,21 @@
     var editarProdutoId = null;
     var editarImagemBase64 = "";
     var editarPlataforma = "";
+
+    // Popup manual universal
+    var manualProdutoId = null;
+    var manualPlataformaAtual = "";
+    var manualImagemBase64 = "";
+    var manualLinkAtual = "";
+
+    var textosPorPlataforma = {
+        amazon: { titulo: "🛒 Imagem não encontrada", texto: "Não conseguimos buscar a imagem deste produto da Amazon automaticamente. Preencha as informações manualmente para exibir na sua vitrine.", cor: "#FF9900" },
+        mercadolivre: { titulo: "🛍️ Link com limitações", texto: "Links do site do Mercado Livre têm limitações de acesso. Para melhor resultado, use o link do app do Mercado Livre ou preencha as informações manualmente.", cor: "#FFE600" },
+        shopee: { titulo: "🧡 Produto Shopee", texto: "Não conseguimos buscar a imagem deste produto da Shopee automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#EE4D2D" },
+        magalu: { titulo: "🛍️ Imagem não encontrada", texto: "Não conseguimos buscar a imagem deste produto do Magalu automaticamente. Preencha as informações manualmente para exibir na sua vitrine.", cor: "#0086FF" },
+        shein: { titulo: "✨ Produto Shein", texto: "Não conseguimos buscar a imagem deste produto da Shein automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#8A63D2" },
+        outro: { titulo: "🎁 Produto não encontrado", texto: "Não conseguimos buscar as informações deste produto automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#8A63D2" }
+    };
 
     var eventos = {
         aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜" },
@@ -543,16 +587,14 @@
         verificarWhatsapp();
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
-            const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee", magalu: "badge-magalu" }[p.plataforma] || "badge-outro";
-            const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee", magalu: "🛍️ Magalu" }[p.plataforma] || p.plataforma;
+            const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee", magalu: "badge-magalu", shein: "badge-shein" }[p.plataforma] || "badge-outro";
+            const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee", magalu: "🛍️ Magalu", shein: "✨ Shein" }[p.plataforma] || p.plataforma;
             const imgHtml = p.imagem_url
                 ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
-                : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : '🎁'}</div>`;
+                : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : p.plataforma === 'shein' ? '✨' : '🎁'}</div>`;
             const nomeEscapado = (p.nome || '').replace(/'/g, "\\'");
             const precoEscapado = (p.preco || '').replace(/'/g, "\\'");
-            const editBtn = (p.plataforma === 'shopee' || p.plataforma === 'mercadolivre')
-                ? `<button class="btn-editar" onclick="abrirEditarProduto(${p.id}, '${nomeEscapado}', '${precoEscapado}', '${p.plataforma}')">✏️</button>`
-                : '';
+            const editBtn = `<button class="btn-editar" onclick="abrirEditarProduto(${p.id}, '${nomeEscapado}', '${precoEscapado}', '${p.plataforma}')">✏️</button>`;
             return `
             <div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
@@ -571,6 +613,59 @@
         }).join("");
     }
 
+    // POPUP MANUAL UNIVERSAL
+    function abrirPopupManualUniversal(plataforma, produtoId, linkOriginal, nomeJaEncontrado) {
+        manualProdutoId = produtoId;
+        manualPlataformaAtual = plataforma;
+        manualImagemBase64 = "";
+        manualLinkAtual = linkOriginal || "";
+        var cfg = textosPorPlataforma[plataforma] || textosPorPlataforma['outro'];
+        document.getElementById('manualTitulo').textContent = cfg.titulo;
+        document.getElementById('manualTexto').textContent = cfg.texto;
+        document.getElementById('manualNomeInput').value = nomeJaEncontrado || '';
+        document.getElementById('manualPrecoInput').value = '';
+        document.getElementById('manualPreviewImg').style.display = 'none';
+        document.getElementById('manualPrecoWrap').style.display = plataforma === 'mercadolivre' ? 'none' : 'block';
+        var inner = document.getElementById('popupManualInner');
+        inner.style.borderColor = cfg.cor;
+        document.getElementById('popupManualUniversal').style.display = 'flex';
+    }
+
+    function fecharPopupManualUniversal() {
+        document.getElementById('popupManualUniversal').style.display = 'none';
+    }
+
+    function previewImagemManualUniversal(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            manualImagemBase64 = ev.target.result;
+            var img = document.getElementById('manualPreviewImg');
+            img.src = manualImagemBase64;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function salvarManualUniversal() {
+        var nome = document.getElementById('manualNomeInput').value.trim();
+        var preco = document.getElementById('manualPrecoInput').value.trim();
+        document.getElementById('popupManualUniversal').style.display = 'none';
+        if (manualProdutoId) {
+            try {
+                await fetch(`${BASE}/api/editar-produto/${manualProdutoId}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ nome, preco, imagem_base64: manualImagemBase64 })
+                });
+                await carregarProdutos();
+            } catch(e) {
+                alert("Erro ao salvar. Tente novamente.");
+            }
+        }
+    }
+
     // EDITAR PRODUTO
     function abrirEditarProduto(id, nome, preco, plataforma) {
         editarProdutoId = id;
@@ -582,10 +677,12 @@
         document.getElementById('editarPrecoWrap').style.display = plataforma === 'mercadolivre' ? 'none' : 'block';
         document.getElementById('cardEditarProduto').style.display = 'flex';
     }
+
     function fecharEditarProduto() {
         document.getElementById('cardEditarProduto').style.display = 'none';
         editarProdutoId = null;
     }
+
     function previewEditarImagem(e) {
         var file = e.target.files[0];
         if (!file) return;
@@ -598,6 +695,7 @@
         };
         reader.readAsDataURL(file);
     }
+
     async function salvarEdicaoProduto() {
         if (!editarProdutoId) return;
         var nome = document.getElementById('editarNome').value.trim();
@@ -702,7 +800,7 @@
             const r = await fetch(`${BASE}/api/adicionar-produto-manual`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ link, lista_id: LISTA_ID, nome: nome || (plataforma === 'shopee' ? 'Produto Shopee' : 'Produto Mercado Livre'), preco, imagem_base64: imagem, plataforma })
+                body: JSON.stringify({ link, lista_id: LISTA_ID, nome: nome || 'Produto', preco, imagem_base64: imagem, plataforma })
             });
             const data = await r.json();
             if (data.ok) {
@@ -732,6 +830,9 @@
             if (data.ok) {
                 document.getElementById("inputLink").value = "";
                 await carregarProdutos();
+                if (data.manual) {
+                    abrirPopupManualUniversal(data.plataforma, data.produto.id, link, data.produto.nome);
+                }
             } else {
                 alert("Não consegui buscar o produto. Tente outro link.");
             }
@@ -747,7 +848,7 @@
         const input = document.getElementById("inputLink");
         const link = input.value.trim();
         if (!link) return;
-        if (link.indexOf('produto.mercadolivre') > -1) {
+        if (link.indexOf('produto.mercadolivre') > -1 || link.indexOf('share.google') > -1) {
             abrirPopupML(link);
             return;
         }
