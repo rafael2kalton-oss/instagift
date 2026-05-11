@@ -238,25 +238,16 @@ def extrair_magalu(link):
 
 def extrair_shein(link):
     try:
-        # Resolve link do app/encurtado
         if "onelink.shein.com" in link or "api-shein.shein.com" in link or "sharejump" in link:
             try:
-                r_red = requests.get(
-                    link,
-                    headers={"User-Agent": "Mozilla/5.0"},
-                    timeout=10,
-                    allow_redirects=True
-                )
+                r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
                 link = r_red.url
                 print("Shein redirect resolvido:", link)
             except Exception as e:
                 print("Shein redirect erro:", e)
-
         nome = ""
         imagem = ""
         preco = ""
-
-        # Tenta extrair goods_id da URL
         goods_id = None
         m = re.search(r'goods[_-]id[=/-](\d+)', link, re.IGNORECASE)
         if not m:
@@ -265,19 +256,10 @@ def extrair_shein(link):
             m = re.search(r'[?&]goods_id=(\d+)', link)
         if m:
             goods_id = m.group(1)
-
-        # Tenta API pública da Shein
         if goods_id:
             try:
                 api_url = f"https://api-shein.shein.com/v2/goods/detail?goods_id={goods_id}&currency=BRL&lang=pt"
-                r_api = requests.get(
-                    api_url,
-                    headers={
-                        "User-Agent": "Mozilla/5.0",
-                        "Accept": "application/json"
-                    },
-                    timeout=10
-                )
+                r_api = requests.get(api_url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"}, timeout=10)
                 data = r_api.json()
                 info = data.get("info", {}) or {}
                 detail = info.get("goods_info", {}) or {}
@@ -290,8 +272,6 @@ def extrair_shein(link):
                     preco = preco_info["amountWithSymbol"].replace("R$", "").strip()
             except Exception as e:
                 print("Shein API erro:", e)
-
-        # Fallback: ScraperAPI
         if not nome or not imagem:
             try:
                 html = requests.get(
@@ -299,66 +279,53 @@ def extrair_shein(link):
                     timeout=25
                 ).text
                 soup = BeautifulSoup(html, "html.parser")
-
                 if not nome:
                     t = soup.find("meta", property="og:title")
                     if t:
                         nome = t.get("content", "")[:100]
                         nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
-
                 if not imagem:
                     i = soup.find("meta", property="og:image")
                     if i:
                         imagem = i.get("content", "")
-
-                # Tenta pegar imagem direto do HTML
                 if not imagem:
                     img = soup.find("img", {"class": re.compile(r'crop-image-container|goods-img', re.I)})
                     if img:
                         imagem = img.get("src", "") or img.get("data-src", "")
-
                 if not preco:
                     pm = re.search(r'R\$\s*[\d.,]+', html)
                     if pm:
                         preco = pm.group(0).replace("R$", "").strip()
             except Exception as e:
                 print("Shein ScraperAPI erro:", e)
-
         return nome, imagem, preco
-
     except Exception as e:
         print("Shein erro geral:", e)
         return "", "", ""
 
 def extrair_dados(link, plataforma):
     link = resolver_redirect(link)
-
     if plataforma == "shopee":
         n, i, p = extrair_shopee(link)
         if n:
             return n, i, p
-
     if plataforma == "magalu":
         n, i, p = extrair_magalu(link)
         if n:
             return n, i, p
-
     if plataforma == "shein":
         n, i, p = extrair_shein(link)
         if n:
             return n, i, p
-
     if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
         if n:
             return n, i, p
-
     try:
         r = requests.get(link, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "pt-BR"}, timeout=8)
         html = r.text if r.status_code == 200 else ""
     except:
         html = ""
-
     if plataforma == "amazon" or len(html) < 1000:
         try:
             render = "true" if plataforma == "amazon" else "false"
@@ -369,23 +336,18 @@ def extrair_dados(link, plataforma):
         except Exception as e:
             print("ScraperAPI erro:", e)
             html = ""
-
     if not html:
         return "", "", ""
-
     soup = BeautifulSoup(html, "html.parser")
     nome = ""
     imagem = ""
     preco = ""
-
     t = soup.find("meta", property="og:title")
     if t:
         nome = t.get("content", "")[:100]
-
     i = soup.find("meta", property="og:image")
     if i:
         imagem = i.get("content", "")
-
     if not imagem and plataforma == "amazon":
         img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
         if img and img.get("src") and "http" in img.get("src", ""):
@@ -394,13 +356,11 @@ def extrair_dados(link, plataforma):
             img = soup.find("img", {"data-old-hires": True})
             if img:
                 imagem = img["data-old-hires"]
-
     if nome:
         nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
         nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
         nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
         nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
-
     if plataforma == "amazon":
         preco_tag = soup.find("span", {"class": "a-price-whole"})
         if preco_tag:
@@ -408,12 +368,10 @@ def extrair_dados(link, plataforma):
             preco = preco_tag.text.strip().replace('.', '').replace(',', '')
             if preco_frac:
                 preco = preco + ',' + preco_frac.text.strip()
-
     if not preco and plataforma != "mercadolivre":
         pm = re.search(r'R\$\s*[\d.,]+', html)
         if pm:
             preco = pm.group(0).replace("R$", "").strip()
-
     return nome, imagem, preco
 
 def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto=""):
@@ -553,9 +511,8 @@ def adicionar_produto():
         "plataforma": plataforma,
         "reservado": 0
     })
-    if isinstance(produto, list):
-        return jsonify({"ok": True, "produto": produto[0]})
-    return jsonify({"ok": True, "produto": produto})
+    p = produto[0] if isinstance(produto, list) else produto
+    return jsonify({"ok": True, "produto": p, "manual": precisa_manual, "plataforma": plataforma})
 
 @app.route("/api/produtos/<lista_id>")
 def listar_produtos(lista_id):
@@ -585,10 +542,10 @@ def adicionar_produto_manual():
     data = request.json
     link = data.get("link", "").strip()
     lista_id = data.get("lista_id", "").strip()
-    nome = data.get("nome", "Produto Shopee").strip()
+    nome = data.get("nome", "Produto").strip()
     preco = data.get("preco", "").strip()
     imagem_base64 = data.get("imagem_base64", "")
-    plataforma = data.get("plataforma", "shopee")
+    plataforma = data.get("plataforma", "outro")
     if not link or not lista_id:
         return jsonify({"erro": "Dados inválidos"}), 400
     link_afiliado = injetar_afiliado(link, plataforma)
