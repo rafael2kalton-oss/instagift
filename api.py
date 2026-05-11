@@ -42,15 +42,40 @@ def sb_patch(tabela, filtro, dados):
 def sb_delete(tabela, filtro):
     return requests.delete(f"{SUPABASE_URL}/rest/v1/{tabela}?{filtro}", headers=HEADERS_SB).status_code
 
+def resolver_redirect(link):
+    try:
+        dominios_encurtados = [
+            'amzn.to', 'a.co',
+            'br.shp.ee', 's.shopee',
+            'meli.la',
+            'mglu.me',
+            'onelink.shein.com', 'api-shein.shein.com',
+            'share.google', 'bit.ly', 'tinyurl.com'
+        ]
+        precisa_resolver = any(d in link.lower() for d in dominios_encurtados)
+        if precisa_resolver:
+            r = requests.get(
+                link,
+                headers={"User-Agent": "Mozilla/5.0"},
+                timeout=10,
+                allow_redirects=True
+            )
+            link_final = r.url
+            print(f"Redirect resolvido: {link} → {link_final}")
+            return link_final
+    except Exception as e:
+        print(f"Erro ao resolver redirect: {e}")
+    return link
+
 def detectar_plataforma(link):
     l = link.lower()
-    if "amazon.com.br" in l or "amzn.to" in l:
+    if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l:
         return "amazon"
-    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l:
+    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l:
         return "magalu"
     if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l:
         return "mercadolivre"
-    if "shopee.com.br" in l:
+    if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l:
         return "shopee"
     if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l:
         return "shein"
@@ -166,9 +191,6 @@ def extrair_ml(link):
 
 def extrair_shopee(link):
     try:
-        m = re.search(r'i\.(\d+)\.(\d+)', link)
-        if not m:
-            return "", "", ""
         html = requests.get(
             f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
             timeout=20
@@ -216,20 +238,13 @@ def extrair_magalu(link):
 
 def extrair_shein(link):
     try:
-        # Resolve qualquer link encurtado ou do app da Shein
         if "onelink.shein.com" in link or "api-shein.shein.com" in link or "sharejump" in link:
             try:
-                r_red = requests.get(
-                    link,
-                    headers={"User-Agent": "Mozilla/5.0"},
-                    timeout=10,
-                    allow_redirects=True
-                )
+                r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
                 link = r_red.url
                 print("Shein redirect resolvido:", link)
             except Exception as e:
                 print("Shein redirect erro:", e)
-
         html = requests.get(
             f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
             timeout=20
@@ -254,12 +269,7 @@ def extrair_shein(link):
         return "", "", ""
 
 def extrair_dados(link, plataforma):
-    if plataforma == "amazon" and ("amzn.to" in link or "amzn.com" in link):
-        try:
-            r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
-            link = r_red.url
-        except:
-            pass
+    link = resolver_redirect(link)
 
     if plataforma == "shopee":
         n, i, p = extrair_shopee(link)
@@ -448,6 +458,7 @@ def preview_produto():
     link = request.json.get("link", "").strip()
     if not link:
         return jsonify({"ok": False}), 400
+    link = resolver_redirect(link)
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
@@ -460,6 +471,7 @@ def adicionar_produto():
     lista_id = data.get("lista_id", "").strip()
     if not link or not lista_id:
         return jsonify({"erro": "Dados inválidos"}), 400
+    link = resolver_redirect(link)
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
