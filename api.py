@@ -537,8 +537,9 @@ def adicionar_produto():
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
+    precisa_manual = not nome or not imagem
     if not nome:
-        nome = "Produto Shopee" if plataforma == "shopee" else "Produto"
+        nome = "Produto"
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
