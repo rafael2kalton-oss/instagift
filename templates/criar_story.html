@@ -9,22 +9,17 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; min-height: 100vh; padding: 20px 16px 40px; }
 .container { width: 100%; max-width: 900px; margin: 0 auto; }
-
 .topo { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
 .btn-voltar { background: transparent; border: 1px solid rgba(201,168,76,0.4); color: #C9A84C; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
 .btn-voltar:hover { background: rgba(201,168,76,0.08); }
 .logo-topo { font-family: 'Playfair Display', serif; font-size: clamp(22px, 5vw, 30px); font-weight: 700; color: #C9A84C; }
-
 .evento-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: #C9A84C; margin-bottom: 16px; letter-spacing: 0.03em; }
 .sub { font-size: 14px; color: #888; margin-bottom: 28px; margin-top: 4px; font-style: italic; font-family: 'Playfair Display', serif; }
-
 .section-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-
 .layout { display: flex; gap: 32px; align-items: flex-start; }
 .painel-esq { flex: 1; min-width: 0; }
 .painel-dir { width: 340px; flex-shrink: 0; position: sticky; top: 20px; }
 @media (max-width: 700px) { .layout { flex-direction: column; } .painel-dir { width: 100%; position: static; } }
-
 .templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
 .tpl-card { border: 1.5px solid rgba(201,168,76,0.2); border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: all 0.2s; background: #fff; }
 .tpl-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(201,168,76,0.15); }
@@ -34,26 +29,21 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 .tpl-card.selected .tpl-label { color: #C9A84C; }
 .check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #C9A84C, #A8722A); display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
 .tpl-card.selected .check { display: flex; }
-
 .upload-box { border: 1px dashed rgba(201,168,76,0.35); border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s; background: rgba(201,168,76,0.02); }
 .upload-box:hover { background: rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.5); }
 .upload-box input { display: none; }
 .upload-text { font-size: 13px; color: #aaa; font-style: italic; font-family: 'Playfair Display', serif; }
 .upload-text strong { color: #C9A84C; font-style: normal; }
-
 .form-row { margin-bottom: 18px; }
 .form-row label { font-size: 11px; color: #aaa; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.07em; }
 .form-row input, .form-row textarea { width: 100%; padding: 12px 16px; font-size: 15px; background: #fff; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; color: #2C2C2C; font-family: 'Inter', sans-serif; resize: none; outline: none; transition: all 0.2s; }
 .form-row input:focus, .form-row textarea:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
 .form-row input::placeholder, .form-row textarea::placeholder { color: #ccc; }
-
 .frases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .chip { font-size: 12px; padding: 5px 14px; border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; cursor: pointer; color: #aaa; background: #fff; transition: all 0.15s; font-family: 'Playfair Display', serif; font-style: italic; }
 .chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.04); }
-
 .btn-gerar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); font-family: 'Inter', sans-serif; letter-spacing: 0.04em; }
 .btn-gerar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
-
 .preview-box { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
 .preview-title { font-size: 11px; color: #aaa; margin-bottom: 14px; text-align: center; text-transform: uppercase; letter-spacing: 0.08em; }
 .story-frame { width: 100%; max-width: 280px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
@@ -61,13 +51,11 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 .preview-vazio { text-align: center; padding: 48px 20px; }
 .preview-vazio .icone { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
 .preview-vazio p { font-size: 13px; color: #aaa; line-height: 1.7; font-family: 'Playfair Display', serif; font-style: italic; }
-
 .botoes-pos { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 .btn-insta { width: 100%; padding: 14px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; letter-spacing: 0.03em; }
 .btn-insta:hover { transform: translateY(-1px); }
 .btn-baixar { width: 100%; padding: 12px; background: transparent; color: #C9A84C; border: 1px solid rgba(201,168,76,0.35); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
 .btn-baixar:hover { background: rgba(201,168,76,0.06); }
-
 .modal-bg { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; overflow-y:auto; }
 .modal-bg.show { display: flex; }
 .modal-box { background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:20px; padding:32px 24px; max-width:380px; width:90%; text-align:center; margin:20px auto; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
@@ -132,7 +120,6 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
         <label>Link da sua vitrine</label>
         <input type="text" id="link" value="" placeholder="Será preenchido automaticamente" oninput="atualizar()">
       </div>
-
       <button class="btn-gerar" onclick="gerarStory()">✦ Gerar story</button>
     </div>
 
@@ -161,35 +148,23 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 <div class="modal-bg" id="modal-insta">
   <div class="modal-box">
     <div class="modal-ornamento">✦ ✦ ✦</div>
-    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px; color:#2C2C2C;" id="modalTitulo">Imagem baixada!</h3>
+    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px; color:#2C2C2C;">Imagem baixada!</h3>
     <p style="font-size:13px; color:#aaa; margin-bottom:20px; line-height:1.7; font-style:italic;">Siga os passos para postar no Instagram</p>
     <div class="modal-step">
       <div class="modal-num">1</div>
-      <div>
-        <p class="modal-step-title">Clique em Abrir Instagram</p>
-        <p class="modal-step-sub">O app vai abrir direto na câmera de <strong style="color:#C9A84C;">Stories</strong></p>
-      </div>
+      <div><p class="modal-step-title">Clique em Abrir Instagram</p><p class="modal-step-sub">O app vai abrir direto na câmera de <strong style="color:#C9A84C;">Stories</strong></p></div>
     </div>
     <div class="modal-step">
       <div class="modal-num">2</div>
-      <div>
-        <p class="modal-step-title">Escolha a imagem da galeria</p>
-        <p class="modal-step-sub">Selecione <strong style="color:#C9A84C;">story-instagift.png</strong> que foi baixada</p>
-      </div>
+      <div><p class="modal-step-title">Escolha a imagem da galeria</p><p class="modal-step-sub">Selecione <strong style="color:#C9A84C;">story-instagift.png</strong> que foi baixada</p></div>
     </div>
     <div class="modal-step">
       <div class="modal-num">3</div>
-      <div>
-        <p class="modal-step-title">Toque em Figurinha e escolha Link</p>
-        <p class="modal-step-sub">Arraste sobre o botão <strong style="color:#C9A84C;">Ver Lista de Presentes</strong></p>
-      </div>
+      <div><p class="modal-step-title">Toque em Figurinha e escolha Link</p><p class="modal-step-sub">Arraste sobre o botão <strong style="color:#C9A84C;">Ver Lista de Presentes</strong></p></div>
     </div>
     <div class="modal-step">
       <div class="modal-num">4</div>
-      <div>
-        <p class="modal-step-title">Adicione ao Destaque</p>
-        <p class="modal-step-sub" id="modalDicaDestaque">✦ Adicione ao Destaque para ficar visível até a data do evento!</p>
-      </div>
+      <div><p class="modal-step-title">Adicione ao Destaque</p><p class="modal-step-sub" id="modalDicaDestaque">✦ Adicione ao Destaque para ficar visível até a data do evento!</p></div>
     </div>
     <div class="modal-step" style="margin-bottom:16px;">
       <div class="modal-num">5</div>
@@ -211,113 +186,55 @@ var params = new URLSearchParams(window.location.search);
 var vitrineId = params.get('vitrine');
 var eventoParam = params.get('evento') || 'aniversario';
 
-// URLs de fotos reais do Unsplash por evento
-function desenharFundo(ctx, w, h, tplIdx, foto) {
-  if (foto) {
-    ctx.drawImage(foto, 0, 0, w, h);
-    var ov = ctx.createLinearGradient(0, 0, 0, h);
-    ov.addColorStop(0, 'rgba(255,248,236,0.3)');
-    ov.addColorStop(0.5, 'rgba(255,248,236,0.1)');
-    ov.addColorStop(1, 'rgba(255,248,236,0.6)');
-    ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
-    return;
-  }
-
-  // TODOS os 3 templates usam a foto real do evento
-  if (imgFotoEvento) {
-    ctx.drawImage(imgFotoEvento, 0, 0, w, h);
-    var overlay;
-    if (tplIdx === 0) {
-      // Template Claro — overlay suave
-      overlay = ctx.createLinearGradient(0, 0, 0, h);
-      overlay.addColorStop(0, 'rgba(255,248,236,0.25)');
-      overlay.addColorStop(0.5, 'rgba(255,248,236,0.05)');
-      overlay.addColorStop(1, 'rgba(255,248,236,0.65)');
-    } else if (tplIdx === 1) {
-      // Template Elegante — overlay com moldura
-      overlay = ctx.createLinearGradient(0, 0, 0, h);
-      overlay.addColorStop(0, 'rgba(44,30,10,0.35)');
-      overlay.addColorStop(0.5, 'rgba(44,30,10,0.1)');
-      overlay.addColorStop(1, 'rgba(44,30,10,0.55)');
-    } else {
-      // Template Foto Real — overlay mínimo
-      overlay = ctx.createLinearGradient(0, 0, 0, h);
-      overlay.addColorStop(0, 'rgba(255,248,236,0.1)');
-      overlay.addColorStop(0.5, 'rgba(255,248,236,0.0)');
-      overlay.addColorStop(1, 'rgba(255,248,236,0.5)');
-    }
-    ctx.fillStyle = overlay;
-    ctx.fillRect(0, 0, w, h);
-
-    // Moldura dourada no template Elegante
-    if (tplIdx === 1) {
-      ctx.strokeStyle = 'rgba(201,168,76,0.5)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(w * 0.04, h * 0.025, w * 0.92, h * 0.62);
-      ctx.strokeStyle = 'rgba(201,168,76,0.25)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(w * 0.06, h * 0.038, w * 0.88, h * 0.595);
-    }
-    return;
-  }
-
-  // Fallback sem foto — gradiente creme
-  var g = ctx.createLinearGradient(0, 0, 0, h);
-  g.addColorStop(0, '#FFF8EC');
-  g.addColorStop(1, '#F5EDD8');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = 'rgba(201,168,76,0.08)';
-  ctx.beginPath(); ctx.arc(w * 0.85, h * 0.08, w * 0.35, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = 'rgba(201,168,76,0.05)';
-  ctx.beginPath(); ctx.arc(w * 0.1, h * 0.55, w * 0.28, 0, Math.PI * 2); ctx.fill();
-}
+// ✅ CORREÇÃO PRINCIPAL — objeto fotosEventos declarado aqui!
+var fotosEventos = {
+  aniversario: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=720&q=80&fit=crop',
+  casamento:   'https://images.unsplash.com/photo-1519741497674-611481863552?w=720&q=80&fit=crop',
+  'casa-nova': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=720&q=80&fit=crop',
+  'cha-bebe':  'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=720&q=80&fit=crop',
+  outros:      'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=720&q=80&fit=crop'
+};
 
 var configEventos = {
   aniversario: {
     badge: '🎂 Aniversário', sub: 'Crie seu story de aniversário em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Deixei ideias de presente aqui!',
-    frases: ['Pra quem sempre pergunta', 'Facilita a vida de quem me ama', 'Meu aniversário, minhas regras', 'Escolhi com carinho cada item'],
-    templates: ['Claro', 'Elegante', 'Foto Real'],
-    cardTitulo: function(nome) { return nome ? nome + ' — Desejos de Niver' : 'Meus Desejos de Niver'; },
-    icone: '🎂', modalEmoji: '🎉',
-    dicaDestaque: '✦ Adicione ao Destaque para ficar visível até a data do seu aniversário!'
+    frases: ['Pra quem sempre pergunta','Facilita a vida de quem me ama','Meu aniversário, minhas regras','Escolhi com carinho cada item'],
+    templates: ['Claro','Elegante','Foto Real'],
+    cardTitulo: function(n){ return n ? n+' — Desejos de Niver' : 'Meus Desejos de Niver'; },
+    icone: '🎂', dicaDestaque: '✦ Adicione ao Destaque até a data do seu aniversário!'
   },
   casamento: {
     badge: '💍 Casamento', sub: 'Crie seu story de casamento em segundos',
     labelNome: 'Nome do casal', fraseDefault: 'Nossa lista de presentes está aqui!',
-    frases: ['Presentes que vão durar para sempre', 'Escolhemos com amor cada item', 'Ajude a construir nosso lar', 'Cada presente é uma memória'],
-    templates: ['Claro', 'Elegante', 'Foto Real'],
-    cardTitulo: function(nome) { return nome ? nome + ' — Lista de Casamento' : 'Nossa Lista de Casamento'; },
-    icone: '💍', modalEmoji: '💍',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até o dia do casamento!'
+    frases: ['Presentes que vão durar para sempre','Escolhemos com amor cada item','Ajude a construir nosso lar','Cada presente é uma memória'],
+    templates: ['Claro','Elegante','Foto Real'],
+    cardTitulo: function(n){ return n ? n+' — Lista de Casamento' : 'Nossa Lista de Casamento'; },
+    icone: '💍', dicaDestaque: '✦ Adicione ao Destaque até o dia do casamento!'
   },
   'casa-nova': {
     badge: '🏠 Casa Nova', sub: 'Crie seu story de casa nova em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Ajude a montar nosso novo lar!',
-    frases: ['Novo lar, nova história', 'Cada item com muito carinho', 'Ajude a construir nosso cantinho', 'Nossa casa começa aqui'],
-    templates: ['Claro', 'Elegante', 'Foto Real'],
-    cardTitulo: function(nome) { return nome ? nome + ' — Casa Nova' : 'Lista Casa Nova'; },
-    icone: '🏠', modalEmoji: '🏠',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam e ajudem a montar seu novo lar!'
+    frases: ['Novo lar, nova história','Cada item com muito carinho','Ajude a construir nosso cantinho','Nossa casa começa aqui'],
+    templates: ['Claro','Elegante','Foto Real'],
+    cardTitulo: function(n){ return n ? n+' — Casa Nova' : 'Lista Casa Nova'; },
+    icone: '🏠', dicaDestaque: '✦ Adicione ao Destaque para que todos vejam!'
   },
   'cha-bebe': {
     badge: '👶 Chá de Bebê', sub: 'Crie seu story de chá de bebê em segundos',
     labelNome: 'Nome dos papais', fraseDefault: 'Nosso bebê está chegando!',
-    frases: ['O pequeno já tem uma lista', 'Presentes para o novo amor', 'Ajude a receber nosso bebê', 'Escolhemos com carinho cada item'],
-    templates: ['Claro', 'Elegante', 'Foto Real'],
-    cardTitulo: function(nome) { return nome ? 'Bebê de ' + nome : 'Nosso Bebê Chegando!'; },
-    icone: '👶', modalEmoji: '👶',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a chegada do bebê!'
+    frases: ['O pequeno já tem uma lista','Presentes para o novo amor','Ajude a receber nosso bebê','Escolhemos com carinho cada item'],
+    templates: ['Claro','Elegante','Foto Real'],
+    cardTitulo: function(n){ return n ? 'Bebê de '+n : 'Nosso Bebê Chegando!'; },
+    icone: '👶', dicaDestaque: '✦ Adicione ao Destaque até a chegada do bebê!'
   },
   outros: {
     badge: '🎁 Outro Evento', sub: 'Crie seu story personalizado em segundos',
     labelNome: 'Seu nome', fraseDefault: 'Preparei uma lista especial para você!',
-    frases: ['Escolhi com carinho cada item', 'Sua presença já é o maior presente', 'Compartilhe esse momento comigo', 'Cada presente conta muito!'],
-    templates: ['Claro', 'Elegante', 'Foto Real'],
-    cardTitulo: function(nome) { return nome ? nome + ' — Lista de Presentes' : 'Minha Lista de Presentes'; },
-    icone: '🎁', modalEmoji: '🎉',
-    dicaDestaque: '✦ Adicione ao Destaque para que todos vejam até a data do seu evento!'
+    frases: ['Escolhi com carinho cada item','Sua presença já é o maior presente','Compartilhe esse momento comigo','Cada presente conta muito!'],
+    templates: ['Claro','Elegante','Foto Real'],
+    cardTitulo: function(n){ return n ? n+' — Lista de Presentes' : 'Minha Lista de Presentes'; },
+    icone: '🎁', dicaDestaque: '✦ Adicione ao Destaque até a data do seu evento!'
   }
 };
 
@@ -328,18 +245,16 @@ var tplAtivo = 0;
 var fotoUsuario = null;
 var previewAberto = false;
 
-// Pré-carrega foto do evento
 function preCarregarFotoEvento(cb) {
   if (imgFotoEvento) { cb(); return; }
   var img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = function() { imgFotoEvento = img; cb(); };
-  img.onerror = function() { 
-    // Fallback — tenta sem crossOrigin
+  img.onerror = function() {
     var img2 = new Image();
     img2.onload = function() { imgFotoEvento = img2; cb(); };
     img2.onerror = function() { imgFotoEvento = null; cb(); };
-    img2.src = fotoEvento + '&cb=' + Date.now();
+    img2.src = fotoEvento + '&t=' + Date.now();
   };
   img.src = fotoEvento;
 }
@@ -350,25 +265,17 @@ document.getElementById('labelNome').textContent = eventoConfig.labelNome;
 document.getElementById('frase').value = eventoConfig.fraseDefault;
 document.getElementById('previewIcone').textContent = eventoConfig.icone;
 document.getElementById('modalDicaDestaque').textContent = eventoConfig.dicaDestaque;
-
-for (var i = 0; i < 3; i++) {
-  document.getElementById('label' + i).textContent = eventoConfig.templates[i];
-}
+for (var i = 0; i < 3; i++) document.getElementById('label'+i).textContent = eventoConfig.templates[i];
 
 var frasesEl = document.getElementById('frasesChips');
 eventoConfig.frases.forEach(function(f) {
   var span = document.createElement('span');
-  span.className = 'chip';
-  span.textContent = f;
+  span.className = 'chip'; span.textContent = f;
   span.onclick = function() { usarFrase(this); };
   frasesEl.appendChild(span);
 });
 
-if (vitrineId) {
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('link').value = window.location.origin + '/vitrine/' + vitrineId;
-  });
-}
+if (vitrineId) document.getElementById('link').value = window.location.origin + '/vitrine/' + vitrineId;
 
 function voltarLista() {
   if (vitrineId) window.location.href = '/lista/' + vitrineId;
@@ -379,210 +286,144 @@ function quebrarTexto(ctx, texto, x, y, maxW, altLinha) {
   var palavras = texto.split(' '), linha = '', yAtual = y;
   for (var i = 0; i < palavras.length; i++) {
     var teste = linha + palavras[i] + ' ';
-    if (ctx.measureText(teste).width > maxW && i > 0) {
-      ctx.fillText(linha.trim(), x, yAtual);
-      linha = palavras[i] + ' ';
-      yAtual += altLinha;
-    } else { linha = teste; }
+    if (ctx.measureText(teste).width > maxW && i > 0) { ctx.fillText(linha.trim(), x, yAtual); linha = palavras[i]+' '; yAtual += altLinha; }
+    else { linha = teste; }
   }
   ctx.fillText(linha.trim(), x, yAtual);
 }
 
 function desenharFundo(ctx, w, h, tplIdx, foto) {
-  if (foto) {
-    // Foto do usuário
-    ctx.drawImage(foto, 0, 0, w, h);
-    var ov = ctx.createLinearGradient(0, 0, 0, h);
-    ov.addColorStop(0, 'rgba(255,248,236,0.3)');
-    ov.addColorStop(0.5, 'rgba(255,248,236,0.1)');
-    ov.addColorStop(1, 'rgba(255,248,236,0.6)');
-    ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
+  var imgFundo = foto || imgFotoEvento;
+
+  if (imgFundo) {
+    // Calcula crop para preencher o canvas mantendo proporção
+    var escala = Math.max(w / imgFundo.width, h / imgFundo.height);
+    var iw = imgFundo.width * escala, ih = imgFundo.height * escala;
+    var ix = (w - iw) / 2, iy = (h - ih) / 2;
+    ctx.drawImage(imgFundo, ix, iy, iw, ih);
+
+    var overlay = ctx.createLinearGradient(0, 0, 0, h);
+    if (tplIdx === 0) {
+      overlay.addColorStop(0, 'rgba(255,248,236,0.3)');
+      overlay.addColorStop(0.5, 'rgba(255,248,236,0.08)');
+      overlay.addColorStop(1, 'rgba(255,248,236,0.65)');
+    } else if (tplIdx === 1) {
+      overlay.addColorStop(0, 'rgba(20,12,4,0.45)');
+      overlay.addColorStop(0.5, 'rgba(20,12,4,0.15)');
+      overlay.addColorStop(1, 'rgba(20,12,4,0.6)');
+      ctx.fillStyle = overlay; ctx.fillRect(0,0,w,h);
+      // Moldura dourada elegante
+      ctx.strokeStyle = 'rgba(201,168,76,0.6)'; ctx.lineWidth = 2;
+      ctx.strokeRect(w*0.04, h*0.025, w*0.92, h*0.62);
+      ctx.strokeStyle = 'rgba(201,168,76,0.3)'; ctx.lineWidth = 1;
+      ctx.strokeRect(w*0.065, h*0.04, w*0.87, h*0.595);
+      return;
+    } else {
+      overlay.addColorStop(0, 'rgba(255,248,236,0.08)');
+      overlay.addColorStop(0.5, 'rgba(255,248,236,0.0)');
+      overlay.addColorStop(1, 'rgba(255,248,236,0.5)');
+    }
+    ctx.fillStyle = overlay; ctx.fillRect(0,0,w,h);
     return;
   }
-  if (tplIdx === 2 && imgFotoEvento) {
-    // Foto real do evento
-    ctx.drawImage(imgFotoEvento, 0, 0, w, h);
-    var ov2 = ctx.createLinearGradient(0, 0, 0, h);
-    ov2.addColorStop(0, 'rgba(255,248,236,0.2)');
-    ov2.addColorStop(0.5, 'rgba(255,248,236,0.05)');
-    ov2.addColorStop(1, 'rgba(255,248,236,0.7)');
-    ctx.fillStyle = ov2; ctx.fillRect(0, 0, w, h);
-    return;
-  }
-  if (tplIdx === 0) {
-    // Template Claro — creme puro com detalhes dourados
-    var g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#FFF8EC');
-    g.addColorStop(1, '#F5EDD8');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    // Círculo decorativo top
-    ctx.fillStyle = 'rgba(201,168,76,0.08)';
-    ctx.beginPath(); ctx.arc(w * 0.85, h * 0.08, w * 0.35, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = 'rgba(201,168,76,0.05)';
-    ctx.beginPath(); ctx.arc(w * 0.1, h * 0.55, w * 0.28, 0, Math.PI * 2); ctx.fill();
-    // Pontos dourados
-    ctx.fillStyle = 'rgba(201,168,76,0.25)';
-    for (var i = 0; i < 20; i++) {
-      ctx.beginPath();
-      ctx.arc(Math.random() * w, Math.random() * h * 0.6, Math.random() * 2 + 0.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    // Linhas decorativas
-    ctx.strokeStyle = 'rgba(201,168,76,0.12)';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(w * 0.1, h * 0.04); ctx.lineTo(w * 0.9, h * 0.04); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w * 0.1, h * 0.065); ctx.lineTo(w * 0.9, h * 0.065); ctx.stroke();
-  } else {
-    // Template Elegante — creme mais escuro com textura
-    var g2 = ctx.createLinearGradient(0, 0, w, h);
-    g2.addColorStop(0, '#F5EDD8');
-    g2.addColorStop(0.5, '#EDE0C4');
-    g2.addColorStop(1, '#F5EDD8');
-    ctx.fillStyle = g2; ctx.fillRect(0, 0, w, h);
-    // Moldura elegante
-    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(w * 0.04, h * 0.025, w * 0.92, h * 0.62);
-    ctx.strokeStyle = 'rgba(201,168,76,0.15)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(w * 0.06, h * 0.035, w * 0.88, h * 0.60);
-    // Cantos decorativos
-    var cs = 16;
-    ctx.strokeStyle = 'rgba(201,168,76,0.5)';
-    ctx.lineWidth = 2;
-    [[w*0.04, h*0.025], [w*0.96, h*0.025], [w*0.04, h*0.645], [w*0.96, h*0.645]].forEach(function(pt) {
-      ctx.beginPath();
-      ctx.arc(pt[0], pt[1], cs * 0.5, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    // Pontos dourados
-    ctx.fillStyle = 'rgba(201,168,76,0.2)';
-    for (var j = 0; j < 15; j++) {
-      ctx.beginPath();
-      ctx.arc(Math.random() * w, Math.random() * h * 0.6, Math.random() * 1.5 + 0.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+
+  // Fallback gradiente creme
+  var g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, '#FFF8EC'); g.addColorStop(1, '#F5EDD8');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = 'rgba(201,168,76,0.08)';
+  ctx.beginPath(); ctx.arc(w*0.85, h*0.08, w*0.35, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(201,168,76,0.05)';
+  ctx.beginPath(); ctx.arc(w*0.1, h*0.55, w*0.28, 0, Math.PI*2); ctx.fill();
+  if (tplIdx === 1) {
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)'; ctx.lineWidth = 2;
+    ctx.strokeRect(w*0.04, h*0.025, w*0.92, h*0.62);
+    ctx.strokeStyle = 'rgba(201,168,76,0.15)'; ctx.lineWidth = 1;
+    ctx.strokeRect(w*0.065, h*0.04, w*0.87, h*0.595);
   }
 }
 
 function desenharCard(ctx, w, h, nome, frase, sc) {
-  var cardX = w * 0.04, cardW = w * 0.92, cardY = h * 0.66, cardH = h * 0.31, raio = 18 * sc;
-
-  // Sombra suave
-  ctx.shadowColor = 'rgba(0,0,0,0.1)';
-  ctx.shadowBlur = 20 * sc;
-  ctx.shadowOffsetY = 6 * sc;
-
-  // Card branco
-  ctx.fillStyle = 'rgba(255,255,255,0.97)';
+  var cardX=w*0.04, cardW=w*0.92, cardY=h*0.66, cardH=h*0.31, raio=18*sc;
+  ctx.shadowColor='rgba(0,0,0,0.12)'; ctx.shadowBlur=24*sc; ctx.shadowOffsetY=8*sc;
+  ctx.fillStyle='rgba(255,255,255,0.97)';
   ctx.beginPath();
-  ctx.moveTo(cardX + raio, cardY);
-  ctx.lineTo(cardX + cardW - raio, cardY);
-  ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + raio);
-  ctx.lineTo(cardX + cardW, cardY + cardH - raio);
-  ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - raio, cardY + cardH);
-  ctx.lineTo(cardX + raio, cardY + cardH);
-  ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - raio);
-  ctx.lineTo(cardX, cardY + raio);
-  ctx.quadraticCurveTo(cardX, cardY, cardX + raio, cardY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+  ctx.moveTo(cardX+raio,cardY); ctx.lineTo(cardX+cardW-raio,cardY);
+  ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
+  ctx.lineTo(cardX+cardW,cardY+cardH-raio);
+  ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
+  ctx.lineTo(cardX+raio,cardY+cardH);
+  ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
+  ctx.lineTo(cardX,cardY+raio); ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
+  ctx.closePath(); ctx.fill();
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
 
-  // Borda dourada fina
-  ctx.strokeStyle = 'rgba(201,168,76,0.35)';
-  ctx.lineWidth = 1 * sc;
+  ctx.strokeStyle='rgba(201,168,76,0.4)'; ctx.lineWidth=1*sc;
   ctx.beginPath();
-  ctx.moveTo(cardX + raio, cardY);
-  ctx.lineTo(cardX + cardW - raio, cardY);
-  ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + raio);
-  ctx.lineTo(cardX + cardW, cardY + cardH - raio);
-  ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - raio, cardY + cardH);
-  ctx.lineTo(cardX + raio, cardY + cardH);
-  ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - raio);
-  ctx.lineTo(cardX, cardY + raio);
-  ctx.quadraticCurveTo(cardX, cardY, cardX + raio, cardY);
-  ctx.closePath();
-  ctx.stroke();
+  ctx.moveTo(cardX+raio,cardY); ctx.lineTo(cardX+cardW-raio,cardY);
+  ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+raio);
+  ctx.lineTo(cardX+cardW,cardY+cardH-raio);
+  ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-raio,cardY+cardH);
+  ctx.lineTo(cardX+raio,cardY+cardH);
+  ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-raio);
+  ctx.lineTo(cardX,cardY+raio); ctx.quadraticCurveTo(cardX,cardY,cardX+raio,cardY);
+  ctx.closePath(); ctx.stroke();
 
-  // Ornamento topo do card
-  ctx.textAlign = 'center';
-  ctx.font = Math.round(9 * sc) + 'px Arial';
-  ctx.fillStyle = '#C9A84C';
-  ctx.fillText('✦  ✦  ✦', w / 2, cardY + 16 * sc);
+  ctx.textAlign='center';
+  ctx.font=Math.round(9*sc)+'px Arial'; ctx.fillStyle='#C9A84C';
+  ctx.fillText('✦  ✦  ✦', w/2, cardY+16*sc);
+  ctx.font='bold '+Math.round(13*sc)+'px Georgia'; ctx.fillStyle='#2C2C2C';
+  ctx.fillText(eventoConfig.cardTitulo(nome), w/2, cardY+cardH*0.30);
 
-  // Nome do evento
-  ctx.font = 'bold ' + Math.round(13 * sc) + 'px Georgia';
-  ctx.fillStyle = '#2C2C2C';
-  ctx.fillText(eventoConfig.cardTitulo(nome), w / 2, cardY + cardH * 0.30);
+  ctx.strokeStyle='rgba(201,168,76,0.4)'; ctx.lineWidth=0.8*sc;
+  ctx.beginPath(); ctx.moveTo(w*0.28,cardY+cardH*0.38); ctx.lineTo(w*0.72,cardY+cardH*0.38); ctx.stroke();
 
-  // Linha dourada
-  var lx1 = w * 0.28, lx2 = w * 0.72, ly = cardY + cardH * 0.38;
-  ctx.strokeStyle = 'rgba(201,168,76,0.4)';
-  ctx.lineWidth = 0.8 * sc;
-  ctx.beginPath(); ctx.moveTo(lx1, ly); ctx.lineTo(lx2, ly); ctx.stroke();
+  ctx.font=Math.round(10*sc)+'px Georgia'; ctx.fillStyle='#888'; ctx.textAlign='center';
+  quebrarTexto(ctx, frase||eventoConfig.fraseDefault, w/2, cardY+cardH*0.48, cardW*0.80, 13*sc);
 
-  // Frase
-  ctx.font = Math.round(10 * sc) + 'px Georgia';
-  ctx.fillStyle = '#888';
-  ctx.textAlign = 'center';
-  quebrarTexto(ctx, frase || eventoConfig.fraseDefault, w / 2, cardY + cardH * 0.48, cardW * 0.80, 13 * sc);
-
-  // Botão dourado
-  var btnX = cardX + cardW * 0.08, btnW = cardW * 0.84;
-  var btnY = cardY + cardH * 0.68, btnH = 34 * sc, btnR = btnH / 2;
-  var gradBtn = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY);
-  gradBtn.addColorStop(0, '#C9A84C');
-  gradBtn.addColorStop(1, '#A8722A');
-  ctx.fillStyle = gradBtn;
+  var btnX=cardX+cardW*0.08, btnW=cardW*0.84, btnY=cardY+cardH*0.68, btnH=34*sc, btnR=btnH/2;
+  var gradBtn=ctx.createLinearGradient(btnX,btnY,btnX+btnW,btnY);
+  gradBtn.addColorStop(0,'#C9A84C'); gradBtn.addColorStop(1,'#A8722A');
+  ctx.fillStyle=gradBtn;
   ctx.beginPath();
-  ctx.moveTo(btnX + btnR, btnY);
-  ctx.lineTo(btnX + btnW - btnR, btnY);
-  ctx.quadraticCurveTo(btnX + btnW, btnY, btnX + btnW, btnY + btnR);
-  ctx.quadraticCurveTo(btnX + btnW, btnY + btnH, btnX + btnW - btnR, btnY + btnH);
-  ctx.lineTo(btnX + btnR, btnY + btnH);
-  ctx.quadraticCurveTo(btnX, btnY + btnH, btnX, btnY + btnR);
-  ctx.quadraticCurveTo(btnX, btnY, btnX + btnR, btnY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.font = 'bold ' + Math.round(11 * sc) + 'px Arial';
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.fillText('✦ Ver Lista de Presentes', btnX + btnW / 2, btnY + btnH * 0.64);
+  ctx.moveTo(btnX+btnR,btnY); ctx.lineTo(btnX+btnW-btnR,btnY);
+  ctx.quadraticCurveTo(btnX+btnW,btnY,btnX+btnW,btnY+btnR);
+  ctx.quadraticCurveTo(btnX+btnW,btnY+btnH,btnX+btnW-btnR,btnY+btnH);
+  ctx.lineTo(btnX+btnR,btnY+btnH);
+  ctx.quadraticCurveTo(btnX,btnY+btnH,btnX,btnY+btnR);
+  ctx.quadraticCurveTo(btnX,btnY,btnX+btnR,btnY);
+  ctx.closePath(); ctx.fill();
+  ctx.font='bold '+Math.round(11*sc)+'px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='center';
+  ctx.fillText('✦ Ver Lista de Presentes', btnX+btnW/2, btnY+btnH*0.64);
 }
 
 function desenhar(canvas, tplIdx, nome, frase, foto) {
-  var ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height, sc = w / 360;
+  var ctx=canvas.getContext('2d'), w=canvas.width, h=canvas.height, sc=w/360;
   desenharFundo(ctx, w, h, tplIdx, foto);
   desenharCard(ctx, w, h, nome, frase, sc);
 }
 
 function renderPreviews() {
-  var nomePreview = eventoParam === 'casamento' ? 'Ana & João' : eventoParam === 'cha-bebe' ? 'Os Papais' : 'Seu Nome';
-  // Previews com gradiente creme enquanto foto carrega
+  var nomePreview = eventoParam==='casamento' ? 'Ana & João' : eventoParam==='cha-bebe' ? 'Os Papais' : 'Seu Nome';
+  // Mostra gradiente creme imediatamente
   for (var i = 0; i < 3; i++) {
-    var ctx = document.getElementById('prev' + i).getContext('2d');
-    var w = 180, h = 320;
-    var g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#FFF8EC');
-    g.addColorStop(1, '#F5EDD8');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = 'rgba(201,168,76,0.3)';
-    ctx.font = '12px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('✦', w/2, h*0.3);
+    var ctx = document.getElementById('prev'+i).getContext('2d');
+    var g = ctx.createLinearGradient(0,0,0,320);
+    g.addColorStop(0,'#FFF8EC'); g.addColorStop(1,'#F5EDD8');
+    ctx.fillStyle = g; ctx.fillRect(0,0,180,320);
+    ctx.fillStyle='rgba(201,168,76,0.3)'; ctx.font='14px Arial'; ctx.textAlign='center';
+    ctx.fillText('✦', 90, 96);
   }
-  // Depois carrega a foto real
+  // Carrega foto real e redesenha
   preCarregarFotoEvento(function() {
     for (var i = 0; i < 3; i++) {
-      desenhar(document.getElementById('prev' + i), i, nomePreview, eventoConfig.fraseDefault, null);
+      desenhar(document.getElementById('prev'+i), i, nomePreview, eventoConfig.fraseDefault, null);
     }
   });
 }
 
 function selecionarTpl(el) {
-  document.querySelectorAll('.tpl-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.querySelectorAll('.tpl-card').forEach(function(c){ c.classList.remove('selected'); });
   el.classList.add('selected');
   tplAtivo = parseInt(el.dataset.tpl);
   if (previewAberto) gerarStory();
@@ -606,10 +447,6 @@ function gerarStory() {
   var nome = document.getElementById('nome').value;
   var frase = document.getElementById('frase').value;
   var canvas = document.getElementById('storyFinal');
-  
-  // Força recarregar a foto se não carregou
-  imgFotoEvento = null;
-  
   preCarregarFotoEvento(function() {
     desenhar(canvas, tplAtivo, nome, frase, fotoUsuario);
     previewAberto = true;
@@ -633,30 +470,22 @@ function abrirInstagram() {
   a.download = 'story-instagift.png';
   a.href = canvas.toDataURL('image/png');
   a.click();
-  navigator.clipboard.writeText(link).catch(function() {});
+  navigator.clipboard.writeText(link).catch(function(){});
   document.getElementById('modal-link-texto').textContent = link;
   document.getElementById('modal-insta').classList.add('show');
 }
 
 function copiarLinkModal() {
   var link = document.getElementById('modal-link-texto').textContent;
-  navigator.clipboard.writeText(link).then(function() { alert('Link copiado!'); });
+  navigator.clipboard.writeText(link).then(function(){ alert('Link copiado!'); });
 }
 
 function abrirAppInstagram() {
   window.location.href = 'instagram://story-camera';
-  setTimeout(function() { window.open('https://www.instagram.com', '_blank'); }, 1500);
+  setTimeout(function(){ window.open('https://www.instagram.com','_blank'); }, 1500);
 }
 
 renderPreviews();
-
-if (vitrineId) {
-  document.getElementById('link').value = window.location.origin + '/vitrine/' + vitrineId;
-}
 </script>
 </body>
 </html>
-
-
-
-
