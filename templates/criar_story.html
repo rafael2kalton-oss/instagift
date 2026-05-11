@@ -334,7 +334,13 @@ function preCarregarFotoEvento(cb) {
   var img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = function() { imgFotoEvento = img; cb(); };
-  img.onerror = function() { imgFotoEvento = null; cb(); };
+  img.onerror = function() { 
+    // Fallback — tenta sem crossOrigin
+    var img2 = new Image();
+    img2.onload = function() { imgFotoEvento = img2; cb(); };
+    img2.onerror = function() { imgFotoEvento = null; cb(); };
+    img2.src = fotoEvento + '&cb=' + Date.now();
+  };
   img.src = fotoEvento;
 }
 
@@ -631,4 +637,5 @@ if (vitrineId) {
 </script>
 </body>
 </html>
+
 
