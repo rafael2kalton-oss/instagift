@@ -4,101 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InstaGift - Criar Lista</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: linear-gradient(135deg, #0a0a0f 0%, #0f0a1a 100%); font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
+        body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #F5F0E8; min-height: 100vh; }
         .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding: 20px 16px 48px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 28px 0; }
-        .logo-box { background: linear-gradient(135deg, #8A63D2, #b088f5); color: #fff; font-weight: 800; padding: 7px 16px; font-size: 22px; border-radius: 10px; letter-spacing: -0.5px; cursor: pointer; }
-        .tagline { font-size: 12px; color: #888; margin-top: 4px; }
-        .header-right { text-align: right; }
+
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 28px 0; border-bottom: 1px solid rgba(201,168,76,0.15); margin-bottom: 28px; }
+        .logo-box { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #C9A84C; letter-spacing: 0.5px; cursor: pointer; }
+        .logo-box span { color: #F5F0E8; }
+        .tagline { font-size: 11px; color: #666; margin-top: 3px; letter-spacing: 0.05em; }
         .header-right span { font-size: 11px; color: #555; }
+
+        /* WIZARD */
         .wizard-steps { display: flex; gap: 6px; margin-bottom: 28px; }
-        .step { flex: 1; height: 3px; border-radius: 3px; background: #1a1a2e; transition: background 0.4s; }
-        .step.active { background: linear-gradient(90deg, #8A63D2, #b088f5); }
-        .step.done { background: #5a3d9a; }
+        .step { flex: 1; height: 2px; border-radius: 2px; background: #1a1a1a; transition: background 0.4s; }
+        .step.active { background: linear-gradient(90deg, #C9A84C, #E8C96A); }
+        .step.done { background: #7A6230; }
+
+        /* SEÇÕES */
         .secao { display: none; animation: fadeUp 0.4s ease; }
         .secao.ativa { display: block; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .secao-titulo { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-        .secao-sub { font-size: 13px; color: #888; margin-bottom: 24px; line-height: 1.5; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        .secao-titulo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 6px; color: #F5F0E8; }
+        .secao-sub { font-size: 13px; color: #666; margin-bottom: 24px; line-height: 1.6; }
+
+        /* EVENTOS */
         .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
-        .evento-card { background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.25s; }
-        .evento-card:hover { border-color: rgba(138,99,210,0.5); background: rgba(138,99,210,0.08); transform: translateY(-2px); }
-        .evento-card.selected { border-color: #8A63D2; background: rgba(138,99,210,0.12); box-shadow: 0 0 20px rgba(138,99,210,0.2); }
+        .evento-card { background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.25s; }
+        .evento-card:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); transform: translateY(-2px); }
+        .evento-card.selected { border-color: #C9A84C; background: rgba(201,168,76,0.08); box-shadow: 0 0 20px rgba(201,168,76,0.12); }
         .evento-emoji { font-size: 30px; margin-bottom: 8px; }
-        .evento-nome { font-size: 13px; font-weight: 600; color: #eee; }
-        .evento-sub { font-size: 11px; color: #666; margin-top: 3px; }
+        .evento-nome { font-size: 13px; font-weight: 600; color: #F5F0E8; }
+        .evento-sub { font-size: 11px; color: #555; margin-top: 3px; }
         .evento-card-full { grid-column: span 2; }
+
+        /* CAMPOS */
         .campo { margin-bottom: 16px; }
-        .campo label { font-size: 12px; color: #888; font-weight: 500; display: block; margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
-        .campo input { width: 100%; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 13px 16px; color: #fff; font-size: 15px; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
-        .campo input:focus { border-color: rgba(138,99,210,0.6); background: rgba(138,99,210,0.05); }
-        .campo input::placeholder { color: #444; }
-        .btn-proximo { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(138,99,210,0.3); margin-top: 8px; }
-        .btn-proximo:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(138,99,210,0.45); }
-        .btn-pular { width: 100%; background: transparent; border: none; color: #555; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 10px; margin-top: 4px; }
-        .btn-pular:hover { color: #888; }
-        .btn-voltar-step { background: transparent; border: none; color: #666; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 8px 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
-        .btn-voltar-step:hover { color: #aaa; }
-        .email-hint { font-size: 12px; color: #555; margin-top: 8px; line-height: 1.5; }
-        .email-salvo { font-size: 12px; color: #22c55e; margin-top: 8px; display: none; }
+        .campo label { font-size: 11px; color: #666; font-weight: 500; display: block; margin-bottom: 8px; letter-spacing: 0.06em; text-transform: uppercase; }
+        .campo input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 13px 16px; color: #F5F0E8; font-size: 15px; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
+        .campo input:focus { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.03); }
+        .campo input::placeholder { color: #333; }
+
+        /* BOTÕES */
+        .btn-proximo { width: 100%; background: linear-gradient(135deg, #C9A84C, #A8722A); border: none; border-radius: 14px; padding: 15px; color: #0D0D0D; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.25); margin-top: 8px; letter-spacing: 0.02em; }
+        .btn-proximo:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.35); }
+        .btn-pular { width: 100%; background: transparent; border: none; color: #444; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 10px; margin-top: 4px; }
+        .btn-pular:hover { color: #666; }
+        .btn-voltar-step { background: transparent; border: none; color: #555; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; padding: 8px 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
+        .btn-voltar-step:hover { color: #C9A84C; }
+
+        /* EMAIL */
+        .email-hint { font-size: 12px; color: #444; margin-top: 8px; line-height: 1.5; }
+        .email-salvo { font-size: 12px; color: #C9A84C; margin-top: 8px; display: none; }
+
+        /* CHIPS PLATAFORMAS */
         .platform-chips { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-        .chip { font-size: 11px; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; color: #888; border: 1px solid rgba(255,255,255,0.08); }
+        .chip { font-size: 11px; background: rgba(201,168,76,0.06); padding: 4px 12px; border-radius: 20px; color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); }
+
+        /* INPUT LINK */
         .input-group { display: flex; gap: 10px; }
-        .input-group input { flex: 1; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; }
-        .input-group input:focus { border-color: rgba(138,99,210,0.6); }
-        .input-group input::placeholder { color: #444; }
-        .btn-add { background: #8A63D2; border: none; padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
-        .btn-add:hover { background: #9d7ae0; }
-        .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
-        .loading { text-align: center; color: #8A63D2; padding: 10px 0; font-size: 13px; display: none; }
+        .input-group input { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 12px 14px; color: #F5F0E8; font-size: 14px; outline: none; font-family: 'Inter', sans-serif; }
+        .input-group input:focus { border-color: rgba(201,168,76,0.5); }
+        .input-group input::placeholder { color: #333; }
+        .btn-add { background: linear-gradient(135deg, #C9A84C, #A8722A); border: none; padding: 12px 18px; border-radius: 12px; color: #0D0D0D; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
+        .btn-add:hover { transform: scale(1.03); }
+        .btn-add:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .loading { text-align: center; color: #C9A84C; padding: 10px 0; font-size: 13px; display: none; }
+
+        /* SECTION HEADER */
         .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .section-header h3 { font-size: 15px; font-weight: 600; color: #eee; }
-        .section-header span { font-size: 12px; color: #8A63D2; }
-        .product-card { background: rgba(255,255,255,0.03); border-radius: 16px; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.2s; }
-        .product-card:hover { border-color: rgba(138,99,210,0.2); }
-        .product-img-wrap { background: rgba(255,255,255,0.02); text-align: center; padding: 16px; }
+        .section-header h3 { font-size: 15px; font-weight: 600; color: #F5F0E8; }
+        .section-header span { font-size: 12px; color: #C9A84C; }
+
+        /* PRODUCT CARDS */
+        .product-card { background: #141414; border-radius: 16px; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(201,168,76,0.1); transition: border-color 0.2s; animation: fadeUp 0.3s ease; }
+        .product-card:hover { border-color: rgba(201,168,76,0.25); }
+        .product-img-wrap { background: #0a0a0a; text-align: center; padding: 16px; }
         .product-img-wrap img { width: 100%; max-height: 160px; object-fit: contain; border-radius: 8px; }
         .product-img-placeholder { font-size: 44px; padding: 16px 0; }
         .product-info { padding: 12px 16px; }
-        .product-nome { font-size: 13px; font-weight: 600; color: #eee; margin-bottom: 4px; line-height: 1.4; }
-        .product-preco { font-size: 15px; font-weight: 700; color: #8A63D2; margin-bottom: 8px; }
+        .product-nome { font-size: 13px; font-weight: 600; color: #F5F0E8; margin-bottom: 4px; line-height: 1.4; }
+        .product-preco { font-size: 15px; font-weight: 700; color: #C9A84C; margin-bottom: 8px; }
         .product-footer { display: flex; justify-content: space-between; align-items: center; }
         .platform-badge { font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
         .badge-amazon { background: #FF9900; color: #000; }
         .badge-mercadolivre { background: #FFE600; color: #000; }
         .badge-shopee { background: #EE4D2D; color: #fff; }
-        .badge-shein { background: #000000; color: #fff; }
-        .badge-outro { background: #333; color: #fff; }
+        .badge-shein { background: #1a1a1a; color: #C9A84C; border: 1px solid rgba(201,168,76,0.3); }
         .badge-magalu { background: #0086FF; color: #fff; }
-        .btn-remover { background: transparent; border: none; color: #444; font-size: 16px; cursor: pointer; transition: color 0.2s; }
+        .badge-outro { background: #222; color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); }
+        .btn-remover { background: transparent; border: none; color: #333; font-size: 16px; cursor: pointer; transition: color 0.2s; }
         .btn-remover:hover { color: #ff4444; }
-        .btn-editar { background: transparent; border: none; color: #8A63D2; font-size: 15px; cursor: pointer; transition: color 0.2s; margin-right: 4px; }
-        .btn-editar:hover { color: #b088f5; }
+        .btn-editar { background: transparent; border: none; color: #C9A84C; font-size: 15px; cursor: pointer; transition: color 0.2s; margin-right: 4px; opacity: 0.7; }
+        .btn-editar:hover { opacity: 1; }
+
+        /* AÇÕES */
         .btn-whatsapp { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-whatsapp:hover:not(:disabled) { transform: translateY(-2px); }
-        .btn-whatsapp:disabled { background: rgba(255,255,255,0.06); color: #444; cursor: not-allowed; border: 1.5px solid rgba(255,255,255,0.06); }
-        .whatsapp-hint { font-size: 11px; color: #555; text-align: center; margin-top: 4px; line-height: 1.5; }
-        .whatsapp-hint.liberado { color: #22c55e; }
-        .empty-state { text-align: center; padding: 32px 0; color: #333; }
+        .btn-whatsapp:disabled { background: rgba(255,255,255,0.04); color: #333; cursor: not-allowed; border: 1px solid rgba(255,255,255,0.05); }
+        .whatsapp-hint { font-size: 11px; color: #444; text-align: center; margin-top: 4px; line-height: 1.5; }
+        .whatsapp-hint.liberado { color: #C9A84C; }
+        .empty-state { text-align: center; padding: 32px 0; color: #2a2a2a; }
         .empty-state .emoji { font-size: 36px; margin-bottom: 10px; }
         .empty-state p { font-size: 13px; line-height: 1.6; }
         .acoes { margin-top: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
         .btn-criar-story { width: 100%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; }
         .btn-criar-story:hover { transform: translateY(-2px); }
-        .btn-gerar-vitrine { width: 100%; background: linear-gradient(135deg, #8A63D2, #6a43b2); border: none; border-radius: 14px; padding: 15px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(138,99,210,0.25); }
-        .btn-gerar-vitrine:hover { transform: translateY(-2px); }
-        .btn-ver-vitrine { width: 100%; background: transparent; border: 1.5px solid rgba(138,99,210,0.4); border-radius: 14px; padding: 14px; color: #8A63D2; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-        .btn-ver-vitrine:hover { background: rgba(138,99,210,0.1); border-color: #8A63D2; }
-        .link-permanente { background: rgba(138,99,210,0.05); border: 1px solid rgba(138,99,210,0.15); border-radius: 14px; padding: 16px; margin-top: 20px; }
-        .link-permanente p { font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .link-permanente code { font-size: 11px; color: #8A63D2; word-break: break-all; display: block; margin-bottom: 10px; }
-        .btn-copiar { background: rgba(138,99,210,0.15); border: 1px solid rgba(138,99,210,0.3); color: #8A63D2; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-        .btn-copiar:hover { background: #8A63D2; color: #fff; }
-        .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 24px 0; }
-        .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(138,99,210,0.1); border: 1px solid rgba(138,99,210,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #b088f5; margin-bottom: 20px; }
+        .btn-gerar-vitrine { width: 100%; background: linear-gradient(135deg, #C9A84C, #A8722A); border: none; border-radius: 14px; padding: 15px; color: #0D0D0D; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.2); letter-spacing: 0.02em; }
+        .btn-gerar-vitrine:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.3); }
+        .btn-ver-vitrine { width: 100%; background: transparent; border: 1px solid rgba(201,168,76,0.3); border-radius: 14px; padding: 14px; color: #C9A84C; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .btn-ver-vitrine:hover { background: rgba(201,168,76,0.07); border-color: #C9A84C; }
+
+        /* LINK PERMANENTE */
+        .link-permanente { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12); border-radius: 14px; padding: 16px; margin-top: 20px; }
+        .link-permanente p { font-size: 11px; color: #555; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .link-permanente code { font-size: 11px; color: #C9A84C; word-break: break-all; display: block; margin-bottom: 10px; }
+        .btn-copiar { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); color: #C9A84C; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .btn-copiar:hover { background: #C9A84C; color: #0D0D0D; }
+
+        .divider { height: 1px; background: rgba(201,168,76,0.08); margin: 24px 0; }
+        .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #C9A84C; margin-bottom: 20px; }
         .nav-etapa4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     </style>
 </head>
@@ -107,8 +134,8 @@
 
     <header class="header">
         <div>
-            <div class="logo-box" onclick="recomecar()">InstaGift</div>
-            <p class="tagline">Presentes que chegam com amor ✨</p>
+            <div class="logo-box" onclick="recomecar()">Insta<span>Gift</span></div>
+            <p class="tagline">PRESENTES QUE CHEGAM COM AMOR</p>
         </div>
         <div class="header-right">
             <span id="stepIndicator">1 de 4</span>
@@ -124,7 +151,7 @@
 
     <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
-        <p class="secao-titulo">Qual é o seu evento? 🎉</p>
+        <p class="secao-titulo">Qual é o seu evento?</p>
         <p class="secao-sub">Escolha o tipo de evento para personalizar sua lista de presentes.</p>
         <div class="eventos-grid">
             <div class="evento-card selected" data-evento="aniversario" onclick="selecionarEvento(this)">
@@ -160,7 +187,7 @@
     <div class="secao" id="secao2">
         <button class="btn-voltar-step" onclick="irParaEtapa(1)">← Voltar</button>
         <div class="evento-badge-mini" id="eventoBadgeMini">🎂 Aniversário</div>
-        <p class="secao-titulo">Personalize sua lista ✨</p>
+        <p class="secao-titulo">Personalize sua lista</p>
         <p class="secao-sub">Dê um nome especial e a data do seu evento.</p>
         <div class="campo">
             <label id="labelNomeEvento">Nome do evento</label>
@@ -177,13 +204,13 @@
     <!-- ETAPA 3 -->
     <div class="secao" id="secao3">
         <button class="btn-voltar-step" onclick="irParaEtapa(2)">← Voltar</button>
-        <p class="secao-titulo">Seu e-mail 💜</p>
+        <p class="secao-titulo">Seu e-mail</p>
         <p class="secao-sub">Para receber uma notificação especial quando alguém confirmar um presente para você.</p>
         <div class="campo">
             <label>E-mail</label>
             <input type="email" id="inputEmail" placeholder="seu@email.com">
             <p class="email-hint">Só enviamos quando uma compra for confirmada. Nada de spam!</p>
-            <p class="email-salvo" id="emailSalvo">✅ E-mail salvo!</p>
+            <p class="email-salvo" id="emailSalvo">✦ E-mail salvo com sucesso</p>
         </div>
         <button class="btn-proximo" onclick="salvarEmailEAvancar()">Continuar →</button>
         <button class="btn-pular" onclick="irParaEtapa(4)">Pular por agora</button>
@@ -193,13 +220,13 @@
     <div class="secao" id="secao4">
         <div class="nav-etapa4">
             <button class="btn-voltar-step" style="margin-bottom:0;" onclick="irParaEtapa(3)">← Voltar</button>
-            <button class="btn-voltar-step" style="margin-bottom:0; color:#8A63D2;" onclick="recomecar()">↺ Trocar evento</button>
+            <button class="btn-voltar-step" style="margin-bottom:0; color:#C9A84C;" onclick="recomecar()">↺ Trocar evento</button>
         </div>
         <div class="evento-badge-mini" id="eventoBadgeMini4">🎂 Aniversário</div>
         <div class="section-header">
             <div>
                 <h3 id="nomeListaHeader">Minha Lista</h3>
-                <p style="font-size:11px; color:#555; margin-top:2px;" id="dataEventoHeader"></p>
+                <p style="font-size:11px; color:#444; margin-top:2px;" id="dataEventoHeader"></p>
             </div>
         </div>
         <div class="platform-chips">
@@ -226,7 +253,7 @@
             </div>
         </div>
         <div class="link-permanente" id="linkPermanente" style="display:none">
-            <p>🔗 Seu link permanente</p>
+            <p>✦ Seu link permanente</p>
             <code id="textoLink"></code>
             <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
         </div>
@@ -235,10 +262,10 @@
                 📸 Criar meu story no Instagram
             </button>
             <button class="btn-gerar-vitrine" onclick="gerarVitrine()">
-                🎉 Gerar minha vitrine
+                ✦ Gerar minha vitrine
             </button>
             <button class="btn-ver-vitrine" onclick="verVitrine()">
-                👁️ Ver minha vitrine
+                Ver minha vitrine
             </button>
             <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>
                 💚 Avisar Convidados no WhatsApp
@@ -250,62 +277,58 @@
 </div>
 
 <!-- Popup story -->
-<div id="popupStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#0f0f1a; border:1px solid rgba(138,99,210,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center;">
+<div id="popupStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#111; border:1px solid rgba(201,168,76,0.25); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center;">
         <div id="popupEmoji" style="font-size:48px; margin-bottom:14px;">🎉</div>
-        <h3 id="popupTitulo" style="font-size:20px; font-weight:700; color:#fff; margin-bottom:10px;"></h3>
-        <p id="popupTexto" style="font-size:14px; color:#888; line-height:1.7; margin-bottom:14px;"></p>
-        <div style="background:rgba(138,99,210,0.08); border:1px solid rgba(138,99,210,0.2); border-radius:12px; padding:14px; margin-bottom:24px; text-align:left;">
-            <p style="font-size:13px; color:#b088f5; line-height:1.6;">💡 <strong>Dica:</strong> Adicione este story ao seu Destaque para os Melhores Amigos — assim ele fica visível até a data do seu evento!</p>
+        <h3 id="popupTitulo" style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#F5F0E8; margin-bottom:10px;"></h3>
+        <p id="popupTexto" style="font-size:14px; color:#666; line-height:1.7; margin-bottom:14px;"></p>
+        <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.15); border-radius:12px; padding:14px; margin-bottom:24px; text-align:left;">
+            <p style="font-size:13px; color:#C9A84C; line-height:1.6;">✦ <strong>Dica:</strong> Adicione este story ao seu Destaque para os Melhores Amigos — assim ele fica visível até a data do seu evento!</p>
         </div>
         <button onclick="irParaStory()" style="width:100%; padding:15px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; border:none; border-radius:14px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">Entendi, vamos lá! 📸</button>
-        <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#555; border:1px solid rgba(255,255,255,0.08); border-radius:14px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
+        <button onclick="fecharPopupStory()" style="width:100%; padding:12px; background:transparent; color:#444; border:1px solid rgba(255,255,255,0.06); border-radius:14px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
     </div>
 </div>
 
 <!-- Popup Shopee -->
-<div id="popupShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#0f0f1a; border:1px solid rgba(238,77,45,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
+<div id="popupShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#111; border:1px solid rgba(238,77,45,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
         <div style="font-size:40px; margin-bottom:12px;">🧡</div>
-        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:10px;">Produto Shopee detectado</h3>
-        <p style="font-size:13px; color:#888; line-height:1.7; margin-bottom:24px;">Devido às políticas de privacidade da Shopee, não conseguimos buscar as informações do produto automaticamente. Deseja personalizar sua lista manualmente?</p>
+        <h3 style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#F5F0E8; margin-bottom:10px;">Produto Shopee detectado</h3>
+        <p style="font-size:13px; color:#666; line-height:1.7; margin-bottom:24px;">Devido às políticas de privacidade da Shopee, não conseguimos buscar as informações do produto automaticamente. Deseja personalizar sua lista manualmente?</p>
         <button onclick="aceitarPersonalizarShopee()" style="width:100%; padding:14px; background:#EE4D2D; color:white; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Sim, quero personalizar</button>
-        <button onclick="recusarPersonalizarShopee()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid rgba(255,255,255,0.08); border-radius:12px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Não, adicionar assim mesmo</button>
+        <button onclick="recusarPersonalizarShopee()" style="width:100%; padding:12px; background:transparent; color:#555; border:1px solid rgba(255,255,255,0.06); border-radius:12px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Não, adicionar assim mesmo</button>
     </div>
 </div>
 
 <!-- Card manual Shopee -->
-<div id="cardManualShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:#0f0f1a; border:1px solid rgba(238,77,45,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
+<div id="cardManualShopee" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#111; border:1px solid rgba(238,77,45,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 style="font-size:17px; font-weight:700; color:#fff;">🧡 Personalizar produto Shopee</h3>
-            <button onclick="fecharCardManualShopee()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:#F5F0E8;">🧡 Personalizar produto Shopee</h3>
+            <button onclick="fecharCardManualShopee()" style="background:transparent; border:none; color:#444; font-size:20px; cursor:pointer;">✕</button>
         </div>
         <div style="margin-bottom:14px;">
-            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Nome do produto</label>
-            <input type="text" id="shopeeNomeManual" placeholder="Ex: Tênis Nike Air Max" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(238,77,45,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Nome do produto</label>
+            <input type="text" id="shopeeNomeManual" placeholder="Ex: Tênis Nike Air Max" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(238,77,45,0.3); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:14px;">
-            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Preço (opcional)</label>
-            <input type="text" id="shopeePrecoManual" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(238,77,45,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Preço (opcional)</label>
+            <input type="text" id="shopeePrecoManual" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(238,77,45,0.3); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:20px;">
-            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
-            <label for="shopeeImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.06); border:1.5px dashed rgba(238,77,45,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#EE4D2D; font-size:13px; margin-bottom:8px;">
-                📸 Tirar print ou escolher da galeria
-            </label>
+            <label style="font-size:11px; color:#EE4D2D; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Foto do produto (opcional)</label>
+            <label for="shopeeImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(238,77,45,0.04); border:1px dashed rgba(238,77,45,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#EE4D2D; font-size:13px; margin-bottom:8px;">📸 Tirar print ou escolher da galeria</label>
             <input type="file" id="shopeeImagemManual" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="flex:1; height:1px; background:rgba(238,77,45,0.15);"></div>
-                <span style="font-size:11px; color:#555;">ou</span>
-                <div style="flex:1; height:1px; background:rgba(238,77,45,0.15);"></div>
+                <div style="flex:1; height:1px; background:rgba(238,77,45,0.12);"></div>
+                <span style="font-size:11px; color:#444;">ou</span>
+                <div style="flex:1; height:1px; background:rgba(238,77,45,0.12);"></div>
             </div>
-            <div style="background:rgba(238,77,45,0.04); border:1px solid rgba(238,77,45,0.15); border-radius:10px; padding:12px; margin-bottom:8px;">
+            <div style="background:rgba(238,77,45,0.03); border:1px solid rgba(238,77,45,0.12); border-radius:10px; padding:12px; margin-bottom:8px;">
                 <p style="font-size:12px; color:#EE4D2D; font-weight:600; margin-bottom:6px;">📥 Já baixou a imagem da Shopee?</p>
-                <p style="font-size:11px; color:#666; line-height:1.6; margin-bottom:10px;">No app Shopee toque em <strong style="color:#aaa;">Compartilhar → Baixar imagem</strong>, volte aqui e faça o upload.</p>
-                <label for="shopeeImagemBaixada" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(238,77,45,0.1); border:1.5px solid rgba(238,77,45,0.3); border-radius:8px; padding:10px; cursor:pointer; color:#EE4D2D; font-size:13px; font-weight:600;">
-                    📂 Fazer upload da imagem
-                </label>
+                <p style="font-size:11px; color:#555; line-height:1.6; margin-bottom:10px;">No app Shopee toque em <strong style="color:#888;">Compartilhar → Baixar imagem</strong>, volte aqui e faça o upload.</p>
+                <label for="shopeeImagemBaixada" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(238,77,45,0.08); border:1px solid rgba(238,77,45,0.3); border-radius:8px; padding:10px; cursor:pointer; color:#EE4D2D; font-size:13px; font-weight:600;">📂 Fazer upload da imagem</label>
                 <input type="file" id="shopeeImagemBaixada" accept="image/*" style="display:none;" onchange="previewImagemShopee(event)">
             </div>
             <img id="shopeePreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
@@ -315,91 +338,85 @@
 </div>
 
 <!-- Popup ML -->
-<div id="popupML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#0f0f1a; border:1px solid rgba(255,230,0,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
+<div id="popupML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#111; border:1px solid rgba(201,168,76,0.25); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; text-align:center;">
         <div style="font-size:40px; margin-bottom:12px;">🛍️</div>
-        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:10px;">Link do site detectado</h3>
-        <p style="font-size:13px; color:#888; line-height:1.7; margin-bottom:24px;">Links do site do Mercado Livre têm limitações de acesso. Para melhor resultado, use o link do <strong style="color:#FFE600;">app do Mercado Livre</strong> ou preencha as informações manualmente.</p>
-        <button onclick="aceitarPersonalizarML()" style="width:100%; padding:14px; background:#FFE600; color:#000; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Preencher manualmente</button>
-        <button onclick="recusarPersonalizarML()" style="width:100%; padding:12px; background:transparent; color:#666; border:1px solid rgba(255,255,255,0.08); border-radius:12px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Tentar assim mesmo</button>
+        <h3 style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#F5F0E8; margin-bottom:10px;">Link do site detectado</h3>
+        <p style="font-size:13px; color:#666; line-height:1.7; margin-bottom:24px;">Links do site do Mercado Livre têm limitações de acesso. Para melhor resultado, use o link do <strong style="color:#C9A84C;">app do Mercado Livre</strong> ou preencha as informações manualmente.</p>
+        <button onclick="aceitarPersonalizarML()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#0D0D0D; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✏️ Preencher manualmente</button>
+        <button onclick="recusarPersonalizarML()" style="width:100%; padding:12px; background:transparent; color:#555; border:1px solid rgba(255,255,255,0.06); border-radius:12px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Tentar assim mesmo</button>
     </div>
 </div>
 
 <!-- Card manual ML -->
-<div id="cardManualML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:#0f0f1a; border:1px solid rgba(255,230,0,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
+<div id="cardManualML" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#111; border:1px solid rgba(201,168,76,0.25); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 style="font-size:17px; font-weight:700; color:#fff;">🛍️ Adicionar produto ML</h3>
-            <button onclick="fecharCardManualML()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:#F5F0E8;">🛍️ Adicionar produto ML</h3>
+            <button onclick="fecharCardManualML()" style="background:transparent; border:none; color:#444; font-size:20px; cursor:pointer;">✕</button>
         </div>
         <div style="margin-bottom:14px;">
-            <label style="font-size:11px; color:#FFE600; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Nome do produto</label>
-            <input type="text" id="mlNomeManual" placeholder="Ex: Tênis Adidas Ultraboost" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,230,0,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label style="font-size:11px; color:#C9A84C; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Nome do produto</label>
+            <input type="text" id="mlNomeManual" placeholder="Ex: Tênis Adidas Ultraboost" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:20px;">
-            <label style="font-size:11px; color:#FFE600; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
-            <label for="mlImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(255,230,0,0.06); border:1.5px dashed rgba(255,230,0,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#FFE600; font-size:13px; margin-bottom:8px;">
-                📸 Escolher imagem da galeria
-            </label>
+            <label style="font-size:11px; color:#C9A84C; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Foto do produto (opcional)</label>
+            <label for="mlImagemManual" style="display:flex; align-items:center; gap:8px; background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.25); border-radius:10px; padding:12px; cursor:pointer; color:#C9A84C; font-size:13px; margin-bottom:8px;">📸 Escolher imagem da galeria</label>
             <input type="file" id="mlImagemManual" accept="image/*" style="display:none;" onchange="previewImagemML(event)">
             <img id="mlPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
         </div>
-        <button onclick="salvarProdutoMLManual()" style="width:100%; padding:14px; background:#FFE600; color:#000; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto 🛍️</button>
+        <button onclick="salvarProdutoMLManual()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#0D0D0D; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto ✦</button>
     </div>
 </div>
 
-<!-- Popup Manual Universal — aparece quando imagem não é encontrada -->
-<div id="popupManualUniversal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:1000; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:#0f0f1a; border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;" id="popupManualInner">
+<!-- Popup Manual Universal -->
+<div id="popupManualUniversal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#111; border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;" id="popupManualInner">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 id="manualTitulo" style="font-size:17px; font-weight:700; color:#fff;">✏️ Completar produto</h3>
-            <button onclick="fecharPopupManualUniversal()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+            <h3 id="manualTitulo" style="font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:#F5F0E8;">✏️ Completar produto</h3>
+            <button onclick="fecharPopupManualUniversal()" style="background:transparent; border:none; color:#444; font-size:20px; cursor:pointer;">✕</button>
         </div>
-        <p id="manualTexto" style="font-size:13px; color:#888; line-height:1.6; margin-bottom:20px;"></p>
+        <p id="manualTexto" style="font-size:13px; color:#666; line-height:1.6; margin-bottom:20px;"></p>
         <div style="margin-bottom:14px;">
-            <label id="manualLabelNome" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; color:#8A63D2;">Nome do produto</label>
-            <input type="text" id="manualNomeInput" placeholder="Ex: Tênis Nike Air Max" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label id="manualLabelNome" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#C9A84C;">Nome do produto</label>
+            <input type="text" id="manualNomeInput" placeholder="Ex: Tênis Nike Air Max" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:14px;" id="manualPrecoWrap">
-            <label id="manualLabelPreco" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; color:#8A63D2;">Preço (opcional)</label>
-            <input type="text" id="manualPrecoInput" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#C9A84C;">Preço (opcional)</label>
+            <input type="text" id="manualPrecoInput" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:20px;">
-            <label id="manualLabelImagem" style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; color:#8A63D2;">Foto do produto (opcional)</label>
-            <label for="manualImagemInput" style="display:flex; align-items:center; gap:8px; background:rgba(138,99,210,0.06); border:1.5px dashed rgba(138,99,210,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#8A63D2; font-size:13px; margin-bottom:8px;">
-                📸 Escolher imagem da galeria
-            </label>
+            <label style="font-size:11px; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#C9A84C;">Foto do produto (opcional)</label>
+            <label for="manualImagemInput" style="display:flex; align-items:center; gap:8px; background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.25); border-radius:10px; padding:12px; cursor:pointer; color:#C9A84C; font-size:13px; margin-bottom:8px;">📸 Escolher imagem da galeria</label>
             <input type="file" id="manualImagemInput" accept="image/*" style="display:none;" onchange="previewImagemManualUniversal(event)">
             <img id="manualPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
         </div>
-        <button id="manualSalvarBtn" onclick="salvarManualUniversal()" style="width:100%; padding:14px; background:linear-gradient(135deg,#8A63D2,#6a43b2); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto 💜</button>
+        <button onclick="salvarManualUniversal()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#0D0D0D; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto ✦</button>
     </div>
 </div>
 
 <!-- Card editar produto -->
-<div id="cardEditarProduto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:#0f0f1a; border:1px solid rgba(138,99,210,0.3); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
+<div id="cardEditarProduto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#111; border:1px solid rgba(201,168,76,0.2); border-radius:24px; padding:28px 24px; max-width:380px; width:100%; margin:20px auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 style="font-size:17px; font-weight:700; color:#fff;">✏️ Editar produto</h3>
-            <button onclick="fecharEditarProduto()" style="background:transparent; border:none; color:#555; font-size:20px; cursor:pointer;">✕</button>
+            <h3 style="font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:#F5F0E8;">✏️ Editar produto</h3>
+            <button onclick="fecharEditarProduto()" style="background:transparent; border:none; color:#444; font-size:20px; cursor:pointer;">✕</button>
         </div>
         <div style="margin-bottom:14px;">
-            <label style="font-size:11px; color:#8A63D2; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Nome do produto</label>
-            <input type="text" id="editarNome" placeholder="Nome do produto" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label style="font-size:11px; color:#C9A84C; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Nome do produto</label>
+            <input type="text" id="editarNome" placeholder="Nome do produto" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:14px;" id="editarPrecoWrap">
-            <label style="font-size:11px; color:#8A63D2; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Preço (opcional)</label>
-            <input type="text" id="editarPreco" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(138,99,210,0.3); border-radius:10px; padding:12px 14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
+            <label style="font-size:11px; color:#C9A84C; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Preço (opcional)</label>
+            <input type="text" id="editarPreco" placeholder="Ex: 159,90" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:12px 14px; color:#F5F0E8; font-size:14px; font-family:'Inter',sans-serif; outline:none;">
         </div>
         <div style="margin-bottom:20px;">
-            <label style="font-size:11px; color:#8A63D2; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase;">Foto do produto (opcional)</label>
-            <label for="editarImagem" style="display:flex; align-items:center; gap:8px; background:rgba(138,99,210,0.06); border:1.5px dashed rgba(138,99,210,0.3); border-radius:10px; padding:12px; cursor:pointer; color:#8A63D2; font-size:13px; margin-bottom:8px;">
-                📸 Trocar imagem
-            </label>
+            <label style="font-size:11px; color:#C9A84C; font-weight:600; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Foto do produto (opcional)</label>
+            <label for="editarImagem" style="display:flex; align-items:center; gap:8px; background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.25); border-radius:10px; padding:12px; cursor:pointer; color:#C9A84C; font-size:13px; margin-bottom:8px;">📸 Trocar imagem</label>
             <input type="file" id="editarImagem" accept="image/*" style="display:none;" onchange="previewEditarImagem(event)">
             <img id="editarPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
         </div>
-        <button onclick="salvarEdicaoProduto()" style="width:100%; padding:14px; background:linear-gradient(135deg,#8A63D2,#6a43b2); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar alterações 💜</button>
+        <button onclick="salvarEdicaoProduto()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#0D0D0D; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">Salvar alterações ✦</button>
     </div>
 </div>
 
@@ -417,8 +434,6 @@
     var editarProdutoId = null;
     var editarImagemBase64 = "";
     var editarPlataforma = "";
-
-    // Popup manual universal
     var manualProdutoId = null;
     var manualPlataformaAtual = "";
     var manualImagemBase64 = "";
@@ -426,19 +441,19 @@
 
     var textosPorPlataforma = {
         amazon: { titulo: "🛒 Imagem não encontrada", texto: "Não conseguimos buscar a imagem deste produto da Amazon automaticamente. Preencha as informações manualmente para exibir na sua vitrine.", cor: "#FF9900" },
-        mercadolivre: { titulo: "🛍️ Link com limitações", texto: "Links do site do Mercado Livre têm limitações de acesso. Para melhor resultado, use o link do app do Mercado Livre ou preencha as informações manualmente.", cor: "#FFE600" },
+        mercadolivre: { titulo: "🛍️ Link com limitações", texto: "Links do site do Mercado Livre têm limitações de acesso. Para melhor resultado, use o link do app do Mercado Livre ou preencha as informações manualmente.", cor: "#C9A84C" },
         shopee: { titulo: "🧡 Produto Shopee", texto: "Não conseguimos buscar a imagem deste produto da Shopee automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#EE4D2D" },
         magalu: { titulo: "🛍️ Imagem não encontrada", texto: "Não conseguimos buscar a imagem deste produto do Magalu automaticamente. Preencha as informações manualmente para exibir na sua vitrine.", cor: "#0086FF" },
-        shein: { titulo: "✨ Produto Shein", texto: "Não conseguimos buscar a imagem deste produto da Shein automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#8A63D2" },
-        outro: { titulo: "🎁 Produto não encontrado", texto: "Não conseguimos buscar as informações deste produto automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#8A63D2" }
+        shein: { titulo: "✨ Produto Shein", texto: "Não conseguimos buscar a imagem deste produto da Shein automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#C9A84C" },
+        outro: { titulo: "🎁 Produto não encontrado", texto: "Não conseguimos buscar as informações deste produto automaticamente. Preencha manualmente para exibir na sua vitrine.", cor: "#C9A84C" }
     };
 
     var eventos = {
-        aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa! 💜" },
-        casamento: { emoji: "💍", badge: "💍 Casamento", labelNome: "Nome do casal", placeholder: "Ex: Casamento Ana & João", titulo: "Que comecem as celebrações!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais importam saibam o que vocês precisam para esse novo começo! 💜" },
-        "casa-nova": { emoji: "🏠", badge: "🏠 Casa Nova", labelNome: "Nome do evento", placeholder: "Ex: Casa Nova da Mari", titulo: "Novo lar, nova vida!", texto: "Compartilhe sua lista nos Melhores Amigos e receba a ajuda de quem você ama para montar seu novo lar! 💜" },
-        "cha-bebe": { emoji: "👶", badge: "👶 Chá de Bebê", labelNome: "Nome dos papais", placeholder: "Ex: Bebê da Ana", titulo: "Que chegada especial!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais amam você ajudem a receber o pequeno! 💜" },
-        outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você! 💜" }
+        aniversario: { emoji: "🎂", badge: "🎂 Aniversário", labelNome: "Nome do evento", placeholder: "Ex: Aniversário da Maria", titulo: "Parabéns pelo seu dia!", texto: "Recomendamos compartilhar sua vitrine nos Melhores Amigos. É o lugar perfeito para celebrar com quem realmente importa!" },
+        casamento: { emoji: "💍", badge: "💍 Casamento", labelNome: "Nome do casal", placeholder: "Ex: Casamento Ana & João", titulo: "Que comecem as celebrações!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais importam saibam o que vocês precisam para esse novo começo!" },
+        "casa-nova": { emoji: "🏠", badge: "🏠 Casa Nova", labelNome: "Nome do evento", placeholder: "Ex: Casa Nova da Mari", titulo: "Novo lar, nova vida!", texto: "Compartilhe sua lista nos Melhores Amigos e receba a ajuda de quem você ama para montar seu novo lar!" },
+        "cha-bebe": { emoji: "👶", badge: "👶 Chá de Bebê", labelNome: "Nome dos papais", placeholder: "Ex: Bebê da Ana", titulo: "Que chegada especial!", texto: "Compartilhe sua lista nos Melhores Amigos e deixe que as pessoas que mais amam você ajudem a receber o pequeno!" },
+        outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine nos Melhores Amigos com quem realmente importa para você!" }
     };
 
     function verificarWhatsapp() {
@@ -448,7 +463,7 @@
             var hint = document.getElementById('whatsappHint');
             if (compartilhou === 'true') {
                 btn.disabled = false;
-                hint.textContent = '✅ WhatsApp liberado! Avise seus convidados.';
+                hint.textContent = '✦ WhatsApp liberado! Avise seus convidados.';
                 hint.className = 'whatsapp-hint liberado';
             } else {
                 btn.disabled = true;
@@ -490,20 +505,12 @@
 
     function recomecar() {
         try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-        stepAtual = 1;
-        eventoAtual = 'aniversario';
+        stepAtual = 1; eventoAtual = 'aniversario';
         document.querySelectorAll('.secao').forEach(function(s) { s.classList.remove('ativa'); });
         document.getElementById('secao1').classList.add('ativa');
         document.getElementById('stepIndicator').textContent = '1 de 4';
-        for(var i=1;i<=4;i++){
-            var s = document.getElementById('step'+i);
-            s.className = 'step';
-            if(i === 1) s.classList.add('active');
-        }
-        document.querySelectorAll('.evento-card').forEach(function(c) {
-            c.classList.remove('selected');
-            if(c.dataset.evento === 'aniversario') c.classList.add('selected');
-        });
+        for(var i=1;i<=4;i++){var s=document.getElementById('step'+i);s.className='step';if(i===1)s.classList.add('active');}
+        document.querySelectorAll('.evento-card').forEach(function(c){c.classList.remove('selected');if(c.dataset.evento==='aniversario')c.classList.add('selected');});
         window.scrollTo(0,0);
     }
 
@@ -519,43 +526,25 @@
         stepAtual = n;
         document.getElementById('secao' + n).classList.add('ativa');
         document.getElementById('stepIndicator').textContent = n + ' de 4';
-        for(var i=1;i<=4;i++){
-            var s = document.getElementById('step'+i);
-            s.className = 'step';
-            if(i < n) s.classList.add('done');
-            else if(i === n) s.classList.add('active');
-        }
+        for(var i=1;i<=4;i++){var s=document.getElementById('step'+i);s.className='step';if(i<n)s.classList.add('done');else if(i===n)s.classList.add('active');}
         var ev = eventos[eventoAtual] || eventos['aniversario'];
-        if(n === 2) {
-            document.getElementById('eventoBadgeMini').textContent = ev.badge;
-            document.getElementById('labelNomeEvento').textContent = ev.labelNome;
-            document.getElementById('inputNomeEvento').placeholder = ev.placeholder;
+        if(n===2){document.getElementById('eventoBadgeMini').textContent=ev.badge;document.getElementById('labelNomeEvento').textContent=ev.labelNome;document.getElementById('inputNomeEvento').placeholder=ev.placeholder;}
+        if(n===4){
+            document.getElementById('eventoBadgeMini4').textContent=ev.badge;
+            var nomeEvento=document.getElementById('inputNomeEvento').value.trim();
+            var dataEvento=document.getElementById('inputDataEvento').value;
+            document.getElementById('nomeListaHeader').textContent=nomeEvento||'Minha Lista';
+            if(dataEvento){var d=new Date(dataEvento+'T00:00:00');document.getElementById('dataEventoHeader').textContent='✦ '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}
+            carregarProdutos();verificarWhatsapp();
         }
-        if(n === 4) {
-            document.getElementById('eventoBadgeMini4').textContent = ev.badge;
-            var nomeEvento = document.getElementById('inputNomeEvento').value.trim();
-            var dataEvento = document.getElementById('inputDataEvento').value;
-            document.getElementById('nomeListaHeader').textContent = nomeEvento || 'Minha Lista';
-            if(dataEvento) {
-                var d = new Date(dataEvento + 'T00:00:00');
-                document.getElementById('dataEventoHeader').textContent = '📅 ' + d.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
-            }
-            carregarProdutos();
-            verificarWhatsapp();
-        }
-        salvarEstado();
-        window.scrollTo(0,0);
+        salvarEstado();window.scrollTo(0,0);
     }
 
     async function salvarEmailEAvancar() {
         const email = document.getElementById('inputEmail').value.trim();
         if (email && email.includes('@')) {
             try {
-                await fetch(`${BASE}/api/salvar-email-lista`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({lista_id: LISTA_ID, email: email})
-                });
+                await fetch(`${BASE}/api/salvar-email-lista`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({lista_id: LISTA_ID, email: email}) });
                 document.getElementById('emailSalvo').style.display = 'block';
             } catch(e) {}
         }
@@ -578,47 +567,33 @@
         contador.textContent = produtos.length + (produtos.length === 1 ? ' item' : ' itens');
         if (produtos.length === 0) {
             el.innerHTML = `<div class="empty-state"><div class="emoji">🎁</div><p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p></div>`;
-            linkPerm.style.display = "none";
-            acoes.style.display = "none";
-            return;
+            linkPerm.style.display = "none"; acoes.style.display = "none"; return;
         }
-        linkPerm.style.display = "block";
-        acoes.style.display = "flex";
-        verificarWhatsapp();
+        linkPerm.style.display = "block"; acoes.style.display = "flex"; verificarWhatsapp();
         document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon: "badge-amazon", mercadolivre: "badge-mercadolivre", shopee: "badge-shopee", magalu: "badge-magalu", shein: "badge-shein" }[p.plataforma] || "badge-outro";
             const label = { amazon: "🛒 Amazon", mercadolivre: "🛍️ Mercado Livre", shopee: "🧡 Shopee", magalu: "🛍️ Magalu", shein: "✨ Shein" }[p.plataforma] || p.plataforma;
-            const imgHtml = p.imagem_url
-                ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">`
-                : `<div class="product-img-placeholder">${p.plataforma === 'shopee' ? '🧡' : p.plataforma === 'shein' ? '✨' : '🎁'}</div>`;
-            const nomeEscapado = (p.nome || '').replace(/'/g, "\\'");
-            const precoEscapado = (p.preco || '').replace(/'/g, "\\'");
-            const editBtn = `<button class="btn-editar" onclick="abrirEditarProduto(${p.id}, '${nomeEscapado}', '${precoEscapado}', '${p.plataforma}')">✏️</button>`;
-            return `
-            <div class="product-card" id="prod-${p.id}">
+            const imgHtml = p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">` : `<div class="product-img-placeholder">${p.plataforma==='shopee'?'🧡':p.plataforma==='shein'?'✨':'🎁'}</div>`;
+            const nomeEscapado = (p.nome||'').replace(/'/g,"\\'");
+            const precoEscapado = (p.preco||'').replace(/'/g,"\\'");
+            const editBtn = `<button class="btn-editar" onclick="abrirEditarProduto(${p.id},'${nomeEscapado}','${precoEscapado}','${p.plataforma}')">✏️</button>`;
+            return `<div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
                 <div class="product-info">
-                    <div class="product-nome">${p.nome || "Produto"}</div>
-                    ${p.preco ? `<div class="product-preco">R$ ${p.preco}</div>` : ""}
+                    <div class="product-nome">${p.nome||"Produto"}</div>
+                    ${p.preco?`<div class="product-preco">R$ ${p.preco}</div>`:""}
                     <div class="product-footer">
                         <span class="platform-badge ${badge}">${label}</span>
-                        <div style="display:flex;align-items:center;gap:4px;">
-                            ${editBtn}
-                            <button class="btn-remover" onclick="remover(${p.id})">✕</button>
-                        </div>
+                        <div style="display:flex;align-items:center;gap:4px;">${editBtn}<button class="btn-remover" onclick="remover(${p.id})">✕</button></div>
                     </div>
                 </div>
             </div>`;
         }).join("");
     }
 
-    // POPUP MANUAL UNIVERSAL
     function abrirPopupManualUniversal(plataforma, produtoId, linkOriginal, nomeJaEncontrado) {
-        manualProdutoId = produtoId;
-        manualPlataformaAtual = plataforma;
-        manualImagemBase64 = "";
-        manualLinkAtual = linkOriginal || "";
+        manualProdutoId = produtoId; manualPlataformaAtual = plataforma; manualImagemBase64 = ""; manualLinkAtual = linkOriginal || "";
         var cfg = textosPorPlataforma[plataforma] || textosPorPlataforma['outro'];
         document.getElementById('manualTitulo').textContent = cfg.titulo;
         document.getElementById('manualTexto').textContent = cfg.texto;
@@ -630,280 +605,147 @@
         inner.style.borderColor = cfg.cor;
         document.getElementById('popupManualUniversal').style.display = 'flex';
     }
-
-    function fecharPopupManualUniversal() {
-        document.getElementById('popupManualUniversal').style.display = 'none';
-    }
-
+    function fecharPopupManualUniversal() { document.getElementById('popupManualUniversal').style.display = 'none'; }
     function previewImagemManualUniversal(e) {
-        var file = e.target.files[0];
-        if (!file) return;
+        var file = e.target.files[0]; if (!file) return;
         var reader = new FileReader();
-        reader.onload = function(ev) {
-            manualImagemBase64 = ev.target.result;
-            var img = document.getElementById('manualPreviewImg');
-            img.src = manualImagemBase64;
-            img.style.display = 'block';
-        };
+        reader.onload = function(ev) { manualImagemBase64 = ev.target.result; var img = document.getElementById('manualPreviewImg'); img.src = manualImagemBase64; img.style.display = 'block'; };
         reader.readAsDataURL(file);
     }
-
     async function salvarManualUniversal() {
         var nome = document.getElementById('manualNomeInput').value.trim();
         var preco = document.getElementById('manualPrecoInput').value.trim();
         document.getElementById('popupManualUniversal').style.display = 'none';
         if (manualProdutoId) {
             try {
-                await fetch(`${BASE}/api/editar-produto/${manualProdutoId}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ nome, preco, imagem_base64: manualImagemBase64 })
-                });
+                await fetch(`${BASE}/api/editar-produto/${manualProdutoId}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ nome, preco, imagem_base64: manualImagemBase64 }) });
                 await carregarProdutos();
-            } catch(e) {
-                alert("Erro ao salvar. Tente novamente.");
-            }
+            } catch(e) { alert("Erro ao salvar. Tente novamente."); }
         }
     }
 
-    // EDITAR PRODUTO
     function abrirEditarProduto(id, nome, preco, plataforma) {
-        editarProdutoId = id;
-        editarPlataforma = plataforma;
-        editarImagemBase64 = "";
+        editarProdutoId = id; editarPlataforma = plataforma; editarImagemBase64 = "";
         document.getElementById('editarNome').value = nome || '';
         document.getElementById('editarPreco').value = preco || '';
         document.getElementById('editarPreviewImg').style.display = 'none';
         document.getElementById('editarPrecoWrap').style.display = plataforma === 'mercadolivre' ? 'none' : 'block';
         document.getElementById('cardEditarProduto').style.display = 'flex';
     }
-
-    function fecharEditarProduto() {
-        document.getElementById('cardEditarProduto').style.display = 'none';
-        editarProdutoId = null;
-    }
-
+    function fecharEditarProduto() { document.getElementById('cardEditarProduto').style.display = 'none'; editarProdutoId = null; }
     function previewEditarImagem(e) {
-        var file = e.target.files[0];
-        if (!file) return;
+        var file = e.target.files[0]; if (!file) return;
         var reader = new FileReader();
-        reader.onload = function(ev) {
-            editarImagemBase64 = ev.target.result;
-            var img = document.getElementById('editarPreviewImg');
-            img.src = editarImagemBase64;
-            img.style.display = 'block';
-        };
+        reader.onload = function(ev) { editarImagemBase64 = ev.target.result; var img = document.getElementById('editarPreviewImg'); img.src = editarImagemBase64; img.style.display = 'block'; };
         reader.readAsDataURL(file);
     }
-
     async function salvarEdicaoProduto() {
         if (!editarProdutoId) return;
         var nome = document.getElementById('editarNome').value.trim();
         var preco = document.getElementById('editarPreco').value.trim();
         document.getElementById('cardEditarProduto').style.display = 'none';
         try {
-            await fetch(`${BASE}/api/editar-produto/${editarProdutoId}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ nome, preco, imagem_base64: editarImagemBase64 })
-            });
+            await fetch(`${BASE}/api/editar-produto/${editarProdutoId}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ nome, preco, imagem_base64: editarImagemBase64 }) });
             await carregarProdutos();
-        } catch(e) {
-            alert("Erro ao salvar. Tente novamente.");
-        }
+        } catch(e) { alert("Erro ao salvar. Tente novamente."); }
     }
 
-    // SHOPEE
-    function abrirPopupShopee(link) {
-        linkShopeeAtual = link;
-        document.getElementById('popupShopee').style.display = 'flex';
-    }
-    function aceitarPersonalizarShopee() {
-        document.getElementById('popupShopee').style.display = 'none';
-        document.getElementById('shopeeNomeManual').value = '';
-        document.getElementById('shopeePrecoManual').value = '';
-        document.getElementById('shopeePreviewImg').style.display = 'none';
-        imagemShopeeBase64 = '';
-        document.getElementById('cardManualShopee').style.display = 'flex';
-    }
-    function recusarPersonalizarShopee() {
-        document.getElementById('popupShopee').style.display = 'none';
-        adicionarProdutoManual(linkShopeeAtual, '', '', '', 'shopee');
-    }
-    function fecharCardManualShopee() {
-        document.getElementById('cardManualShopee').style.display = 'none';
-        adicionarProdutoManual(linkShopeeAtual, '', '', '', 'shopee');
-    }
+    function abrirPopupShopee(link) { linkShopeeAtual = link; document.getElementById('popupShopee').style.display = 'flex'; }
+    function aceitarPersonalizarShopee() { document.getElementById('popupShopee').style.display='none'; document.getElementById('shopeeNomeManual').value=''; document.getElementById('shopeePrecoManual').value=''; document.getElementById('shopeePreviewImg').style.display='none'; imagemShopeeBase64=''; document.getElementById('cardManualShopee').style.display='flex'; }
+    function recusarPersonalizarShopee() { document.getElementById('popupShopee').style.display='none'; adicionarProdutoManual(linkShopeeAtual,'','','','shopee'); }
+    function fecharCardManualShopee() { document.getElementById('cardManualShopee').style.display='none'; adicionarProdutoManual(linkShopeeAtual,'','','','shopee'); }
     function previewImagemShopee(e) {
-        var file = e.target.files[0];
-        if (!file) return;
-        var reader = new FileReader();
-        reader.onload = function(ev) {
-            imagemShopeeBase64 = ev.target.result;
-            var img = document.getElementById('shopeePreviewImg');
-            img.src = imagemShopeeBase64;
-            img.style.display = 'block';
-        };
+        var file=e.target.files[0]; if(!file) return;
+        var reader=new FileReader();
+        reader.onload=function(ev){imagemShopeeBase64=ev.target.result;var img=document.getElementById('shopeePreviewImg');img.src=imagemShopeeBase64;img.style.display='block';};
         reader.readAsDataURL(file);
     }
     async function salvarProdutoShopeeManual() {
-        var nome = document.getElementById('shopeeNomeManual').value.trim();
-        var preco = document.getElementById('shopeePrecoManual').value.trim();
-        document.getElementById('cardManualShopee').style.display = 'none';
-        await adicionarProdutoManual(linkShopeeAtual, nome, preco, imagemShopeeBase64, 'shopee');
+        var nome=document.getElementById('shopeeNomeManual').value.trim();
+        var preco=document.getElementById('shopeePrecoManual').value.trim();
+        document.getElementById('cardManualShopee').style.display='none';
+        await adicionarProdutoManual(linkShopeeAtual,nome,preco,imagemShopeeBase64,'shopee');
     }
 
-    // ML MANUAL
-    function abrirPopupML(link) {
-        linkMLAtual = link;
-        document.getElementById('popupML').style.display = 'flex';
-    }
-    function aceitarPersonalizarML() {
-        document.getElementById('popupML').style.display = 'none';
-        document.getElementById('mlNomeManual').value = '';
-        document.getElementById('mlPreviewImg').style.display = 'none';
-        imagemMLBase64 = '';
-        document.getElementById('cardManualML').style.display = 'flex';
-    }
-    function recusarPersonalizarML() {
-        document.getElementById('popupML').style.display = 'none';
-        adicionarProdutoNormal(linkMLAtual);
-    }
-    function fecharCardManualML() {
-        document.getElementById('cardManualML').style.display = 'none';
-        adicionarProdutoNormal(linkMLAtual);
-    }
+    function abrirPopupML(link) { linkMLAtual=link; document.getElementById('popupML').style.display='flex'; }
+    function aceitarPersonalizarML() { document.getElementById('popupML').style.display='none'; document.getElementById('mlNomeManual').value=''; document.getElementById('mlPreviewImg').style.display='none'; imagemMLBase64=''; document.getElementById('cardManualML').style.display='flex'; }
+    function recusarPersonalizarML() { document.getElementById('popupML').style.display='none'; adicionarProdutoNormal(linkMLAtual); }
+    function fecharCardManualML() { document.getElementById('cardManualML').style.display='none'; adicionarProdutoNormal(linkMLAtual); }
     function previewImagemML(e) {
-        var file = e.target.files[0];
-        if (!file) return;
-        var reader = new FileReader();
-        reader.onload = function(ev) {
-            imagemMLBase64 = ev.target.result;
-            var img = document.getElementById('mlPreviewImg');
-            img.src = imagemMLBase64;
-            img.style.display = 'block';
-        };
+        var file=e.target.files[0]; if(!file) return;
+        var reader=new FileReader();
+        reader.onload=function(ev){imagemMLBase64=ev.target.result;var img=document.getElementById('mlPreviewImg');img.src=imagemMLBase64;img.style.display='block';};
         reader.readAsDataURL(file);
     }
     async function salvarProdutoMLManual() {
-        var nome = document.getElementById('mlNomeManual').value.trim();
-        document.getElementById('cardManualML').style.display = 'none';
-        await adicionarProdutoManual(linkMLAtual, nome, '', imagemMLBase64, 'mercadolivre');
+        var nome=document.getElementById('mlNomeManual').value.trim();
+        document.getElementById('cardManualML').style.display='none';
+        await adicionarProdutoManual(linkMLAtual,nome,'',imagemMLBase64,'mercadolivre');
     }
 
-    async function adicionarProdutoManual(link, nome, preco, imagem, plataforma) {
-        const btn = document.getElementById("btnAdicionar");
-        const loading = document.getElementById("loading");
-        btn.disabled = true;
-        loading.style.display = "block";
+    async function adicionarProdutoManual(link,nome,preco,imagem,plataforma) {
+        const btn=document.getElementById("btnAdicionar"); const loading=document.getElementById("loading");
+        btn.disabled=true; loading.style.display="block";
         try {
-            const r = await fetch(`${BASE}/api/adicionar-produto-manual`, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ link, lista_id: LISTA_ID, nome: nome || 'Produto', preco, imagem_base64: imagem, plataforma })
-            });
-            const data = await r.json();
-            if (data.ok) {
-                document.getElementById("inputLink").value = "";
-                await carregarProdutos();
-            }
-        } catch(e) {
-            alert("Erro de conexão. Tente novamente.");
-        } finally {
-            btn.disabled = false;
-            loading.style.display = "none";
-        }
+            const r=await fetch(`${BASE}/api/adicionar-produto-manual`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({link,lista_id:LISTA_ID,nome:nome||'Produto',preco,imagem_base64:imagem,plataforma})});
+            const data=await r.json();
+            if(data.ok){document.getElementById("inputLink").value="";await carregarProdutos();}
+        } catch(e){alert("Erro de conexão. Tente novamente.");}
+        finally{btn.disabled=false;loading.style.display="none";}
     }
 
     async function adicionarProdutoNormal(link) {
-        const btn = document.getElementById("btnAdicionar");
-        const loading = document.getElementById("loading");
-        btn.disabled = true;
-        loading.style.display = "block";
+        const btn=document.getElementById("btnAdicionar"); const loading=document.getElementById("loading");
+        btn.disabled=true; loading.style.display="block";
         try {
-            const r = await fetch(`${BASE}/api/adicionar-produto`, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ link, lista_id: LISTA_ID })
-            });
-            const data = await r.json();
-            if (data.ok) {
-                document.getElementById("inputLink").value = "";
+            const r=await fetch(`${BASE}/api/adicionar-produto`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({link,lista_id:LISTA_ID})});
+            const data=await r.json();
+            if(data.ok){
+                document.getElementById("inputLink").value="";
                 await carregarProdutos();
-                if (data.manual) {
-                    abrirPopupManualUniversal(data.plataforma, data.produto.id, link, data.produto.nome);
-                }
-            } else {
-                alert("Não consegui buscar o produto. Tente outro link.");
-            }
-        } catch(e) {
-            alert("Erro de conexão. Tente novamente.");
-        } finally {
-            btn.disabled = false;
-            loading.style.display = "none";
-        }
+                if(data.manual){abrirPopupManualUniversal(data.plataforma,data.produto.id,link,data.produto.nome);}
+            } else {alert("Não consegui buscar o produto. Tente outro link.");}
+        } catch(e){alert("Erro de conexão. Tente novamente.");}
+        finally{btn.disabled=false;loading.style.display="none";}
     }
 
     async function adicionarProduto() {
-        const input = document.getElementById("inputLink");
-        const link = input.value.trim();
-        if (!link) return;
-        if (link.indexOf('produto.mercadolivre') > -1 || link.indexOf('share.google') > -1) {
-            abrirPopupML(link);
-            return;
-        }
-        if (link.toLowerCase().indexOf('shopee.com.br') > -1 || link.toLowerCase().indexOf('s.shopee') > -1 || link.toLowerCase().indexOf('br.shp.ee') > -1) {
-            abrirPopupShopee(link);
-            return;
-        }
+        const input=document.getElementById("inputLink");
+        const link=input.value.trim();
+        if(!link) return;
+        if(link.indexOf('produto.mercadolivre')>-1||link.indexOf('share.google')>-1){abrirPopupML(link);return;}
+        if(link.toLowerCase().indexOf('shopee.com.br')>-1||link.toLowerCase().indexOf('s.shopee')>-1||link.toLowerCase().indexOf('br.shp.ee')>-1){abrirPopupShopee(link);return;}
         await adicionarProdutoNormal(link);
     }
 
-    async function remover(id) {
-        await fetch(`${BASE}/api/remover-produto/${id}`, { method: "DELETE" });
-        await carregarProdutos();
-    }
+    async function remover(id) { await fetch(`${BASE}/api/remover-produto/${id}`,{method:"DELETE"}); await carregarProdutos(); }
 
     function abrirPopupStory() {
-        var ev = eventos[eventoAtual] || eventos['aniversario'];
-        document.getElementById('popupEmoji').textContent = ev.emoji;
-        document.getElementById('popupTitulo').textContent = ev.titulo;
-        document.getElementById('popupTexto').textContent = ev.texto;
-        document.getElementById('popupStory').style.display = 'flex';
+        var ev=eventos[eventoAtual]||eventos['aniversario'];
+        document.getElementById('popupEmoji').textContent=ev.emoji;
+        document.getElementById('popupTitulo').textContent=ev.titulo;
+        document.getElementById('popupTexto').textContent=ev.texto;
+        document.getElementById('popupStory').style.display='flex';
     }
-    function fecharPopupStory() {
-        document.getElementById('popupStory').style.display = 'none';
-    }
+    function fecharPopupStory() { document.getElementById('popupStory').style.display='none'; }
     function irParaStory() {
-        document.getElementById('popupStory').style.display = 'none';
-        try { localStorage.setItem(WHATSAPP_KEY, 'true'); } catch(e) {}
+        document.getElementById('popupStory').style.display='none';
+        try{localStorage.setItem(WHATSAPP_KEY,'true');}catch(e){}
         salvarEstado();
-        window.location.href = `/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
+        window.location.href=`/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
     }
-    function gerarVitrine() {
-        salvarEstado();
-        window.location.href = `/vitrine/${LISTA_ID}`;
-    }
-    function verVitrine() {
-        salvarEstado();
-        window.open(`/vitrine/${LISTA_ID}?admin=true`, '_blank');
-    }
+    function gerarVitrine() { salvarEstado(); window.location.href=`/vitrine/${LISTA_ID}`; }
+    function verVitrine() { salvarEstado(); window.open(`/vitrine/${LISTA_ID}?admin=true`,'_blank'); }
     function compartilharWhatsApp() {
-        var nomeEvento = document.getElementById('inputNomeEvento').value.trim() || 'meu evento';
-        var linkVitrine = window.location.origin + '/vitrine/' + LISTA_ID;
-        var mensagem = 'Oi! 🎉 Preparei tudo para ' + nomeEvento + ' e criei uma lista digital no InstaGift! 🎁\n\n' +
-                      '👉 ESCOLHA O PRESENTE AQUI:\n' + linkVitrine + '\n\n' +
-                      'Valeu pelo carinho! 🙏💜';
-        window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
+        var nomeEvento=document.getElementById('inputNomeEvento').value.trim()||'meu evento';
+        var linkVitrine=window.location.origin+'/vitrine/'+LISTA_ID;
+        var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+' e criei uma lista digital no InstaGift! 🎁\n\n👉 ESCOLHA O PRESENTE AQUI:\n'+linkVitrine+'\n\nValeu pelo carinho! 🙏✦';
+        window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(mensagem),'_blank');
     }
-    function copiarLink() {
-        navigator.clipboard.writeText(`${window.location.origin}/lista/${LISTA_ID}`).then(() => alert("Link copiado!"));
-    }
+    function copiarLink() { navigator.clipboard.writeText(`${window.location.origin}/lista/${LISTA_ID}`).then(()=>alert("Link copiado!")); }
 
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById("inputLink").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") adicionarProduto();
-        });
+        document.getElementById("inputLink").addEventListener("keypress", function(e) { if(e.key==="Enter") adicionarProduto(); });
         restaurarEstado();
     });
 </script>
