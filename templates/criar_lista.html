@@ -254,12 +254,31 @@
             <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
         </div>
         <div class="acoes" id="acoesVitrine" style="display:none">
-            <button class="btn-criar-story" onclick="abrirPopupStory()">📸 Criar meu story no Instagram</button>
-            <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
-            <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
-            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
-            <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
+
+    <!-- CARD PREMIUM -->
+    <div class="card-premium-cta">
+        <div class="card-premium-brilho"></div>
+        <div class="card-premium-conteudo">
+            <div class="card-premium-badge">✦ NOVO</div>
+            <h3 class="card-premium-titulo">Página Premium do Evento</h3>
+            <p class="card-premium-texto">Surpreenda seus convidados com uma página personalizada — mural de fotos, livro de recados e convite digital.</p>
+            <div class="card-premium-itens">
+                <div class="card-premium-item">📸 Mural de memórias</div>
+                <div class="card-premium-item">💌 Livro de recados</div>
+                <div class="card-premium-item">✉️ Convite para WhatsApp</div>
+            </div>
+            <button class="btn-premium-cta" onclick="abrirPaginaPremium()">
+                ✦ Experimente a versão Premium
+            </button>
         </div>
+    </div>
+
+    <button class="btn-criar-story" onclick="abrirPopupStory()">📸 Criar meu story no Instagram</button>
+    <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
+    <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
+    <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
+    <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
+</div>
     </div>
 
 </div>
