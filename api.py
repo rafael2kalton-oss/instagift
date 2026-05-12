@@ -746,8 +746,16 @@ def salvar_recado():
 def excluir_recado(recado_id):
     sb_delete("recados", f"id=eq.{recado_id}")
     return jsonify({"ok": True})
+
+@app.route("/api/recados/<lista_id>")
+def listar_recados(lista_id):
     recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
     return jsonify(recados if isinstance(recados, list) else [])
 
+@app.route("/premium/<lista_id>")
+def premium(lista_id):
+    return render_template("premium.html", lista_id=lista_id)
+
 if __name__ == "__main__":
     app.run(debug=True)
+
