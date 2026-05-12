@@ -669,5 +669,83 @@ def editar_produto(produto_id):
         sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
     return jsonify({"ok": True})
 
+# ── ROTAS PREMIUM ──
+
+@app.route("/premium/<lista_id>")
+def premium(lista_id):
+    return render_template("premium.html", lista_id=lista_id)
+
+@app.route("/api/config-premium/<lista_id>")
+def get_config_premium(lista_id):
+    config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    fotos = sb_get("fotos_mural", f"lista_id=eq.{lista_id}&order=ordem.asc")
+    recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
+    return jsonify({
+        "config": config[0] if config and isinstance(config, list) else {},
+        "fotos": fotos if isinstance(fotos, list) else [],
+        "recados": recados if isinstance(recados, list) else []
+    })
+
+@app.route("/api/salvar-config-premium", methods=["POST"])
+def salvar_config_premium():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    if not lista_id:
+        return jsonify({"erro": "Dados inválidos"}), 400
+    config_existente = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    payload = {
+        "lista_id": lista_id,
+        "mensagem_celebrante": data.get("mensagem_celebrante", ""),
+        "texto_convite": data.get("texto_convite", ""),
+        "usa_convite_padrao": data.get("usa_convite_padrao", True),
+        "nome_celebrante": data.get("nome_celebrante", ""),
+        "data_evento": data.get("data_evento", "")
+    }
+    if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
+        sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
+    else:
+        sb_post("config_premium", payload)
+    return jsonify({"ok": True})
+
+@app.route("/api/salvar-foto-mural", methods=["POST"])
+def salvar_foto_mural():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    url_foto = data.get("url_foto", "").strip()
+    ordem = data.get("ordem", 0)
+    if not lista_id or not url_foto:
+        return jsonify({"erro": "Dados inválidos"}), 400
+    foto = sb_post("fotos_mural", {
+        "lista_id": lista_id,
+        "url_foto": url_foto,
+        "ordem": ordem
+    })
+    return jsonify({"ok": True, "foto": foto[0] if isinstance(foto, list) else foto})
+
+@app.route("/api/remover-foto-mural/<int:foto_id>", methods=["DELETE"])
+def remover_foto_mural(foto_id):
+    sb_delete("fotos_mural", f"id=eq.{foto_id}")
+    return jsonify({"ok": True})
+
+@app.route("/api/salvar-recado", methods=["POST"])
+def salvar_recado():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    nome = data.get("nome", "").strip()
+    mensagem = data.get("mensagem", "").strip()
+    if not lista_id or not nome or not mensagem:
+        return jsonify({"erro": "Preencha nome e mensagem"}), 400
+    recado = sb_post("recados", {
+        "lista_id": lista_id,
+        "nome": nome,
+        "mensagem": mensagem
+    })
+    return jsonify({"ok": True, "recado": recado[0] if isinstance(recado, list) else recado})
+
+@app.route("/api/recados/<lista_id>")
+def listar_recados(lista_id):
+    recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
+    return jsonify(recados if isinstance(recados, list) else [])
+
 if __name__ == "__main__":
     app.run(debug=True)
