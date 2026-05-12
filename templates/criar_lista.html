@@ -750,6 +750,9 @@
         var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+' e criei uma lista digital no InstaGift! 🎁\n\n✦ ESCOLHA O PRESENTE AQUI:\n'+linkVitrine+'\n\nValeu pelo carinho! 🙏✦';
         window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(mensagem),'_blank');
     }
+   function abrirPaginaPremium() {
+    window.open('/configurar-premium/' + LISTA_ID, '_blank');
+}
     function copiarLink() { navigator.clipboard.writeText(`${window.location.origin}/lista/${LISTA_ID}`).then(()=>alert("Link copiado!")); }
 
     document.addEventListener('DOMContentLoaded', function() {
