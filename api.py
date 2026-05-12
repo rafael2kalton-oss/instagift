@@ -757,5 +757,5 @@ def premium(lista_id):
     return render_template("premium.html", lista_id=lista_id)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000, debug=False)
 
