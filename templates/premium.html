@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGift — Página Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
+
+/* HERO */
+.hero { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(8px) brightness(0.6); transform: scale(1.1); transition: opacity 1s; }
+.hero-bg-default { position: absolute; inset: 0; background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5), rgba(20,12,4,0.85)); }
+.hero-content { position: relative; z-index: 2; text-align: center; padding: 40px 24px; max-width: 600px; }
+.hero-ornamento { color: #C9A84C; font-size: 16px; letter-spacing: 10px; margin-bottom: 20px; opacity: 0; animation: fadeInDown 1s ease 0.3s forwards; }
+.hero-titulo { font-family: 'Playfair Display', serif; font-size: clamp(36px, 8vw, 64px); font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 16px; opacity: 0; animation: fadeInDown 1s ease 0.6s forwards; text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.hero-titulo span { color: #C9A84C; }
+.hero-subtitulo { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(14px, 3vw, 18px); color: rgba(255,255,255,0.8); margin-bottom: 32px; opacity: 0; animation: fadeInDown 1s ease 0.9s forwards; line-height: 1.6; }
+.hero-linha { display: flex; align-items: center; gap: 12px; margin: 0 auto 32px; max-width: 240px; opacity: 0; animation: fadeInDown 1s ease 1.1s forwards; }
+.hero-linha-barra { flex: 1; height: 1px; background: rgba(201,168,76,0.5); }
+.hero-linha-icon { color: #C9A84C; font-size: 12px; }
+.btn-ver-presentes { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; padding: 18px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; box-shadow: 0 8px 32px rgba(201,168,76,0.4); opacity: 0; animation: fadeInUp 1s ease 1.3s forwards; transition: all 0.3s; letter-spacing: 0.03em; }
+.btn-ver-presentes:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(201,168,76,0.5); }
+.hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; animation: fadeInUp 1s ease 1.8s forwards; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.hero-scroll-arrow { width: 20px; height: 20px; border-right: 1px solid rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.4); transform: rotate(45deg); animation: bounce 1.5s infinite; }
+
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bounce { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
+
+/* NAVEGAÇÃO */
+.nav-premium { background: #fff; border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+.nav-inner { max-width: 600px; margin: 0 auto; display: flex; padding: 0 16px; }
+.nav-tab { flex: 1; padding: 16px 8px; text-align: center; font-size: 13px; font-weight: 600; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.03em; font-family: 'Inter', sans-serif; }
+.nav-tab:hover { color: #C9A84C; }
+.nav-tab.active { color: #C9A84C; border-bottom-color: #C9A84C; }
+
+/* SEÇÕES */
+.secao { display: none; max-width: 600px; margin: 0 auto; padding: 40px 16px 60px; }
+.secao.ativa { display: block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.secao-ornamento { color: #C9A84C; font-size: 12px; letter-spacing: 6px; text-align: center; margin-bottom: 12px; }
+.secao-titulo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; text-align: center; color: #2C2C2C; margin-bottom: 8px; }
+.secao-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; text-align: center; margin-bottom: 32px; line-height: 1.6; }
+.secao-divider { display: flex; align-items: center; gap: 12px; margin: 32px 0; }
+.secao-divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
+.secao-divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.7; }
+
+/* MENSAGEM DO CELEBRANTE */
+.mensagem-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 32px 28px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.04); margin-bottom: 32px; }
+.mensagem-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(201,168,76,0.3); margin: 0 auto 16px; object-fit: cover; background: linear-gradient(135deg, #FFF8EC, #F5EDD8); display: flex; align-items: center; justify-content: center; font-size: 28px; overflow: hidden; }
+.mensagem-nome { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
+.mensagem-cargo { font-size: 12px; color: #C9A84C; letter-spacing: 0.05em; margin-bottom: 20px; }
+.mensagem-texto { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #666; line-height: 1.8; }
+.aspas { font-size: 48px; color: rgba(201,168,76,0.2); font-family: Georgia; line-height: 0.5; display: block; margin-bottom: 8px; }
+
+/* MURAL DE FOTOS */
+.mural-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.mural-foto { border-radius: 14px; overflow: hidden; aspect-ratio: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer; }
+.mural-foto:hover { transform: scale(1.02); }
+.mural-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mural-foto:first-child { grid-column: span 2; aspect-ratio: 16/9; }
+.mural-vazio { text-align: center; padding: 60px 20px; color: #bbb; }
+.mural-vazio-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.mural-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
+
+/* LIGHTBOX */
+.lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999; align-items: center; justify-content: center; padding: 20px; }
+.lightbox.show { display: flex; }
+.lightbox img { max-width: 100%; max-height: 90vh; border-radius: 12px; object-fit: contain; }
+.lightbox-fechar { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+
+/* RECADOS */
+.form-recado { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+.form-recado h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 20px; text-align: center; }
+.form-field { margin-bottom: 14px; }
+.form-field label { font-size: 11px; color: #aaa; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.07em; }
+.form-field input, .form-field textarea { width: 100%; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 16px; color: #2C2C2C; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; resize: none; transition: all 0.2s; }
+.form-field input:focus, .form-field textarea:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+.form-field input::placeholder, .form-field textarea::placeholder { color: #ccc; }
+.btn-enviar-recado { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); margin-top: 4px; }
+.btn-enviar-recado:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201,168,76,0.4); }
+.recado-sucesso { display: none; text-align: center; padding: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
+
+.recados-lista { display: flex; flex-direction: column; gap: 16px; }
+.recado-card { background: #fff; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); animation: fadeUp 0.4s ease; }
+.recado-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.recado-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #C9A84C, #A8722A); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; font-weight: 700; font-family: 'Playfair Display', serif; flex-shrink: 0; }
+.recado-nome { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #2C2C2C; }
+.recado-data { font-size: 11px; color: #bbb; margin-top: 2px; }
+.recado-mensagem { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #666; line-height: 1.7; }
+.recados-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
+.recados-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
+
+/* CONVITE */
+.convite-card { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 32px 28px; text-align: center; margin-bottom: 20px; }
+.convite-ornamento { color: #C9A84C; font-size: 12px; letter-spacing: 6px; margin-bottom: 16px; }
+.convite-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 15px; line-height: 1.9; white-space: pre-line; }
+.btn-copiar-convite { width: 100%; padding: 14px; background: rgba(201,168,76,0.1); color: #C9A84C; border: 1px solid rgba(201,168,76,0.3); border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-bottom: 10px; }
+.btn-copiar-convite:hover { background: rgba(201,168,76,0.15); }
+.btn-whatsapp-convite { width: 100%; padding: 14px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-whatsapp-convite:hover { transform: translateY(-2px); }
+
+/* BTN FLUTUANTE */
+.btn-flutuante { position: fixed; bottom: 24px; right: 20px; left: 20px; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); z-index: 50; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; }
+.btn-flutuante:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.6); }
+
+/* LOADING */
+.loading-state { text-align: center; padding: 60px 20px; color: #C9A84C; }
+.loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-bg-default" id="heroBgDefault"></div>
+  <div class="hero-bg" id="heroBg" style="opacity:0;"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <h1 class="hero-titulo" id="heroTitulo">Carregando<span>...</span></h1>
+    <p class="hero-subtitulo" id="heroSubtitulo">Uma celebração especial preparada com carinho</p>
+    <div class="hero-linha">
+      <div class="hero-linha-barra"></div>
+      <div class="hero-linha-icon">✦</div>
+      <div class="hero-linha-barra"></div>
+    </div>
+    <button class="btn-ver-presentes" onclick="irParaPresentes()">
+      🎁 Ver Lista de Presentes
+    </button>
+  </div>
+  <div class="hero-scroll">
+    <span>Explorar</span>
+    <div class="hero-scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div class="nav-premium">
+  <div class="nav-inner">
+    <div class="nav-tab active" onclick="trocarAba('mural')" id="tab-mural">📸 Mural</div>
+    <div class="nav-tab" onclick="trocarAba('recados')" id="tab-recados">💌 Recados</div>
+    <div class="nav-tab" onclick="trocarAba('convite')" id="tab-convite">✉️ Convite</div>
+  </div>
+</div>
+
+<!-- ABA MURAL -->
+<div class="secao ativa" id="secao-mural">
+  <div class="secao-ornamento">✦ ✦ ✦</div>
+  <h2 class="secao-titulo">Mural de Memórias</h2>
+  <p class="secao-sub">Momentos especiais que fazem parte dessa história</p>
+
+  <div class="mensagem-card" id="mensagemCard" style="display:none;">
+    <div class="mensagem-avatar" id="mensagemAvatar">✦</div>
+    <div class="mensagem-nome" id="mensagemNome"></div>
+    <div class="mensagem-cargo" id="mensagemCargo">✦ Uma mensagem especial ✦</div>
+    <span class="aspas">"</span>
+    <p class="mensagem-texto" id="mensagemTexto"></p>
+  </div>
+
+  <div class="secao-divider" id="dividerFotos" style="display:none;">
+    <div class="secao-divider-linha"></div>
+    <div class="secao-divider-icon">✦</div>
+    <div class="secao-divider-linha"></div>
+  </div>
+
+  <div id="muralContainer">
+    <div class="loading-state">
+      <div style="font-size:28px; letter-spacing:6px; color:rgba(201,168,76,0.4);">✦ ✦ ✦</div>
+      <p>Carregando memórias...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ABA RECADOS -->
+<div class="secao" id="secao-recados">
+  <div class="secao-ornamento">✦ ✦ ✦</div>
+  <h2 class="secao-titulo">Livro de Recados</h2>
+  <p class="secao-sub">Deixe uma mensagem carinhosa para quem está celebrando</p>
+
+  <div class="form-recado">
+    <h3>✦ Deixe seu carinho</h3>
+    <div class="form-field">
+      <label>Seu nome</label>
+      <input type="text" id="recadoNome" placeholder="Como você se chama?">
+    </div>
+    <div class="form-field">
+      <label>Sua mensagem</label>
+      <textarea id="recadoMensagem" rows="4" placeholder="Escreva uma mensagem especial..."></textarea>
+    </div>
+    <button class="btn-enviar-recado" onclick="enviarRecado()">✦ Enviar mensagem</button>
+    <div class="recado-sucesso" id="recadoSucesso">🎉 Mensagem enviada com sucesso!</div>
+  </div>
+
+  <div class="secao-divider">
+    <div class="secao-divider-linha"></div>
+    <div class="secao-divider-icon">✦</div>
+    <div class="secao-divider-linha"></div>
+  </div>
+
+  <div id="recadosLista">
+    <div class="loading-state">
+      <div style="font-size:28px; letter-spacing:6px; color:rgba(201,168,76,0.4);">✦ ✦ ✦</div>
+      <p>Carregando recados...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ABA CONVITE -->
+<div class="secao" id="secao-convite">
+  <div class="secao-ornamento">✦ ✦ ✦</div>
+  <h2 class="secao-titulo">Convite Digital</h2>
+  <p class="secao-sub">Compartilhe com seus convidados pelo WhatsApp</p>
+
+  <div class="convite-card">
+    <div class="convite-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <p class="convite-texto" id="conviteTexto">Carregando convite...</p>
+  </div>
+
+  <button class="btn-copiar-convite" onclick="copiarConvite()">📋 Copiar texto do convite</button>
+  <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">
+    💚 Enviar pelo WhatsApp
+  </button>
+</div>
+
+<!-- BOTÃO FLUTUANTE -->
+<button class="btn-flutuante" onclick="irParaPresentes()">
+  🎁 Ver Lista de Presentes
+</button>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="fecharLightbox()">
+  <button class="lightbox-fechar" onclick="fecharLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+var listaId = "{{ lista_id }}";
+var dadosPremium = {};
+var conviteTextoFinal = "";
+
+async function carregarPremium() {
+  try {
+    var r = await fetch('/api/config-premium/' + listaId);
+    var data = await r.json();
+    dadosPremium = data;
+    renderHero(data.config);
+    renderMensagem(data.config);
+    renderMural(data.fotos);
+    renderRecados(data.recados);
+    renderConvite(data.config);
+  } catch(e) {
+    console.error('Erro ao carregar premium:', e);
+  }
+}
+
+function renderHero(config) {
+  if (!config) return;
+  var nome = config.nome_celebrante || 'Celebração Especial';
+  var data = config.data_evento ? formatarData(config.data_evento) : '';
+  document.getElementById('heroTitulo').innerHTML = nome.includes('&')
+    ? nome.replace('&', '<span>&</span>')
+    : '<span>' + nome + '</span>';
+  if (data) document.getElementById('heroSubtitulo').textContent = '✦ ' + data + ' ✦';
+
+  // Usa primeira foto como fundo do hero
+  if (dadosPremium.fotos && dadosPremium.fotos.length > 0) {
+    var heroBg = document.getElementById('heroBg');
+    heroBg.style.backgroundImage = 'url(' + dadosPremium.fotos[0].url_foto + ')';
+    heroBg.style.opacity = '1';
+  }
+}
+
+function renderMensagem(config) {
+  if (!config || !config.mensagem_celebrante) return;
+  var card = document.getElementById('mensagemCard');
+  var divider = document.getElementById('dividerFotos');
+  card.style.display = 'block';
+  divider.style.display = 'flex';
+  document.getElementById('mensagemNome').textContent = config.nome_celebrante || '';
+  document.getElementById('mensagemTexto').textContent = config.mensagem_celebrante;
+}
+
+function renderMural(fotos) {
+  var container = document.getElementById('muralContainer');
+  if (!fotos || fotos.length === 0) {
+    container.innerHTML = '<div class="mural-vazio"><div class="mural-vazio-icon">📸</div><p>As fotos do evento aparecerão aqui em breve</p></div>';
+    return;
+  }
+  var html = '<div class="mural-grid">';
+  fotos.forEach(function(f, idx) {
+    html += '<div class="mural-foto" onclick="abrirLightbox(\'' + f.url_foto + '\')">';
+    html += '<img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="lazy">';
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderRecados(recados) {
+  var lista = document.getElementById('recadosLista');
+  if (!recados || recados.length === 0) {
+    lista.innerHTML = '<div class="recados-vazio"><p>Seja o primeiro a deixar uma mensagem! 💌</p></div>';
+    return;
+  }
+  lista.innerHTML = '<div class="recados-lista">' + recados.map(function(r) {
+    var inicial = r.nome ? r.nome[0].toUpperCase() : '?';
+    var data = r.criado_em ? formatarDataHora(r.criado_em) : '';
+    return '<div class="recado-card">' +
+      '<div class="recado-header">' +
+        '<div class="recado-avatar">' + inicial + '</div>' +
+        '<div><div class="recado-nome">' + r.nome + '</div>' +
+        '<div class="recado-data">' + data + '</div></div>' +
+      '</div>' +
+      '<p class="recado-mensagem">' + r.mensagem + '</p>' +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+function renderConvite(config) {
+  if (!config) return;
+  var nome = config.nome_celebrante || 'o evento';
+  var data = config.data_evento ? formatarData(config.data_evento) : 'em breve';
+  var link = window.location.origin + '/premium/' + listaId;
+
+  if (config.texto_convite && !config.usa_convite_padrao) {
+    conviteTextoFinal = config.texto_convite;
+  } else {
+    conviteTextoFinal = gerarConvitePadrao(nome, data, link, config);
+  }
+  document.getElementById('conviteTexto').textContent = conviteTextoFinal;
+}
+
+function gerarConvitePadrao(nome, data, link, config) {
+  var evento = detectarEvento();
+  var convites = {
+    aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha celebrar esse momento especial! ✦',
+    casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para celebrar o seu casamento.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será uma celebração inesquecível! ✦',
+    'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha fazer parte desse momento! ✦',
+    'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
+    outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será incrível! ✦'
+  };
+  return convites[evento] || convites['outros'];
+}
+
+function detectarEvento() {
+  // Detecta pelo badge da config se disponível
+  return 'aniversario';
+}
+
+async function enviarRecado() {
+  var nome = document.getElementById('recadoNome').value.trim();
+  var mensagem = document.getElementById('recadoMensagem').value.trim();
+  if (!nome || !mensagem) { alert('Preencha seu nome e mensagem!'); return; }
+  try {
+    var r = await fetch('/api/salvar-recado', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ lista_id: listaId, nome: nome, mensagem: mensagem })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      document.getElementById('recadoNome').value = '';
+      document.getElementById('recadoMensagem').value = '';
+      document.getElementById('recadoSucesso').style.display = 'block';
+      setTimeout(function() { document.getElementById('recadoSucesso').style.display = 'none'; }, 3000);
+      // Recarrega recados
+      var r2 = await fetch('/api/recados/' + listaId);
+      var recados = await r2.json();
+      renderRecados(recados);
+    }
+  } catch(e) { alert('Erro ao enviar. Tente novamente.'); }
+}
+
+function copiarConvite() {
+  navigator.clipboard.writeText(conviteTextoFinal).then(function() {
+    alert('Convite copiado! ✦');
+  });
+}
+
+function enviarWhatsApp() {
+  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank');
+}
+
+function irParaPresentes() {
+  window.location.href = '/vitrine/' + listaId;
+}
+
+function trocarAba(aba) {
+  document.querySelectorAll('.secao').forEach(function(s) { s.classList.remove('ativa'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('secao-' + aba).classList.add('ativa');
+  document.getElementById('tab-' + aba).classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav-premium').offsetTop - 10, behavior: 'smooth' });
+}
+
+function abrirLightbox(url) {
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function fecharLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+function formatarData(dataStr) {
+  try {
+    var d = new Date(dataStr + 'T00:00:00');
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  } catch(e) { return dataStr; }
+}
+
+function formatarDataHora(dataStr) {
+  try {
+    var d = new Date(dataStr);
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch(e) { return ''; }
+}
+
+carregarPremium();
+</script>
+</body>
+</html>
