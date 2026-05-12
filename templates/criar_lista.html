@@ -142,7 +142,18 @@
 
     <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
-        <p class="secao-titulo">Qual é o seu evento?</p>
+
+    <!-- BANNER PREMIUM -->
+    <div onclick="window.open('/configurar-premium/'+LISTA_ID,'_blank')" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03)); border:1px solid rgba(201,168,76,0.3); border-radius:14px; padding:12px 16px; margin-bottom:20px; cursor:pointer; display:flex; align-items:center; gap:12px; transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03))'">
+        <div style="font-size:22px; flex-shrink:0;">✨</div>
+        <div>
+            <p style="font-family:'Playfair Display',serif; font-size:12px; font-weight:700; color:#C9A84C; margin-bottom:2px;">Conheça a vantagem de ter sua página personalizada!</p>
+            <p style="font-size:11px; color:#aaa; font-style:italic;">Teste nossa página Premium gratuitamente por 3 dias ✦</p>
+        </div>
+        <div style="margin-left:auto; color:#C9A84C; font-size:14px; flex-shrink:0;">→</div>
+    </div>
+
+    <p class="secao-titulo">Qual é o seu evento?</p>
         <p class="secao-sub">Escolha o tipo de evento para personalizar sua lista.</p>
         <div class="eventos-grid">
             <div class="evento-card selected" data-evento="aniversario" onclick="selecionarEvento(this)">
