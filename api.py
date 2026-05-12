@@ -671,9 +671,9 @@ def editar_produto(produto_id):
 
 # ── ROTAS PREMIUM ──
 
-@app.route("/premium/<lista_id>")
-def premium(lista_id):
-    return render_template("premium.html", lista_id=lista_id)
+@app.route("/configurar-premium/<lista_id>")
+def configurar_premium(lista_id):
+    return render_template("configurar_premium.html", lista_id=lista_id)
 
 @app.route("/api/config-premium/<lista_id>")
 def get_config_premium(lista_id):
