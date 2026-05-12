@@ -742,8 +742,10 @@ def salvar_recado():
     })
     return jsonify({"ok": True, "recado": recado[0] if isinstance(recado, list) else recado})
 
-@app.route("/api/recados/<lista_id>")
-def listar_recados(lista_id):
+@app.route("/api/excluir-recado/<int:recado_id>", methods=["DELETE"])
+def excluir_recado(recado_id):
+    sb_delete("recados", f"id=eq.{recado_id}")
+    return jsonify({"ok": True})
     recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
     return jsonify(recados if isinstance(recados, list) else [])
 
