@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGift — Configurar Página Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; min-height: 100vh; padding-bottom: 60px; }
+.container { max-width: 480px; margin: 0 auto; padding: 20px 16px; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 24px; border-bottom: 1px solid rgba(201,168,76,0.25); margin-bottom: 28px; }
+.logo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #C9A84C; }
+.btn-voltar { background: transparent; border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-voltar:hover { background: rgba(201,168,76,0.06); }
+
+.page-titulo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #2C2C2C; margin-bottom: 6px; }
+.page-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-bottom: 32px; line-height: 1.6; }
+
+/* SEÇÃO */
+.secao-config { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
+.secao-config-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.secao-config-icon { width: 40px; height: 40px; background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.08)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.secao-config-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; }
+.secao-config-sub { font-size: 12px; color: #aaa; margin-top: 2px; font-style: italic; }
+
+/* CAMPOS */
+.campo { margin-bottom: 16px; }
+.campo label { font-size: 11px; color: #aaa; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; }
+.campo input, .campo textarea, .campo select { width: 100%; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 16px; color: #2C2C2C; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; resize: none; transition: all 0.2s; }
+.campo input:focus, .campo textarea:focus, .campo select:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); background: #fff; }
+.campo input::placeholder, .campo textarea::placeholder { color: #ccc; }
+
+/* FRASES SUGERIDAS */
+.frases-sugeridas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.frase-chip { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; cursor: pointer; color: #888; background: #fff; transition: all 0.15s; font-family: 'Playfair Display', serif; font-style: italic; }
+.frase-chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.04); }
+
+/* UPLOAD FOTOS */
+.upload-area { border: 2px dashed rgba(201,168,76,0.3); border-radius: 14px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(201,168,76,0.02); margin-bottom: 16px; }
+.upload-area:hover { border-color: #C9A84C; background: rgba(201,168,76,0.04); }
+.upload-area input { display: none; }
+.upload-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+.upload-texto { font-size: 14px; color: #aaa; font-family: 'Playfair Display', serif; font-style: italic; }
+.upload-texto strong { color: #C9A84C; font-style: normal; }
+
+.fotos-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.foto-preview-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; }
+.foto-preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.foto-preview-item .btn-remover-foto { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.6); border: none; color: #fff; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.foto-preview-item .btn-remover-foto:hover { background: rgba(255,50,50,0.8); }
+.foto-uploading { aspect-ratio: 1; border-radius: 10px; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #C9A84C; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* TOGGLE CONVITE */
+.toggle-group { display: flex; gap: 10px; margin-bottom: 16px; }
+.toggle-btn { flex: 1; padding: 12px; border: 1.5px solid rgba(201,168,76,0.25); border-radius: 12px; background: #fff; color: #aaa; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-align: center; }
+.toggle-btn.active { border-color: #C9A84C; background: rgba(201,168,76,0.06); color: #C9A84C; }
+
+.convite-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; }
+.convite-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.9; white-space: pre-line; }
+.convite-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 4px; margin-bottom: 10px; text-align: center; }
+
+/* RECADOS */
+.recado-admin-card { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.15); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
+.recado-admin-info { flex: 1; }
+.recado-admin-nome { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
+.recado-admin-msg { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; color: #666; line-height: 1.6; }
+.recado-admin-data { font-size: 11px; color: #bbb; margin-top: 4px; }
+.btn-excluir-recado { background: transparent; border: 1px solid rgba(255,80,80,0.2); color: #f87171; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer; flex-shrink: 0; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.btn-excluir-recado:hover { background: rgba(255,80,80,0.08); border-color: rgba(255,80,80,0.4); }
+.recados-vazio-admin { text-align: center; padding: 28px; color: #bbb; font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; }
+
+/* LINK PREMIUM */
+.link-box { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; }
+.link-box p { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.link-box code { font-size: 12px; color: #C9A84C; word-break: break-all; display: block; margin-bottom: 10px; }
+.btn-copiar-link { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); color: #C9A84C; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-right: 8px; }
+.btn-copiar-link:hover { background: #C9A84C; color: #fff; }
+.btn-ver-pagina { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; border: none; transition: all 0.2s; }
+.btn-ver-pagina:hover { transform: translateY(-1px); }
+
+/* BOTÃO SALVAR */
+.btn-salvar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); margin-top: 8px; letter-spacing: 0.03em; }
+.btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
+.salvo-sucesso { display: none; text-align: center; padding: 14px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
+
+.divider { display: flex; align-items: center; gap: 12px; margin: 8px 0 20px; }
+.divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); }
+.divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo">InstaGift</div>
+    <button class="btn-voltar" onclick="window.location.href='/lista/'+listaId">← Voltar</button>
+  </div>
+
+  <p class="page-titulo">Página Premium ✦</p>
+  <p class="page-sub">Configure sua página especial para os convidados</p>
+
+  <!-- LINK DA PÁGINA PREMIUM -->
+  <div class="link-box">
+    <p>✦ Link da sua página premium</p>
+    <code id="linkPremium"></code>
+    <button class="btn-copiar-link" onclick="copiarLink()">Copiar link</button>
+    <button class="btn-ver-pagina" onclick="verPagina()">Ver página →</button>
+  </div>
+
+  <!-- 1. INFORMAÇÕES DO EVENTO -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">🎉</div>
+      <div>
+        <div class="secao-config-titulo">Informações do Evento</div>
+        <div class="secao-config-sub">Nome e data que aparecem na abertura</div>
+      </div>
+    </div>
+    <div class="campo">
+      <label>Nome do evento ou celebrante</label>
+      <input type="text" id="nomeCelebrante" placeholder="Ex: Ana & João, Maria Silva, Bebê da Ana...">
+    </div>
+    <div class="campo">
+      <label>Data do evento</label>
+      <input type="date" id="dataEvento">
+    </div>
+  </div>
+
+  <!-- 2. MENSAGEM DO CELEBRANTE -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">💬</div>
+      <div>
+        <div class="secao-config-titulo">Sua Mensagem</div>
+        <div class="secao-config-sub">Aparece no mural para os convidados</div>
+      </div>
+    </div>
+    <div class="campo">
+      <label>Escreva sua mensagem ou escolha uma abaixo</label>
+      <textarea id="mensagemCelebrante" rows="4" placeholder="Ex: Estou muito feliz em celebrar esse momento especial com vocês..."></textarea>
+    </div>
+    <div class="frases-sugeridas" id="frasesContainer"></div>
+  </div>
+
+  <!-- 3. MURAL DE FOTOS -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">📸</div>
+      <div>
+        <div class="secao-config-titulo">Mural de Fotos</div>
+        <div class="secao-config-sub">Até 9 fotos do seu evento</div>
+      </div>
+    </div>
+    <div class="upload-area" onclick="document.getElementById('inputFotos').click()">
+      <input type="file" id="inputFotos" accept="image/*" multiple onchange="processarFotos(event)">
+      <div class="upload-icon">📷</div>
+      <p class="upload-texto"><strong>Clique aqui</strong> para adicionar fotos</p>
+    </div>
+    <div class="fotos-preview" id="fotosPreview"></div>
+  </div>
+
+  <!-- 4. CONVITE -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">✉️</div>
+      <div>
+        <div class="secao-config-titulo">Convite Digital</div>
+        <div class="secao-config-sub">Para enviar pelo WhatsApp</div>
+      </div>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle-btn active" id="btnPadrao" onclick="toggleConvite(true)">✦ Usar texto padrão</div>
+      <div class="toggle-btn" id="btnPersonalizado" onclick="toggleConvite(false)">✏️ Personalizar</div>
+    </div>
+    <div id="convitePadraoInfo" style="font-size:13px; color:#aaa; font-style:italic; margin-bottom:12px;">
+      O texto será gerado automaticamente com o nome e data do evento.
+    </div>
+    <div id="convitePersonalizadoArea" style="display:none;">
+      <div class="campo">
+        <label>Seu texto personalizado</label>
+        <textarea id="textoConvite" rows="6" placeholder="Escreva o texto do seu convite aqui..."></textarea>
+      </div>
+    </div>
+    <div class="convite-preview" id="convitePreview">
+      <div class="convite-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <p class="convite-preview-texto" id="convitePreviewTexto">Preencha o nome e a data para ver o convite...</p>
+    </div>
+  </div>
+
+  <!-- 5. RECADOS DOS CONVIDADOS -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">💌</div>
+      <div>
+        <div class="secao-config-titulo">Recados dos Convidados</div>
+        <div class="secao-config-sub">Gerencie as mensagens recebidas</div>
+      </div>
+    </div>
+    <div id="recadosAdmin">
+      <div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua página premium!</div>
+    </div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-linha"></div>
+    <div class="divider-icon">✦</div>
+    <div class="divider-linha"></div>
+  </div>
+
+  <button class="btn-salvar" onclick="salvarConfig()">✦ Salvar e publicar página</button>
+  <div class="salvo-sucesso" id="salvoSucesso">✦ Página premium salva com sucesso!</div>
+
+</div>
+
+<script>
+var listaId = "{{ lista_id }}";
+var usaConvitePadrao = true;
+var fotosExistentes = [];
+var eventoAtual = 'aniversario';
+
+var frasesPorEvento = {
+  aniversario: [
+    'Estou muito feliz em celebrar mais um ano ao lado de pessoas tão especiais!',
+    'Cada presente é um gesto de carinho que guardo no coração.',
+    'Obrigada por fazer parte da minha história!',
+    'Que alegria celebrar mais um ano de vida com vocês!'
+  ],
+  casamento: [
+    'Estamos radiantes de alegria por compartilhar esse momento com vocês!',
+    'Cada presente simboliza o carinho de quem amamos.',
+    'Obrigado por fazer parte do dia mais especial das nossas vidas!',
+    'Com vocês ao nosso lado, essa celebração fica ainda mais especial!'
+  ],
+  'casa-nova': [
+    'Estamos começando uma nova história e vocês fazem parte dela!',
+    'Cada item escolhido vai encher nosso lar de amor.',
+    'Obrigado por ajudar a construir nosso cantinho!',
+    'Com muito carinho, estamos montando nosso novo lar!'
+  ],
+  'cha-bebe': [
+    'Nosso coração está transbordando de amor pela chegada do nosso bebê!',
+    'Cada presente será recebido com muito amor e gratidão.',
+    'Obrigado por fazer parte desse momento tão especial!',
+    'Estamos ansiosos para apresentar o novo membro da família!'
+  ],
+  outros: [
+    'Estou muito feliz em compartilhar esse momento especial com vocês!',
+    'Cada gesto de carinho de vocês significa muito para mim.',
+    'Obrigado por fazer parte dessa celebração!',
+    'Com vocês ao meu lado, tudo fica mais especial!'
+  ]
+};
+
+document.getElementById('linkPremium').textContent = window.location.origin + '/premium/' + listaId;
+
+// Carrega dados existentes
+async function carregarConfig() {
+  try {
+    var r = await fetch('/api/config-premium/' + listaId);
+    var data = await r.json();
+    if (data.config && data.config.nome_celebrante) {
+      document.getElementById('nomeCelebrante').value = data.config.nome_celebrante || '';
+      document.getElementById('dataEvento').value = data.config.data_evento || '';
+      document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante || '';
+      if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
+      if (!data.config.usa_convite_padrao) toggleConvite(false);
+    }
+    if (data.fotos && data.fotos.length > 0) {
+      fotosExistentes = data.fotos;
+      renderFotosExistentes(data.fotos);
+    }
+    if (data.recados && data.recados.length > 0) {
+      renderRecadosAdmin(data.recados);
+    }
+    atualizarPreviewConvite();
+  } catch(e) { console.error(e); }
+}
+
+// Frases sugeridas
+function renderFrases() {
+  var frases = frasesPorEvento[eventoAtual] || frasesPorEvento['outros'];
+  var container = document.getElementById('frasesContainer');
+  container.innerHTML = frases.map(function(f) {
+    return '<span class="frase-chip" onclick="usarFrase(\'' + f.replace(/'/g, "\\'") + '\')">' + f + '</span>';
+  }).join('');
+}
+
+function usarFrase(frase) {
+  document.getElementById('mensagemCelebrante').value = frase;
+}
+
+// Toggle convite
+function toggleConvite(padrao) {
+  usaConvitePadrao = padrao;
+  document.getElementById('btnPadrao').className = 'toggle-btn' + (padrao ? ' active' : '');
+  document.getElementById('btnPersonalizado').className = 'toggle-btn' + (!padrao ? ' active' : '');
+  document.getElementById('convitePadraoInfo').style.display = padrao ? 'block' : 'none';
+  document.getElementById('convitePersonalizadoArea').style.display = padrao ? 'none' : 'block';
+  atualizarPreviewConvite();
+}
+
+// Preview do convite
+function atualizarPreviewConvite() {
+  var nome = document.getElementById('nomeCelebrante').value || 'o evento';
+  var dataStr = document.getElementById('dataEvento').value;
+  var data = dataStr ? new Date(dataStr + 'T00:00:00').toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) : 'em breve';
+  var link = window.location.origin + '/premium/' + listaId;
+  var texto = '';
+  if (usaConvitePadrao) {
+    var convites = {
+      aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha celebrar esse momento especial! ✦',
+      casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para celebrar o seu casamento.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será uma celebração inesquecível! ✦',
+      'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha fazer parte desse momento! ✦',
+      'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
+      outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será incrível! ✦'
+    };
+    texto = convites[eventoAtual] || convites['outros'];
+  } else {
+    texto = document.getElementById('textoConvite').value || 'Seu convite aparecerá aqui...';
+  }
+  document.getElementById('convitePreviewTexto').textContent = texto;
+}
+
+// Listeners para atualizar preview
+document.getElementById('nomeCelebrante').addEventListener('input', atualizarPreviewConvite);
+document.getElementById('dataEvento').addEventListener('change', atualizarPreviewConvite);
+document.getElementById('textoConvite').addEventListener('input', atualizarPreviewConvite);
+
+// FOTOS
+function renderFotosExistentes(fotos) {
+  var preview = document.getElementById('fotosPreview');
+  preview.innerHTML = '';
+  fotos.forEach(function(f) {
+    var div = document.createElement('div');
+    div.className = 'foto-preview-item';
+    div.id = 'foto-' + f.id;
+    div.innerHTML = '<img src="' + f.url_foto + '" alt="foto">' +
+      '<button class="btn-remover-foto" onclick="removerFoto(' + f.id + ')">✕</button>';
+    preview.appendChild(div);
+  });
+}
+
+async function processarFotos(e) {
+  var files = Array.from(e.target.files);
+  var totalAtual = document.querySelectorAll('.foto-preview-item').length;
+  if (totalAtual + files.length > 9) {
+    alert('Máximo de 9 fotos permitidas!');
+    files = files.slice(0, 9 - totalAtual);
+  }
+  for (var i = 0; i < files.length; i++) {
+    await uploadFoto(files[i]);
+  }
+  e.target.value = '';
+}
+
+async function uploadFoto(file) {
+  var preview = document.getElementById('fotosPreview');
+  var loadingDiv = document.createElement('div');
+  loadingDiv.className = 'foto-uploading';
+  loadingDiv.textContent = '✦';
+  preview.appendChild(loadingDiv);
+  var reader = new FileReader();
+  reader.onload = async function(ev) {
+    var base64 = ev.target.result;
+    try {
+      var ordem = document.querySelectorAll('.foto-preview-item').length;
+      var r = await fetch('/api/salvar-foto-mural', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ lista_id: listaId, url_foto: base64, ordem: ordem })
+      });
+      var data = await r.json();
+      preview.removeChild(loadingDiv);
+      if (data.ok && data.foto) {
+        var div = document.createElement('div');
+        div.className = 'foto-preview-item';
+        div.id = 'foto-' + data.foto.id;
+        div.innerHTML = '<img src="' + base64 + '" alt="foto">' +
+          '<button class="btn-remover-foto" onclick="removerFoto(' + data.foto.id + ')">✕</button>';
+        preview.appendChild(div);
+      }
+    } catch(e) {
+      preview.removeChild(loadingDiv);
+      alert('Erro ao salvar foto. Tente novamente.');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function removerFoto(id) {
+  if (!confirm('Remover esta foto?')) return;
+  await fetch('/api/remover-foto-mural/' + id, { method: 'DELETE' });
+  var el = document.getElementById('foto-' + id);
+  if (el) el.remove();
+}
+
+// RECADOS
+function renderRecadosAdmin(recados) {
+  var container = document.getElementById('recadosAdmin');
+  if (!recados || recados.length === 0) {
+    container.innerHTML = '<div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua página premium!</div>';
+    return;
+  }
+  container.innerHTML = recados.map(function(r) {
+    var data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '';
+    return '<div class="recado-admin-card" id="recado-' + r.id + '">' +
+      '<div class="recado-admin-info">' +
+        '<div class="recado-admin-nome">' + r.nome + '</div>' +
+        '<div class="recado-admin-msg">"' + r.mensagem + '"</div>' +
+        '<div class="recado-admin-data">' + data + '</div>' +
+      '</div>' +
+      '<button class="btn-excluir-recado" onclick="excluirRecado(' + r.id + ')">Excluir</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function excluirRecado(id) {
+  if (!confirm('Excluir este recado?')) return;
+  try {
+    await fetch('/api/excluir-recado/' + id, { method: 'DELETE' });
+    var el = document.getElementById('recado-' + id);
+    if (el) el.remove();
+  } catch(e) { alert('Erro ao excluir. Tente novamente.'); }
+}
+
+// SALVAR CONFIG
+async function salvarConfig() {
+  var nome = document.getElementById('nomeCelebrante').value.trim();
+  var data = document.getElementById('dataEvento').value;
+  var mensagem = document.getElementById('mensagemCelebrante').value.trim();
+  var textoConvite = document.getElementById('textoConvite').value.trim();
+  try {
+    var r = await fetch('/api/salvar-config-premium', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        lista_id: listaId,
+        nome_celebrante: nome,
+        data_evento: data,
+        mensagem_celebrante: mensagem,
+        texto_convite: textoConvite,
+        usa_convite_padrao: usaConvitePadrao
+      })
+    });
+    var result = await r.json();
+    if (result.ok) {
+      document.getElementById('salvoSucesso').style.display = 'block';
+      setTimeout(function() { document.getElementById('salvoSucesso').style.display = 'none'; }, 3000);
+    }
+  } catch(e) { alert('Erro ao salvar. Tente novamente.'); }
+}
+
+function copiarLink() {
+  var link = window.location.origin + '/premium/' + listaId;
+  navigator.clipboard.writeText(link).then(function() { alert('Link copiado! ✦'); });
+}
+
+function verPagina() {
+  window.open('/premium/' + listaId, '_blank');
+}
+
+// Detecta evento da lista
+async function detectarEvento() {
+  try {
+    var r = await fetch('/api/lista-info/' + listaId);
+    var data = await r.json();
+    if (data.evento) eventoAtual = data.evento;
+  } catch(e) {}
+  renderFrases();
+}
+
+// Adiciona rota de excluir recado no api.py
+async function init() {
+  await detectarEvento();
+  await carregarConfig();
+}
+
+init();
+</script>
+</body>
+</html>
