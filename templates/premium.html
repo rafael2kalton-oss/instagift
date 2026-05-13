@@ -380,6 +380,18 @@ function aplicarPaleta(nome) {
 
 async function carregarPremium() {
   try {
+    // Verifica expiração
+    var exp = await fetch('/api/verificar-expiracao/' + listaId);
+    var expData = await exp.json();
+    if (expData.expirada) {
+      document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFF8EC;font-family:\'Playfair Display\',serif;text-align:center;padding:40px;">' +
+        '<div><div style="font-size:48px;margin-bottom:20px;">✦</div>' +
+        '<h2 style="color:#C9A84C;font-size:28px;margin-bottom:12px;">Página Encerrada</h2>' +
+        '<p style="color:#aaa;font-style:italic;font-size:16px;line-height:1.7;">' +
+        (expData.motivo === 'evento_encerrado' ? 'Este evento já foi celebrado!<br>A página ficou disponível por 7 dias após o evento.' : 'O prazo desta página expirou após 6 meses.') +
+        '</p><div style="margin-top:32px;color:#C9A84C;font-size:12px;letter-spacing:4px;">✦ ✦ ✦</div></div></div>';
+      return;
+    }
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
     dadosPremium = data;
