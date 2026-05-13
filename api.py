@@ -715,10 +715,16 @@ def salvar_foto_mural():
     ordem = data.get("ordem", 0)
     if not lista_id or not url_foto:
         return jsonify({"erro": "Dados inválidos"}), 400
+    # Verifica limite de 10 fotos
+    fotos_existentes = sb_get("fotos_mural", f"lista_id=eq.{lista_id}")
+    if isinstance(fotos_existentes, list) and len(fotos_existentes) >= 10:
+        return jsonify({"erro": "Limite de 10 fotos atingido!", "limite": True}), 400
     foto = sb_post("fotos_mural", {
         "lista_id": lista_id,
         "url_foto": url_foto,
         "ordem": ordem
+    })
+    return jsonify({"ok": True, "foto": foto[0] if isinstance(foto, list) else foto})
     })
     return jsonify({"ok": True, "foto": foto[0] if isinstance(foto, list) else foto})
 
