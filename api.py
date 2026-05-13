@@ -761,7 +761,32 @@ def listar_recados(lista_id):
 @app.route("/premium/<lista_id>")
 def premium(lista_id):
     return render_template("premium.html", lista_id=lista_id)
+@app.route("/api/verificar-expiracao/<lista_id>")
+def verificar_expiracao(lista_id):
+    try:
+        config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+        if not config or not isinstance(config, list) or len(config) == 0:
+            return jsonify({"expirada": False, "motivo": None})
+        cfg = config[0]
+        data_evento_str = cfg.get("data_evento")
+        criado_em_str = cfg.get("criado_em")
+        hoje = datetime.utcnow()
 
+        # Verifica 7 dias após o evento
+        if data_evento_str:
+            data_evento = datetime.fromisoformat(data_evento_str)
+            if hoje > data_evento + timedelta(days=7):
+                return jsonify({"expirada": True, "motivo": "evento_encerrado"})
+
+        # Verifica 6 meses após criação
+        if criado_em_str:
+            criado_em = datetime.fromisoformat(criado_em_str.replace('Z', ''))
+            if hoje > criado_em + timedelta(days=180):
+                return jsonify({"expirada": True, "motivo": "prazo_expirado"})
+
+        return jsonify({"expirada": False, "motivo": None})
+    except Exception as e:
+        return jsonify({"expirada": False, "motivo": None})
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
 
