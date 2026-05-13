@@ -699,7 +699,8 @@ def salvar_config_premium():
         "texto_convite": data.get("texto_convite", ""),
         "usa_convite_padrao": data.get("usa_convite_padrao", True),
         "nome_celebrante": data.get("nome_celebrante", ""),
-        "data_evento": data.get("data_evento", "")
+        "data_evento": data.get("data_evento", ""),
+        "paleta": data.get("paleta", "dourado")
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
@@ -715,7 +716,6 @@ def salvar_foto_mural():
     ordem = data.get("ordem", 0)
     if not lista_id or not url_foto:
         return jsonify({"erro": "Dados inválidos"}), 400
-    # Verifica limite de 10 fotos
     fotos_existentes = sb_get("fotos_mural", f"lista_id=eq.{lista_id}")
     if isinstance(fotos_existentes, list) and len(fotos_existentes) >= 10:
         return jsonify({"erro": "Limite de 10 fotos atingido!", "limite": True}), 400
@@ -723,8 +723,6 @@ def salvar_foto_mural():
         "lista_id": lista_id,
         "url_foto": url_foto,
         "ordem": ordem
-    })
-    return jsonify({"ok": True, "foto": foto[0] if isinstance(foto, list) else foto})
     })
     return jsonify({"ok": True, "foto": foto[0] if isinstance(foto, list) else foto})
 
@@ -758,9 +756,32 @@ def listar_recados(lista_id):
     recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
     return jsonify(recados if isinstance(recados, list) else [])
 
+@app.route("/api/salvar-presenca", methods=["POST"])
+def salvar_presenca():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    nome = data.get("nome", "").strip()
+    status = data.get("status", "confirmado")
+    acompanhantes = data.get("acompanhantes", 0)
+    if not lista_id or not nome:
+        return jsonify({"erro": "Dados inválidos"}), 400
+    presenca = sb_post("presencas", {
+        "lista_id": lista_id,
+        "nome": nome,
+        "status": status,
+        "acompanhantes": acompanhantes
+    })
+    return jsonify({"ok": True, "presenca": presenca[0] if isinstance(presenca, list) else presenca})
+
+@app.route("/api/presencas/<lista_id>")
+def listar_presencas(lista_id):
+    presencas = sb_get("presencas", f"lista_id=eq.{lista_id}&order=criado_em.asc")
+    return jsonify(presencas if isinstance(presencas, list) else [])
+
 @app.route("/premium/<lista_id>")
 def premium(lista_id):
     return render_template("premium.html", lista_id=lista_id)
+
 @app.route("/api/verificar-expiracao/<lista_id>")
 def verificar_expiracao(lista_id):
     try:
@@ -771,22 +792,17 @@ def verificar_expiracao(lista_id):
         data_evento_str = cfg.get("data_evento")
         criado_em_str = cfg.get("criado_em")
         hoje = datetime.utcnow()
-
-        # Verifica 7 dias após o evento
         if data_evento_str:
             data_evento = datetime.fromisoformat(data_evento_str)
             if hoje > data_evento + timedelta(days=7):
                 return jsonify({"expirada": True, "motivo": "evento_encerrado"})
-
-        # Verifica 6 meses após criação
         if criado_em_str:
             criado_em = datetime.fromisoformat(criado_em_str.replace('Z', ''))
             if hoje > criado_em + timedelta(days=180):
                 return jsonify({"expirada": True, "motivo": "prazo_expirado"})
-
         return jsonify({"expirada": False, "motivo": None})
     except Exception as e:
         return jsonify({"expirada": False, "motivo": None})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
-
