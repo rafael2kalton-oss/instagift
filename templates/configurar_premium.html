@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaGift — Configurar Página Premium</title>
+<title>InstaGift — Página do Evento</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,26 +18,22 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .page-titulo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #2C2C2C; margin-bottom: 6px; }
 .page-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-bottom: 32px; line-height: 1.6; }
 
-/* SEÇÃO */
 .secao-config { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
 .secao-config-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 .secao-config-icon { width: 40px; height: 40px; background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.08)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .secao-config-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; }
 .secao-config-sub { font-size: 12px; color: #aaa; margin-top: 2px; font-style: italic; }
 
-/* CAMPOS */
 .campo { margin-bottom: 16px; }
 .campo label { font-size: 11px; color: #aaa; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; }
 .campo input, .campo textarea, .campo select { width: 100%; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 16px; color: #2C2C2C; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; resize: none; transition: all 0.2s; }
 .campo input:focus, .campo textarea:focus, .campo select:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); background: #fff; }
 .campo input::placeholder, .campo textarea::placeholder { color: #ccc; }
 
-/* FRASES SUGERIDAS */
 .frases-sugeridas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .frase-chip { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; cursor: pointer; color: #888; background: #fff; transition: all 0.15s; font-family: 'Playfair Display', serif; font-style: italic; }
 .frase-chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.04); }
 
-/* UPLOAD FOTOS */
 .upload-area { border: 2px dashed rgba(201,168,76,0.3); border-radius: 14px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(201,168,76,0.02); margin-bottom: 16px; }
 .upload-area:hover { border-color: #C9A84C; background: rgba(201,168,76,0.04); }
 .upload-area input { display: none; }
@@ -53,7 +49,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .foto-uploading { aspect-ratio: 1; border-radius: 10px; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #C9A84C; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-/* TOGGLE CONVITE */
 .toggle-group { display: flex; gap: 10px; margin-bottom: 16px; }
 .toggle-btn { flex: 1; padding: 12px; border: 1.5px solid rgba(201,168,76,0.25); border-radius: 12px; background: #fff; color: #aaa; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-align: center; }
 .toggle-btn.active { border-color: #C9A84C; background: rgba(201,168,76,0.06); color: #C9A84C; }
@@ -62,7 +57,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .convite-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.9; white-space: pre-line; }
 .convite-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 4px; margin-bottom: 10px; text-align: center; }
 
-/* RECADOS */
 .recado-admin-card { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.15); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
 .recado-admin-info { flex: 1; }
 .recado-admin-nome { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
@@ -72,7 +66,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .btn-excluir-recado:hover { background: rgba(255,80,80,0.08); border-color: rgba(255,80,80,0.4); }
 .recados-vazio-admin { text-align: center; padding: 28px; color: #bbb; font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; }
 
-/* LINK PREMIUM */
 .link-box { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; }
 .link-box p { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
 .link-box code { font-size: 12px; color: #C9A84C; word-break: break-all; display: block; margin-bottom: 10px; }
@@ -81,7 +74,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .btn-ver-pagina { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; border: none; transition: all 0.2s; }
 .btn-ver-pagina:hover { transform: translateY(-1px); }
 
-/* BOTÃO SALVAR */
+/* PALETA DE CORES */
+.paleta-opcoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+.paleta-cor { width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.paleta-cor:hover { transform: scale(1.1); }
+.paleta-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
+.paleta-nome { text-align: center; font-size: 12px; color: #aaa; margin-top: 12px; font-style: italic; font-family: 'Playfair Display', serif; }
+
 .btn-salvar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); margin-top: 8px; letter-spacing: 0.03em; }
 .btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
 .salvo-sucesso { display: none; text-align: center; padding: 14px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
@@ -99,12 +98,12 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     <button class="btn-voltar" onclick="window.location.href='/lista/'+listaId">← Voltar</button>
   </div>
 
-  <p class="page-titulo">Página Premium ✦</p>
+  <p class="page-titulo">Página do Evento 🎉</p>
   <p class="page-sub">Configure sua página especial para os convidados</p>
 
-  <!-- LINK DA PÁGINA PREMIUM -->
+  <!-- LINK DA PÁGINA -->
   <div class="link-box">
-    <p>✦ Link da sua página premium</p>
+    <p>✦ Link da sua Página do Evento</p>
     <code id="linkPremium"></code>
     <button class="btn-copiar-link" onclick="copiarLink()">Copiar link</button>
     <button class="btn-ver-pagina" onclick="verPagina()">Ver página →</button>
@@ -129,7 +128,27 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     </div>
   </div>
 
-  <!-- 2. MENSAGEM DO CELEBRANTE -->
+  <!-- 2. PALETA DE CORES -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">🎨</div>
+      <div>
+        <div class="secao-config-titulo">Cor da Página</div>
+        <div class="secao-config-sub">Escolha a cor que combina com seu evento</div>
+      </div>
+    </div>
+    <div class="paleta-opcoes">
+      <div class="paleta-cor ativa" data-paleta="dourado" style="background:linear-gradient(135deg,#C9A84C,#A8722A);" onclick="selecionarPaleta('dourado')" title="Dourado"></div>
+      <div class="paleta-cor" data-paleta="rosa" style="background:linear-gradient(135deg,#E91E8C,#C2185B);" onclick="selecionarPaleta('rosa')" title="Rosa"></div>
+      <div class="paleta-cor" data-paleta="azul" style="background:linear-gradient(135deg,#1E88E5,#1565C0);" onclick="selecionarPaleta('azul')" title="Azul"></div>
+      <div class="paleta-cor" data-paleta="verde" style="background:linear-gradient(135deg,#43A047,#2E7D32);" onclick="selecionarPaleta('verde')" title="Verde"></div>
+      <div class="paleta-cor" data-paleta="roxo" style="background:linear-gradient(135deg,#8E24AA,#6A1B9A);" onclick="selecionarPaleta('roxo')" title="Roxo"></div>
+      <div class="paleta-cor" data-paleta="vermelho" style="background:linear-gradient(135deg,#E53935,#B71C1C);" onclick="selecionarPaleta('vermelho')" title="Vermelho"></div>
+    </div>
+    <p class="paleta-nome" id="paletaNome">✦ Dourado — clássico e elegante</p>
+  </div>
+
+  <!-- 3. MENSAGEM DO CELEBRANTE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💬</div>
@@ -145,13 +164,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     <div class="frases-sugeridas" id="frasesContainer"></div>
   </div>
 
-  <!-- 3. MURAL DE FOTOS -->
+  <!-- 4. MURAL DE FOTOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">📸</div>
       <div>
         <div class="secao-config-titulo">Mural de Fotos</div>
-        <div class="secao-config-sub">Até 9 fotos do seu evento</div>
+        <div class="secao-config-sub">Até 10 fotos do seu evento</div>
       </div>
     </div>
     <div class="upload-area" onclick="document.getElementById('inputFotos').click()">
@@ -162,7 +181,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     <div class="fotos-preview" id="fotosPreview"></div>
   </div>
 
-  <!-- 4. CONVITE -->
+  <!-- 5. CONVITE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">✉️</div>
@@ -190,7 +209,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     </div>
   </div>
 
-  <!-- 5. RECADOS DOS CONVIDADOS -->
+  <!-- 6. RECADOS DOS CONVIDADOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💌</div>
@@ -200,7 +219,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       </div>
     </div>
     <div id="recadosAdmin">
-      <div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua página premium!</div>
+      <div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua Página do Evento!</div>
     </div>
   </div>
 
@@ -211,7 +230,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
   </div>
 
   <button class="btn-salvar" onclick="salvarConfig()">✦ Salvar e publicar página</button>
-  <div class="salvo-sucesso" id="salvoSucesso">✦ Página premium salva com sucesso!</div>
+  <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
 
 </div>
 
@@ -220,6 +239,26 @@ var listaId = "{{ lista_id }}";
 var usaConvitePadrao = true;
 var fotosExistentes = [];
 var eventoAtual = 'aniversario';
+var paletaSelecionada = 'dourado';
+
+var paletas = {
+  dourado:  { nome: '✦ Dourado — clássico e elegante' },
+  rosa:     { nome: '✦ Rosa — delicado e romântico' },
+  azul:     { nome: '✦ Azul — sereno e especial' },
+  verde:    { nome: '✦ Verde — fresco e vibrante' },
+  roxo:     { nome: '✦ Roxo — sofisticado e mágico' },
+  vermelho: { nome: '✦ Vermelho — apaixonante e marcante' }
+};
+
+function selecionarPaleta(nome) {
+  paletaSelecionada = nome;
+  document.querySelectorAll('.paleta-cor').forEach(function(el) {
+    el.classList.toggle('ativa', el.dataset.paleta === nome);
+  });
+  document.getElementById('paletaNome').textContent = paletas[nome].nome;
+  // Salva no localStorage para o premium.html usar
+  localStorage.setItem('paleta_' + listaId, nome);
+}
 
 var frasesPorEvento = {
   aniversario: [
@@ -256,7 +295,6 @@ var frasesPorEvento = {
 
 document.getElementById('linkPremium').textContent = window.location.origin + '/premium/' + listaId;
 
-// Carrega dados existentes
 async function carregarConfig() {
   try {
     var r = await fetch('/api/config-premium/' + listaId);
@@ -267,6 +305,8 @@ async function carregarConfig() {
       document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante || '';
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
       if (!data.config.usa_convite_padrao) toggleConvite(false);
+      // Restaura paleta salva
+      if (data.config.paleta) selecionarPaleta(data.config.paleta);
     }
     if (data.fotos && data.fotos.length > 0) {
       fotosExistentes = data.fotos;
@@ -276,10 +316,12 @@ async function carregarConfig() {
       renderRecadosAdmin(data.recados);
     }
     atualizarPreviewConvite();
+    // Restaura paleta do localStorage
+    var paletaSalva = localStorage.getItem('paleta_' + listaId);
+    if (paletaSalva) selecionarPaleta(paletaSalva);
   } catch(e) { console.error(e); }
 }
 
-// Frases sugeridas
 function renderFrases() {
   var frases = frasesPorEvento[eventoAtual] || frasesPorEvento['outros'];
   var container = document.getElementById('frasesContainer');
@@ -292,7 +334,6 @@ function usarFrase(frase) {
   document.getElementById('mensagemCelebrante').value = frase;
 }
 
-// Toggle convite
 function toggleConvite(padrao) {
   usaConvitePadrao = padrao;
   document.getElementById('btnPadrao').className = 'toggle-btn' + (padrao ? ' active' : '');
@@ -302,7 +343,6 @@ function toggleConvite(padrao) {
   atualizarPreviewConvite();
 }
 
-// Preview do convite
 function atualizarPreviewConvite() {
   var nome = document.getElementById('nomeCelebrante').value || 'o evento';
   var dataStr = document.getElementById('dataEvento').value;
@@ -324,12 +364,10 @@ function atualizarPreviewConvite() {
   document.getElementById('convitePreviewTexto').textContent = texto;
 }
 
-// Listeners para atualizar preview
 document.getElementById('nomeCelebrante').addEventListener('input', atualizarPreviewConvite);
 document.getElementById('dataEvento').addEventListener('change', atualizarPreviewConvite);
 document.getElementById('textoConvite').addEventListener('input', atualizarPreviewConvite);
 
-// FOTOS
 function renderFotosExistentes(fotos) {
   var preview = document.getElementById('fotosPreview');
   preview.innerHTML = '';
@@ -346,9 +384,9 @@ function renderFotosExistentes(fotos) {
 async function processarFotos(e) {
   var files = Array.from(e.target.files);
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
-  if (totalAtual + files.length > 9) {
-    alert('Máximo de 9 fotos permitidas!');
-    files = files.slice(0, 9 - totalAtual);
+  if (totalAtual + files.length > 10) {
+    alert('Máximo de 10 fotos permitidas!');
+    files = files.slice(0, 10 - totalAtual);
   }
   for (var i = 0; i < files.length; i++) {
     await uploadFoto(files[i]);
@@ -397,11 +435,10 @@ async function removerFoto(id) {
   if (el) el.remove();
 }
 
-// RECADOS
 function renderRecadosAdmin(recados) {
   var container = document.getElementById('recadosAdmin');
   if (!recados || recados.length === 0) {
-    container.innerHTML = '<div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua página premium!</div>';
+    container.innerHTML = '<div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua Página do Evento!</div>';
     return;
   }
   container.innerHTML = recados.map(function(r) {
@@ -426,7 +463,6 @@ async function excluirRecado(id) {
   } catch(e) { alert('Erro ao excluir. Tente novamente.'); }
 }
 
-// SALVAR CONFIG
 async function salvarConfig() {
   var nome = document.getElementById('nomeCelebrante').value.trim();
   var data = document.getElementById('dataEvento').value;
@@ -442,7 +478,8 @@ async function salvarConfig() {
         data_evento: data,
         mensagem_celebrante: mensagem,
         texto_convite: textoConvite,
-        usa_convite_padrao: usaConvitePadrao
+        usa_convite_padrao: usaConvitePadrao,
+        paleta: paletaSelecionada
       })
     });
     var result = await r.json();
@@ -462,7 +499,6 @@ function verPagina() {
   window.open('/premium/' + listaId, '_blank');
 }
 
-// Detecta evento da lista
 async function detectarEvento() {
   try {
     var r = await fetch('/api/lista-info/' + listaId);
@@ -472,7 +508,6 @@ async function detectarEvento() {
   renderFrases();
 }
 
-// Adiciona rota de excluir recado no api.py
 async function init() {
   await detectarEvento();
   await carregarConfig();
