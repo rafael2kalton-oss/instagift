@@ -74,7 +74,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .btn-ver-pagina { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; border: none; transition: all 0.2s; }
 .btn-ver-pagina:hover { transform: translateY(-1px); }
 
-/* PALETA DE CORES */
 .paleta-opcoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
 .paleta-cor { width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 .paleta-cor:hover { transform: scale(1.1); }
@@ -101,7 +100,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
   <p class="page-titulo">Página do Evento 🎉</p>
   <p class="page-sub">Configure sua página especial para os convidados</p>
 
-  <!-- LINK DA PÁGINA -->
   <div class="link-box">
     <p>✦ Link da sua Página do Evento</p>
     <code id="linkPremium"></code>
@@ -250,13 +248,22 @@ var paletas = {
   vermelho: { nome: '✦ Vermelho — apaixonante e marcante' }
 };
 
+function atualizarContadorFotos() {
+  var total = document.querySelectorAll('.foto-preview-item').length;
+  var restantes = 10 - total;
+  var sub = document.getElementById('fotosSub');
+  if (sub) {
+    sub.textContent = total + '/10 fotos — ' + (restantes > 0 ? restantes + ' restantes' : 'limite atingido!');
+    sub.style.color = restantes === 0 ? '#ef4444' : '#aaa';
+  }
+}
+
 function selecionarPaleta(nome) {
   paletaSelecionada = nome;
   document.querySelectorAll('.paleta-cor').forEach(function(el) {
     el.classList.toggle('ativa', el.dataset.paleta === nome);
   });
   document.getElementById('paletaNome').textContent = paletas[nome].nome;
-  // Salva no localStorage para o premium.html usar
   localStorage.setItem('paleta_' + listaId, nome);
 }
 
@@ -305,7 +312,6 @@ async function carregarConfig() {
       document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante || '';
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
       if (!data.config.usa_convite_padrao) toggleConvite(false);
-      // Restaura paleta salva
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
     }
     if (data.fotos && data.fotos.length > 0) {
@@ -316,7 +322,7 @@ async function carregarConfig() {
       renderRecadosAdmin(data.recados);
     }
     atualizarPreviewConvite();
-    // Restaura paleta do localStorage
+    atualizarContadorFotos();
     var paletaSalva = localStorage.getItem('paleta_' + listaId);
     if (paletaSalva) selecionarPaleta(paletaSalva);
   } catch(e) { console.error(e); }
@@ -379,6 +385,7 @@ function renderFotosExistentes(fotos) {
       '<button class="btn-remover-foto" onclick="removerFoto(' + f.id + ')">✕</button>';
     preview.appendChild(div);
   });
+  atualizarContadorFotos();
 }
 
 async function processarFotos(e) {
@@ -419,6 +426,9 @@ async function uploadFoto(file) {
         div.innerHTML = '<img src="' + base64 + '" alt="foto">' +
           '<button class="btn-remover-foto" onclick="removerFoto(' + data.foto.id + ')">✕</button>';
         preview.appendChild(div);
+        atualizarContadorFotos();
+      } else if (data.limite) {
+        alert('Limite de 10 fotos atingido!');
       }
     } catch(e) {
       preview.removeChild(loadingDiv);
@@ -433,6 +443,7 @@ async function removerFoto(id) {
   await fetch('/api/remover-foto-mural/' + id, { method: 'DELETE' });
   var el = document.getElementById('foto-' + id);
   if (el) el.remove();
+  atualizarContadorFotos();
 }
 
 function renderRecadosAdmin(recados) {
