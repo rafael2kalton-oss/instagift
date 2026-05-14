@@ -29,6 +29,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .campo input, .campo textarea, .campo select { width: 100%; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 16px; color: #2C2C2C; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; resize: none; transition: all 0.2s; }
 .campo input:focus, .campo textarea:focus, .campo select:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); background: #fff; }
 .campo input::placeholder, .campo textarea::placeholder { color: #ccc; }
+.campo input:disabled { opacity: 0.6; cursor: not-allowed; background: #f5f5f5; }
+
+.data-aviso { font-size: 12px; color: #C9A84C; margin-top: 8px; font-style: italic; display: none; }
+.data-erro { font-size: 12px; color: #ef4444; margin-top: 8px; font-style: italic; display: none; }
 
 .frases-sugeridas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .frase-chip { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; cursor: pointer; color: #888; background: #fff; transition: all 0.15s; font-family: 'Playfair Display', serif; font-style: italic; }
@@ -87,6 +91,19 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .divider { display: flex; align-items: center; gap: 12px; margin: 8px 0 20px; }
 .divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); }
 .divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
+
+/* POPUP CONFIRMAÇÃO */
+.popup-overlay { display: none; position: fixed; inset: 0; background: rgba(44,44,44,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.popup-overlay.show { display: flex; }
+.popup-box { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.3); border-radius: 24px; padding: 32px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.popup-icon { font-size: 40px; margin-bottom: 16px; }
+.popup-titulo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #2C2C2C; margin-bottom: 12px; }
+.popup-texto { font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 8px; font-family: 'Playfair Display', serif; font-style: italic; }
+.popup-data-expiracao { font-size: 13px; color: #C9A84C; font-weight: 600; margin-bottom: 20px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); border-radius: 10px; padding: 10px; }
+.popup-aviso { font-size: 12px; color: #aaa; margin-bottom: 24px; font-style: italic; }
+.popup-btn-confirmar { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 10px; transition: all 0.2s; }
+.popup-btn-confirmar:hover { transform: translateY(-2px); }
+.popup-btn-cancelar { width: 100%; padding: 12px; background: transparent; color: #aaa; border: 1px solid rgba(201,168,76,0.2); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
 </style>
 </head>
 <body>
@@ -121,8 +138,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <input type="text" id="nomeCelebrante" placeholder="Ex: Ana & João, Maria Silva, Bebê da Ana...">
     </div>
     <div class="campo">
-      <label>Data do evento</label>
-      <input type="date" id="dataEvento">
+      <label>Data do evento <span style="color:#C9A84C;font-size:10px;">— máximo 6 meses a partir de hoje</span></label>
+      <input type="date" id="dataEvento" onchange="validarData()">
+      <p class="data-aviso" id="dataAviso"></p>
+      <p class="data-erro" id="dataErro">⚠️ Data inválida! Máximo de 6 meses a partir de hoje.</p>
     </div>
   </div>
 
@@ -227,9 +246,22 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     <div class="divider-linha"></div>
   </div>
 
-  <button class="btn-salvar" onclick="salvarConfig()">✦ Salvar e publicar página</button>
+  <button class="btn-salvar" onclick="iniciarSalvar()">✦ Salvar e publicar página</button>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
 
+</div>
+
+<!-- POPUP DE CONFIRMAÇÃO -->
+<div class="popup-overlay" id="popupConfirmacao">
+  <div class="popup-box">
+    <div class="popup-icon">🎉</div>
+    <h3 class="popup-titulo">Confirmar publicação</h3>
+    <p class="popup-texto">Sua página ficará disponível até <strong>7 dias após a data do evento</strong>.</p>
+    <div class="popup-data-expiracao" id="popupDataExpiracao"></div>
+    <p class="popup-aviso">⚠️ Após confirmar, a data do evento não poderá ser modificada.</p>
+    <button class="popup-btn-confirmar" onclick="confirmarSalvar()">✦ Confirmar e publicar</button>
+    <button class="popup-btn-cancelar" onclick="fecharPopup()">Cancelar</button>
+  </div>
 </div>
 
 <script>
@@ -238,6 +270,7 @@ var usaConvitePadrao = true;
 var fotosExistentes = [];
 var eventoAtual = 'aniversario';
 var paletaSelecionada = 'dourado';
+var dataJaSalva = false;
 
 var paletas = {
   dourado:  { nome: '✦ Dourado — clássico e elegante' },
@@ -247,6 +280,31 @@ var paletas = {
   roxo:     { nome: '✦ Roxo — sofisticado e mágico' },
   vermelho: { nome: '✦ Vermelho — apaixonante e marcante' }
 };
+
+function validarData() {
+  var dataStr = document.getElementById('dataEvento').value;
+  var dataErro = document.getElementById('dataErro');
+  var dataAviso = document.getElementById('dataAviso');
+  dataErro.style.display = 'none';
+  dataAviso.style.display = 'none';
+  if (!dataStr) return true;
+  var dataSelecionada = new Date(dataStr + 'T00:00:00');
+  var hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  var maxData = new Date(hoje);
+  maxData.setMonth(maxData.getMonth() + 6);
+  if (dataSelecionada > maxData) {
+    document.getElementById('dataEvento').value = '';
+    dataErro.style.display = 'block';
+    return false;
+  }
+  var expiracao = new Date(dataSelecionada);
+  expiracao.setDate(expiracao.getDate() + 7);
+  dataAviso.textContent = '✦ Sua página expirará em ' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+  dataAviso.style.display = 'block';
+  atualizarPreviewConvite();
+  return true;
+}
 
 function atualizarContadorFotos() {
   var total = document.querySelectorAll('.foto-preview-item').length;
@@ -308,11 +366,17 @@ async function carregarConfig() {
     var data = await r.json();
     if (data.config && data.config.nome_celebrante) {
       document.getElementById('nomeCelebrante').value = data.config.nome_celebrante || '';
-      document.getElementById('dataEvento').value = data.config.data_evento || '';
       document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante || '';
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
       if (!data.config.usa_convite_padrao) toggleConvite(false);
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
+      // Se já tem data salva, bloqueia o campo
+      if (data.config.data_evento) {
+        document.getElementById('dataEvento').value = data.config.data_evento;
+        document.getElementById('dataEvento').disabled = true;
+        dataJaSalva = true;
+        validarData();
+      }
     }
     if (data.fotos && data.fotos.length > 0) {
       fotosExistentes = data.fotos;
@@ -357,11 +421,11 @@ function atualizarPreviewConvite() {
   var texto = '';
   if (usaConvitePadrao) {
     var convites = {
-      aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha celebrar esse momento especial! ✦',
-      casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para celebrar o seu casamento.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será uma celebração inesquecível! ✦',
-      'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha fazer parte desse momento! ✦',
-      'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
-      outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será incrível! ✦'
+      aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha celebrar esse momento especial! ✦',
+      casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para celebrar o seu casamento.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será uma celebração inesquecível! ✦',
+      'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha fazer parte desse momento! ✦',
+      'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
+      outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
     };
     texto = convites[eventoAtual] || convites['outros'];
   } else {
@@ -472,6 +536,43 @@ async function excluirRecado(id) {
     var el = document.getElementById('recado-' + id);
     if (el) el.remove();
   } catch(e) { alert('Erro ao excluir. Tente novamente.'); }
+}
+
+function iniciarSalvar() {
+  // Valida data antes de abrir popup
+  if (!validarData()) return;
+  var dataStr = document.getElementById('dataEvento').value;
+  // Se já tem data salva, salva direto sem popup
+  if (dataJaSalva) {
+    salvarConfig();
+    return;
+  }
+  // Monta texto de expiração para o popup
+  if (dataStr) {
+    var dataEvento = new Date(dataStr + 'T00:00:00');
+    var expiracao = new Date(dataEvento);
+    expiracao.setDate(expiracao.getDate() + 7);
+    document.getElementById('popupDataExpiracao').textContent =
+      '📅 Data do evento: ' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) +
+      '\n⏰ Página expira em: ' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+  } else {
+    document.getElementById('popupDataExpiracao').textContent = '⏰ Sua página ficará ativa por 6 meses após a criação.';
+  }
+  document.getElementById('popupConfirmacao').classList.add('show');
+}
+
+function fecharPopup() {
+  document.getElementById('popupConfirmacao').classList.remove('show');
+}
+
+async function confirmarSalvar() {
+  fecharPopup();
+  await salvarConfig();
+  // Bloqueia campo de data após confirmar
+  if (!dataJaSalva) {
+    document.getElementById('dataEvento').disabled = true;
+    dataJaSalva = true;
+  }
 }
 
 async function salvarConfig() {
