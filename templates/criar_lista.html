@@ -773,8 +773,8 @@
     function verVitrine() { salvarEstado(); window.open(`/vitrine/${LISTA_ID}?admin=true`,'_blank'); }
     function compartilharWhatsApp() {
         var nomeEvento=document.getElementById('inputNomeEvento').value.trim()||'meu evento';
-        var linkVitrine=window.location.origin+'/vitrine/'+LISTA_ID;
-        var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+' e criei uma lista digital no InstaGift! 🎁\n\n✦ ESCOLHA O PRESENTE AQUI:\n'+linkVitrine+'\n\nValeu pelo carinho! 🙏✦';
+       var linkCelebracao=window.location.origin+'/premium/'+LISTA_ID;
+var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+'! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n'+linkCelebracao+'\n\nValeu pelo carinho! 🙏✦';
         window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(mensagem),'_blank');
     }
     function abrirPaginaPremium() { window.open('/configurar-premium/' + LISTA_ID, '_blank'); }
