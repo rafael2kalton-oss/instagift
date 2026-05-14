@@ -117,6 +117,18 @@
         .divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
         .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #C9A84C; margin-bottom: 20px; font-style: italic; font-family: 'Playfair Display', serif; }
         .nav-etapa4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+        /* BANNER 2 BOTÕES */
+        .banner-celebracao { background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03)); border: 1px solid rgba(201,168,76,0.3); border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; }
+        .banner-celebracao-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .banner-celebracao-icone { font-size: 20px; flex-shrink: 0; color: #C9A84C; }
+        .banner-celebracao-texto p:first-child { font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 700; color: #C9A84C; margin-bottom: 2px; }
+        .banner-celebracao-texto p:last-child { font-size: 10px; color: #aaa; font-style: italic; }
+        .banner-celebracao-botoes { display: flex; gap: 8px; }
+        .banner-btn-configurar { flex: 1; padding: 9px 10px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 20px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-align: center; transition: all 0.2s; white-space: nowrap; }
+        .banner-btn-configurar:hover { transform: translateY(-1px); }
+        .banner-btn-ver { flex: 1; padding: 9px 10px; background: transparent; color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); border-radius: 20px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-align: center; transition: all 0.2s; white-space: nowrap; }
+        .banner-btn-ver:hover { background: rgba(201,168,76,0.08); }
     </style>
 </head>
 <body>
@@ -143,15 +155,20 @@
     <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
 
-    <!-- BANNER -->
-    <div onclick="window.open('/configurar-premium/'+LISTA_ID,'_blank')" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03)); border:1px solid rgba(201,168,76,0.3); border-radius:14px; padding:12px 16px; margin-bottom:20px; cursor:pointer; display:flex; align-items:center; gap:12px; transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03))'">
-        <div style="font-size:22px; flex-shrink:0; color:#C9A84C;">✦</div>
-        <div>
-            <p style="font-family:'Playfair Display',serif; font-size:12px; font-weight:700; color:#C9A84C; margin-bottom:2px;">Acesse a sua Página de Celebração!</p>
-            <p style="font-size:11px; color:#aaa; font-style:italic;">Mural de fotos, livro de recados, lista de presença e convite digital ✦</p>
+        <!-- BANNER COM 2 BOTÕES -->
+        <div class="banner-celebracao">
+            <div class="banner-celebracao-topo">
+                <div class="banner-celebracao-icone">✦</div>
+                <div class="banner-celebracao-texto">
+                    <p>Acesse a sua Página de Celebração!</p>
+                    <p>Mural de fotos, recados, presença e convite digital ✦</p>
+                </div>
+            </div>
+            <div class="banner-celebracao-botoes">
+                <button class="banner-btn-configurar" onclick="window.open('/configurar-premium/'+LISTA_ID,'_blank')">⚙️ Configurar Página</button>
+                <button class="banner-btn-ver" onclick="window.open('/premium/'+LISTA_ID,'_blank')">👁 Ver Página</button>
+            </div>
         </div>
-        <div style="margin-left:auto; color:#C9A84C; font-size:14px; flex-shrink:0;">→</div>
-    </div>
 
         <p class="secao-titulo">Qual é o seu evento?</p>
         <p class="secao-sub">Escolha o tipo de evento para personalizar sua lista.</p>
