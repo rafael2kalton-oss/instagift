@@ -606,7 +606,7 @@
             linkPerm.style.display = "none"; acoes.style.display = "none"; return;
         }
         linkPerm.style.display = "block"; acoes.style.display = "flex"; verificarWhatsapp();
-        document.getElementById("textoLink").textContent = `${window.location.origin}/lista/${LISTA_ID}`;
+        document.getElementById("textoLink").textContent = `${window.location.origin}/premium/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon:"badge-amazon", mercadolivre:"badge-mercadolivre", shopee:"badge-shopee", magalu:"badge-magalu", shein:"badge-shein" }[p.plataforma] || "badge-outro";
             const label = { amazon:"Amazon", mercadolivre:"Mercado Livre", shopee:"Shopee", magalu:"Magalu", shein:"Shein" }[p.plataforma] || p.plataforma;
