@@ -552,9 +552,10 @@ function iniciarSalvar() {
     var dataEvento = new Date(dataStr + 'T00:00:00');
     var expiracao = new Date(dataEvento);
     expiracao.setDate(expiracao.getDate() + 7);
-    document.getElementById('popupDataExpiracao').textContent =
-      '📅 Data do evento: ' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) +
-      '\n⏰ Página expira em: ' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+    document.getElementById('popupDataExpiracao').innerHTML =
+  '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</strong><br><br>' +
+  '⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br>' +
+  '<span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</span>';
   } else {
     document.getElementById('popupDataExpiracao').textContent = '⏰ Sua página ficará ativa por 6 meses após a criação.';
   }
