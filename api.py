@@ -771,8 +771,38 @@ def salvar_presenca():
         "status": status,
         "acompanhantes": acompanhantes
     })
+    # Envia email para o celebrante
+    try:
+        lista = sb_get("listas", f"id=eq.{lista_id}")
+        config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+        if lista and isinstance(lista, list) and lista[0].get("email_aniversariante"):
+            email_dest = lista[0]["email_aniversariante"]
+            nome_evento = config[0].get("nome_celebrante", "seu evento") if config and isinstance(config, list) else "seu evento"
+            status_label = "✅ Confirmou presença" if status == "confirmado" else "🤔 Talvez compareça" if status == "talvez" else "❌ Não vai comparecer"
+            acomp_texto = f" com {acompanhantes} acompanhante(s)" if acompanhantes > 0 else ""
+            resend.Emails.send({
+                "from": "InstaGift <onboarding@resend.dev>",
+                "to": email_dest,
+                "subject": f"🎉 Nova confirmação de presença — {nome_evento}",
+                "html": f"""
+                <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);">
+                    <div style="text-align:center;margin-bottom:24px;">
+                        <div style="font-size:48px;margin-bottom:8px;">🎉</div>
+                        <h2 style="color:#C9A84C;font-family:'Georgia',serif;margin-bottom:4px;">Nova confirmação!</h2>
+                        <p style="color:#aaa;font-size:13px;font-style:italic;">{nome_evento}</p>
+                    </div>
+                    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid rgba(201,168,76,0.2);">
+                        <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Convidado</p>
+                        <p style="color:#2C2C2C;font-weight:700;font-size:18px;margin-bottom:8px;">{nome}{acomp_texto}</p>
+                        <p style="color:#C9A84C;font-size:14px;font-weight:600;">{status_label}</p>
+                    </div>
+                    <p style="color:#444;font-size:12px;text-align:center;font-style:italic;">Com carinho, InstaGift ✦</p>
+                </div>
+                """
+            })
+    except Exception as e:
+        print("Erro email presença:", e)
     return jsonify({"ok": True, "presenca": presenca[0] if isinstance(presenca, list) else presenca})
-
 @app.route("/api/presencas/<lista_id>")
 def listar_presencas(lista_id):
     presencas = sb_get("presencas", f"lista_id=eq.{lista_id}&order=criado_em.asc")
@@ -806,3 +836,4 @@ def verificar_expiracao(lista_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
+
