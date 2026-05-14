@@ -9,7 +9,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 
-/* PALETA DINÂMICA */
 :root {
   --cor-primaria: #C9A84C;
   --cor-secundaria: #A8722A;
@@ -17,7 +16,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   --cor-texto: #2C2C2C;
 }
 
-/* HERO */
 .hero { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
 .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(8px) brightness(0.6); transform: scale(1.1); transition: opacity 1s; }
 .hero-bg-default { position: absolute; inset: 0; background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); }
@@ -30,8 +28,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .hero-linha { display: flex; align-items: center; gap: 12px; margin: 0 auto 32px; max-width: 240px; opacity: 0; animation: fadeInDown 1s ease 1.1s forwards; }
 .hero-linha-barra { flex: 1; height: 1px; background: rgba(201,168,76,0.5); }
 .hero-linha-icon { color: var(--cor-primaria); font-size: 12px; }
-.btn-ver-presentes { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 18px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; box-shadow: 0 8px 32px rgba(201,168,76,0.4); opacity: 0; animation: fadeInUp 1s ease 1.3s forwards; transition: all 0.3s; letter-spacing: 0.03em; }
+.hero-botoes { display: flex; flex-direction: column; gap: 12px; align-items: center; opacity: 0; animation: fadeInUp 1s ease 1.3s forwards; }
+.btn-ver-presentes { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 18px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; box-shadow: 0 8px 32px rgba(201,168,76,0.4); transition: all 0.3s; letter-spacing: 0.03em; }
 .btn-ver-presentes:hover { transform: translateY(-3px); }
+.btn-explorar { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 12px 24px; border-radius: 50px; font-size: 13px; font-weight: 500; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; backdrop-filter: blur(10px); }
+.btn-explorar:hover { background: rgba(255,255,255,0.15); }
 .hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; animation: fadeInUp 1s ease 1.8s forwards; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .hero-scroll-arrow { width: 20px; height: 20px; border-right: 1px solid rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.4); transform: rotate(45deg); animation: bounce 1.5s infinite; }
 
@@ -39,14 +40,12 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes bounce { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
 
-/* NAVEGAÇÃO */
 .nav-premium { background: #fff; border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
 .nav-inner { max-width: 600px; margin: 0 auto; display: flex; padding: 0 16px; overflow-x: auto; }
 .nav-tab { flex: 1; min-width: 80px; padding: 16px 8px; text-align: center; font-size: 12px; font-weight: 600; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.03em; font-family: 'Inter', sans-serif; white-space: nowrap; }
 .nav-tab:hover { color: var(--cor-primaria); }
 .nav-tab.active { color: var(--cor-primaria); border-bottom-color: var(--cor-primaria); }
 
-/* SEÇÕES */
 .secao { display: none; max-width: 600px; margin: 0 auto; padding: 40px 16px 100px; }
 .secao.ativa { display: block; animation: fadeUp 0.4s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -58,7 +57,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .secao-divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
 .secao-divider-icon { color: var(--cor-primaria); font-size: 10px; opacity: 0.7; }
 
-/* MENSAGEM DO CELEBRANTE */
 .mensagem-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 32px 28px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.04); margin-bottom: 32px; }
 .mensagem-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(201,168,76,0.3); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: linear-gradient(135deg, #FFF8EC, #F5EDD8); }
 .mensagem-nome { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
@@ -66,7 +64,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .mensagem-texto { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #666; line-height: 1.8; }
 .aspas { font-size: 48px; color: rgba(201,168,76,0.2); font-family: Georgia; line-height: 0.5; display: block; margin-bottom: 8px; }
 
-/* MURAL DE FOTOS */
 .mural-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .mural-foto { border-radius: 14px; overflow: hidden; aspect-ratio: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer; }
 .mural-foto:hover { transform: scale(1.02); }
@@ -76,13 +73,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .mural-vazio-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
 .mural-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
 
-/* LIGHTBOX */
 .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999; align-items: center; justify-content: center; padding: 20px; }
 .lightbox.show { display: flex; }
 .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 12px; object-fit: contain; }
 .lightbox-fechar { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; }
 
-/* RECADOS */
 .form-recado { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
 .form-recado h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 20px; text-align: center; }
 .form-field { margin-bottom: 14px; }
@@ -104,7 +99,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .recados-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .recados-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
 
-/* CONVITE */
 .convite-card { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 32px 28px; text-align: center; margin-bottom: 20px; }
 .convite-ornamento { color: var(--cor-primaria); font-size: 12px; letter-spacing: 6px; margin-bottom: 16px; }
 .convite-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 15px; line-height: 1.9; white-space: pre-line; }
@@ -113,8 +107,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .btn-whatsapp-convite { width: 100%; padding: 14px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-whatsapp-convite:hover { transform: translateY(-2px); }
 
-/* LISTA DE PRESENÇA */
-.presenca-info { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 20px; margin-bottom: 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
 .presenca-contadores { display: flex; gap: 12px; margin-bottom: 20px; }
 .presenca-contador { flex: 1; background: var(--cor-fundo); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 16px 12px; text-align: center; }
 .presenca-contador-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--cor-primaria); }
@@ -140,7 +132,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .presencas-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .presencas-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
 
-/* PALETA DE CORES */
 .paleta-section { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
 .paleta-titulo { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #2C2C2C; margin-bottom: 14px; text-align: center; }
 .paleta-opcoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
@@ -148,11 +139,9 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .paleta-cor:hover { transform: scale(1.1); }
 .paleta-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
 
-/* BTN FLUTUANTE */
 .btn-flutuante { position: fixed; bottom: 24px; right: 20px; left: 20px; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); z-index: 50; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; }
 .btn-flutuante:hover { transform: translateY(-2px); }
 
-/* LOADING */
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
 </style>
@@ -173,9 +162,14 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
       <div class="hero-linha-icon">✦</div>
       <div class="hero-linha-barra"></div>
     </div>
-    <button class="btn-ver-presentes" onclick="irParaPresentes()">
-      🎁 Ver Lista de Presentes
-    </button>
+    <div class="hero-botoes">
+      <button class="btn-ver-presentes" onclick="irParaPresentes()">
+        🎁 Ver Lista de Presentes
+      </button>
+      <button class="btn-explorar" onclick="explorarPagina()">
+        ✦ Explorar a celebração
+      </button>
+    </div>
   </div>
   <div class="hero-scroll">
     <span>Explorar</span>
@@ -212,21 +206,21 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <div class="secao-divider-icon">✦</div>
     <div class="secao-divider-linha"></div>
   </div>
-<!-- PALETA DE CORES -->
-<div class="paleta-section">
+
+  <!-- PALETA DE CORES -->
+  <div class="paleta-section">
     <p class="paleta-titulo">🎨 Personalizar cores da página</p>
     <div class="paleta-opcoes">
-        <div class="paleta-cor" data-paleta="dourado" style="background:linear-gradient(135deg,#C9A84C,#A8722A);" onclick="aplicarPaleta('dourado')" title="Dourado"></div>
-        <div class="paleta-cor" data-paleta="rosa" style="background:linear-gradient(135deg,#E91E8C,#C2185B);" onclick="aplicarPaleta('rosa')" title="Rosa"></div>
-        <div class="paleta-cor" data-paleta="azul" style="background:linear-gradient(135deg,#1E88E5,#1565C0);" onclick="aplicarPaleta('azul')" title="Azul"></div>
-        <div class="paleta-cor" data-paleta="verde" style="background:linear-gradient(135deg,#43A047,#2E7D32);" onclick="aplicarPaleta('verde')" title="Verde"></div>
-        <div class="paleta-cor" data-paleta="roxo" style="background:linear-gradient(135deg,#8E24AA,#6A1B9A);" onclick="aplicarPaleta('roxo')" title="Roxo"></div>
-        <div class="paleta-cor" data-paleta="vermelho" style="background:linear-gradient(135deg,#E53935,#B71C1C);" onclick="aplicarPaleta('vermelho')" title="Vermelho"></div>
+      <div class="paleta-cor" data-paleta="dourado" style="background:linear-gradient(135deg,#C9A84C,#A8722A);" onclick="aplicarPaleta('dourado')" title="Dourado"></div>
+      <div class="paleta-cor" data-paleta="rosa" style="background:linear-gradient(135deg,#E91E8C,#C2185B);" onclick="aplicarPaleta('rosa')" title="Rosa"></div>
+      <div class="paleta-cor" data-paleta="azul" style="background:linear-gradient(135deg,#1E88E5,#1565C0);" onclick="aplicarPaleta('azul')" title="Azul"></div>
+      <div class="paleta-cor" data-paleta="verde" style="background:linear-gradient(135deg,#43A047,#2E7D32);" onclick="aplicarPaleta('verde')" title="Verde"></div>
+      <div class="paleta-cor" data-paleta="roxo" style="background:linear-gradient(135deg,#8E24AA,#6A1B9A);" onclick="aplicarPaleta('roxo')" title="Roxo"></div>
+      <div class="paleta-cor" data-paleta="vermelho" style="background:linear-gradient(135deg,#E53935,#B71C1C);" onclick="aplicarPaleta('vermelho')" title="Vermelho"></div>
     </div>
-</div>
+  </div>
 
   <div id="muralContainer">
-  
     <div class="loading-state">
       <div style="font-size:28px; letter-spacing:6px; color:rgba(201,168,76,0.4);">✦ ✦ ✦</div>
       <p>Carregando memórias...</p>
@@ -239,7 +233,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Livro de Recados</h2>
   <p class="secao-sub">Deixe uma mensagem carinhosa para quem está celebrando</p>
-
   <div class="form-recado">
     <h3>✦ Deixe seu carinho</h3>
     <div class="form-field">
@@ -253,13 +246,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <button class="btn-enviar-recado" onclick="enviarRecado()">✦ Enviar mensagem</button>
     <div class="recado-sucesso" id="recadoSucesso">🎉 Mensagem enviada com sucesso!</div>
   </div>
-
   <div class="secao-divider">
     <div class="secao-divider-linha"></div>
     <div class="secao-divider-icon">✦</div>
     <div class="secao-divider-linha"></div>
   </div>
-
   <div id="recadosLista">
     <div class="loading-state">
       <div style="font-size:28px; letter-spacing:6px; color:rgba(201,168,76,0.4);">✦ ✦ ✦</div>
@@ -273,7 +264,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Lista de Presença</h2>
   <p class="secao-sub">Confirme sua presença no evento</p>
-
   <div class="presenca-contadores" id="presencaContadores">
     <div class="presenca-contador">
       <div class="presenca-contador-num" id="totalConfirmados">0</div>
@@ -288,7 +278,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
       <div class="presenca-contador-label">❌ Não vai</div>
     </div>
   </div>
-
   <div class="form-presenca">
     <h3>✦ Confirme sua presença</h3>
     <div class="form-field">
@@ -310,13 +299,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <button class="btn-confirmar-presenca" onclick="confirmarPresenca()">✦ Confirmar presença</button>
     <div class="presenca-sucesso" id="presencaSucesso">🎉 Presença confirmada com sucesso!</div>
   </div>
-
   <div class="secao-divider">
     <div class="secao-divider-linha"></div>
     <div class="secao-divider-icon">✦</div>
     <div class="secao-divider-linha"></div>
   </div>
-
   <div id="presencasLista">
     <div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div>
   </div>
@@ -327,12 +314,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Convite Digital</h2>
   <p class="secao-sub">Compartilhe com seus convidados pelo WhatsApp</p>
-
   <div class="convite-card">
     <div class="convite-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
     <p class="convite-texto" id="conviteTexto">Carregando convite...</p>
   </div>
-
   <button class="btn-copiar-convite" onclick="copiarConvite()">📋 Copiar texto do convite</button>
   <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">
     💚 Enviar pelo WhatsApp
@@ -356,7 +341,6 @@ var dadosPremium = {};
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
 
-// PALETAS DE CORES
 var paletas = {
   dourado:  { primaria: '#C9A84C', secundaria: '#A8722A', fundo: '#FFF8EC' },
   rosa:     { primaria: '#E91E8C', secundaria: '#C2185B', fundo: '#FFF5F9' },
@@ -380,7 +364,6 @@ function aplicarPaleta(nome) {
 
 async function carregarPremium() {
   try {
-    // Verifica expiração
     var exp = await fetch('/api/verificar-expiracao/' + listaId);
     var expData = await exp.json();
     if (expData.expirada) {
@@ -401,7 +384,6 @@ async function carregarPremium() {
     renderRecados(data.recados);
     renderConvite(data.config);
     carregarPresencas();
-    // Restaura paleta salva
     var paletaSalva = localStorage.getItem('paleta_' + listaId) || 'dourado';
     aplicarPaleta(paletaSalva);
   } catch(e) {
@@ -476,22 +458,20 @@ function renderConvite(config) {
   if (config.texto_convite && !config.usa_convite_padrao) {
     conviteTextoFinal = config.texto_convite;
   } else {
-    conviteTextoFinal = '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n🎁 Lista de Presentes:\n' + link + '\n\n✦ Será incrível! ✦';
+    conviteTextoFinal = '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
   }
   document.getElementById('conviteTexto').textContent = conviteTextoFinal;
 }
 
-// PRESENÇA
 function selecionarPresenca(status) {
   presencaSelecionada = status;
   document.querySelectorAll('.presenca-opcao').forEach(function(el) {
     el.style.opacity = '0.4';
     el.style.transform = 'scale(0.95)';
   });
-  var el = document.getElementById('opcao' + status.charAt(0).toUpperCase() + status.slice(1).replace('-vai', 'Vai').replace('-', ''));
-  if (status === 'confirmado') el = document.getElementById('opcaoConfirmado');
-  if (status === 'talvez') el = document.getElementById('opcaoTalvez');
-  if (status === 'nao-vai') el = document.getElementById('opcaoNaoVai');
+  if (status === 'confirmado') { var el = document.getElementById('opcaoConfirmado'); }
+  if (status === 'talvez') { var el = document.getElementById('opcaoTalvez'); }
+  if (status === 'nao-vai') { var el = document.getElementById('opcaoNaoVai'); }
   if (el) { el.style.opacity = '1'; el.style.transform = 'scale(1.05)'; }
 }
 
@@ -586,6 +566,13 @@ function irParaPresentes() {
   window.location.href = '/vitrine/' + listaId;
 }
 
+function explorarPagina() {
+  var nav = document.querySelector('.nav-premium');
+  if (nav) {
+    window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' });
+  }
+}
+
 function trocarAba(aba) {
   document.querySelectorAll('.secao').forEach(function(s) { s.classList.remove('ativa'); });
   document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -617,7 +604,6 @@ function formatarDataHora(dataStr) {
   } catch(e) { return ''; }
 }
 
-// Inicializa seleção de presença
 selecionarPresenca('confirmado');
 carregarPremium();
 </script>
