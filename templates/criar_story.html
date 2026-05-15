@@ -117,7 +117,7 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
         <div class="frases" id="frasesChips"></div>
       </div>
       <div class="form-row">
-        <label>Link da sua vitrine</label>
+        <label>Link da sua Página de Celebração</label>
         <input type="text" id="link" value="" placeholder="Será preenchido automaticamente" oninput="atualizar()">
       </div>
       <button class="btn-gerar" onclick="gerarStory()">✦ Gerar story</button>
@@ -275,7 +275,7 @@ eventoConfig.frases.forEach(function(f) {
   frasesEl.appendChild(span);
 });
 
-if (vitrineId) document.getElementById('link').value = window.location.origin + '/vitrine/' + vitrineId;
+if (vitrineId) document.getElementById('link').value = window.location.origin + '/premium/' + vitrineId;
 
 function voltarLista() {
   if (vitrineId) window.location.href = '/lista/' + vitrineId;
