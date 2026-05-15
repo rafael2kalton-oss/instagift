@@ -426,12 +426,12 @@ async function carregarConfig() {
       if (!data.config.usa_convite_padrao) toggleConvite(false);
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
       if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
-      if (data.config.data_evento) {
-        document.getElementById('dataEvento').value = data.config.data_evento;
-        document.getElementById('dataEvento').disabled = true;
-        dataJaSalva = true;
-        validarData();
-      }
+      if (data.config.data_evento && data.config.data_evento.trim() !== '') {
+  document.getElementById('dataEvento').value = data.config.data_evento;
+  document.getElementById('dataEvento').disabled = true;
+  dataJaSalva = true;
+  validarData();
+}
     }
     if (data.fotos && data.fotos.length > 0) {
       fotosExistentes = data.fotos;
