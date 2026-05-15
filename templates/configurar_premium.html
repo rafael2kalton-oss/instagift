@@ -88,10 +88,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .popup-btn-confirmar:hover { transform: translateY(-2px); }
 .popup-btn-cancelar { width: 100%; padding: 12px; background: transparent; color: #aaa; border: 1px solid rgba(201,168,76,0.2); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
 .estilo-opcoes { display: flex; gap: 10px; margin-top: 20px; }
-.estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; background: #fff; transition: all 0.2s; }
+.estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; background: #fff; transition: all 0.2s; overflow: hidden; }
 .estilo-card.ativo { border-color: #C9A84C; background: rgba(201,168,76,0.06); }
 .estilo-card.ativo .estilo-label { color: #C9A84C; }
-.estilo-emoji { font-size: 20px; margin-bottom: 4px; }
+.estilo-preview { width: 100%; height: 60px; margin-bottom: 6px; border-radius: 6px; overflow: hidden; position: relative; background: #f5f5f5; }
 .estilo-label { font-size: 11px; font-weight: 600; color: #aaa; }
 </style>
 </head>
@@ -185,20 +185,68 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <p class="upload-texto"><strong>Clique aqui</strong> para adicionar fotos</p>
     </div>
     <div class="fotos-preview" id="fotosPreview"></div>
+
     <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-top:20px;margin-bottom:12px;">Estilo do mural</p>
     <div class="estilo-opcoes">
+
+      <!-- NORMAL -->
       <div class="estilo-card ativo" id="estiloNormal" onclick="selecionarEstilo('normal')">
-        <div class="estilo-emoji">📸</div>
+        <div class="estilo-preview">
+          <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <rect width="80" height="60" fill="#f5f0e8"/>
+            <rect x="2" y="2" width="37" height="27" rx="3" fill="#C9A84C" opacity="0.7"/>
+            <rect x="41" y="2" width="37" height="27" rx="3" fill="#A8722A" opacity="0.7"/>
+            <rect x="2" y="31" width="37" height="27" rx="3" fill="#A8722A" opacity="0.7"/>
+            <rect x="41" y="31" width="37" height="27" rx="3" fill="#C9A84C" opacity="0.7"/>
+          </svg>
+        </div>
         <div class="estilo-label">Normal</div>
       </div>
+
+      <!-- POLAROID -->
       <div class="estilo-card" id="estiloPolaroid" onclick="selecionarEstilo('polaroid')">
-        <div class="estilo-emoji">📌</div>
+        <div class="estilo-preview">
+          <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <rect width="80" height="60" fill="#f5f0e8"/>
+            <g transform="rotate(-5,20,30)">
+              <rect x="5" y="8" width="28" height="34" rx="1" fill="white" filter="url(#s)"/>
+              <rect x="7" y="10" width="24" height="20" fill="#C9A84C" opacity="0.8"/>
+              <circle cx="19" cy="8" r="3" fill="#e74c3c"/>
+            </g>
+            <g transform="rotate(4,55,28)">
+              <rect x="42" y="6" width="28" height="34" rx="1" fill="white" filter="url(#s)"/>
+              <rect x="44" y="8" width="24" height="20" fill="#A8722A" opacity="0.8"/>
+              <circle cx="56" cy="6" r="3" fill="#3498db"/>
+            </g>
+            <defs><filter id="s"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter></defs>
+          </svg>
+        </div>
         <div class="estilo-label">Polaroid</div>
       </div>
+
+      <!-- COLAGEM -->
       <div class="estilo-card" id="estiloColagem" onclick="selecionarEstilo('colagem')">
-        <div class="estilo-emoji">🎨</div>
+        <div class="estilo-preview">
+          <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <rect width="80" height="60" fill="#f5f0e8"/>
+            <g transform="rotate(-8,18,25)">
+              <rect x="4" y="8" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/>
+              <rect x="6" y="10" width="22" height="22" fill="#C9A84C" opacity="0.8"/>
+            </g>
+            <g transform="rotate(5,45,22)">
+              <rect x="30" y="4" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/>
+              <rect x="32" y="6" width="22" height="22" fill="#A8722A" opacity="0.8"/>
+            </g>
+            <g transform="rotate(-3,38,44)">
+              <rect x="20" y="28" width="26" height="28" rx="1" fill="white" filter="url(#s2)"/>
+              <rect x="22" y="30" width="22" height="20" fill="#C9A84C" opacity="0.6"/>
+            </g>
+            <defs><filter id="s2"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter></defs>
+          </svg>
+        </div>
         <div class="estilo-label">Colagem</div>
       </div>
+
     </div>
   </div>
 
@@ -348,9 +396,7 @@ function selecionarPaleta(nome) {
 
 function selecionarEstilo(estilo) {
   estiloMural = estilo;
-  document.querySelectorAll('.estilo-card').forEach(function(el) {
-    el.classList.remove('ativo');
-  });
+  document.querySelectorAll('.estilo-card').forEach(function(el) { el.classList.remove('ativo'); });
   var ids = { normal: 'estiloNormal', polaroid: 'estiloPolaroid', colagem: 'estiloColagem' };
   document.getElementById(ids[estilo]).classList.add('ativo');
 }
@@ -373,9 +419,9 @@ async function carregarConfig() {
 
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
-    if (data.config && data.config.nome_celebrante) {
-      document.getElementById('nomeCelebrante').value = data.config.nome_celebrante || '';
-      document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante || '';
+    if (data.config) {
+      if (data.config.nome_celebrante) document.getElementById('nomeCelebrante').value = data.config.nome_celebrante;
+      if (data.config.mensagem_celebrante) document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante;
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
       if (!data.config.usa_convite_padrao) toggleConvite(false);
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
@@ -417,9 +463,7 @@ function renderFrases() {
   }).join('');
 }
 
-function usarFrase(frase) {
-  document.getElementById('mensagemCelebrante').value = frase;
-}
+function usarFrase(frase) { document.getElementById('mensagemCelebrante').value = frase; }
 
 function toggleConvite(padrao) {
   usaConvitePadrao = padrao;
@@ -462,8 +506,7 @@ function renderFotosExistentes(fotos) {
     var div = document.createElement('div');
     div.className = 'foto-preview-item';
     div.id = 'foto-' + f.id;
-    div.innerHTML = '<img src="' + f.url_foto + '" alt="foto">' +
-      '<button class="btn-remover-foto" onclick="removerFoto(' + f.id + ')">✕</button>';
+    div.innerHTML = '<img src="' + f.url_foto + '" alt="foto"><button class="btn-remover-foto" onclick="removerFoto(' + f.id + ')">✕</button>';
     preview.appendChild(div);
   });
   atualizarContadorFotos();
@@ -471,27 +514,16 @@ function renderFotosExistentes(fotos) {
 
 function abrirUpload() {
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
-  if (totalAtual >= limiteFotos) {
-    document.getElementById('popupComprarFotos').style.display = 'flex';
-    return;
-  }
+  if (totalAtual >= limiteFotos) { document.getElementById('popupComprarFotos').style.display = 'flex'; return; }
   document.getElementById('inputFotos').click();
 }
 
 async function processarFotos(e) {
   var files = Array.from(e.target.files);
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
-  if (totalAtual >= limiteFotos) {
-    e.target.value = '';
-    document.getElementById('popupComprarFotos').style.display = 'flex';
-    return;
-  }
-  if (totalAtual + files.length > limiteFotos) {
-    files = files.slice(0, limiteFotos - totalAtual);
-  }
-  for (var i = 0; i < files.length; i++) {
-    await uploadFoto(files[i]);
-  }
+  if (totalAtual >= limiteFotos) { e.target.value = ''; document.getElementById('popupComprarFotos').style.display = 'flex'; return; }
+  if (totalAtual + files.length > limiteFotos) files = files.slice(0, limiteFotos - totalAtual);
+  for (var i = 0; i < files.length; i++) await uploadFoto(files[i]);
   e.target.value = '';
 }
 
@@ -506,28 +538,20 @@ async function uploadFoto(file) {
     var base64 = ev.target.result;
     try {
       var ordem = document.querySelectorAll('.foto-preview-item').length;
-      var r = await fetch('/api/salvar-foto-mural', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ lista_id: listaId, url_foto: base64, ordem: ordem })
-      });
+      var r = await fetch('/api/salvar-foto-mural', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, url_foto: base64, ordem: ordem }) });
       var data = await r.json();
       preview.removeChild(loadingDiv);
       if (data.ok && data.foto) {
         var div = document.createElement('div');
         div.className = 'foto-preview-item';
         div.id = 'foto-' + data.foto.id;
-        div.innerHTML = '<img src="' + base64 + '" alt="foto">' +
-          '<button class="btn-remover-foto" onclick="removerFoto(' + data.foto.id + ')">✕</button>';
+        div.innerHTML = '<img src="' + base64 + '" alt="foto"><button class="btn-remover-foto" onclick="removerFoto(' + data.foto.id + ')">✕</button>';
         preview.appendChild(div);
         atualizarContadorFotos();
       } else if (data.limite) {
         document.getElementById('popupComprarFotos').style.display = 'flex';
       }
-    } catch(e) {
-      preview.removeChild(loadingDiv);
-      alert('Erro ao salvar foto. Tente novamente.');
-    }
+    } catch(e) { preview.removeChild(loadingDiv); alert('Erro ao salvar foto. Tente novamente.'); }
   };
   reader.readAsDataURL(file);
 }
@@ -535,20 +559,10 @@ async function uploadFoto(file) {
 async function comprarFotos(pacote) {
   document.getElementById('popupComprarFotos').style.display = 'none';
   try {
-    var r = await fetch('/api/stripe/checkout', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ lista_id: listaId, pacote: pacote })
-    });
+    var r = await fetch('/api/stripe/checkout', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, pacote: pacote }) });
     var data = await r.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('Erro ao processar pagamento. Tente novamente.');
-    }
-  } catch(e) {
-    alert('Erro de conexão. Tente novamente.');
-  }
+    if (data.url) { window.location.href = data.url; } else { alert('Erro ao processar pagamento. Tente novamente.'); }
+  } catch(e) { alert('Erro de conexão. Tente novamente.'); }
 }
 
 async function removerFoto(id) {
@@ -561,30 +575,17 @@ async function removerFoto(id) {
 
 function renderRecadosAdmin(recados) {
   var container = document.getElementById('recadosAdmin');
-  if (!recados || recados.length === 0) {
-    container.innerHTML = '<div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua Página do Evento!</div>';
-    return;
-  }
+  if (!recados || recados.length === 0) { container.innerHTML = '<div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua Página do Evento!</div>'; return; }
   container.innerHTML = recados.map(function(r) {
     var data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '';
-    return '<div class="recado-admin-card" id="recado-' + r.id + '">' +
-      '<div class="recado-admin-info">' +
-        '<div class="recado-admin-nome">' + r.nome + '</div>' +
-        '<div class="recado-admin-msg">"' + r.mensagem + '"</div>' +
-        '<div class="recado-admin-data">' + data + '</div>' +
-      '</div>' +
-      '<button class="btn-excluir-recado" onclick="excluirRecado(' + r.id + ')">Excluir</button>' +
-    '</div>';
+    return '<div class="recado-admin-card" id="recado-' + r.id + '"><div class="recado-admin-info"><div class="recado-admin-nome">' + r.nome + '</div><div class="recado-admin-msg">"' + r.mensagem + '"</div><div class="recado-admin-data">' + data + '</div></div><button class="btn-excluir-recado" onclick="excluirRecado(' + r.id + ')">Excluir</button></div>';
   }).join('');
 }
 
 async function excluirRecado(id) {
   if (!confirm('Excluir este recado?')) return;
-  try {
-    await fetch('/api/excluir-recado/' + id, { method: 'DELETE' });
-    var el = document.getElementById('recado-' + id);
-    if (el) el.remove();
-  } catch(e) { alert('Erro ao excluir. Tente novamente.'); }
+  try { await fetch('/api/excluir-recado/' + id, { method: 'DELETE' }); var el = document.getElementById('recado-' + id); if (el) el.remove(); }
+  catch(e) { alert('Erro ao excluir. Tente novamente.'); }
 }
 
 function iniciarSalvar() {
@@ -595,27 +596,19 @@ function iniciarSalvar() {
     var dataEvento = new Date(dataStr + 'T00:00:00');
     var expiracao = new Date(dataEvento);
     expiracao.setDate(expiracao.getDate() + 7);
-    document.getElementById('popupDataExpiracao').innerHTML =
-      '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</strong><br><br>' +
-      '⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br>' +
-      '<span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</span>';
+    document.getElementById('popupDataExpiracao').innerHTML = '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</strong><br><br>⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br><span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</span>';
   } else {
     document.getElementById('popupDataExpiracao').textContent = '⏰ Sua página ficará ativa por 6 meses após a criação.';
   }
   document.getElementById('popupConfirmacao').classList.add('show');
 }
 
-function fecharPopup() {
-  document.getElementById('popupConfirmacao').classList.remove('show');
-}
+function fecharPopup() { document.getElementById('popupConfirmacao').classList.remove('show'); }
 
 async function confirmarSalvar() {
   fecharPopup();
   await salvarConfig();
-  if (!dataJaSalva) {
-    document.getElementById('dataEvento').disabled = true;
-    dataJaSalva = true;
-  }
+  if (!dataJaSalva) { document.getElementById('dataEvento').disabled = true; dataJaSalva = true; }
 }
 
 async function salvarConfig() {
@@ -642,28 +635,15 @@ async function salvarConfig() {
   } catch(e) { alert('Erro ao salvar. Tente novamente.'); }
 }
 
-function copiarLink() {
-  navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); });
-}
-
-function verPagina() {
-  window.open('/premium/' + listaId, '_blank');
-}
+function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
+function verPagina() { window.open('/premium/' + listaId, '_blank'); }
 
 async function detectarEvento() {
-  try {
-    var r = await fetch('/api/lista-info/' + listaId);
-    var data = await r.json();
-    if (data.evento) eventoAtual = data.evento;
-  } catch(e) {}
+  try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
   renderFrases();
 }
 
-async function init() {
-  await detectarEvento();
-  await carregarConfig();
-}
-
+async function init() { await detectarEvento(); await carregarConfig(); }
 init();
 </script>
 </body>
