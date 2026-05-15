@@ -781,6 +781,27 @@ var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+'! Acesse minha Página d
     }
     function abrirPaginaPremium() { window.open('/configurar-premium/' + LISTA_ID, '_blank'); }
     function copiarLink() { navigator.clipboard.writeText(`${window.location.origin}/premium/${LISTA_ID}`).then(()=>alert("Link copiado!")); }
+    function validarDataEvento() {
+    var dataStr = document.getElementById('inputDataEvento').value;
+    var erro = document.getElementById('dataEventoErro');
+    var aviso = document.getElementById('dataEventoAviso');
+    erro.style.display = 'none';
+    aviso.style.display = 'none';
+    if (!dataStr) return;
+    var dataSelecionada = new Date(dataStr + 'T00:00:00');
+    var hoje = new Date(); hoje.setHours(0,0,0,0);
+    var maxData = new Date(hoje);
+    maxData.setMonth(maxData.getMonth() + 12);
+    if (dataSelecionada > maxData) {
+        document.getElementById('inputDataEvento').value = '';
+        erro.style.display = 'block';
+        return;
+    }
+    var expiracao = new Date(dataSelecionada);
+    expiracao.setDate(expiracao.getDate() + 7);
+    aviso.textContent = '✦ Sua página expirará em ' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+    aviso.style.display = 'block';
+}
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("inputLink").addEventListener("keypress", function(e) { if(e.key==="Enter") adicionarProduto(); });
         restaurarEstado();
