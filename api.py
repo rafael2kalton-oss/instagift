@@ -640,7 +640,8 @@ def salvar_config_premium():
         "usa_convite_padrao": data.get("usa_convite_padrao", True),
         "nome_celebrante": data.get("nome_celebrante", ""),
         "data_evento": data.get("data_evento", ""),
-        "paleta": data.get("paleta", "dourado")
+        "paleta": data.get("paleta", "dourado"),
+        "estilo_mural": data.get("estilo_mural", "normal")
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
