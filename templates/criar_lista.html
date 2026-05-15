@@ -767,7 +767,7 @@
         document.getElementById('popupStory').style.display='none';
         try{localStorage.setItem(WHATSAPP_KEY,'true');}catch(e){}
         salvarEstado();
-        window.location.href=`/?vitrine=${LISTA_ID}&evento=${eventoAtual}`;
+        window.location.href=`/premium/${LISTA_ID}`;
     }
     function gerarVitrine() { salvarEstado(); window.location.href=`/vitrine/${LISTA_ID}`; }
     function verVitrine() { salvarEstado(); window.open(`/vitrine/${LISTA_ID}?admin=true`,'_blank'); }
