@@ -173,7 +173,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
         <div class="secao-config-sub" id="fotosSub">Até 10 fotos do seu evento</div>
       </div>
     </div>
-    <div class="upload-area" onclick="document.getElementById('inputFotos').click()">
+    <div class="upload-area" onclick="abrirUpload()">
       <input type="file" id="inputFotos" accept="image/*" multiple onchange="processarFotos(event)">
       <div class="upload-icon">📷</div>
       <p class="upload-texto"><strong>Clique aqui</strong> para adicionar fotos</p>
@@ -438,7 +438,14 @@ function renderFotosExistentes(fotos) {
   });
   atualizarContadorFotos();
 }
-
+function abrirUpload() {
+  var totalAtual = document.querySelectorAll('.foto-preview-item').length;
+  if (totalAtual >= limiteFotos) {
+    document.getElementById('popupComprarFotos').style.display = 'flex';
+    return;
+  }
+  document.getElementById('inputFotos').click();
+}
 async function processarFotos(e) {
   var files = Array.from(e.target.files);
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
