@@ -8,14 +8,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
-
-:root {
-  --cor-primaria: #C9A84C;
-  --cor-secundaria: #A8722A;
-  --cor-fundo: #FFF8EC;
-  --cor-texto: #2C2C2C;
-}
-
+:root { --cor-primaria: #C9A84C; --cor-secundaria: #A8722A; --cor-fundo: #FFF8EC; --cor-texto: #2C2C2C; }
 .hero { position: relative; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
 .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(8px) brightness(0.6); transform: scale(1.1); transition: opacity 1s; }
 .hero-bg-default { position: absolute; inset: 0; background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); }
@@ -29,41 +22,33 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .hero-linha-barra { flex: 1; height: 1px; background: rgba(201,168,76,0.5); }
 .hero-linha-icon { color: var(--cor-primaria); font-size: 12px; }
 .hero-botoes { display: flex; flex-direction: column; gap: 12px; align-items: center; opacity: 0; animation: fadeInUp 1s ease 1.3s forwards; }
-.btn-ver-presentes { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 18px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; box-shadow: 0 8px 32px rgba(201,168,76,0.4); transition: all 0.3s; letter-spacing: 0.03em; }
-.btn-ver-presentes:hover { transform: translateY(-3px); }
-.btn-explorar { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 12px 24px; border-radius: 50px; font-size: 13px; font-weight: 500; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; backdrop-filter: blur(10px); }
+.btn-explorar { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 18px 36px; border-radius: 50px; font-size: 16px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; backdrop-filter: blur(10px); }
 .btn-explorar:hover { background: rgba(255,255,255,0.15); }
 .hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; animation: fadeInUp 1s ease 1.8s forwards; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .hero-scroll-arrow { width: 20px; height: 20px; border-right: 1px solid rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.4); transform: rotate(45deg); animation: bounce 1.5s infinite; }
-
 @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes bounce { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
-
 .nav-premium { background: #fff; border-bottom: 1px solid rgba(201,168,76,0.2); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
 .nav-inner { max-width: 600px; margin: 0 auto; display: flex; padding: 0 16px; overflow-x: auto; }
 .nav-tab { flex: 1; min-width: 80px; padding: 16px 8px; text-align: center; font-size: 12px; font-weight: 600; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.03em; font-family: 'Inter', sans-serif; white-space: nowrap; }
 .nav-tab:hover { color: var(--cor-primaria); }
 .nav-tab.active { color: var(--cor-primaria); border-bottom-color: var(--cor-primaria); }
-
 .secao { display: none; max-width: 600px; margin: 0 auto; padding: 40px 16px 100px; }
 .secao.ativa { display: block; animation: fadeUp 0.4s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
 .secao-ornamento { color: var(--cor-primaria); font-size: 12px; letter-spacing: 6px; text-align: center; margin-bottom: 12px; }
 .secao-titulo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; text-align: center; color: #2C2C2C; margin-bottom: 8px; }
 .secao-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; text-align: center; margin-bottom: 32px; line-height: 1.6; }
 .secao-divider { display: flex; align-items: center; gap: 12px; margin: 32px 0; }
 .secao-divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
 .secao-divider-icon { color: var(--cor-primaria); font-size: 10px; opacity: 0.7; }
-
 .mensagem-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 32px 28px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.04); margin-bottom: 32px; }
 .mensagem-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(201,168,76,0.3); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: linear-gradient(135deg, #FFF8EC, #F5EDD8); }
 .mensagem-nome { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
 .mensagem-cargo { font-size: 12px; color: var(--cor-primaria); letter-spacing: 0.05em; margin-bottom: 20px; }
 .mensagem-texto { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #666; line-height: 1.8; }
 .aspas { font-size: 48px; color: rgba(201,168,76,0.2); font-family: Georgia; line-height: 0.5; display: block; margin-bottom: 8px; }
-
 .mural-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .mural-foto { border-radius: 14px; overflow: hidden; aspect-ratio: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer; }
 .mural-foto:hover { transform: scale(1.02); }
@@ -72,12 +57,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .mural-vazio { text-align: center; padding: 60px 20px; color: #bbb; }
 .mural-vazio-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
 .mural-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
-
 .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999; align-items: center; justify-content: center; padding: 20px; }
 .lightbox.show { display: flex; }
 .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 12px; object-fit: contain; }
 .lightbox-fechar { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; }
-
 .form-recado { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
 .form-recado h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 20px; text-align: center; }
 .form-field { margin-bottom: 14px; }
@@ -88,7 +71,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .btn-enviar-recado { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); margin-top: 4px; }
 .btn-enviar-recado:hover { transform: translateY(-2px); }
 .recado-sucesso { display: none; text-align: center; padding: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
-
 .recados-lista { display: flex; flex-direction: column; gap: 16px; }
 .recado-card { background: #fff; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); animation: fadeUp 0.4s ease; }
 .recado-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
@@ -98,7 +80,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .recado-mensagem { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #666; line-height: 1.7; }
 .recados-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .recados-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
-
 .convite-card { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 32px 28px; text-align: center; margin-bottom: 20px; }
 .convite-ornamento { color: var(--cor-primaria); font-size: 12px; letter-spacing: 6px; margin-bottom: 16px; }
 .convite-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 15px; line-height: 1.9; white-space: pre-line; }
@@ -106,7 +87,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .btn-copiar-convite:hover { background: rgba(201,168,76,0.15); }
 .btn-whatsapp-convite { width: 100%; padding: 14px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-whatsapp-convite:hover { transform: translateY(-2px); }
-
 .presenca-contadores { display: flex; gap: 12px; margin-bottom: 20px; }
 .presenca-contador { flex: 1; background: var(--cor-fundo); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 16px 12px; text-align: center; }
 .presenca-contador-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--cor-primaria); }
@@ -131,24 +111,14 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .status-nao-vai { background: rgba(239,68,68,0.1); color: #dc2626; }
 .presencas-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .presencas-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
-
-.paleta-section { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-.paleta-titulo { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #2C2C2C; margin-bottom: 14px; text-align: center; }
-.paleta-opcoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.paleta-cor { width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-.paleta-cor:hover { transform: scale(1.1); }
-.paleta-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
-
 .btn-flutuante { position: fixed; bottom: 24px; right: 20px; left: 20px; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); z-index: 50; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; }
 .btn-flutuante:hover { transform: translateY(-2px); }
-
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
 <div class="hero" id="hero">
   <div class="hero-bg-default" id="heroBgDefault"></div>
   <div class="hero-bg" id="heroBg" style="opacity:0;"></div>
@@ -163,10 +133,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
       <div class="hero-linha-barra"></div>
     </div>
     <div class="hero-botoes">
-  <button class="btn-explorar" onclick="explorarPagina()">
-    ✦ Explorar a celebração
-  </button>
-</div>
+      <button class="btn-explorar" onclick="explorarPagina()">✦ Explorar a celebração</button>
+    </div>
   </div>
   <div class="hero-scroll">
     <span>Explorar</span>
@@ -174,7 +142,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   </div>
 </div>
 
-<!-- NAVEGAÇÃO -->
 <div class="nav-premium">
   <div class="nav-inner">
     <div class="nav-tab active" onclick="trocarAba('mural')" id="tab-mural">📸 Mural</div>
@@ -184,12 +151,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   </div>
 </div>
 
-<!-- ABA MURAL -->
 <div class="secao ativa" id="secao-mural">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Mural de Memórias</h2>
   <p class="secao-sub">Momentos especiais que fazem parte dessa história</p>
-
   <div class="mensagem-card" id="mensagemCard" style="display:none;">
     <div class="mensagem-avatar" id="mensagemAvatar">✦</div>
     <div class="mensagem-nome" id="mensagemNome"></div>
@@ -197,26 +162,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <span class="aspas">"</span>
     <p class="mensagem-texto" id="mensagemTexto"></p>
   </div>
-
   <div class="secao-divider" id="dividerFotos" style="display:none;">
     <div class="secao-divider-linha"></div>
     <div class="secao-divider-icon">✦</div>
     <div class="secao-divider-linha"></div>
   </div>
-
-  <!-- PALETA DE CORES -->
-  <div class="paleta-section">
-    <p class="paleta-titulo">🎨 Personalizar cores da página</p>
-    <div class="paleta-opcoes">
-      <div class="paleta-cor" data-paleta="dourado" style="background:linear-gradient(135deg,#C9A84C,#A8722A);" onclick="aplicarPaleta('dourado')" title="Dourado"></div>
-      <div class="paleta-cor" data-paleta="rosa" style="background:linear-gradient(135deg,#E91E8C,#C2185B);" onclick="aplicarPaleta('rosa')" title="Rosa"></div>
-      <div class="paleta-cor" data-paleta="azul" style="background:linear-gradient(135deg,#1E88E5,#1565C0);" onclick="aplicarPaleta('azul')" title="Azul"></div>
-      <div class="paleta-cor" data-paleta="verde" style="background:linear-gradient(135deg,#43A047,#2E7D32);" onclick="aplicarPaleta('verde')" title="Verde"></div>
-      <div class="paleta-cor" data-paleta="roxo" style="background:linear-gradient(135deg,#8E24AA,#6A1B9A);" onclick="aplicarPaleta('roxo')" title="Roxo"></div>
-      <div class="paleta-cor" data-paleta="vermelho" style="background:linear-gradient(135deg,#E53935,#B71C1C);" onclick="aplicarPaleta('vermelho')" title="Vermelho"></div>
-    </div>
-  </div>
-
   <div id="muralContainer">
     <div class="loading-state">
       <div style="font-size:28px; letter-spacing:6px; color:rgba(201,168,76,0.4);">✦ ✦ ✦</div>
@@ -225,7 +175,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   </div>
 </div>
 
-<!-- ABA RECADOS -->
 <div class="secao" id="secao-recados">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Livro de Recados</h2>
@@ -256,12 +205,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   </div>
 </div>
 
-<!-- ABA PRESENÇA -->
 <div class="secao" id="secao-presenca">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Lista de Presença</h2>
   <p class="secao-sub">Confirme sua presença no evento</p>
-  <div class="presenca-contadores" id="presencaContadores">
+  <div class="presenca-contadores">
     <div class="presenca-contador">
       <div class="presenca-contador-num" id="totalConfirmados">0</div>
       <div class="presenca-contador-label">✅ Confirmados</div>
@@ -306,7 +254,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   </div>
 </div>
 
-<!-- ABA CONVITE -->
 <div class="secao" id="secao-convite">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Convite Digital</h2>
@@ -316,17 +263,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <p class="convite-texto" id="conviteTexto">Carregando convite...</p>
   </div>
   <button class="btn-copiar-convite" onclick="copiarConvite()">📋 Copiar texto do convite</button>
-  <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">
-    💚 Enviar pelo WhatsApp
-  </button>
+  <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">💚 Enviar pelo WhatsApp</button>
 </div>
 
-<!-- BOTÃO FLUTUANTE -->
-<button class="btn-flutuante" onclick="irParaPresentes()">
-  🎁 Ver Lista de Presentes
-</button>
+<button class="btn-flutuante" onclick="irParaPresentes()">🎁 Ver Lista de Presentes</button>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="fecharLightbox()">
   <button class="lightbox-fechar" onclick="fecharLightbox()">✕</button>
   <img id="lightboxImg" src="" alt="">
@@ -338,38 +279,12 @@ var dadosPremium = {};
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
 
-var paletas = {
-  dourado:  { primaria: '#C9A84C', secundaria: '#A8722A', fundo: '#FFF8EC' },
-  rosa:     { primaria: '#E91E8C', secundaria: '#C2185B', fundo: '#FFF5F9' },
-  azul:     { primaria: '#1E88E5', secundaria: '#1565C0', fundo: '#F5F9FF' },
-  verde:    { primaria: '#43A047', secundaria: '#2E7D32', fundo: '#F5FFF6' },
-  roxo:     { primaria: '#8E24AA', secundaria: '#6A1B9A', fundo: '#FDF5FF' },
-  vermelho: { primaria: '#E53935', secundaria: '#B71C1C', fundo: '#FFF5F5' }
-};
-
-function aplicarPaleta(nome) {
-  var p = paletas[nome] || paletas['dourado'];
-  document.documentElement.style.setProperty('--cor-primaria', p.primaria);
-  document.documentElement.style.setProperty('--cor-secundaria', p.secundaria);
-  document.documentElement.style.setProperty('--cor-fundo', p.fundo);
-  document.body.style.background = p.fundo;
-  document.querySelectorAll('.paleta-cor').forEach(function(el) {
-    el.classList.toggle('ativa', el.dataset.paleta === nome);
-  });
-  localStorage.setItem('paleta_' + listaId, nome);
-}
-
 async function carregarPremium() {
   try {
     var exp = await fetch('/api/verificar-expiracao/' + listaId);
     var expData = await exp.json();
     if (expData.expirada) {
-      document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFF8EC;font-family:\'Playfair Display\',serif;text-align:center;padding:40px;">' +
-        '<div><div style="font-size:48px;margin-bottom:20px;">✦</div>' +
-        '<h2 style="color:#C9A84C;font-size:28px;margin-bottom:12px;">Página Encerrada</h2>' +
-        '<p style="color:#aaa;font-style:italic;font-size:16px;line-height:1.7;">' +
-        (expData.motivo === 'evento_encerrado' ? 'Este evento já foi celebrado!<br>A página ficou disponível por 7 dias após o evento.' : 'O prazo desta página expirou após 6 meses.') +
-        '</p><div style="margin-top:32px;color:#C9A84C;font-size:12px;letter-spacing:4px;">✦ ✦ ✦</div></div></div>';
+      document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFF8EC;font-family:\'Playfair Display\',serif;text-align:center;padding:40px;"><div><div style="font-size:48px;margin-bottom:20px;">✦</div><h2 style="color:#C9A84C;font-size:28px;margin-bottom:12px;">Página Encerrada</h2><p style="color:#aaa;font-style:italic;font-size:16px;line-height:1.7;">' + (expData.motivo === 'evento_encerrado' ? 'Este evento já foi celebrado!<br>A página ficou disponível por 7 dias após o evento.' : 'O prazo desta página expirou após 6 meses.') + '</p><div style="margin-top:32px;color:#C9A84C;font-size:12px;letter-spacing:4px;">✦ ✦ ✦</div></div></div>';
       return;
     }
     var r = await fetch('/api/config-premium/' + listaId);
@@ -381,20 +296,14 @@ async function carregarPremium() {
     renderRecados(data.recados);
     renderConvite(data.config);
     carregarPresencas();
-    var paletaSalva = localStorage.getItem('paleta_' + listaId) || 'dourado';
-    aplicarPaleta(paletaSalva);
-  } catch(e) {
-    console.error('Erro ao carregar:', e);
-  }
+  } catch(e) { console.error('Erro ao carregar:', e); }
 }
 
 function renderHero(config) {
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var data = config.data_evento ? formatarData(config.data_evento) : '';
-  document.getElementById('heroTitulo').innerHTML = nome.includes('&')
-    ? nome.replace('&', '<span>&</span>')
-    : '<span>' + nome + '</span>';
+  document.getElementById('heroTitulo').innerHTML = nome.includes('&') ? nome.replace('&', '<span>&</span>') : '<span>' + nome + '</span>';
   if (data) document.getElementById('heroSubtitulo').textContent = '✦ ' + data + ' ✦';
   if (dadosPremium.fotos && dadosPremium.fotos.length > 0) {
     var heroBg = document.getElementById('heroBg');
@@ -419,9 +328,7 @@ function renderMural(fotos) {
   }
   var html = '<div class="mural-grid">';
   fotos.forEach(function(f, idx) {
-    html += '<div class="mural-foto" onclick="abrirLightbox(\'' + f.url_foto + '\')">';
-    html += '<img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="lazy">';
-    html += '</div>';
+    html += '<div class="mural-foto" onclick="abrirLightbox(\'' + f.url_foto + '\')"><img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="lazy"></div>';
   });
   html += '</div>';
   container.innerHTML = html;
@@ -436,14 +343,7 @@ function renderRecados(recados) {
   lista.innerHTML = '<div class="recados-lista">' + recados.map(function(r) {
     var inicial = r.nome ? r.nome[0].toUpperCase() : '?';
     var data = r.criado_em ? formatarDataHora(r.criado_em) : '';
-    return '<div class="recado-card">' +
-      '<div class="recado-header">' +
-        '<div class="recado-avatar">' + inicial + '</div>' +
-        '<div><div class="recado-nome">' + r.nome + '</div>' +
-        '<div class="recado-data">' + data + '</div></div>' +
-      '</div>' +
-      '<p class="recado-mensagem">' + r.mensagem + '</p>' +
-    '</div>';
+    return '<div class="recado-card"><div class="recado-header"><div class="recado-avatar">' + inicial + '</div><div><div class="recado-nome">' + r.nome + '</div><div class="recado-data">' + data + '</div></div></div><p class="recado-mensagem">' + r.mensagem + '</p></div>';
   }).join('') + '</div>';
 }
 
@@ -462,10 +362,7 @@ function renderConvite(config) {
 
 function selecionarPresenca(status) {
   presencaSelecionada = status;
-  document.querySelectorAll('.presenca-opcao').forEach(function(el) {
-    el.style.opacity = '0.4';
-    el.style.transform = 'scale(0.95)';
-  });
+  document.querySelectorAll('.presenca-opcao').forEach(function(el) { el.style.opacity = '0.4'; el.style.transform = 'scale(0.95)'; });
   if (status === 'confirmado') { var el = document.getElementById('opcaoConfirmado'); }
   if (status === 'talvez') { var el = document.getElementById('opcaoTalvez'); }
   if (status === 'nao-vai') { var el = document.getElementById('opcaoNaoVai'); }
@@ -477,11 +374,7 @@ async function confirmarPresenca() {
   var acompanhantes = parseInt(document.getElementById('presencaAcompanhantes').value) || 0;
   if (!nome) { alert('Preencha seu nome!'); return; }
   try {
-    var r = await fetch('/api/salvar-presenca', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ lista_id: listaId, nome: nome, status: presencaSelecionada, acompanhantes: acompanhantes })
-    });
+    var r = await fetch('/api/salvar-presenca', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, nome: nome, status: presencaSelecionada, acompanhantes: acompanhantes }) });
     var data = await r.json();
     if (data.ok) {
       document.getElementById('presencaNome').value = '';
@@ -520,11 +413,7 @@ function renderPresencas(presencas) {
     var statusLabel = p.status === 'confirmado' ? '✅ Confirmado' : p.status === 'talvez' ? '🤔 Talvez' : '❌ Não vai';
     var statusClass = p.status === 'confirmado' ? 'status-confirmado' : p.status === 'talvez' ? 'status-talvez' : 'status-nao-vai';
     var acomp = p.acompanhantes > 0 ? ' +' + p.acompanhantes : '';
-    return '<div class="presenca-item">' +
-      '<div class="presenca-item-avatar">' + inicial + '</div>' +
-      '<div><div class="presenca-item-nome">' + p.nome + acomp + '</div></div>' +
-      '<span class="presenca-item-status ' + statusClass + '">' + statusLabel + '</span>' +
-    '</div>';
+    return '<div class="presenca-item"><div class="presenca-item-avatar">' + inicial + '</div><div><div class="presenca-item-nome">' + p.nome + acomp + '</div></div><span class="presenca-item-status ' + statusClass + '">' + statusLabel + '</span></div>';
   }).join('') + '</div>';
 }
 
@@ -533,11 +422,7 @@ async function enviarRecado() {
   var mensagem = document.getElementById('recadoMensagem').value.trim();
   if (!nome || !mensagem) { alert('Preencha seu nome e mensagem!'); return; }
   try {
-    var r = await fetch('/api/salvar-recado', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ lista_id: listaId, nome: nome, mensagem: mensagem })
-    });
+    var r = await fetch('/api/salvar-recado', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, nome: nome, mensagem: mensagem }) });
     var data = await r.json();
     if (data.ok) {
       document.getElementById('recadoNome').value = '';
@@ -551,25 +436,10 @@ async function enviarRecado() {
   } catch(e) { alert('Erro ao enviar. Tente novamente.'); }
 }
 
-function copiarConvite() {
-  navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); });
-}
-
-function enviarWhatsApp() {
-  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank');
-}
-
-function irParaPresentes() {
-  window.location.href = '/vitrine/' + listaId;
-}
-
-function explorarPagina() {
-  var nav = document.querySelector('.nav-premium');
-  if (nav) {
-    window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' });
-  }
-}
-
+function copiarConvite() { navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); }); }
+function enviarWhatsApp() { window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank'); }
+function irParaPresentes() { window.location.href = '/vitrine/' + listaId; }
+function explorarPagina() { var nav = document.querySelector('.nav-premium'); if (nav) { window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' }); } }
 function trocarAba(aba) {
   document.querySelectorAll('.secao').forEach(function(s) { s.classList.remove('ativa'); });
   document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -577,29 +447,10 @@ function trocarAba(aba) {
   document.getElementById('tab-' + aba).classList.add('active');
   window.scrollTo({ top: document.querySelector('.nav-premium').offsetTop - 10, behavior: 'smooth' });
 }
-
-function abrirLightbox(url) {
-  document.getElementById('lightboxImg').src = url;
-  document.getElementById('lightbox').classList.add('show');
-}
-
-function fecharLightbox() {
-  document.getElementById('lightbox').classList.remove('show');
-}
-
-function formatarData(dataStr) {
-  try {
-    var d = new Date(dataStr + 'T00:00:00');
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-  } catch(e) { return dataStr; }
-}
-
-function formatarDataHora(dataStr) {
-  try {
-    var d = new Date(dataStr);
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-  } catch(e) { return ''; }
-}
+function abrirLightbox(url) { document.getElementById('lightboxImg').src = url; document.getElementById('lightbox').classList.add('show'); }
+function fecharLightbox() { document.getElementById('lightbox').classList.remove('show'); }
+function formatarData(dataStr) { try { var d = new Date(dataStr + 'T00:00:00'); return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }); } catch(e) { return dataStr; } }
+function formatarDataHora(dataStr) { try { var d = new Date(dataStr); return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }); } catch(e) { return ''; } }
 
 selecionarPresenca('confirmado');
 carregarPremium();
