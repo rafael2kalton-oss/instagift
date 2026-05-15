@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, jsonify
-import uuid, re, requests, resend
+from flask import Flask, render_template, request, jsonify, redirect
+import uuid, re, requests, resend, stripe
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
@@ -15,7 +15,17 @@ MAGALU_ID = "magazinevitrinedodanilo"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
+STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
+STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7"
 
+# Pacotes de fotos
+STRIPE_PACOTES = {
+    "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
+    "10": {"price_id": "price_1TXSBn41uxxrCBOGWfYbpFCt", "fotos": 10, "valor": "R$ 19,90"},
+    "25": {"price_id": "price_1TXSCB41uxxrCBOGaliEnmy3", "fotos": 25, "valor": "R$ 49,90"},
+}
+
+stripe.api_key = STRIPE_SECRET_KEY
 resend.api_key = RESEND_KEY
 
 HEADERS_SB = {
@@ -45,40 +55,25 @@ def sb_delete(tabela, filtro):
 def resolver_redirect(link):
     try:
         dominios_encurtados = [
-            'amzn.to', 'a.co',
-            'br.shp.ee', 's.shopee',
-            'meli.la',
-            'mglu.me',
-            'onelink.shein.com', 'api-shein.shein.com',
+            'amzn.to', 'a.co', 'br.shp.ee', 's.shopee', 'meli.la',
+            'mglu.me', 'onelink.shein.com', 'api-shein.shein.com',
             'share.google', 'bit.ly', 'tinyurl.com'
         ]
         precisa_resolver = any(d in link.lower() for d in dominios_encurtados)
         if precisa_resolver:
-            r = requests.get(
-                link,
-                headers={"User-Agent": "Mozilla/5.0"},
-                timeout=10,
-                allow_redirects=True
-            )
-            link_final = r.url
-            print(f"Redirect resolvido: {link} → {link_final}")
-            return link_final
+            r = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
+            return r.url
     except Exception as e:
         print(f"Erro ao resolver redirect: {e}")
     return link
 
 def detectar_plataforma(link):
     l = link.lower()
-    if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l:
-        return "amazon"
-    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l:
-        return "magalu"
-    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l:
-        return "mercadolivre"
-    if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l:
-        return "shopee"
-    if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l:
-        return "shein"
+    if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l: return "amazon"
+    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
+    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l: return "mercadolivre"
+    if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l: return "shopee"
+    if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l: return "shein"
     return "outro"
 
 def injetar_afiliado(link, plataforma):
@@ -113,15 +108,11 @@ def get_ml_token():
     try:
         if ml_token_cache["token"]:
             return ml_token_cache["token"]
-        r = requests.post(
-            "https://api.mercadolibre.com/oauth/token",
-            data={
-                "grant_type": "client_credentials",
-                "client_id": ML_CLIENT_ID,
-                "client_secret": ML_CLIENT_SECRET
-            },
-            timeout=10
-        )
+        r = requests.post("https://api.mercadolibre.com/oauth/token", data={
+            "grant_type": "client_credentials",
+            "client_id": ML_CLIENT_ID,
+            "client_secret": ML_CLIENT_SECRET
+        }, timeout=10)
         data = r.json()
         if "access_token" in data:
             ml_token_cache["token"] = data["access_token"]
@@ -135,16 +126,13 @@ def extrair_ml(link):
         token = get_ml_token()
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
-
         m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if not m2:
             try:
                 r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
                 link_limpo = r_red.url
                 m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
-            except:
-                pass
-
+            except: pass
         m = re.search(r'/p/(MLB\w+)', link_limpo, re.IGNORECASE)
         if m:
             catalog_id = m.group(1)
@@ -160,41 +148,29 @@ def extrair_ml(link):
                 if not imagem:
                     pics3 = r3.get("pictures") or []
                     imagem = pics3[0].get("url", "") if pics3 else ""
-                return nome, imagem, ""
             return nome, imagem, ""
-
         if m2:
             item_id = f"MLB{m2.group(1)}"
             r = requests.get(f"https://api.mercadolibre.com/items/{item_id}", headers=auth, timeout=10).json()
             if r.get("status") == 403 or "UNAUTHORIZED" in str(r.get("code", "")):
                 try:
-                    r_search = requests.get(
-                        f"https://api.mercadolibre.com/sites/MLB/search?q={item_id}&limit=1",
-                        headers=auth, timeout=8
-                    ).json()
+                    r_search = requests.get(f"https://api.mercadolibre.com/sites/MLB/search?q={item_id}&limit=1", headers=auth, timeout=8).json()
                     resultados = r_search.get("results", [])
                     if resultados:
-                        prod = resultados[0]
-                        nome = prod.get("title", "")[:100]
-                        return nome, "", ""
-                except:
-                    pass
+                        return resultados[0].get("title", "")[:100], "", ""
+                except: pass
                 return "", "", ""
             nome = r.get("title", "")[:100]
             pics = r.get("pictures") or []
             imagem = pics[0].get("url", "") if pics else ""
-            if nome:
-                return nome, imagem, ""
+            if nome: return nome, imagem, ""
     except Exception as e:
         print("ML erro:", e)
     return "", "", ""
 
 def extrair_shopee(link):
     try:
-        html = requests.get(
-            f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
-            timeout=20
-        ).text
+        html = requests.get(f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br", timeout=20).text
         soup = BeautifulSoup(html, "html.parser")
         nome = ""
         t = soup.find("meta", property="og:title")
@@ -203,8 +179,7 @@ def extrair_shopee(link):
             nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
         imagem = ""
         i = soup.find("meta", property="og:image")
-        if i:
-            imagem = i.get("content", "")
+        if i: imagem = i.get("content", "")
         return nome, imagem, ""
     except Exception as e:
         print("Shopee erro:", e)
@@ -212,25 +187,18 @@ def extrair_shopee(link):
 
 def extrair_magalu(link):
     try:
-        html = requests.get(
-            f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br",
-            timeout=20
-        ).text
+        html = requests.get(f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=false&country_code=br", timeout=20).text
         soup = BeautifulSoup(html, "html.parser")
-        nome = ""
-        imagem = ""
-        preco = ""
+        nome = imagem = preco = ""
         t = soup.find("meta", property="og:title")
         if t:
             nome = t.get("content", "")[:100]
             nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
             nome = re.sub(r'\s*[:|]\s*Magalu.*$', '', nome)
         i = soup.find("meta", property="og:image")
-        if i:
-            imagem = i.get("content", "")
+        if i: imagem = i.get("content", "")
         pm = re.search(r'R\$\s*[\d.,]+', html)
-        if pm:
-            preco = pm.group(0).replace("R$", "").strip()
+        if pm: preco = pm.group(0).replace("R$", "").strip()
         return nome, imagem, preco
     except Exception as e:
         print("Magalu erro:", e)
@@ -242,20 +210,14 @@ def extrair_shein(link):
             try:
                 r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
                 link = r_red.url
-                print("Shein redirect resolvido:", link)
             except Exception as e:
                 print("Shein redirect erro:", e)
-        nome = ""
-        imagem = ""
-        preco = ""
+        nome = imagem = preco = ""
         goods_id = None
         m = re.search(r'goods[_-]id[=/-](\d+)', link, re.IGNORECASE)
-        if not m:
-            m = re.search(r'/(\d{6,12})\.html', link)
-        if not m:
-            m = re.search(r'[?&]goods_id=(\d+)', link)
-        if m:
-            goods_id = m.group(1)
+        if not m: m = re.search(r'/(\d{6,12})\.html', link)
+        if not m: m = re.search(r'[?&]goods_id=(\d+)', link)
+        if m: goods_id = m.group(1)
         if goods_id:
             try:
                 api_url = f"https://api-shein.shein.com/v2/goods/detail?goods_id={goods_id}&currency=BRL&lang=pt"
@@ -263,21 +225,15 @@ def extrair_shein(link):
                 data = r_api.json()
                 info = data.get("info", {}) or {}
                 detail = info.get("goods_info", {}) or {}
-                if detail.get("goods_name"):
-                    nome = detail["goods_name"][:100]
-                if detail.get("goods_img"):
-                    imagem = "https:" + detail["goods_img"] if detail["goods_img"].startswith("//") else detail["goods_img"]
+                if detail.get("goods_name"): nome = detail["goods_name"][:100]
+                if detail.get("goods_img"): imagem = "https:" + detail["goods_img"] if detail["goods_img"].startswith("//") else detail["goods_img"]
                 preco_info = detail.get("retailPrice", {}) or {}
-                if preco_info.get("amountWithSymbol"):
-                    preco = preco_info["amountWithSymbol"].replace("R$", "").strip()
+                if preco_info.get("amountWithSymbol"): preco = preco_info["amountWithSymbol"].replace("R$", "").strip()
             except Exception as e:
                 print("Shein API erro:", e)
         if not nome or not imagem:
             try:
-                html = requests.get(
-                    f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=true&country_code=br",
-                    timeout=25
-                ).text
+                html = requests.get(f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render=true&country_code=br", timeout=25).text
                 soup = BeautifulSoup(html, "html.parser")
                 if not nome:
                     t = soup.find("meta", property="og:title")
@@ -286,16 +242,13 @@ def extrair_shein(link):
                         nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
                 if not imagem:
                     i = soup.find("meta", property="og:image")
-                    if i:
-                        imagem = i.get("content", "")
+                    if i: imagem = i.get("content", "")
                 if not imagem:
                     img = soup.find("img", {"class": re.compile(r'crop-image-container|goods-img', re.I)})
-                    if img:
-                        imagem = img.get("src", "") or img.get("data-src", "")
+                    if img: imagem = img.get("src", "") or img.get("data-src", "")
                 if not preco:
                     pm = re.search(r'R\$\s*[\d.,]+', html)
-                    if pm:
-                        preco = pm.group(0).replace("R$", "").strip()
+                    if pm: preco = pm.group(0).replace("R$", "").strip()
             except Exception as e:
                 print("Shein ScraperAPI erro:", e)
         return nome, imagem, preco
@@ -307,55 +260,40 @@ def extrair_dados(link, plataforma):
     link = resolver_redirect(link)
     if plataforma == "shopee":
         n, i, p = extrair_shopee(link)
-        if n:
-            return n, i, p
+        if n: return n, i, p
     if plataforma == "magalu":
         n, i, p = extrair_magalu(link)
-        if n:
-            return n, i, p
+        if n: return n, i, p
     if plataforma == "shein":
         n, i, p = extrair_shein(link)
-        if n:
-            return n, i, p
+        if n: return n, i, p
     if plataforma == "mercadolivre":
         n, i, p = extrair_ml(link)
-        if n:
-            return n, i, p
+        if n: return n, i, p
     try:
         r = requests.get(link, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "pt-BR"}, timeout=8)
         html = r.text if r.status_code == 200 else ""
-    except:
-        html = ""
+    except: html = ""
     if plataforma == "amazon" or len(html) < 1000:
         try:
             render = "true" if plataforma == "amazon" else "false"
-            html = requests.get(
-                f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}&country_code=br&premium=true",
-                timeout=25
-            ).text
+            html = requests.get(f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={link}&render={render}&country_code=br&premium=true", timeout=25).text
         except Exception as e:
             print("ScraperAPI erro:", e)
             html = ""
-    if not html:
-        return "", "", ""
+    if not html: return "", "", ""
     soup = BeautifulSoup(html, "html.parser")
-    nome = ""
-    imagem = ""
-    preco = ""
+    nome = imagem = preco = ""
     t = soup.find("meta", property="og:title")
-    if t:
-        nome = t.get("content", "")[:100]
+    if t: nome = t.get("content", "")[:100]
     i = soup.find("meta", property="og:image")
-    if i:
-        imagem = i.get("content", "")
+    if i: imagem = i.get("content", "")
     if not imagem and plataforma == "amazon":
         img = soup.find("img", {"id": "landingImage"}) or soup.find("img", {"id": "imgBlkFront"})
-        if img and img.get("src") and "http" in img.get("src", ""):
-            imagem = img["src"]
+        if img and img.get("src") and "http" in img.get("src", ""): imagem = img["src"]
         if not imagem:
             img = soup.find("img", {"data-old-hires": True})
-            if img:
-                imagem = img["data-old-hires"]
+            if img: imagem = img["data-old-hires"]
     if nome:
         nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
         nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
@@ -366,12 +304,10 @@ def extrair_dados(link, plataforma):
         if preco_tag:
             preco_frac = soup.find("span", {"class": "a-price-fraction"})
             preco = preco_tag.text.strip().replace('.', '').replace(',', '')
-            if preco_frac:
-                preco = preco + ',' + preco_frac.text.strip()
+            if preco_frac: preco = preco + ',' + preco_frac.text.strip()
     if not preco and plataforma != "mercadolivre":
         pm = re.search(r'R\$\s*[\d.,]+', html)
-        if pm:
-            preco = pm.group(0).replace("R$", "").strip()
+        if pm: preco = pm.group(0).replace("R$", "").strip()
     return nome, imagem, preco
 
 def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto=""):
@@ -393,12 +329,9 @@ def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token,
                     <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Presente reservado</p>
                     <p style="color:#fff;font-weight:700;font-size:16px;">{nome_produto}</p>
                 </div>
-                <p style="color:#aaa;margin-bottom:16px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. Assim a pessoa especial saberá que vai receber esse presente! 💜</p>
+                <p style="color:#aaa;margin-bottom:16px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. 💜</p>
                 {link_btn}
                 <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
-                <div style="background:#1a1a1a;border-radius:10px;padding:14px;margin-bottom:24px;">
-                    <p style="color:#666;font-size:12px;line-height:1.6;">⏰ Este link expira em <strong style="color:#aaa;">3 horas</strong>. Se não confirmar dentro do prazo, o presente voltará a ficar disponível para outros.</p>
-                </div>
                 <p style="color:#444;font-size:12px;text-align:center;">Com carinho, InstaGift 💜</p>
             </div>
             """
@@ -411,21 +344,18 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_aniversariante,
-            "subject": "🎉 Você ganhou um presente! Alguém te surpreendeu!",
+            "subject": "🎉 Você ganhou um presente!",
             "html": f"""
             <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
                 <div style="text-align:center;margin-bottom:28px;">
                     <div style="font-size:56px;margin-bottom:12px;">🎉</div>
                     <h2 style="color:#8A63D2;font-size:22px;margin-bottom:6px;">Que surpresa incrível!</h2>
-                    <p style="color:#888;font-size:13px;">Alguém especial pensou em você 💜</p>
                 </div>
                 <div style="background:linear-gradient(135deg,rgba(138,99,210,0.15),rgba(176,136,245,0.08));border:1px solid rgba(138,99,210,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px;">
-                    <p style="color:#b088f5;font-size:13px;margin-bottom:8px;">PRESENTE CONFIRMADO</p>
                     <p style="color:#fff;font-weight:700;font-size:18px;margin-bottom:12px;">{nome_produto}</p>
-                    <p style="color:#888;font-size:13px;">presenteado com carinho por</p>
+                    <p style="color:#888;font-size:13px;">presenteado por</p>
                     <p style="color:#fff;font-weight:600;font-size:16px;margin-top:4px;">{nome_comprador}</p>
                 </div>
-                <p style="color:#aaa;text-align:center;line-height:1.7;margin-bottom:24px;">A compra foi confirmada e seu presente está garantido! Que seu evento seja incrível e cheio de momentos especiais. 🎁✨</p>
                 <p style="color:#444;font-size:12px;text-align:center;">Com muito carinho, InstaGift 💜</p>
             </div>
             """
@@ -476,8 +406,7 @@ def salvar_email_lista():
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
     link = request.json.get("link", "").strip()
-    if not link:
-        return jsonify({"ok": False}), 400
+    if not link: return jsonify({"ok": False}), 400
     link = resolver_redirect(link)
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
@@ -489,27 +418,19 @@ def adicionar_produto():
     data = request.json
     link = data.get("link", "").strip()
     lista_id = data.get("lista_id", "").strip()
-    if not link or not lista_id:
-        return jsonify({"erro": "Dados inválidos"}), 400
+    if not link or not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     link = resolver_redirect(link)
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
     nome, imagem, preco = extrair_dados(link_afiliado, plataforma)
     precisa_manual = not nome or not imagem
-    if not nome:
-        nome = "Produto"
+    if not nome: nome = "Produto"
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
     produto = sb_post("produtos", {
-        "lista_id": lista_id,
-        "nome": nome,
-        "preco": preco,
-        "imagem_url": imagem,
-        "link_original": link,
-        "link_afiliado": link_afiliado,
-        "plataforma": plataforma,
-        "reservado": 0
+        "lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem,
+        "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0
     })
     p = produto[0] if isinstance(produto, list) else produto
     return jsonify({"ok": True, "produto": p, "manual": precisa_manual, "plataforma": plataforma})
@@ -517,9 +438,7 @@ def adicionar_produto():
 @app.route("/api/produtos/<lista_id>")
 def listar_produtos(lista_id):
     produtos = sb_get("produtos", f"lista_id=eq.{lista_id}&order=id.asc")
-    if isinstance(produtos, list):
-        return jsonify(produtos)
-    return jsonify([])
+    return jsonify(produtos if isinstance(produtos, list) else [])
 
 @app.route("/api/remover-produto/<int:produto_id>", methods=["DELETE"])
 def remover_produto(produto_id):
@@ -529,11 +448,8 @@ def remover_produto(produto_id):
 @app.route("/api/liberar-produto/<int:produto_id>", methods=["POST"])
 def liberar_produto(produto_id):
     sb_patch("produtos", f"id=eq.{produto_id}", {
-        "reservado": 0,
-        "token_confirmacao": None,
-        "reservado_em": None,
-        "nome_comprador": None,
-        "email_comprador": None
+        "reservado": 0, "token_confirmacao": None,
+        "reservado_em": None, "nome_comprador": None, "email_comprador": None
     })
     return jsonify({"ok": True})
 
@@ -546,24 +462,16 @@ def adicionar_produto_manual():
     preco = data.get("preco", "").strip()
     imagem_base64 = data.get("imagem_base64", "")
     plataforma = data.get("plataforma", "outro")
-    if not link or not lista_id:
-        return jsonify({"erro": "Dados inválidos"}), 400
+    if not link or not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     link_afiliado = injetar_afiliado(link, plataforma)
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
     produto = sb_post("produtos", {
-        "lista_id": lista_id,
-        "nome": nome,
-        "preco": preco,
-        "imagem_url": imagem_base64,
-        "link_original": link,
-        "link_afiliado": link_afiliado,
-        "plataforma": plataforma,
-        "reservado": 0
+        "lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem_base64,
+        "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0
     })
-    if isinstance(produto, list):
-        return jsonify({"ok": True, "produto": produto[0]})
+    if isinstance(produto, list): return jsonify({"ok": True, "produto": produto[0]})
     return jsonify({"ok": True, "produto": produto})
 
 @app.route("/api/reservar/<int:produto_id>", methods=["POST"])
@@ -581,11 +489,8 @@ def reservar(produto_id):
     token = str(uuid.uuid4())
     agora = datetime.utcnow().isoformat()
     sb_patch("produtos", f"id=eq.{produto_id}", {
-        "reservado": 1,
-        "token_confirmacao": token,
-        "reservado_em": agora,
-        "nome_comprador": nome_comprador,
-        "email_comprador": email_comprador
+        "reservado": 1, "token_confirmacao": token,
+        "reservado_em": agora, "nome_comprador": nome_comprador, "email_comprador": email_comprador
     })
     nome_produto = produtos[0].get("nome", "Produto")
     link_produto = produtos[0].get("link_afiliado", "")
@@ -604,26 +509,16 @@ def confirmar_compra(token):
         dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
         if datetime.utcnow() > dt + timedelta(hours=3):
             sb_patch("produtos", f"id=eq.{produto['id']}", {
-                "reservado": 0,
-                "token_confirmacao": None,
-                "reservado_em": None,
-                "nome_comprador": None,
-                "email_comprador": None
+                "reservado": 0, "token_confirmacao": None,
+                "reservado_em": None, "nome_comprador": None, "email_comprador": None
             })
             return render_template("confirmacao.html", status="expirado")
-    sb_patch("produtos", f"id=eq.{produto['id']}", {
-        "reservado": 2,
-        "token_confirmacao": None
-    })
+    sb_patch("produtos", f"id=eq.{produto['id']}", {"reservado": 2, "token_confirmacao": None})
     lista = sb_get("listas", f"id=eq.{produto['lista_id']}")
     if lista and isinstance(lista, list):
         email_aniversariante = lista[0].get("email_aniversariante")
         if email_aniversariante:
-            enviar_email_aniversariante(
-                email_aniversariante,
-                produto.get("nome_comprador", "Alguém"),
-                produto.get("nome", "Produto")
-            )
+            enviar_email_aniversariante(email_aniversariante, produto.get("nome_comprador", "Alguém"), produto.get("nome", "Produto"))
     return render_template("confirmacao.html", status="confirmado", nome_produto=produto.get("nome", "Produto"))
 
 @app.route("/api/limpar-reservas-expiradas", methods=["POST"])
@@ -632,8 +527,7 @@ def limpar_reservas_expiradas():
         agora = datetime.utcnow()
         prazo_limite = agora - timedelta(hours=3)
         produtos = sb_get("produtos", "reservado=eq.1")
-        if not isinstance(produtos, list):
-            return jsonify({"status": "sucesso", "liberados": 0}), 200
+        if not isinstance(produtos, list): return jsonify({"status": "sucesso", "liberados": 0}), 200
         liberados = 0
         for p in produtos:
             reservado_em = p.get("reservado_em")
@@ -641,11 +535,8 @@ def limpar_reservas_expiradas():
                 dt_reserva = datetime.fromisoformat(reservado_em.replace('Z', ''))
                 if dt_reserva < prazo_limite:
                     sb_patch("produtos", f"id=eq.{p['id']}", {
-                        "reservado": 0,
-                        "token_confirmacao": None,
-                        "reservado_em": None,
-                        "nome_comprador": None,
-                        "email_comprador": None
+                        "reservado": 0, "token_confirmacao": None,
+                        "reservado_em": None, "nome_comprador": None, "email_comprador": None
                     })
                     liberados += 1
         return jsonify({"status": "sucesso", "liberados": liberados}), 200
@@ -659,15 +550,65 @@ def editar_produto(produto_id):
     preco = data.get("preco", "").strip()
     imagem_base64 = data.get("imagem_base64", "")
     atualizacao = {}
-    if nome:
-        atualizacao["nome"] = nome
-    if preco:
-        atualizacao["preco"] = preco
-    if imagem_base64:
-        atualizacao["imagem_url"] = imagem_base64
-    if atualizacao:
-        sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
+    if nome: atualizacao["nome"] = nome
+    if preco: atualizacao["preco"] = preco
+    if imagem_base64: atualizacao["imagem_url"] = imagem_base64
+    if atualizacao: sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
     return jsonify({"ok": True})
+
+# ── STRIPE ──
+
+@app.route("/api/stripe/checkout", methods=["POST"])
+def stripe_checkout():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    pacote = data.get("pacote", "").strip()  # "5", "10" ou "25"
+    if not lista_id or pacote not in STRIPE_PACOTES:
+        return jsonify({"erro": "Dados inválidos"}), 400
+    info = STRIPE_PACOTES[pacote]
+    base_url = request.host_url.rstrip('/')
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[{"price": info["price_id"], "quantity": 1}],
+            mode="payment",
+            success_url=f"{base_url}/stripe/sucesso?lista_id={lista_id}&pacote={pacote}&session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{base_url}/configurar-premium/{lista_id}",
+            metadata={"lista_id": lista_id, "pacote": pacote}
+        )
+        return jsonify({"ok": True, "url": session.url})
+    except Exception as e:
+        print("Stripe erro:", e)
+        return jsonify({"erro": str(e)}), 500
+
+@app.route("/stripe/sucesso")
+def stripe_sucesso():
+    lista_id = request.args.get("lista_id", "")
+    pacote = request.args.get("pacote", "")
+    session_id = request.args.get("session_id", "")
+    if not lista_id or pacote not in STRIPE_PACOTES:
+        return redirect(f"/configurar-premium/{lista_id}")
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        if session.payment_status == "paid":
+            fotos_extras = STRIPE_PACOTES[pacote]["fotos"]
+            config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+            if config and isinstance(config, list) and len(config) > 0:
+                limite_atual = config[0].get("limite_fotos", 10)
+                novo_limite = limite_atual + fotos_extras
+                sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"limite_fotos": novo_limite})
+            else:
+                sb_post("config_premium", {"lista_id": lista_id, "limite_fotos": 10 + fotos_extras})
+    except Exception as e:
+        print("Stripe sucesso erro:", e)
+    return redirect(f"/configurar-premium/{lista_id}?compra=ok&fotos={STRIPE_PACOTES.get(pacote, {}).get('fotos', 0)}")
+
+@app.route("/api/limite-fotos/<lista_id>")
+def get_limite_fotos(lista_id):
+    config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    if config and isinstance(config, list) and len(config) > 0:
+        return jsonify({"limite": config[0].get("limite_fotos", 10)})
+    return jsonify({"limite": 10})
 
 # ── ROTAS PREMIUM ──
 
@@ -690,8 +631,7 @@ def get_config_premium(lista_id):
 def salvar_config_premium():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
-    if not lista_id:
-        return jsonify({"erro": "Dados inválidos"}), 400
+    if not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     config_existente = sb_get("config_premium", f"lista_id=eq.{lista_id}")
     payload = {
         "lista_id": lista_id,
@@ -714,16 +654,16 @@ def salvar_foto_mural():
     lista_id = data.get("lista_id", "").strip()
     url_foto = data.get("url_foto", "").strip()
     ordem = data.get("ordem", 0)
-    if not lista_id or not url_foto:
-        return jsonify({"erro": "Dados inválidos"}), 400
+    if not lista_id or not url_foto: return jsonify({"erro": "Dados inválidos"}), 400
+    # Busca limite dinâmico
+    config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    limite = 10
+    if config and isinstance(config, list) and len(config) > 0:
+        limite = config[0].get("limite_fotos", 10)
     fotos_existentes = sb_get("fotos_mural", f"lista_id=eq.{lista_id}")
-    if isinstance(fotos_existentes, list) and len(fotos_existentes) >= 10:
-        return jsonify({"erro": "Limite de 10 fotos atingido!", "limite": True}), 400
-    foto = sb_post("fotos_mural", {
-        "lista_id": lista_id,
-        "url_foto": url_foto,
-        "ordem": ordem
-    })
+    if isinstance(fotos_existentes, list) and len(fotos_existentes) >= limite:
+        return jsonify({"erro": f"Limite de {limite} fotos atingido!", "limite": True}), 400
+    foto = sb_post("fotos_mural", {"lista_id": lista_id, "url_foto": url_foto, "ordem": ordem})
     return jsonify({"ok": True, "foto": foto[0] if isinstance(foto, list) else foto})
 
 @app.route("/api/remover-foto-mural/<int:foto_id>", methods=["DELETE"])
@@ -737,13 +677,8 @@ def salvar_recado():
     lista_id = data.get("lista_id", "").strip()
     nome = data.get("nome", "").strip()
     mensagem = data.get("mensagem", "").strip()
-    if not lista_id or not nome or not mensagem:
-        return jsonify({"erro": "Preencha nome e mensagem"}), 400
-    recado = sb_post("recados", {
-        "lista_id": lista_id,
-        "nome": nome,
-        "mensagem": mensagem
-    })
+    if not lista_id or not nome or not mensagem: return jsonify({"erro": "Preencha nome e mensagem"}), 400
+    recado = sb_post("recados", {"lista_id": lista_id, "nome": nome, "mensagem": mensagem})
     return jsonify({"ok": True, "recado": recado[0] if isinstance(recado, list) else recado})
 
 @app.route("/api/excluir-recado/<int:recado_id>", methods=["DELETE"])
@@ -763,15 +698,8 @@ def salvar_presenca():
     nome = data.get("nome", "").strip()
     status = data.get("status", "confirmado")
     acompanhantes = data.get("acompanhantes", 0)
-    if not lista_id or not nome:
-        return jsonify({"erro": "Dados inválidos"}), 400
-    presenca = sb_post("presencas", {
-        "lista_id": lista_id,
-        "nome": nome,
-        "status": status,
-        "acompanhantes": acompanhantes
-    })
-    # Envia email para o celebrante
+    if not lista_id or not nome: return jsonify({"erro": "Dados inválidos"}), 400
+    presenca = sb_post("presencas", {"lista_id": lista_id, "nome": nome, "status": status, "acompanhantes": acompanhantes})
     try:
         lista = sb_get("listas", f"id=eq.{lista_id}")
         config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
@@ -803,6 +731,7 @@ def salvar_presenca():
     except Exception as e:
         print("Erro email presença:", e)
     return jsonify({"ok": True, "presenca": presenca[0] if isinstance(presenca, list) else presenca})
+
 @app.route("/api/presencas/<lista_id>")
 def listar_presencas(lista_id):
     presencas = sb_get("presencas", f"lista_id=eq.{lista_id}&order=criado_em.asc")
@@ -836,4 +765,3 @@ def verificar_expiracao(lista_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
-
