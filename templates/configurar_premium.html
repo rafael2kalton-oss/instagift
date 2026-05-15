@@ -138,7 +138,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <input type="text" id="nomeCelebrante" placeholder="Ex: Ana & João, Maria Silva, Bebê da Ana...">
     </div>
     <div class="campo">
-      <label>Data do evento <span style="color:#C9A84C;font-size:10px;">— máximo 6 meses a partir de hoje</span></label>
+      <label>Data do evento <span style="color:#C9A84C;font-size:10px;">— máximo 12 meses a partir de hoje</span></label>
       <input type="date" id="dataEvento" onchange="validarData()">
       <p class="data-aviso" id="dataAviso"></p>
       <p class="data-erro" id="dataErro">⚠️ Data inválida! Máximo de 6 meses a partir de hoje.</p>
@@ -292,7 +292,7 @@ function validarData() {
   var hoje = new Date();
   hoje.setHours(0,0,0,0);
   var maxData = new Date(hoje);
-  maxData.setMonth(maxData.getMonth() + 6);
+  maxData.setMonth(maxData.getMonth() + 12);
   if (dataSelecionada > maxData) {
     document.getElementById('dataEvento').value = '';
     dataErro.style.display = 'block';
