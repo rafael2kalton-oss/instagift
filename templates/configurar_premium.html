@@ -9,42 +9,34 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; min-height: 100vh; padding-bottom: 60px; }
 .container { max-width: 480px; margin: 0 auto; padding: 20px 16px; }
-
 .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 24px; border-bottom: 1px solid rgba(201,168,76,0.25); margin-bottom: 28px; }
 .logo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #C9A84C; }
 .btn-voltar { background: transparent; border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
 .btn-voltar:hover { background: rgba(201,168,76,0.06); }
-
 .page-titulo { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #2C2C2C; margin-bottom: 6px; }
 .page-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-bottom: 32px; line-height: 1.6; }
-
 .secao-config { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
 .secao-config-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 .secao-config-icon { width: 40px; height: 40px; background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.08)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .secao-config-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; }
 .secao-config-sub { font-size: 12px; color: #aaa; margin-top: 2px; font-style: italic; }
-
 .campo { margin-bottom: 16px; }
 .campo label { font-size: 11px; color: #aaa; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; }
 .campo input, .campo textarea, .campo select { width: 100%; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 16px; color: #2C2C2C; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; resize: none; transition: all 0.2s; }
 .campo input:focus, .campo textarea:focus, .campo select:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.08); background: #fff; }
 .campo input::placeholder, .campo textarea::placeholder { color: #ccc; }
 .campo input:disabled { opacity: 0.6; cursor: not-allowed; background: #f5f5f5; }
-
 .data-aviso { font-size: 12px; color: #C9A84C; margin-top: 8px; font-style: italic; display: none; }
 .data-erro { font-size: 12px; color: #ef4444; margin-top: 8px; font-style: italic; display: none; }
-
 .frases-sugeridas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .frase-chip { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; cursor: pointer; color: #888; background: #fff; transition: all 0.15s; font-family: 'Playfair Display', serif; font-style: italic; }
 .frase-chip:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.04); }
-
 .upload-area { border: 2px dashed rgba(201,168,76,0.3); border-radius: 14px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(201,168,76,0.02); margin-bottom: 16px; }
 .upload-area:hover { border-color: #C9A84C; background: rgba(201,168,76,0.04); }
 .upload-area input { display: none; }
 .upload-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
 .upload-texto { font-size: 14px; color: #aaa; font-family: 'Playfair Display', serif; font-style: italic; }
 .upload-texto strong { color: #C9A84C; font-style: normal; }
-
 .fotos-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
 .foto-preview-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; }
 .foto-preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -52,15 +44,12 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .foto-preview-item .btn-remover-foto:hover { background: rgba(255,50,50,0.8); }
 .foto-uploading { aspect-ratio: 1; border-radius: 10px; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #C9A84C; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
 .toggle-group { display: flex; gap: 10px; margin-bottom: 16px; }
 .toggle-btn { flex: 1; padding: 12px; border: 1.5px solid rgba(201,168,76,0.25); border-radius: 12px; background: #fff; color: #aaa; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-align: center; }
 .toggle-btn.active { border-color: #C9A84C; background: rgba(201,168,76,0.06); color: #C9A84C; }
-
 .convite-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; }
 .convite-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.9; white-space: pre-line; }
 .convite-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 4px; margin-bottom: 10px; text-align: center; }
-
 .recado-admin-card { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.15); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
 .recado-admin-info { flex: 1; }
 .recado-admin-nome { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
@@ -69,7 +58,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .btn-excluir-recado { background: transparent; border: 1px solid rgba(255,80,80,0.2); color: #f87171; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer; flex-shrink: 0; transition: all 0.2s; font-family: 'Inter', sans-serif; }
 .btn-excluir-recado:hover { background: rgba(255,80,80,0.08); border-color: rgba(255,80,80,0.4); }
 .recados-vazio-admin { text-align: center; padding: 28px; color: #bbb; font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; }
-
 .link-box { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; }
 .link-box p { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
 .link-box code { font-size: 12px; color: #C9A84C; word-break: break-all; display: block; margin-bottom: 10px; }
@@ -77,22 +65,17 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .btn-copiar-link:hover { background: #C9A84C; color: #fff; }
 .btn-ver-pagina { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; border: none; transition: all 0.2s; }
 .btn-ver-pagina:hover { transform: translateY(-1px); }
-
 .paleta-opcoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
 .paleta-cor { width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 .paleta-cor:hover { transform: scale(1.1); }
 .paleta-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
 .paleta-nome { text-align: center; font-size: 12px; color: #aaa; margin-top: 12px; font-style: italic; font-family: 'Playfair Display', serif; }
-
 .btn-salvar { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); margin-top: 8px; letter-spacing: 0.03em; }
 .btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.4); }
 .salvo-sucesso { display: none; text-align: center; padding: 14px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
-
 .divider { display: flex; align-items: center; gap: 12px; margin: 8px 0 20px; }
 .divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); }
 .divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
-
-/* POPUP CONFIRMAÇÃO */
 .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(44,44,44,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .popup-overlay.show { display: flex; }
 .popup-box { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.3); border-radius: 24px; padding: 32px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
@@ -141,7 +124,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <label>Data do evento <span style="color:#C9A84C;font-size:10px;">— máximo 12 meses a partir de hoje</span></label>
       <input type="date" id="dataEvento" onchange="validarData()">
       <p class="data-aviso" id="dataAviso"></p>
-      <p class="data-erro" id="dataErro">⚠️ Data inválida! Máximo de 6 meses a partir de hoje.</p>
+      <p class="data-erro" id="dataErro">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
     </div>
   </div>
 
@@ -251,7 +234,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 
 </div>
 
-<!-- POPUP DE CONFIRMAÇÃO -->
+<!-- POPUP DE CONFIRMAÇÃO DE DATA -->
 <div class="popup-overlay" id="popupConfirmacao">
   <div class="popup-box">
     <div class="popup-icon">🎉</div>
@@ -264,6 +247,21 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
   </div>
 </div>
 
+<!-- POPUP COMPRAR MAIS FOTOS -->
+<div id="popupComprarFotos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+    <div style="font-size:40px; margin-bottom:12px;">📸</div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:8px;">Limite de fotos atingido!</h3>
+    <p style="font-size:13px; color:#aaa; margin-bottom:24px; line-height:1.7; font-style:italic;">Deseja adicionar mais fotos ao seu mural? Escolha um pacote:</p>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+      <button onclick="comprarFotos('5')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s;">📸 +5 fotos — R$ 9,90</button>
+      <button onclick="comprarFotos('10')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s;">📸 +10 fotos — R$ 19,90</button>
+      <button onclick="comprarFotos('25')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s;">📸 +25 fotos — R$ 49,90</button>
+    </div>
+    <button onclick="document.getElementById('popupComprarFotos').style.display='none'" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.2); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Agora não</button>
+  </div>
+</div>
+
 <script>
 var listaId = "{{ lista_id }}";
 var usaConvitePadrao = true;
@@ -271,6 +269,7 @@ var fotosExistentes = [];
 var eventoAtual = 'aniversario';
 var paletaSelecionada = 'dourado';
 var dataJaSalva = false;
+var limiteFotos = 10;
 
 var paletas = {
   dourado:  { nome: '✦ Dourado — clássico e elegante' },
@@ -308,10 +307,10 @@ function validarData() {
 
 function atualizarContadorFotos() {
   var total = document.querySelectorAll('.foto-preview-item').length;
-  var restantes = 10 - total;
+  var restantes = limiteFotos - total;
   var sub = document.getElementById('fotosSub');
   if (sub) {
-    sub.textContent = total + '/10 fotos — ' + (restantes > 0 ? restantes + ' restantes' : 'limite atingido!');
+    sub.textContent = total + '/' + limiteFotos + ' fotos — ' + (restantes > 0 ? restantes + ' restantes' : 'limite atingido!');
     sub.style.color = restantes === 0 ? '#ef4444' : '#aaa';
   }
 }
@@ -326,42 +325,22 @@ function selecionarPaleta(nome) {
 }
 
 var frasesPorEvento = {
-  aniversario: [
-    'Estou muito feliz em celebrar mais um ano ao lado de pessoas tão especiais!',
-    'Cada presente é um gesto de carinho que guardo no coração.',
-    'Obrigada por fazer parte da minha história!',
-    'Que alegria celebrar mais um ano de vida com vocês!'
-  ],
-  casamento: [
-    'Estamos radiantes de alegria por compartilhar esse momento com vocês!',
-    'Cada presente simboliza o carinho de quem amamos.',
-    'Obrigado por fazer parte do dia mais especial das nossas vidas!',
-    'Com vocês ao nosso lado, essa celebração fica ainda mais especial!'
-  ],
-  'casa-nova': [
-    'Estamos começando uma nova história e vocês fazem parte dela!',
-    'Cada item escolhido vai encher nosso lar de amor.',
-    'Obrigado por ajudar a construir nosso cantinho!',
-    'Com muito carinho, estamos montando nosso novo lar!'
-  ],
-  'cha-bebe': [
-    'Nosso coração está transbordando de amor pela chegada do nosso bebê!',
-    'Cada presente será recebido com muito amor e gratidão.',
-    'Obrigado por fazer parte desse momento tão especial!',
-    'Estamos ansiosos para apresentar o novo membro da família!'
-  ],
-  outros: [
-    'Estou muito feliz em compartilhar esse momento especial com vocês!',
-    'Cada gesto de carinho de vocês significa muito para mim.',
-    'Obrigado por fazer parte dessa celebração!',
-    'Com vocês ao meu lado, tudo fica mais especial!'
-  ]
+  aniversario: ['Estou muito feliz em celebrar mais um ano ao lado de pessoas tão especiais!','Cada presente é um gesto de carinho que guardo no coração.','Obrigada por fazer parte da minha história!','Que alegria celebrar mais um ano de vida com vocês!'],
+  casamento: ['Estamos radiantes de alegria por compartilhar esse momento com vocês!','Cada presente simboliza o carinho de quem amamos.','Obrigado por fazer parte do dia mais especial das nossas vidas!','Com vocês ao nosso lado, essa celebração fica ainda mais especial!'],
+  'casa-nova': ['Estamos começando uma nova história e vocês fazem parte dela!','Cada item escolhido vai encher nosso lar de amor.','Obrigado por ajudar a construir nosso cantinho!','Com muito carinho, estamos montando nosso novo lar!'],
+  'cha-bebe': ['Nosso coração está transbordando de amor pela chegada do nosso bebê!','Cada presente será recebido com muito amor e gratidão.','Obrigado por fazer parte desse momento tão especial!','Estamos ansiosos para apresentar o novo membro da família!'],
+  outros: ['Estou muito feliz em compartilhar esse momento especial com vocês!','Cada gesto de carinho de vocês significa muito para mim.','Obrigado por fazer parte dessa celebração!','Com vocês ao meu lado, tudo fica mais especial!']
 };
 
 document.getElementById('linkPremium').textContent = window.location.origin + '/premium/' + listaId;
 
 async function carregarConfig() {
   try {
+    // Carrega limite de fotos
+    var rl = await fetch('/api/limite-fotos/' + listaId);
+    var dl = await rl.json();
+    limiteFotos = dl.limite || 10;
+
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
     if (data.config && data.config.nome_celebrante) {
@@ -370,7 +349,6 @@ async function carregarConfig() {
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
       if (!data.config.usa_convite_padrao) toggleConvite(false);
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
-      // Se já tem data salva, bloqueia o campo
       if (data.config.data_evento) {
         document.getElementById('dataEvento').value = data.config.data_evento;
         document.getElementById('dataEvento').disabled = true;
@@ -387,6 +365,15 @@ async function carregarConfig() {
     }
     atualizarPreviewConvite();
     atualizarContadorFotos();
+
+    // Verifica se voltou de compra bem-sucedida
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('compra') === 'ok') {
+      var fotosGanhas = urlParams.get('fotos');
+      alert('🎉 Parabéns! Você adicionou +' + fotosGanhas + ' fotos ao seu mural!');
+      window.history.replaceState({}, '', '/configurar-premium/' + listaId);
+    }
+
     var paletaSalva = localStorage.getItem('paleta_' + listaId);
     if (paletaSalva) selecionarPaleta(paletaSalva);
   } catch(e) { console.error(e); }
@@ -455,9 +442,13 @@ function renderFotosExistentes(fotos) {
 async function processarFotos(e) {
   var files = Array.from(e.target.files);
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
-  if (totalAtual + files.length > 10) {
-    alert('Máximo de 10 fotos permitidas!');
-    files = files.slice(0, 10 - totalAtual);
+  if (totalAtual >= limiteFotos) {
+    document.getElementById('popupComprarFotos').style.display = 'flex';
+    e.target.value = '';
+    return;
+  }
+  if (totalAtual + files.length > limiteFotos) {
+    files = files.slice(0, limiteFotos - totalAtual);
   }
   for (var i = 0; i < files.length; i++) {
     await uploadFoto(files[i]);
@@ -492,7 +483,7 @@ async function uploadFoto(file) {
         preview.appendChild(div);
         atualizarContadorFotos();
       } else if (data.limite) {
-        alert('Limite de 10 fotos atingido!');
+        document.getElementById('popupComprarFotos').style.display = 'flex';
       }
     } catch(e) {
       preview.removeChild(loadingDiv);
@@ -500,6 +491,25 @@ async function uploadFoto(file) {
     }
   };
   reader.readAsDataURL(file);
+}
+
+async function comprarFotos(pacote) {
+  document.getElementById('popupComprarFotos').style.display = 'none';
+  try {
+    var r = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ lista_id: listaId, pacote: pacote })
+    });
+    var data = await r.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Erro ao processar pagamento. Tente novamente.');
+    }
+  } catch(e) {
+    alert('Erro de conexão. Tente novamente.');
+  }
 }
 
 async function removerFoto(id) {
@@ -539,23 +549,17 @@ async function excluirRecado(id) {
 }
 
 function iniciarSalvar() {
-  // Valida data antes de abrir popup
   if (!validarData()) return;
   var dataStr = document.getElementById('dataEvento').value;
-  // Se já tem data salva, salva direto sem popup
-  if (dataJaSalva) {
-    salvarConfig();
-    return;
-  }
-  // Monta texto de expiração para o popup
+  if (dataJaSalva) { salvarConfig(); return; }
   if (dataStr) {
     var dataEvento = new Date(dataStr + 'T00:00:00');
     var expiracao = new Date(dataEvento);
     expiracao.setDate(expiracao.getDate() + 7);
     document.getElementById('popupDataExpiracao').innerHTML =
-  '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</strong><br><br>' +
-  '⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br>' +
-  '<span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</span>';
+      '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</strong><br><br>' +
+      '⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br>' +
+      '<span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</span>';
   } else {
     document.getElementById('popupDataExpiracao').textContent = '⏰ Sua página ficará ativa por 6 meses após a criação.';
   }
@@ -569,7 +573,6 @@ function fecharPopup() {
 async function confirmarSalvar() {
   fecharPopup();
   await salvarConfig();
-  // Bloqueia campo de data após confirmar
   if (!dataJaSalva) {
     document.getElementById('dataEvento').disabled = true;
     dataJaSalva = true;
@@ -586,13 +589,9 @@ async function salvarConfig() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        lista_id: listaId,
-        nome_celebrante: nome,
-        data_evento: data,
-        mensagem_celebrante: mensagem,
-        texto_convite: textoConvite,
-        usa_convite_padrao: usaConvitePadrao,
-        paleta: paletaSelecionada
+        lista_id: listaId, nome_celebrante: nome, data_evento: data,
+        mensagem_celebrante: mensagem, texto_convite: textoConvite,
+        usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada
       })
     });
     var result = await r.json();
@@ -604,8 +603,7 @@ async function salvarConfig() {
 }
 
 function copiarLink() {
-  var link = window.location.origin + '/premium/' + listaId;
-  navigator.clipboard.writeText(link).then(function() { alert('Link copiado! ✦'); });
+  navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); });
 }
 
 function verPagina() {
