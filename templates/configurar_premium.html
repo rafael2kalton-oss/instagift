@@ -87,6 +87,12 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .popup-btn-confirmar { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 10px; transition: all 0.2s; }
 .popup-btn-confirmar:hover { transform: translateY(-2px); }
 .popup-btn-cancelar { width: 100%; padding: 12px; background: transparent; color: #aaa; border: 1px solid rgba(201,168,76,0.2); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.estilo-opcoes { display: flex; gap: 10px; margin-top: 20px; }
+.estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; background: #fff; transition: all 0.2s; }
+.estilo-card.ativo { border-color: #C9A84C; background: rgba(201,168,76,0.06); }
+.estilo-card.ativo .estilo-label { color: #C9A84C; }
+.estilo-emoji { font-size: 20px; margin-bottom: 4px; }
+.estilo-label { font-size: 11px; font-weight: 600; color: #aaa; }
 </style>
 </head>
 <body>
@@ -179,6 +185,21 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <p class="upload-texto"><strong>Clique aqui</strong> para adicionar fotos</p>
     </div>
     <div class="fotos-preview" id="fotosPreview"></div>
+    <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-top:20px;margin-bottom:12px;">Estilo do mural</p>
+    <div class="estilo-opcoes">
+      <div class="estilo-card ativo" id="estiloNormal" onclick="selecionarEstilo('normal')">
+        <div class="estilo-emoji">📸</div>
+        <div class="estilo-label">Normal</div>
+      </div>
+      <div class="estilo-card" id="estiloPolaroid" onclick="selecionarEstilo('polaroid')">
+        <div class="estilo-emoji">📌</div>
+        <div class="estilo-label">Polaroid</div>
+      </div>
+      <div class="estilo-card" id="estiloColagem" onclick="selecionarEstilo('colagem')">
+        <div class="estilo-emoji">🎨</div>
+        <div class="estilo-label">Colagem</div>
+      </div>
+    </div>
   </div>
 
   <!-- 5. CONVITE -->
@@ -270,6 +291,7 @@ var eventoAtual = 'aniversario';
 var paletaSelecionada = 'dourado';
 var dataJaSalva = false;
 var limiteFotos = 10;
+var estiloMural = 'normal';
 
 var paletas = {
   dourado:  { nome: '✦ Dourado — clássico e elegante' },
@@ -324,6 +346,15 @@ function selecionarPaleta(nome) {
   localStorage.setItem('paleta_' + listaId, nome);
 }
 
+function selecionarEstilo(estilo) {
+  estiloMural = estilo;
+  document.querySelectorAll('.estilo-card').forEach(function(el) {
+    el.classList.remove('ativo');
+  });
+  var ids = { normal: 'estiloNormal', polaroid: 'estiloPolaroid', colagem: 'estiloColagem' };
+  document.getElementById(ids[estilo]).classList.add('ativo');
+}
+
 var frasesPorEvento = {
   aniversario: ['Estou muito feliz em celebrar mais um ano ao lado de pessoas tão especiais!','Cada presente é um gesto de carinho que guardo no coração.','Obrigada por fazer parte da minha história!','Que alegria celebrar mais um ano de vida com vocês!'],
   casamento: ['Estamos radiantes de alegria por compartilhar esse momento com vocês!','Cada presente simboliza o carinho de quem amamos.','Obrigado por fazer parte do dia mais especial das nossas vidas!','Com vocês ao nosso lado, essa celebração fica ainda mais especial!'],
@@ -336,7 +367,6 @@ document.getElementById('linkPremium').textContent = window.location.origin + '/
 
 async function carregarConfig() {
   try {
-    // Carrega limite de fotos
     var rl = await fetch('/api/limite-fotos/' + listaId);
     var dl = await rl.json();
     limiteFotos = dl.limite || 10;
@@ -349,6 +379,7 @@ async function carregarConfig() {
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
       if (!data.config.usa_convite_padrao) toggleConvite(false);
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
+      if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
       if (data.config.data_evento) {
         document.getElementById('dataEvento').value = data.config.data_evento;
         document.getElementById('dataEvento').disabled = true;
@@ -366,7 +397,6 @@ async function carregarConfig() {
     atualizarPreviewConvite();
     atualizarContadorFotos();
 
-    // Verifica se voltou de compra bem-sucedida
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
       var fotosGanhas = urlParams.get('fotos');
@@ -438,6 +468,7 @@ function renderFotosExistentes(fotos) {
   });
   atualizarContadorFotos();
 }
+
 function abrirUpload() {
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
   if (totalAtual >= limiteFotos) {
@@ -446,6 +477,7 @@ function abrirUpload() {
   }
   document.getElementById('inputFotos').click();
 }
+
 async function processarFotos(e) {
   var files = Array.from(e.target.files);
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
@@ -462,6 +494,7 @@ async function processarFotos(e) {
   }
   e.target.value = '';
 }
+
 async function uploadFoto(file) {
   var preview = document.getElementById('fotosPreview');
   var loadingDiv = document.createElement('div');
@@ -597,7 +630,8 @@ async function salvarConfig() {
       body: JSON.stringify({
         lista_id: listaId, nome_celebrante: nome, data_evento: data,
         mensagem_celebrante: mensagem, texto_convite: textoConvite,
-        usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada
+        usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada,
+        estilo_mural: estiloMural
       })
     });
     var result = await r.json();
