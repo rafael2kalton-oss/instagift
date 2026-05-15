@@ -443,8 +443,8 @@ async function processarFotos(e) {
   var files = Array.from(e.target.files);
   var totalAtual = document.querySelectorAll('.foto-preview-item').length;
   if (totalAtual >= limiteFotos) {
-    document.getElementById('popupComprarFotos').style.display = 'flex';
     e.target.value = '';
+    document.getElementById('popupComprarFotos').style.display = 'flex';
     return;
   }
   if (totalAtual + files.length > limiteFotos) {
@@ -455,7 +455,6 @@ async function processarFotos(e) {
   }
   e.target.value = '';
 }
-
 async function uploadFoto(file) {
   var preview = document.getElementById('fotosPreview');
   var loadingDiv = document.createElement('div');
