@@ -279,6 +279,21 @@ var dadosPremium = {};
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
 
+// ✦ CORREÇÃO: Aplica a paleta de cores na página
+function aplicarPaleta(paleta) {
+  var paletas = {
+    dourado:  { primaria: '#C9A84C', secundaria: '#A8722A' },
+    rosa:     { primaria: '#E91E8C', secundaria: '#C2185B' },
+    azul:     { primaria: '#1E88E5', secundaria: '#1565C0' },
+    verde:    { primaria: '#43A047', secundaria: '#2E7D32' },
+    roxo:     { primaria: '#8E24AA', secundaria: '#6A1B9A' },
+    vermelho: { primaria: '#E53935', secundaria: '#B71C1C' }
+  };
+  var cores = paletas[paleta] || paletas['dourado'];
+  document.documentElement.style.setProperty('--cor-primaria', cores.primaria);
+  document.documentElement.style.setProperty('--cor-secundaria', cores.secundaria);
+}
+
 async function carregarPremium() {
   try {
     var exp = await fetch('/api/verificar-expiracao/' + listaId);
@@ -290,6 +305,10 @@ async function carregarPremium() {
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
     dadosPremium = data;
+
+    // ✦ CORREÇÃO: Aplica a paleta assim que os dados chegam do banco
+    if (data.config && data.config.paleta) aplicarPaleta(data.config.paleta);
+
     renderHero(data.config);
     renderMensagem(data.config);
     renderMural(data.fotos);
