@@ -49,6 +49,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .mensagem-cargo { font-size: 12px; color: var(--cor-primaria); letter-spacing: 0.05em; margin-bottom: 20px; }
 .mensagem-texto { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #666; line-height: 1.8; }
 .aspas { font-size: 48px; color: rgba(201,168,76,0.2); font-family: Georgia; line-height: 0.5; display: block; margin-bottom: 8px; }
+.local-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 20px 22px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 16px; }
+.local-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.local-info { flex: 1; }
+.local-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.local-endereco { font-family: 'Playfair Display', serif; font-size: 14px; color: #2C2C2C; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+.btn-ver-maps { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-ver-maps:hover { opacity: 0.9; transform: translateY(-1px); }
 .mural-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .mural-foto { border-radius: 14px; overflow: hidden; aspect-ratio: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer; }
 .mural-foto:hover { transform: scale(1.02); }
@@ -155,6 +162,17 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Mural de Memórias</h2>
   <p class="secao-sub">Momentos especiais que fazem parte dessa história</p>
+
+  <!-- ✦ CARD DE LOCALIZAÇÃO -->
+  <div class="local-card" id="localCard" style="display:none;">
+    <div class="local-icon">📍</div>
+    <div class="local-info">
+      <div class="local-label">Local do evento</div>
+      <div class="local-endereco" id="localEndereco"></div>
+      <a id="btnVerMaps" href="#" target="_blank" class="btn-ver-maps">🗺️ Ver no Maps</a>
+    </div>
+  </div>
+
   <div class="mensagem-card" id="mensagemCard" style="display:none;">
     <div class="mensagem-avatar" id="mensagemAvatar">✦</div>
     <div class="mensagem-nome" id="mensagemNome"></div>
@@ -279,7 +297,6 @@ var dadosPremium = {};
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
 
-// ✦ CORREÇÃO: Aplica a paleta de cores na página
 function aplicarPaleta(paleta) {
   var paletas = {
     dourado:  { primaria: '#C9A84C', secundaria: '#A8722A' },
@@ -306,10 +323,10 @@ async function carregarPremium() {
     var data = await r.json();
     dadosPremium = data;
 
-    // ✦ CORREÇÃO: Aplica a paleta assim que os dados chegam do banco
     if (data.config && data.config.paleta) aplicarPaleta(data.config.paleta);
 
     renderHero(data.config);
+    renderLocalEvento(data.config);
     renderMensagem(data.config);
     renderMural(data.fotos);
     renderRecados(data.recados);
@@ -331,6 +348,14 @@ function renderHero(config) {
   }
 }
 
+function renderLocalEvento(config) {
+  if (!config || !config.local_evento || config.local_evento.trim() === '') return;
+  var card = document.getElementById('localCard');
+  document.getElementById('localEndereco').textContent = config.local_evento;
+  document.getElementById('btnVerMaps').href = 'https://www.google.com/maps/search/' + encodeURIComponent(config.local_evento);
+  card.style.display = 'flex';
+}
+
 function renderMensagem(config) {
   if (!config || !config.mensagem_celebrante) return;
   document.getElementById('mensagemCard').style.display = 'block';
@@ -346,13 +371,9 @@ function renderMural(fotos) {
     return;
   }
   var estilo = (dadosPremium.config && dadosPremium.config.estilo_mural) || 'normal';
-  if (estilo === 'polaroid') {
-    renderMuralPolaroid(container, fotos);
-  } else if (estilo === 'colagem') {
-    renderMuralColagem(container, fotos);
-  } else {
-    renderMuralNormal(container, fotos);
-  }
+  if (estilo === 'polaroid') { renderMuralPolaroid(container, fotos); }
+  else if (estilo === 'colagem') { renderMuralColagem(container, fotos); }
+  else { renderMuralNormal(container, fotos); }
 }
 
 function renderMuralNormal(container, fotos) {
@@ -371,28 +392,9 @@ function renderMuralPolaroid(container, fotos) {
   fotos.forEach(function(f, idx) {
     var rot = rotacoes[idx % rotacoes.length];
     var cor = cores[idx % cores.length];
-    html += '<div onclick="abrirLightbox(\'' + f.url_foto + '\')" style="' +
-      'transform:rotate(' + rot + 'deg);' +
-      'background:#fff;' +
-      'padding:10px 10px 36px 10px;' +
-      'box-shadow:0 4px 20px rgba(0,0,0,0.15);' +
-      'width:calc(50% - 24px);' +
-      'cursor:pointer;' +
-      'transition:transform 0.3s;' +
-      'position:relative;' +
-      '">' +
+    html += '<div onclick="abrirLightbox(\'' + f.url_foto + '\')" style="transform:rotate(' + rot + 'deg);background:#fff;padding:10px 10px 36px 10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);width:calc(50% - 24px);cursor:pointer;transition:transform 0.3s;position:relative;">' +
       '<img src="' + f.url_foto + '" alt="foto" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">' +
-      '<div style="' +
-        'position:absolute;' +
-        'top:-10px;' +
-        'left:50%;' +
-        'transform:translateX(-50%);' +
-        'width:18px;height:18px;' +
-        'border-radius:50%;' +
-        'background:' + cor + ';' +
-        'box-shadow:0 2px 6px rgba(0,0,0,0.3);' +
-      '"></div>' +
-    '</div>';
+      '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:' + cor + ';box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div></div>';
   });
   html += '</div>';
   container.innerHTML = html;
@@ -407,22 +409,8 @@ function renderMuralColagem(container, fotos) {
     var tam = tamanhos[idx % tamanhos.length];
     var top = Math.floor(idx / 2) * 120 + (idx % 2) * 40;
     var left = idx % 2 === 0 ? '5%' : '35%';
-    var zIndex = idx + 1;
-    html += '<div onclick="abrirLightbox(\'' + f.url_foto + '\')" style="' +
-      'position:absolute;' +
-      'top:' + top + 'px;' +
-      'left:' + left + ';' +
-      'width:' + tam + ';' +
-      'transform:rotate(' + rot + 'deg);' +
-      'z-index:' + zIndex + ';' +
-      'background:#fff;' +
-      'padding:6px 6px 24px 6px;' +
-      'box-shadow:0 6px 24px rgba(0,0,0,0.18);' +
-      'cursor:pointer;' +
-      'transition:transform 0.3s,z-index 0s;' +
-      '">' +
-      '<img src="' + f.url_foto + '" alt="foto" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;">' +
-    '</div>';
+    html += '<div onclick="abrirLightbox(\'' + f.url_foto + '\')" style="position:absolute;top:' + top + 'px;left:' + left + ';width:' + tam + ';transform:rotate(' + rot + 'deg);z-index:' + (idx+1) + ';background:#fff;padding:6px 6px 24px 6px;box-shadow:0 6px 24px rgba(0,0,0,0.18);cursor:pointer;">' +
+      '<img src="' + f.url_foto + '" alt="foto" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;"></div>';
   });
   var alturaTotal = Math.ceil(fotos.length / 2) * 120 + 200;
   html += '<div style="height:' + alturaTotal + 'px;"></div></div>';
@@ -431,10 +419,7 @@ function renderMuralColagem(container, fotos) {
 
 function renderRecados(recados) {
   var lista = document.getElementById('recadosLista');
-  if (!recados || recados.length === 0) {
-    lista.innerHTML = '<div class="recados-vazio"><p>Seja o primeiro a deixar uma mensagem! 💌</p></div>';
-    return;
-  }
+  if (!recados || recados.length === 0) { lista.innerHTML = '<div class="recados-vazio"><p>Seja o primeiro a deixar uma mensagem! 💌</p></div>'; return; }
   lista.innerHTML = '<div class="recados-lista">' + recados.map(function(r) {
     var inicial = r.nome ? r.nome[0].toUpperCase() : '?';
     var data = r.criado_em ? formatarDataHora(r.criado_em) : '';
@@ -447,20 +432,15 @@ function renderConvite(config) {
   var nome = config.nome_celebrante || 'o evento';
   var data = config.data_evento ? formatarData(config.data_evento) : 'em breve';
   var link = window.location.origin + '/premium/' + listaId;
-  if (config.texto_convite && !config.usa_convite_padrao) {
-    conviteTextoFinal = config.texto_convite;
-  } else {
-    conviteTextoFinal = '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
-  }
+  conviteTextoFinal = (config.texto_convite && !config.usa_convite_padrao) ? config.texto_convite :
+    '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
   document.getElementById('conviteTexto').textContent = conviteTextoFinal;
 }
 
 function selecionarPresenca(status) {
   presencaSelecionada = status;
   document.querySelectorAll('.presenca-opcao').forEach(function(el) { el.style.opacity = '0.4'; el.style.transform = 'scale(0.95)'; });
-  if (status === 'confirmado') { var el = document.getElementById('opcaoConfirmado'); }
-  if (status === 'talvez') { var el = document.getElementById('opcaoTalvez'); }
-  if (status === 'nao-vai') { var el = document.getElementById('opcaoNaoVai'); }
+  var el = document.getElementById(status === 'confirmado' ? 'opcaoConfirmado' : status === 'talvez' ? 'opcaoTalvez' : 'opcaoNaoVai');
   if (el) { el.style.opacity = '1'; el.style.transform = 'scale(1.05)'; }
 }
 
@@ -484,25 +464,19 @@ async function confirmarPresenca() {
 async function carregarPresencas() {
   try {
     var r = await fetch('/api/presencas/' + listaId);
-    var presencas = await r.json();
-    renderPresencas(presencas);
+    renderPresencas(await r.json());
   } catch(e) { console.error(e); }
 }
 
 function renderPresencas(presencas) {
   if (!presencas || presencas.length === 0) {
     document.getElementById('presencasLista').innerHTML = '<div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div>';
-    document.getElementById('totalConfirmados').textContent = '0';
-    document.getElementById('totalTalvez').textContent = '0';
-    document.getElementById('totalNaoVai').textContent = '0';
+    ['totalConfirmados','totalTalvez','totalNaoVai'].forEach(function(id) { document.getElementById(id).textContent = '0'; });
     return;
   }
-  var confirmados = presencas.filter(function(p) { return p.status === 'confirmado'; }).length;
-  var talvez = presencas.filter(function(p) { return p.status === 'talvez'; }).length;
-  var naoVai = presencas.filter(function(p) { return p.status === 'nao-vai'; }).length;
-  document.getElementById('totalConfirmados').textContent = confirmados;
-  document.getElementById('totalTalvez').textContent = talvez;
-  document.getElementById('totalNaoVai').textContent = naoVai;
+  document.getElementById('totalConfirmados').textContent = presencas.filter(function(p) { return p.status === 'confirmado'; }).length;
+  document.getElementById('totalTalvez').textContent = presencas.filter(function(p) { return p.status === 'talvez'; }).length;
+  document.getElementById('totalNaoVai').textContent = presencas.filter(function(p) { return p.status === 'nao-vai'; }).length;
   document.getElementById('presencasLista').innerHTML = '<div class="presencas-lista">' + presencas.map(function(p) {
     var inicial = p.nome ? p.nome[0].toUpperCase() : '?';
     var statusLabel = p.status === 'confirmado' ? '✅ Confirmado' : p.status === 'talvez' ? '🤔 Talvez' : '❌ Não vai';
@@ -524,9 +498,7 @@ async function enviarRecado() {
       document.getElementById('recadoMensagem').value = '';
       document.getElementById('recadoSucesso').style.display = 'block';
       setTimeout(function() { document.getElementById('recadoSucesso').style.display = 'none'; }, 3000);
-      var r2 = await fetch('/api/recados/' + listaId);
-      var recados = await r2.json();
-      renderRecados(recados);
+      renderRecados((await (await fetch('/api/recados/' + listaId)).json()));
     }
   } catch(e) { alert('Erro ao enviar. Tente novamente.'); }
 }
