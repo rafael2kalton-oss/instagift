@@ -450,8 +450,7 @@ async function carregarConfig() {
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
 
-    var paletaSalva = localStorage.getItem('paleta_' + listaId);
-    if (paletaSalva) selecionarPaleta(paletaSalva);
+    
   } catch(e) { console.error(e); }
 }
 
