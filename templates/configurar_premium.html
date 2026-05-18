@@ -18,7 +18,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .secao-config { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
 .secao-config-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 .secao-config-icon { width: 40px; height: 40px; background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.08)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.secao-config-icon svg { width: 24px; height: 24px; display: block; }
 .secao-config-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; }
 .secao-config-sub { font-size: 12px; color: #aaa; margin-top: 2px; font-style: italic; }
 .campo { margin-bottom: 16px; }
@@ -94,7 +93,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .estilo-card.ativo .estilo-label { color: #C9A84C; }
 .estilo-preview { width: 100%; height: 60px; margin-bottom: 6px; border-radius: 6px; overflow: hidden; position: relative; background: #f5f5f5; }
 .estilo-label { font-size: 11px; font-weight: 600; color: #aaa; }
-
 /* ✦ COFRINHO PIX */
 .cofrinho-toggle { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; margin-bottom: 16px; cursor: pointer; transition: all 0.2s; }
 .cofrinho-toggle:hover { border-color: #C9A84C; }
@@ -108,9 +106,8 @@ input:checked + .slider { background: linear-gradient(135deg, #C9A84C, #A8722A);
 input:checked + .slider:before { transform: translateX(22px); }
 .cofrinho-area { display: none; }
 .cofrinho-area.ativa { display: block; }
-.cofrinho-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.cofrinho-preview-titulo { font-family: 'Playfair Display', serif; color: #C9A84C; font-size: 16px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-.cofrinho-preview-titulo svg { width: 20px; height: 20px; }
+.cofrinho-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; text-align: center; }
+.cofrinho-preview-titulo { font-family: 'Playfair Display', serif; color: #C9A84C; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .cofrinho-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.7; font-style: italic; }
 </style>
 </head>
@@ -132,6 +129,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     <button class="btn-ver-pagina" onclick="verPagina()">Ver página →</button>
   </div>
 
+  <!-- 1. INFORMAÇÕES DO EVENTO -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">🎉</div>
@@ -156,6 +154,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
+  <!-- 2. PALETA DE CORES -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">🎨</div>
@@ -175,6 +174,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     <p class="paleta-nome" id="paletaNome">✦ Dourado — clássico e elegante</p>
   </div>
 
+  <!-- 3. MENSAGEM DO CELEBRANTE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💬</div>
@@ -190,6 +190,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="frases-sugeridas" id="frasesContainer"></div>
   </div>
 
+  <!-- 4. MURAL DE FOTOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">📸</div>
@@ -244,19 +245,10 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
+  <!-- 5. COFRINHO PIX ✦ NOVO -->
   <div class="secao-config">
     <div class="secao-config-header">
-      <div class="secao-config-icon">
-        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="256" cy="110" r="70" fill="#F4D068" stroke="#1A1A1A" stroke-width="16"/>
-          <path d="M256,70 V150 M230,90 H282" stroke="#1A1A1A" stroke-width="16" stroke-linecap="round"/>
-          <path d="M410,210 C460,210 490,240 490,280 C490,310 470,330 440,330 C410,330 400,290 390,280" fill="none" stroke="#1A1A1A" stroke-width="20" stroke-linecap="round"/>
-          <path d="M120,200 C70,220 40,250 50,290 C60,330 110,340 140,310" fill="#FFB7C5" stroke="#1A1A1A" stroke-width="20"/>
-          <path d="M170,400 L150,470 H210 L215,400 Z M320,400 L310,470 H370 L360,400 Z" fill="#FFB7C5" stroke="#1A1A1A" stroke-width="20" stroke-linejoin="round"/>
-          <path d="M430,240 C430,170 340,170 260,170 C160,170 90,220 90,310 C90,410 200,420 290,420 C390,420 430,340 430,240 Z" fill="#FFB7C5" stroke="#1A1A1A" stroke-width="20" stroke-linejoin="round"/>
-          <circle cx="160" cy="270" r="14" fill="#1A1A1A"/>
-        </svg>
-      </div>
+      <div class="secao-config-icon">💛</div>
       <div>
         <div class="secao-config-titulo">Cofrinho Pix</div>
         <div class="secao-config-sub">Receba contribuições dos seus convidados</div>
@@ -280,20 +272,14 @@ input:checked + .slider:before { transform: translateX(22px); }
         <input type="text" id="chavePix" placeholder="CPF, e-mail, celular ou chave aleatória">
       </div>
       <div class="cofrinho-preview">
-        <div class="cofrinho-preview-titulo">
-          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="256" cy="110" r="70" fill="#F4D068" stroke="#FFF" stroke-width="20"/>
-            <path d="M430,240 C430,170 340,170 260,170 C160,170 90,220 90,310 C90,410 200,420 290,420 C390,420 430,340 430,240 Z" fill="#FFB7C5" stroke="#FFF" stroke-width="20"/>
-            <circle cx="160" cy="270" r="16" fill="#000"/>
-          </svg>
-          Contribuir com nosso Cofrinho
-        </div>
+        <div class="cofrinho-preview-titulo">💛 Contribuir com nosso Cofrinho</div>
         <p class="cofrinho-preview-texto">Quer tornar esse momento ainda mais especial? Qualquer contribuição é recebida com muito amor e gratidão ✦</p>
       </div>
       <p style="font-size:12px;color:#aaa;font-style:italic;margin-top:10px;text-align:center;">É assim que vai aparecer para seus convidados</p>
     </div>
   </div>
 
+  <!-- 6. CONVITE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">✉️</div>
@@ -319,6 +305,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
+  <!-- 7. RECADOS DOS CONVIDADOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💌</div>
@@ -343,6 +330,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 </div>
 
+<!-- POPUP DE CONFIRMAÇÃO DE DATA -->
 <div class="popup-overlay" id="popupConfirmacao">
   <div class="popup-box">
     <div class="popup-icon">🎉</div>
@@ -355,6 +343,7 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
 </div>
 
+<!-- POPUP COMPRAR MAIS FOTOS -->
 <div id="popupComprarFotos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
   <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
     <div style="font-size:40px; margin-bottom:12px;">📸</div>
@@ -462,10 +451,232 @@ async function carregarConfig() {
     if (data.config) {
       if (data.config.nome_celebrante) document.getElementById('nomeCelebrante').value = data.config.nome_celebrante;
       if (data.config.mensagem_celebrante) document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante;
+      if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
+      if (!data.config.usa_convite_padrao) toggleConvite(false);
+      if (data.config.paleta) selecionarPaleta(data.config.paleta);
+      if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
+      if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
+      if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
+      if (data.config.cofrinho_ativo) {
+        document.getElementById('cofrinhoAtivo').checked = true;
+        toggleCofrinho();
+      }
+      if (data.config.data_evento && data.config.data_evento.trim() !== '') {
+        document.getElementById('dataEvento').value = data.config.data_evento;
+        document.getElementById('dataEvento').disabled = true;
+        dataJaSalva = true;
+        validarData();
+      }
+    }
+    if (data.fotos && data.fotos.length > 0) { fotosExistentes = data.fotos; renderFotosExistentes(data.fotos); }
+    if (data.recados && data.recados.length > 0) { renderRecadosAdmin(data.recados); }
+    atualizarPreviewConvite();
+    atualizarContadorFotos();
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('compra') === 'ok') {
+      alert('🎉 Parabéns! Você adicionou +' + urlParams.get('fotos') + ' fotos ao seu mural!');
+      window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
   } catch(e) { console.error(e); }
 }
-carregarConfig();
+
+function renderFrases() {
+  var frases = frasesPorEvento[eventoAtual] || frasesPorEvento['outros'];
+  document.getElementById('frasesContainer').innerHTML = frases.map(function(f) {
+    return '<span class="frase-chip" onclick="usarFrase(\'' + f.replace(/'/g, "\\'") + '\')">' + f + '</span>';
+  }).join('');
+}
+
+function usarFrase(frase) { document.getElementById('mensagemCelebrante').value = frase; }
+
+function toggleConvite(padrao) {
+  usaConvitePadrao = padrao;
+  document.getElementById('btnPadrao').className = 'toggle-btn' + (padrao ? ' active' : '');
+  document.getElementById('btnPersonalizado').className = 'toggle-btn' + (!padrao ? ' active' : '');
+  document.getElementById('convitePadraoInfo').style.display = padrao ? 'block' : 'none';
+  document.getElementById('convitePersonalizadoArea').style.display = padrao ? 'none' : 'block';
+  atualizarPreviewConvite();
+}
+
+function atualizarPreviewConvite() {
+  var nome = document.getElementById('nomeCelebrante').value || 'o evento';
+  var dataStr = document.getElementById('dataEvento').value;
+  var data = dataStr ? new Date(dataStr + 'T00:00:00').toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) : 'em breve';
+  var link = window.location.origin + '/premium/' + listaId;
+  var texto = '';
+  if (usaConvitePadrao) {
+    var convites = {
+      aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha celebrar esse momento especial! ✦',
+      casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para celebrar o seu casamento.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será uma celebração inesquecível! ✦',
+      'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha fazer parte desse momento! ✦',
+      'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
+      outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
+    };
+    texto = convites[eventoAtual] || convites['outros'];
+  } else {
+    texto = document.getElementById('textoConvite').value || 'Seu convite aparecerá aqui...';
+  }
+  document.getElementById('convitePreviewTexto').textContent = texto;
+}
+
+document.getElementById('nomeCelebrante').addEventListener('input', atualizarPreviewConvite);
+document.getElementById('dataEvento').addEventListener('change', atualizarPreviewConvite);
+document.getElementById('textoConvite').addEventListener('input', atualizarPreviewConvite);
+
+function renderFotosExistentes(fotos) {
+  var preview = document.getElementById('fotosPreview');
+  preview.innerHTML = '';
+  fotos.forEach(function(f) {
+    var div = document.createElement('div');
+    div.className = 'foto-preview-item';
+    div.id = 'foto-' + f.id;
+    div.innerHTML = '<img src="' + f.url_foto + '" alt="foto"><button class="btn-remover-foto" onclick="removerFoto(' + f.id + ')">✕</button>';
+    preview.appendChild(div);
+  });
+  atualizarContadorFotos();
+}
+
+function abrirUpload() {
+  var totalAtual = document.querySelectorAll('.foto-preview-item').length;
+  if (totalAtual >= limiteFotos) { document.getElementById('popupComprarFotos').style.display = 'flex'; return; }
+  document.getElementById('inputFotos').click();
+}
+
+async function processarFotos(e) {
+  var files = Array.from(e.target.files);
+  var totalAtual = document.querySelectorAll('.foto-preview-item').length;
+  if (totalAtual >= limiteFotos) { e.target.value = ''; document.getElementById('popupComprarFotos').style.display = 'flex'; return; }
+  if (totalAtual + files.length > limiteFotos) files = files.slice(0, limiteFotos - totalAtual);
+  for (var i = 0; i < files.length; i++) await uploadFoto(files[i]);
+  e.target.value = '';
+}
+
+async function uploadFoto(file) {
+  var preview = document.getElementById('fotosPreview');
+  var loadingDiv = document.createElement('div');
+  loadingDiv.className = 'foto-uploading';
+  loadingDiv.textContent = '✦';
+  preview.appendChild(loadingDiv);
+  var reader = new FileReader();
+  reader.onload = async function(ev) {
+    var base64 = ev.target.result;
+    try {
+      var ordem = document.querySelectorAll('.foto-preview-item').length;
+      var r = await fetch('/api/salvar-foto-mural', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, url_foto: base64, ordem: ordem }) });
+      var data = await r.json();
+      preview.removeChild(loadingDiv);
+      if (data.ok && data.foto) {
+        var div = document.createElement('div');
+        div.className = 'foto-preview-item';
+        div.id = 'foto-' + data.foto.id;
+        div.innerHTML = '<img src="' + base64 + '" alt="foto"><button class="btn-remover-foto" onclick="removerFoto(' + data.foto.id + ')">✕</button>';
+        preview.appendChild(div);
+        atualizarContadorFotos();
+      } else if (data.limite) { document.getElementById('popupComprarFotos').style.display = 'flex'; }
+    } catch(e) { preview.removeChild(loadingDiv); alert('Erro ao salvar foto. Tente novamente.'); }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function comprarFotos(pacote) {
+  document.getElementById('popupComprarFotos').style.display = 'none';
+  try {
+    var r = await fetch('/api/stripe/checkout', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, pacote: pacote }) });
+    var data = await r.json();
+    if (data.url) { window.location.href = data.url; } else { alert('Erro ao processar pagamento. Tente novamente.'); }
+  } catch(e) { alert('Erro de conexão. Tente novamente.'); }
+}
+
+async function removerFoto(id) {
+  if (!confirm('Remover esta foto?')) return;
+  await fetch('/api/remover-foto-mural/' + id, { method: 'DELETE' });
+  var el = document.getElementById('foto-' + id);
+  if (el) el.remove();
+  atualizarContadorFotos();
+}
+
+function renderRecadosAdmin(recados) {
+  var container = document.getElementById('recadosAdmin');
+  if (!recados || recados.length === 0) { container.innerHTML = '<div class="recados-vazio-admin">Nenhum recado ainda. Compartilhe sua Página do Evento!</div>'; return; }
+  container.innerHTML = recados.map(function(r) {
+    var data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '';
+    return '<div class="recado-admin-card" id="recado-' + r.id + '"><div class="recado-admin-info"><div class="recado-admin-nome">' + r.nome + '</div><div class="recado-admin-msg">"' + r.mensagem + '"</div><div class="recado-admin-data">' + data + '</div></div><button class="btn-excluir-recado" onclick="excluirRecado(' + r.id + ')">Excluir</button></div>';
+  }).join('');
+}
+
+async function excluirRecado(id) {
+  if (!confirm('Excluir este recado?')) return;
+  try { await fetch('/api/excluir-recado/' + id, { method: 'DELETE' }); var el = document.getElementById('recado-' + id); if (el) el.remove(); }
+  catch(e) { alert('Erro ao excluir. Tente novamente.'); }
+}
+
+function iniciarSalvar() {
+  if (!validarData()) return;
+  var dataStr = document.getElementById('dataEvento').value;
+  if (dataJaSalva) { salvarConfig(); return; }
+  if (dataStr) {
+    var dataEvento = new Date(dataStr + 'T00:00:00');
+    var expiracao = new Date(dataEvento);
+    expiracao.setDate(expiracao.getDate() + 7);
+    document.getElementById('popupDataExpiracao').innerHTML = '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</strong><br><br>⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br><span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'}) + '</span>';
+  } else {
+    document.getElementById('popupDataExpiracao').textContent = '⏰ Sua página ficará ativa por 6 meses após a criação.';
+  }
+  document.getElementById('popupConfirmacao').classList.add('show');
+}
+
+function fecharPopup() { document.getElementById('popupConfirmacao').classList.remove('show'); }
+
+async function confirmarSalvar() {
+  fecharPopup();
+  await salvarConfig();
+  if (!dataJaSalva) { document.getElementById('dataEvento').disabled = true; dataJaSalva = true; }
+}
+
+async function salvarConfig() {
+  var nome = document.getElementById('nomeCelebrante').value.trim();
+  var data = document.getElementById('dataEvento').value;
+  var mensagem = document.getElementById('mensagemCelebrante').value.trim();
+  var textoConvite = document.getElementById('textoConvite').value.trim();
+  var localEvento = document.getElementById('localEvento').value.trim();
+  var chavePix = document.getElementById('chavePix').value.trim();
+  var cofrinhoAtivo = document.getElementById('cofrinhoAtivo').checked;
+  try {
+    var r = await fetch('/api/salvar-config-premium', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        lista_id: listaId,
+        nome_celebrante: nome,
+        data_evento: data,
+        mensagem_celebrante: mensagem,
+        texto_convite: textoConvite,
+        usa_convite_padrao: usaConvitePadrao,
+        paleta: paletaSelecionada,
+        estilo_mural: estiloMural,
+        local_evento: localEvento,
+        chave_pix: chavePix,
+        cofrinho_ativo: cofrinhoAtivo
+      })
+    });
+    var result = await r.json();
+    if (result.ok) {
+      document.getElementById('salvoSucesso').style.display = 'block';
+      setTimeout(function() { document.getElementById('salvoSucesso').style.display = 'none'; }, 3000);
+    }
+  } catch(e) { alert('Erro ao salvar. Tente novamente.'); }
+}
+
+function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
+function verPagina() { window.open('/premium/' + listaId, '_blank'); }
+
+async function detectarEvento() {
+  try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
+  renderFrases();
+}
+
+async function init() { await detectarEvento(); await carregarConfig(); }
+init();
 </script>
 </body>
 </html>
