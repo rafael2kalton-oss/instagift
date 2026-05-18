@@ -93,6 +93,22 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .estilo-card.ativo .estilo-label { color: #C9A84C; }
 .estilo-preview { width: 100%; height: 60px; margin-bottom: 6px; border-radius: 6px; overflow: hidden; position: relative; background: #f5f5f5; }
 .estilo-label { font-size: 11px; font-weight: 600; color: #aaa; }
+/* ✦ COFRINHO PIX */
+.cofrinho-toggle { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; margin-bottom: 16px; cursor: pointer; transition: all 0.2s; }
+.cofrinho-toggle:hover { border-color: #C9A84C; }
+.cofrinho-toggle-label { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #2C2C2C; }
+.cofrinho-toggle-sub { font-size: 12px; color: #aaa; font-style: italic; margin-top: 2px; }
+.switch { position: relative; width: 48px; height: 26px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; inset: 0; background: #ddd; border-radius: 26px; transition: 0.3s; }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+input:checked + .slider { background: linear-gradient(135deg, #C9A84C, #A8722A); }
+input:checked + .slider:before { transform: translateX(22px); }
+.cofrinho-area { display: none; }
+.cofrinho-area.ativa { display: block; }
+.cofrinho-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; text-align: center; }
+.cofrinho-preview-titulo { font-family: 'Playfair Display', serif; color: #C9A84C; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.cofrinho-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.7; font-style: italic; }
 </style>
 </head>
 <body>
@@ -132,7 +148,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <p class="data-aviso" id="dataAviso"></p>
       <p class="data-erro" id="dataErro">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
     </div>
-    <!-- ✦ NOVO: Localização do evento -->
     <div class="campo">
       <label>📍 Local do evento <span style="color:#C9A84C;font-size:10px;">— opcional</span></label>
       <input type="text" id="localEvento" placeholder="Ex: Rua das Flores, 123 — São Paulo, SP">
@@ -190,11 +205,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <p class="upload-texto"><strong>Clique aqui</strong> para adicionar fotos</p>
     </div>
     <div class="fotos-preview" id="fotosPreview"></div>
-
     <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-top:20px;margin-bottom:12px;">Estilo do mural</p>
     <div class="estilo-opcoes">
-
-      <!-- NORMAL -->
       <div class="estilo-card ativo" id="estiloNormal" onclick="selecionarEstilo('normal')">
         <div class="estilo-preview">
           <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
@@ -207,55 +219,67 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
         </div>
         <div class="estilo-label">Normal</div>
       </div>
-
-      <!-- POLAROID -->
       <div class="estilo-card" id="estiloPolaroid" onclick="selecionarEstilo('polaroid')">
         <div class="estilo-preview">
           <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
             <rect width="80" height="60" fill="#f5f0e8"/>
-            <g transform="rotate(-5,20,30)">
-              <rect x="5" y="8" width="28" height="34" rx="1" fill="white" filter="url(#s)"/>
-              <rect x="7" y="10" width="24" height="20" fill="#C9A84C" opacity="0.8"/>
-              <circle cx="19" cy="8" r="3" fill="#e74c3c"/>
-            </g>
-            <g transform="rotate(4,55,28)">
-              <rect x="42" y="6" width="28" height="34" rx="1" fill="white" filter="url(#s)"/>
-              <rect x="44" y="8" width="24" height="20" fill="#A8722A" opacity="0.8"/>
-              <circle cx="56" cy="6" r="3" fill="#3498db"/>
-            </g>
+            <g transform="rotate(-5,20,30)"><rect x="5" y="8" width="28" height="34" rx="1" fill="white" filter="url(#s)"/><rect x="7" y="10" width="24" height="20" fill="#C9A84C" opacity="0.8"/><circle cx="19" cy="8" r="3" fill="#e74c3c"/></g>
+            <g transform="rotate(4,55,28)"><rect x="42" y="6" width="28" height="34" rx="1" fill="white" filter="url(#s)"/><rect x="44" y="8" width="24" height="20" fill="#A8722A" opacity="0.8"/><circle cx="56" cy="6" r="3" fill="#3498db"/></g>
             <defs><filter id="s"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter></defs>
           </svg>
         </div>
         <div class="estilo-label">Polaroid</div>
       </div>
-
-      <!-- COLAGEM -->
       <div class="estilo-card" id="estiloColagem" onclick="selecionarEstilo('colagem')">
         <div class="estilo-preview">
           <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
             <rect width="80" height="60" fill="#f5f0e8"/>
-            <g transform="rotate(-8,18,25)">
-              <rect x="4" y="8" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/>
-              <rect x="6" y="10" width="22" height="22" fill="#C9A84C" opacity="0.8"/>
-            </g>
-            <g transform="rotate(5,45,22)">
-              <rect x="30" y="4" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/>
-              <rect x="32" y="6" width="22" height="22" fill="#A8722A" opacity="0.8"/>
-            </g>
-            <g transform="rotate(-3,38,44)">
-              <rect x="20" y="28" width="26" height="28" rx="1" fill="white" filter="url(#s2)"/>
-              <rect x="22" y="30" width="22" height="20" fill="#C9A84C" opacity="0.6"/>
-            </g>
+            <g transform="rotate(-8,18,25)"><rect x="4" y="8" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/><rect x="6" y="10" width="22" height="22" fill="#C9A84C" opacity="0.8"/></g>
+            <g transform="rotate(5,45,22)"><rect x="30" y="4" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/><rect x="32" y="6" width="22" height="22" fill="#A8722A" opacity="0.8"/></g>
+            <g transform="rotate(-3,38,44)"><rect x="20" y="28" width="26" height="28" rx="1" fill="white" filter="url(#s2)"/><rect x="22" y="30" width="22" height="20" fill="#C9A84C" opacity="0.6"/></g>
             <defs><filter id="s2"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter></defs>
           </svg>
         </div>
         <div class="estilo-label">Colagem</div>
       </div>
-
     </div>
   </div>
 
-  <!-- 5. CONVITE -->
+  <!-- 5. COFRINHO PIX ✦ NOVO -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">💛</div>
+      <div>
+        <div class="secao-config-titulo">Cofrinho Pix</div>
+        <div class="secao-config-sub">Receba contribuições dos seus convidados</div>
+      </div>
+    </div>
+
+    <label class="cofrinho-toggle" onclick="toggleCofrinho()">
+      <div>
+        <div class="cofrinho-toggle-label">✦ Ativar Cofrinho Pix</div>
+        <div class="cofrinho-toggle-sub">Aparece como botão flutuante para os convidados</div>
+      </div>
+      <label class="switch" onclick="event.stopPropagation()">
+        <input type="checkbox" id="cofrinhoAtivo" onchange="toggleCofrinho()">
+        <span class="slider"></span>
+      </label>
+    </label>
+
+    <div class="cofrinho-area" id="cofrinhoArea">
+      <div class="campo">
+        <label>Sua chave Pix</label>
+        <input type="text" id="chavePix" placeholder="CPF, e-mail, celular ou chave aleatória">
+      </div>
+      <div class="cofrinho-preview">
+        <div class="cofrinho-preview-titulo">💛 Contribuir com nosso Cofrinho</div>
+        <p class="cofrinho-preview-texto">Quer tornar esse momento ainda mais especial? Qualquer contribuição é recebida com muito amor e gratidão ✦</p>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic;margin-top:10px;text-align:center;">É assim que vai aparecer para seus convidados</p>
+    </div>
+  </div>
+
+  <!-- 6. CONVITE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">✉️</div>
@@ -268,9 +292,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
       <div class="toggle-btn active" id="btnPadrao" onclick="toggleConvite(true)">✦ Usar texto padrão</div>
       <div class="toggle-btn" id="btnPersonalizado" onclick="toggleConvite(false)">✏️ Personalizar</div>
     </div>
-    <div id="convitePadraoInfo" style="font-size:13px; color:#aaa; font-style:italic; margin-bottom:12px;">
-      O texto será gerado automaticamente com o nome e data do evento.
-    </div>
+    <div id="convitePadraoInfo" style="font-size:13px; color:#aaa; font-style:italic; margin-bottom:12px;">O texto será gerado automaticamente com o nome e data do evento.</div>
     <div id="convitePersonalizadoArea" style="display:none;">
       <div class="campo">
         <label>Seu texto personalizado</label>
@@ -283,7 +305,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     </div>
   </div>
 
-  <!-- 6. RECADOS DOS CONVIDADOS -->
+  <!-- 7. RECADOS DOS CONVIDADOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💌</div>
@@ -328,9 +350,9 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
     <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:8px;">Limite de 10 fotos atingido!</h3>
     <p style="font-size:13px; color:#aaa; margin-bottom:24px; line-height:1.7; font-style:italic;">Seu plano gratuito inclui até 10 fotos. Para adicionar mais memórias ao seu mural, escolha um pacote:</p>
     <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
-      <button onclick="comprarFotos('5')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s;">📸 +5 fotos — R$ 9,90</button>
-      <button onclick="comprarFotos('10')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s;">📸 +10 fotos — R$ 19,90</button>
-      <button onclick="comprarFotos('25')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s;">📸 +25 fotos — R$ 49,90</button>
+      <button onclick="comprarFotos('5')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">📸 +5 fotos — R$ 9,90</button>
+      <button onclick="comprarFotos('10')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">📸 +10 fotos — R$ 19,90</button>
+      <button onclick="comprarFotos('25')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">📸 +25 fotos — R$ 49,90</button>
     </div>
     <button onclick="document.getElementById('popupComprarFotos').style.display='none'" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.2); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Agora não</button>
   </div>
@@ -354,6 +376,12 @@ var paletas = {
   roxo:     { nome: '✦ Roxo — sofisticado e mágico' },
   vermelho: { nome: '✦ Vermelho — apaixonante e marcante' }
 };
+
+function toggleCofrinho() {
+  var ativo = document.getElementById('cofrinhoAtivo').checked;
+  var area = document.getElementById('cofrinhoArea');
+  area.className = 'cofrinho-area' + (ativo ? ' ativa' : '');
+}
 
 function validarData() {
   var dataStr = document.getElementById('dataEvento').value;
@@ -392,9 +420,7 @@ function atualizarContadorFotos() {
 
 function selecionarPaleta(nome) {
   paletaSelecionada = nome;
-  document.querySelectorAll('.paleta-cor').forEach(function(el) {
-    el.classList.toggle('ativa', el.dataset.paleta === nome);
-  });
+  document.querySelectorAll('.paleta-cor').forEach(function(el) { el.classList.toggle('ativa', el.dataset.paleta === nome); });
   document.getElementById('paletaNome').textContent = paletas[nome].nome;
 }
 
@@ -420,7 +446,6 @@ async function carregarConfig() {
     var rl = await fetch('/api/limite-fotos/' + listaId);
     var dl = await rl.json();
     limiteFotos = dl.limite || 10;
-
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
     if (data.config) {
@@ -431,6 +456,11 @@ async function carregarConfig() {
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
       if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
       if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
+      if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
+      if (data.config.cofrinho_ativo) {
+        document.getElementById('cofrinhoAtivo').checked = true;
+        toggleCofrinho();
+      }
       if (data.config.data_evento && data.config.data_evento.trim() !== '') {
         document.getElementById('dataEvento').value = data.config.data_evento;
         document.getElementById('dataEvento').disabled = true;
@@ -438,20 +468,13 @@ async function carregarConfig() {
         validarData();
       }
     }
-    if (data.fotos && data.fotos.length > 0) {
-      fotosExistentes = data.fotos;
-      renderFotosExistentes(data.fotos);
-    }
-    if (data.recados && data.recados.length > 0) {
-      renderRecadosAdmin(data.recados);
-    }
+    if (data.fotos && data.fotos.length > 0) { fotosExistentes = data.fotos; renderFotosExistentes(data.fotos); }
+    if (data.recados && data.recados.length > 0) { renderRecadosAdmin(data.recados); }
     atualizarPreviewConvite();
     atualizarContadorFotos();
-
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
-      var fotosGanhas = urlParams.get('fotos');
-      alert('🎉 Parabéns! Você adicionou +' + fotosGanhas + ' fotos ao seu mural!');
+      alert('🎉 Parabéns! Você adicionou +' + urlParams.get('fotos') + ' fotos ao seu mural!');
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
   } catch(e) { console.error(e); }
@@ -459,8 +482,7 @@ async function carregarConfig() {
 
 function renderFrases() {
   var frases = frasesPorEvento[eventoAtual] || frasesPorEvento['outros'];
-  var container = document.getElementById('frasesContainer');
-  container.innerHTML = frases.map(function(f) {
+  document.getElementById('frasesContainer').innerHTML = frases.map(function(f) {
     return '<span class="frase-chip" onclick="usarFrase(\'' + f.replace(/'/g, "\\'") + '\')">' + f + '</span>';
   }).join('');
 }
@@ -550,9 +572,7 @@ async function uploadFoto(file) {
         div.innerHTML = '<img src="' + base64 + '" alt="foto"><button class="btn-remover-foto" onclick="removerFoto(' + data.foto.id + ')">✕</button>';
         preview.appendChild(div);
         atualizarContadorFotos();
-      } else if (data.limite) {
-        document.getElementById('popupComprarFotos').style.display = 'flex';
-      }
+      } else if (data.limite) { document.getElementById('popupComprarFotos').style.display = 'flex'; }
     } catch(e) { preview.removeChild(loadingDiv); alert('Erro ao salvar foto. Tente novamente.'); }
   };
   reader.readAsDataURL(file);
@@ -619,6 +639,8 @@ async function salvarConfig() {
   var mensagem = document.getElementById('mensagemCelebrante').value.trim();
   var textoConvite = document.getElementById('textoConvite').value.trim();
   var localEvento = document.getElementById('localEvento').value.trim();
+  var chavePix = document.getElementById('chavePix').value.trim();
+  var cofrinhoAtivo = document.getElementById('cofrinhoAtivo').checked;
   try {
     var r = await fetch('/api/salvar-config-premium', {
       method: 'POST',
@@ -632,7 +654,9 @@ async function salvarConfig() {
         usa_convite_padrao: usaConvitePadrao,
         paleta: paletaSelecionada,
         estilo_mural: estiloMural,
-        local_evento: localEvento
+        local_evento: localEvento,
+        chave_pix: chavePix,
+        cofrinho_ativo: cofrinhoAtivo
       })
     });
     var result = await r.json();
