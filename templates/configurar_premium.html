@@ -391,7 +391,6 @@ function selecionarPaleta(nome) {
     el.classList.toggle('ativa', el.dataset.paleta === nome);
   });
   document.getElementById('paletaNome').textContent = paletas[nome].nome;
-  localStorage.setItem('paleta_' + listaId, nome);
 }
 
 function selecionarEstilo(estilo) {
