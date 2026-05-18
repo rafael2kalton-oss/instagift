@@ -70,7 +70,7 @@ def resolver_redirect(link):
 def detectar_plataforma(link):
     l = link.lower()
     if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l: return "amazon"
-    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
+    if "magazinevoc e.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
     if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l: return "mercadolivre"
     if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l: return "shopee"
     if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l: return "shein"
@@ -562,7 +562,7 @@ def editar_produto(produto_id):
 def stripe_checkout():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
-    pacote = data.get("pacote", "").strip()  # "5", "10" ou "25"
+    pacote = data.get("pacote", "").strip()
     if not lista_id or pacote not in STRIPE_PACOTES:
         return jsonify({"erro": "Dados inválidos"}), 400
     info = STRIPE_PACOTES[pacote]
@@ -641,7 +641,8 @@ def salvar_config_premium():
         "nome_celebrante": data.get("nome_celebrante", ""),
         "data_evento": data.get("data_evento", ""),
         "paleta": data.get("paleta", "dourado"),
-        "estilo_mural": data.get("estilo_mural", "normal")
+        "estilo_mural": data.get("estilo_mural", "normal"),
+        "local_evento": data.get("local_evento", ""),  # ✦ NOVO: Localização do evento
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
@@ -656,7 +657,6 @@ def salvar_foto_mural():
     url_foto = data.get("url_foto", "").strip()
     ordem = data.get("ordem", 0)
     if not lista_id or not url_foto: return jsonify({"erro": "Dados inválidos"}), 400
-    # Busca limite dinâmico
     config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
     limite = 10
     if config and isinstance(config, list) and len(config) > 0:
