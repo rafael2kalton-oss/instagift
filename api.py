@@ -561,6 +561,12 @@ def stripe_sucesso():
                     sb_post("config_premium", atualizacao)
     except Exception as e:
         print("Stripe sucesso erro:", e)
+    # Registrar venda
+    try:
+        valor = float(STRIPE_PACOTES.get(pacote, {}).get("valor", "R$ 0").replace("R$ ", "").replace(",", "."))
+        sb_post("vendas", {"lista_id": lista_id, "pacote": pacote, "valor": valor})
+    except Exception as e:
+        print("Erro registrar venda:", e)
     return redirect(f"/configurar-premium/{lista_id}?compra=ok&fotos={STRIPE_PACOTES.get(pacote, {}).get('fotos', 0)}")
 
 @app.route("/api/limite-fotos/<lista_id>")
@@ -711,6 +717,126 @@ def verificar_expiracao(lista_id):
         return jsonify({"expirada": False, "motivo": None})
     except Exception as e:
         return jsonify({"expirada": False, "motivo": None})
+
+
+# ── MAGIC LINK ──
+
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/acesso/<lista_id>")
+def acesso_direto(lista_id):
+    """Link direto para configurar sem magic link — compatibilidade"""
+    return render_template("configurar_premium.html", lista_id=lista_id)
+
+@app.route("/api/enviar-magic-link", methods=["POST"])
+def enviar_magic_link():
+    data = request.json or {}
+    email = data.get("email", "").strip().lower()
+    if not email: return jsonify({"erro": "E-mail obrigatorio"}), 400
+    # Buscar lista por email
+    listas = sb_get("listas", f"email_aniversariante=eq.{email}")
+    if not listas or not isinstance(listas, list) or len(listas) == 0:
+        return jsonify({"erro": "Nenhuma lista encontrada com este e-mail"}), 404
+    lista = listas[0]
+    lista_id = lista["id"]
+    # Gerar token
+    token = str(uuid.uuid4())
+    expira_em = (datetime.utcnow() + timedelta(hours=24)).isoformat()
+    sb_post("magic_links", {"lista_id": lista_id, "email": email, "token": token, "expira_em": expira_em})
+    # Enviar email
+    link = request.host_url.rstrip("/") + f"/acesso-magico/{token}"
+    try:
+        resend.Emails.send({
+            "from": "InstaGift <onboarding@resend.dev>",
+            "to": email,
+            "subject": "✦ Seu link de acesso — InstaGift",
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <div style="font-family:Georgia,serif;font-size:28px;color:#C9A84C;font-weight:700;">InstaGift</div>
+                    <p style="color:#aaa;font-size:12px;letter-spacing:0.1em;">✦ &nbsp; ✦ &nbsp; ✦</p>
+                </div>
+                <h2 style="font-family:Georgia,serif;color:#2C2C2C;font-size:20px;margin-bottom:12px;text-align:center;">Seu link de acesso chegou!</h2>
+                <p style="color:#666;font-size:14px;line-height:1.7;margin-bottom:24px;text-align:center;font-style:italic;">Clique no botão abaixo para acessar e configurar sua Página do Evento. O link expira em 24 horas.</p>
+                <a href="{link}" style="display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px;border-radius:50px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:20px;">✦ Acessar minha página</a>
+                <p style="color:#bbb;font-size:11px;text-align:center;">Se você não solicitou este link, ignore este e-mail.</p>
+            </div>
+            """
+        })
+    except Exception as e:
+        print("Erro magic link email:", e)
+    return jsonify({"ok": True})
+
+@app.route("/acesso-magico/<token>")
+def acesso_magico(token):
+    links = sb_get("magic_links", f"token=eq.{token}&usado=eq.false")
+    if not links or not isinstance(links, list) or len(links) == 0:
+        return render_template("login.html")
+    link = links[0]
+    # Verificar expiracao
+    expira_em = datetime.fromisoformat(link["expira_em"].replace("Z",""))
+    if datetime.utcnow() > expira_em:
+        return render_template("login.html")
+    # Marcar como usado
+    sb_patch("magic_links", f"token=eq.{token}", {"usado": True})
+    lista_id = link["lista_id"]
+    return render_template("configurar_premium.html", lista_id=lista_id)
+
+# ── PRESIDENTE ──
+
+PRESIDENTE_TOKEN = "instagift-presidente"
+
+@app.route("/presidente/<token>")
+def presidente(token):
+    if token != PRESIDENTE_TOKEN:
+        return redirect("/")
+    return render_template("presidente.html")
+
+@app.route("/api/presidente/metricas")
+def presidente_metricas():
+    try:
+        listas = sb_get("listas", None) or []
+        paginas = sb_get("config_premium", None) or []
+        recados = sb_get("recados", None) or []
+        vendas = sb_get("vendas", None) or []
+        # Faturamento
+        faturamento = 0
+        vendas_por_pacote = {}
+        vendas_hoje = 0
+        hoje = datetime.utcnow().date()
+        if isinstance(vendas, list):
+            for v in vendas:
+                faturamento += float(v.get("valor", 0))
+                pacote = v.get("pacote", "")
+                vendas_por_pacote[pacote] = vendas_por_pacote.get(pacote, 0) + 1
+                criado = v.get("criado_em", "")
+                if criado and criado[:10] == str(hoje):
+                    vendas_hoje += 1
+        usuarios_recentes = []
+        if isinstance(listas, list):
+            usuarios_recentes = sorted(listas, key=lambda x: x.get("criado_em",""), reverse=True)[:10]
+        return jsonify({
+            "total_listas": len(listas) if isinstance(listas, list) else 0,
+            "paginas_ativas": len(paginas) if isinstance(paginas, list) else 0,
+            "total_recados": len(recados) if isinstance(recados, list) else 0,
+            "vendas_hoje": vendas_hoje,
+            "faturamento_total": round(faturamento, 2),
+            "vendas_por_pacote": vendas_por_pacote,
+            "usuarios_recentes": usuarios_recentes
+        })
+    except Exception as e:
+        print("Presidente metricas erro:", e)
+        return jsonify({"erro": str(e)}), 500
+
+@app.route("/api/presidente/vendas")
+def presidente_vendas():
+    try:
+        vendas = sb_get("vendas", "order=criado_em.desc&limit=50")
+        return jsonify(vendas if isinstance(vendas, list) else [])
+    except Exception as e:
+        return jsonify([])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
