@@ -144,20 +144,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
 
-/* ✦ CARROSSEL */
-.carrossel-wrapper { position: relative; width: 100%; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
-.carrossel-track { display: flex; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
-.carrossel-slide { min-width: 100%; aspect-ratio: 4/3; flex-shrink: 0; }
-.carrossel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.carrossel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(201,168,76,0.85); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; backdrop-filter: blur(4px); z-index: 10; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
-.carrossel-btn:hover { background: var(--cor-primaria); transform: translateY(-50%) scale(1.1); }
-.carrossel-btn-prev { left: 12px; }
-.carrossel-btn-next { right: 12px; }
-.carrossel-dots { display: flex; justify-content: center; gap: 8px; padding: 14px 0 4px; }
-.carrossel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(201,168,76,0.3); border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
-.carrossel-dot.ativo { background: var(--cor-primaria); transform: scale(1.3); }
-.carrossel-contador { position: absolute; bottom: 12px; right: 14px; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-family: 'Inter', sans-serif; backdrop-filter: blur(4px); }
-
 
 /* ✦ CONVITES VISUAIS */
 .convite-visual-wrapper { position: relative; width: 100%; margin-bottom: 20px; border-radius: 16px; overflow: hidden; }
@@ -215,6 +201,17 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .classico .convite-local-visual { color: rgba(245,237,216,0.7); }
 .floral .convite-local-visual { color: #999; }
 .livre .convite-local-visual { color: rgba(255,255,255,0.6); }
+
+
+/* ✦ CARROSSEL CROSSFADE */
+.carrossel-wrapper { position: relative; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.15); background: #000; aspect-ratio: 4/3; }
+.carrossel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; }
+.carrossel-slide.ativo { opacity: 1; }
+.carrossel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.carrossel-dots { display: flex; justify-content: center; gap: 8px; padding: 14px 0 4px; }
+.carrossel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(201,168,76,0.3); border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
+.carrossel-dot.ativo { background: var(--cor-primaria); transform: scale(1.3); }
+.carrossel-contador { position: absolute; bottom: 12px; right: 14px; background: rgba(0,0,0,0.45); color: #fff; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-family: 'Inter', sans-serif; z-index: 2; }
 
 </style>
 </head>
@@ -746,67 +743,48 @@ function formatarData(dataStr) { try { var d = new Date(dataStr + 'T00:00:00'); 
 function formatarDataHora(dataStr) { try { var d = new Date(dataStr); return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }); } catch(e) { return ''; } }
 
 
+
+var carrosselIndex = 0;
+var carrosselTimer = null;
+
 function renderMuralCarrossel(container, fotos) {
-  var html = '<div class="carrossel-wrapper" id="carrosselWrapper">' +
-    '<div class="carrossel-track" id="carrosselTrack">';
+  if (carrosselTimer) { clearInterval(carrosselTimer); carrosselTimer = null; }
+  carrosselIndex = 0;
+
+  var html = '<div class="carrossel-wrapper" id="carrosselWrapper">';
   fotos.forEach(function(f, idx) {
-    html += '<div class="carrossel-slide" onclick="abrirLightbox(\'' + f.url_foto + '\')"><img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="lazy"></div>';
+    html += '<div class="carrossel-slide' + (idx === 0 ? ' ativo' : '') + '" id="slide-' + idx + '" onclick="abrirLightbox(\'' + f.url_foto + '\')">' +
+      '<img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="' + (idx === 0 ? 'eager' : 'lazy') + '">' +
+      '</div>';
   });
-  html += '</div>' +
-    '<button class="carrossel-btn carrossel-btn-prev" onclick="carrosselAnterior(event)">&#8592;</button>' +
-    '<button class="carrossel-btn carrossel-btn-next" onclick="carrosselProximo(event)">&#8594;</button>' +
-    '<div class="carrossel-contador"><span id="carrosselAtual">1</span>/' + fotos.length + '</div>' +
-    '</div><div class="carrossel-dots" id="carrosselDots">';
+  html += '<div class="carrossel-contador"><span id="carrosselAtual">1</span>/' + fotos.length + '</div>';
+  html += '</div>';
+  html += '<div class="carrossel-dots" id="carrosselDots">';
   fotos.forEach(function(_, idx) {
     html += '<button class="carrossel-dot' + (idx === 0 ? ' ativo' : '') + '" onclick="irParaSlide(' + idx + ')"></button>';
   });
   html += '</div>';
   container.innerHTML = html;
 
-  // Touch/swipe
-  var track = document.getElementById('carrosselTrack');
-  var startX = 0;
-  track.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, {passive: true});
-  track.addEventListener('touchend', function(e) {
-    var diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) { diff > 0 ? carrosselProximo(null) : carrosselAnterior(null); }
-  }, {passive: true});
-}
-
-var carrosselIndex = 0;
-var carrosselTotal = 0;
-
-function atualizarCarrossel() {
-  var track = document.getElementById('carrosselTrack');
-  if (!track) return;
-  carrosselTotal = track.children.length;
-  track.style.transform = 'translateX(-' + (carrosselIndex * 100) + '%)';
-  var atual = document.getElementById('carrosselAtual');
-  if (atual) atual.textContent = carrosselIndex + 1;
-  document.querySelectorAll('.carrossel-dot').forEach(function(d, i) {
-    d.className = 'carrossel-dot' + (i === carrosselIndex ? ' ativo' : '');
-  });
-}
-
-function carrosselProximo(e) {
-  if (e) e.stopPropagation();
-  var track = document.getElementById('carrosselTrack');
-  if (!track) return;
-  carrosselIndex = (carrosselIndex + 1) % track.children.length;
-  atualizarCarrossel();
-}
-
-function carrosselAnterior(e) {
-  if (e) e.stopPropagation();
-  var track = document.getElementById('carrosselTrack');
-  if (!track) return;
-  carrosselIndex = (carrosselIndex - 1 + track.children.length) % track.children.length;
-  atualizarCarrossel();
+  if (fotos.length > 1) {
+    carrosselTimer = setInterval(function() {
+      var total = document.querySelectorAll('.carrossel-slide').length;
+      irParaSlide((carrosselIndex + 1) % total);
+    }, 3500);
+  }
 }
 
 function irParaSlide(idx) {
+  var slides = document.querySelectorAll('.carrossel-slide');
+  var dots = document.querySelectorAll('.carrossel-dot');
+  if (!slides.length) return;
+  slides.forEach(function(s) { s.classList.remove('ativo'); });
+  dots.forEach(function(d) { d.className = 'carrossel-dot'; });
   carrosselIndex = idx;
-  atualizarCarrossel();
+  if (slides[idx]) slides[idx].classList.add('ativo');
+  if (dots[idx]) dots[idx].classList.add('ativo');
+  var atual = document.getElementById('carrosselAtual');
+  if (atual) atual.textContent = idx + 1;
 }
 
 selecionarPresenca('confirmado');
