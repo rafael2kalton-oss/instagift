@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGift — Painel do Presidente</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; padding: 20px; }
+.header { display: flex; align-items: center; justify-content: space-between; max-width: 900px; margin: 0 auto 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.2); }
+.logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: #C9A84C; }
+.badge-presidente { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; letter-spacing: 0.06em; }
+.container { max-width: 900px; margin: 0 auto; }
+.grid-metricas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+@media(min-width:600px) { .grid-metricas { grid-template-columns: repeat(4, 1fr); } }
+.metrica-card { background: #1a1a1a; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 20px; text-align: center; }
+.metrica-valor { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; margin-bottom: 4px; }
+.metrica-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.06em; }
+.secao { background: #1a1a1a; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.secao-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #C9A84C; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.tabela { width: 100%; border-collapse: collapse; }
+.tabela th { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.tabela td { padding: 12px; font-size: 13px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.tabela tr:last-child td { border-bottom: none; }
+.tabela tr:hover td { background: rgba(201,168,76,0.04); }
+.badge-pacote { font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+.badge-celebracao { background: rgba(201,168,76,0.15); color: #C9A84C; }
+.badge-cofrinho { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.badge-fotos { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.badge-carrossel { background: rgba(167,139,250,0.15); color: #a78bfa; }
+.loading { text-align: center; padding: 40px; color: #555; font-style: italic; font-family: 'Playfair Display', serif; }
+.faturamento-destaque { background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(168,114,42,0.05)); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
+.faturamento-valor { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #C9A84C; }
+.faturamento-label { font-size: 12px; color: #888; margin-top: 4px; }
+.infra-barra-wrapper { background: #0D0D0D; border-radius: 8px; height: 10px; overflow: hidden; margin: 10px 0; }
+.infra-barra { height: 100%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 8px; transition: width 0.5s; }
+.status-ok { color: #22c55e; font-size: 12px; }
+.status-alerta { color: #f59e0b; font-size: 12px; }
+.status-critico { color: #ef4444; font-size: 12px; }
+.btn-atualizar { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.btn-atualizar:hover { background: rgba(201,168,76,0.2); }
+.lista-usuario { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.lista-usuario:last-child { border-bottom: none; }
+.usuario-email { font-size: 13px; color: #ccc; }
+.usuario-lista { font-size: 11px; color: #555; margin-top: 2px; }
+.usuario-data { font-size: 11px; color: #444; }
+.vazio { text-align: center; padding: 30px; color: #444; font-style: italic; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">InstaGift ✦</div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="btn-atualizar" onclick="carregarTudo()">↻ Atualizar</button>
+    <div class="badge-presidente">👑 PRESIDENTE</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- MÉTRICAS RÁPIDAS -->
+  <div class="grid-metricas">
+    <div class="metrica-card">
+      <div class="metrica-valor" id="totalListas">—</div>
+      <div class="metrica-label">📋 Listas criadas</div>
+    </div>
+    <div class="metrica-card">
+      <div class="metrica-valor" id="totalVendas">—</div>
+      <div class="metrica-label">💳 Vendas hoje</div>
+    </div>
+    <div class="metrica-card">
+      <div class="metrica-valor" id="totalPaginas">—</div>
+      <div class="metrica-label">🎉 Páginas ativas</div>
+    </div>
+    <div class="metrica-card">
+      <div class="metrica-valor" id="totalRecados">—</div>
+      <div class="metrica-label">💌 Recados</div>
+    </div>
+  </div>
+
+  <!-- FATURAMENTO -->
+  <div class="secao">
+    <div class="secao-titulo">💰 Faturamento</div>
+    <div class="faturamento-destaque">
+      <div class="faturamento-valor" id="faturamentoTotal">R$ 0,00</div>
+      <div class="faturamento-label">Faturamento bruto total</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;" id="faturamentoDetalhes">
+      <div style="background:#0D0D0D;border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#C9A84C;" id="vendasCelebracao">0</div>
+        <div style="font-size:11px;color:#555;margin-top:3px;">Pacote Celebração</div>
+      </div>
+      <div style="background:#0D0D0D;border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#fbbf24;" id="vendasCofrinho">0</div>
+        <div style="font-size:11px;color:#555;margin-top:3px;">Cofrinho Pix</div>
+      </div>
+      <div style="background:#0D0D0D;border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#60a5fa;" id="vendasFotos">0</div>
+        <div style="font-size:11px;color:#555;margin-top:3px;">Fotos Extras</div>
+      </div>
+      <div style="background:#0D0D0D;border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#a78bfa;" id="vendasCarrossel">0</div>
+        <div style="font-size:11px;color:#555;margin-top:3px;">Carrossel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENDAS RECENTES -->
+  <div class="secao">
+    <div class="secao-titulo">💳 Vendas Recentes</div>
+    <div id="vendasLista"><div class="loading">Carregando vendas...</div></div>
+  </div>
+
+  <!-- USUÁRIOS RECENTES -->
+  <div class="secao">
+    <div class="secao-titulo">👥 Usuários Recentes</div>
+    <div id="usuariosLista"><div class="loading">Carregando usuários...</div></div>
+  </div>
+
+</div>
+
+<script>
+async function carregarTudo() {
+  await Promise.all([carregarMetricas(), carregarVendas()]);
+}
+
+async function carregarMetricas() {
+  try {
+    var r = await fetch('/api/presidente/metricas');
+    var data = await r.json();
+    document.getElementById('totalListas').textContent = data.total_listas || 0;
+    document.getElementById('totalVendas').textContent = data.vendas_hoje || 0;
+    document.getElementById('totalPaginas').textContent = data.paginas_ativas || 0;
+    document.getElementById('totalRecados').textContent = data.total_recados || 0;
+    document.getElementById('faturamentoTotal').textContent = 'R$ ' + (data.faturamento_total || 0).toFixed(2).replace('.', ',');
+    document.getElementById('vendasCelebracao').textContent = data.vendas_por_pacote?.celebracao || 0;
+    document.getElementById('vendasCofrinho').textContent = data.vendas_por_pacote?.cofrinho || 0;
+    document.getElementById('vendasFotos').textContent = (data.vendas_por_pacote?.['5'] || 0) + (data.vendas_por_pacote?.['10'] || 0) + (data.vendas_por_pacote?.['25'] || 0);
+
+    // Usuarios recentes
+    var usuariosEl = document.getElementById('usuariosLista');
+    if (data.usuarios_recentes && data.usuarios_recentes.length > 0) {
+      usuariosEl.innerHTML = data.usuarios_recentes.map(function(u) {
+        return '<div class="lista-usuario"><div><div class="usuario-email">' + (u.email_aniversariante || 'Sem e-mail') + '</div><div class="usuario-lista">Lista: ' + u.id + '</div></div><div class="usuario-data">' + formatarData(u.criado_em) + '</div></div>';
+      }).join('');
+    } else {
+      usuariosEl.innerHTML = '<div class="vazio">Nenhum usuário ainda.</div>';
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function carregarVendas() {
+  try {
+    var r = await fetch('/api/presidente/vendas');
+    var data = await r.json();
+    var el = document.getElementById('vendasLista');
+    if (!data || data.length === 0) { el.innerHTML = '<div class="vazio">Nenhuma venda ainda.</div>'; return; }
+    var badges = { celebracao: 'badge-celebracao', cofrinho: 'badge-cofrinho', '5': 'badge-fotos', '10': 'badge-fotos', '25': 'badge-fotos' };
+    var nomes = { celebracao: 'Pacote Celebração', cofrinho: 'Cofrinho Pix', '5': '+5 Fotos', '10': '+10 Fotos', '25': '+25 Fotos' };
+    el.innerHTML = '<table class="tabela"><thead><tr><th>Data</th><th>Lista</th><th>Pacote</th><th>Valor</th></tr></thead><tbody>' +
+      data.map(function(v) {
+        var badge = badges[v.pacote] || 'badge-fotos';
+        var nome = nomes[v.pacote] || v.pacote;
+        return '<tr><td>' + formatarData(v.criado_em) + '</td><td style="font-size:11px;color:#555;">' + v.lista_id + '</td><td><span class="badge-pacote ' + badge + '">' + nome + '</span></td><td style="color:#C9A84C;font-weight:600;">R$ ' + parseFloat(v.valor).toFixed(2).replace('.', ',') + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  } catch(e) { console.error(e); }
+}
+
+function formatarData(dataStr) {
+  if (!dataStr) return '';
+  try { return new Date(dataStr).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  catch(e) { return dataStr; }
+}
+
+carregarTudo();
+</script>
+</body>
+</html>
