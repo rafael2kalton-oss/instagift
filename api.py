@@ -838,5 +838,42 @@ def presidente_vendas():
     except Exception as e:
         return jsonify([])
 
+
+@app.route("/api/presidente/paginas")
+def presidente_paginas():
+    try:
+        paginas = sb_get("config_premium", "order=criado_em.desc")
+        return jsonify(paginas if isinstance(paginas, list) else [])
+    except Exception as e:
+        return jsonify([])
+
+@app.route("/api/presidente/liberar-premium", methods=["POST"])
+def presidente_liberar_premium():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    limite_fotos = data.get("limite_fotos", 20)
+    cofrinho_ativo = data.get("cofrinho_ativo", False)
+    if not lista_id: return jsonify({"erro": "Lista ID obrigatorio"}), 400
+    config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    atualizacao = {"limite_fotos": limite_fotos, "cofrinho_ativo": cofrinho_ativo}
+    if config and isinstance(config, list) and len(config) > 0:
+        sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
+    else:
+        atualizacao["lista_id"] = lista_id
+        sb_post("config_premium", atualizacao)
+    return jsonify({"ok": True})
+
+@app.route("/api/presidente/excluir-pagina", methods=["POST"])
+def presidente_excluir_pagina():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    if not lista_id: return jsonify({"erro": "Lista ID obrigatorio"}), 400
+    sb_delete("config_premium", f"lista_id=eq.{lista_id}")
+    sb_delete("fotos_mural", f"lista_id=eq.{lista_id}")
+    sb_delete("recados", f"lista_id=eq.{lista_id}")
+    sb_delete("presencas", f"lista_id=eq.{lista_id}")
+    sb_delete("magic_links", f"lista_id=eq.{lista_id}")
+    return jsonify({"ok": True})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
