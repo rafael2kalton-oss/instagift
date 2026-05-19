@@ -209,6 +209,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .btn-whatsapp-convite { flex: 1; padding: 13px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .btn-whatsapp-convite:hover { transform: translateY(-2px); }
 
+
+/* ✦ LOCAL NO CONVITE */
+.convite-local-visual { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.06em; margin-top: 16px; opacity: 0.6; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.classico .convite-local-visual { color: rgba(245,237,216,0.7); }
+.floral .convite-local-visual { color: #999; }
+.livre .convite-local-visual { color: rgba(255,255,255,0.6); }
+
 </style>
 </head>
 <body>
@@ -352,7 +359,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
         </div>
         <div class="convite-data-visual" id="conviteDataVisual"></div>
         <div class="convite-texto-visual" id="conviteTextoVisual"></div>
-        <div class="convite-link-visual" id="conviteLinkVisual">🎁 Ver Lista de Presentes</div>
+        <div class="convite-local-visual" id="conviteLocalVisual" style="display:none;">📍 <span id="conviteLocalTexto"></span></div>
       </div>
       <div class="convite-tarja" id="conviteTarja" style="display:none;">
         <div class="convite-tarja-texto">InstaGift</div>
@@ -557,18 +564,37 @@ function renderConvite(config) {
     visual.className = 'convite-visual ' + estilo;
     if (estilo === 'livre' && imagemFundo) {
       visual.style.backgroundImage = 'url(' + imagemFundo + ')';
+      visual.style.backgroundSize = 'cover';
+      visual.style.backgroundPosition = 'center';
+    } else {
+      visual.style.backgroundImage = '';
     }
   }
 
   var tituloEl = document.getElementById('conviteTituloVisual');
   var dataEl = document.getElementById('conviteDataVisual');
   var textoEl = document.getElementById('conviteTextoVisual');
-  var linkEl = document.getElementById('conviteLinkVisual');
+
 
   if (tituloEl) tituloEl.textContent = nome;
   if (dataEl) dataEl.textContent = '📅 ' + dataStr;
   if (textoEl) textoEl.textContent = config.texto_convite && !config.usa_convite_padrao ? config.texto_convite : 'Venha celebrar esse momento especial conosco ✦';
-  if (linkEl) linkEl.textContent = '🎁 ' + link;
+  var localEvento = config.local_evento || '';
+  var localVisual = document.getElementById('conviteLocalVisual');
+  var localTexto = document.getElementById('conviteLocalTexto');
+  if (localVisual && localTexto) {
+    if (localEvento) {
+      localTexto.textContent = localEvento;
+      localVisual.style.display = 'flex';
+    } else {
+      localVisual.style.display = 'none';
+    }
+  }
+
+  // Montar texto WhatsApp com Maps
+  var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
+  conviteTextoFinal = (config.texto_convite && !config.usa_convite_padrao) ? config.texto_convite + mapsLink :
+    '🎉 Você está convidado!\n\n' + (config.nome_celebrante || 'Celebração Especial') + ' convida você para uma celebração especial.\n\n📅 Data: ' + dataStr + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
 
   // Tarja se sem produtos
   verificarTarja();
@@ -600,11 +626,28 @@ async function salvarConviteImagem() {
 }
 
 function _capturarConvite(el) {
-  html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(function(canvas) {
-    var link = document.createElement('a');
-    link.download = 'convite-instagift.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+  var config = dadosPremium.config || {};
+  var estilo = config.estilo_convite || 'classico';
+  var imagemFundo = config.imagem_fundo_convite || '';
+
+  // Para estilo livre com imagem, injeta inline antes de capturar
+  if (estilo === 'livre' && imagemFundo) {
+    el.style.backgroundImage = 'url(' + imagemFundo + ')';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  }
+
+  html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: estilo === 'classico' ? '#1a0f00' : estilo === 'floral' ? '#FFF8EC' : null,
+    logging: false
+  }).then(function(canvas) {
+    var a = document.createElement('a');
+    a.download = 'convite-instagift.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
   });
 }
 
