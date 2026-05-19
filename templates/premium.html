@@ -34,7 +34,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .nav-tab { flex: 1; min-width: 80px; padding: 16px 8px; text-align: center; font-size: 12px; font-weight: 600; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.03em; font-family: 'Inter', sans-serif; white-space: nowrap; }
 .nav-tab:hover { color: var(--cor-primaria); }
 .nav-tab.active { color: var(--cor-primaria); border-bottom-color: var(--cor-primaria); }
-.secao { display: none; max-width: 600px; margin: 0 auto; padding: 40px 16px 100px; }
+.secao { display: none; max-width: 600px; margin: 0 auto; padding: 40px 16px 120px; }
 .secao.ativa { display: block; animation: fadeUp 0.4s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .secao-ornamento { color: var(--cor-primaria); font-size: 12px; letter-spacing: 6px; text-align: center; margin-bottom: 12px; }
@@ -118,8 +118,29 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .status-nao-vai { background: rgba(239,68,68,0.1); color: #dc2626; }
 .presencas-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .presencas-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
-.btn-flutuante { position: fixed; bottom: 24px; right: 20px; left: 20px; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); z-index: 50; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; }
+
+/* ✦ BOTÕES FLUTUANTES DUPLOS */
+.btns-flutuantes { position: fixed; bottom: 24px; left: 20px; right: 20px; max-width: 500px; margin: 0 auto; display: flex; gap: 10px; z-index: 50; }
+.btn-flutuante { flex: 1; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px 10px; border-radius: 50px; font-size: 14px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; white-space: nowrap; }
 .btn-flutuante:hover { transform: translateY(-2px); }
+.btn-flutuante-unico { position: fixed; bottom: 24px; left: 20px; right: 20px; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); z-index: 50; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; }
+.btn-flutuante-unico:hover { transform: translateY(-2px); }
+
+/* ✦ POPUP COFRINHO */
+.popup-cofrinho { display: none; position: fixed; inset: 0; background: rgba(44,44,44,0.7); backdrop-filter: blur(6px); z-index: 200; align-items: flex-end; justify-content: center; padding: 20px; }
+.popup-cofrinho.show { display: flex; }
+.popup-cofrinho-box { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.4); border-radius: 24px 24px 20px 20px; padding: 32px 28px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 -8px 40px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.popup-cofrinho-icon { font-size: 44px; margin-bottom: 12px; }
+.popup-cofrinho-titulo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--cor-primaria); margin-bottom: 10px; }
+.popup-cofrinho-texto { font-family: 'Playfair Display', serif; font-style: italic; color: #F5EDD8; font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+.popup-cofrinho-chave-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.popup-cofrinho-chave { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 14px 18px; font-family: 'Inter', sans-serif; font-size: 15px; color: var(--cor-primaria); font-weight: 600; word-break: break-all; margin-bottom: 16px; letter-spacing: 0.02em; }
+.btn-copiar-pix { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.4); margin-bottom: 10px; }
+.btn-copiar-pix:hover { transform: translateY(-2px); }
+.btn-fechar-cofrinho { width: 100%; padding: 12px; background: transparent; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.pix-copiado { display: none; text-align: center; padding: 10px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; color: #4ade80; font-size: 13px; margin-bottom: 10px; }
+
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
 </style>
@@ -162,8 +183,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Mural de Memórias</h2>
   <p class="secao-sub">Momentos especiais que fazem parte dessa história</p>
-
-  <!-- ✦ CARD DE LOCALIZAÇÃO -->
   <div class="local-card" id="localCard" style="display:none;">
     <div class="local-icon">📍</div>
     <div class="local-info">
@@ -172,7 +191,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
       <a id="btnVerMaps" href="#" target="_blank" class="btn-ver-maps">🗺️ Ver no Maps</a>
     </div>
   </div>
-
   <div class="mensagem-card" id="mensagemCard" style="display:none;">
     <div class="mensagem-avatar" id="mensagemAvatar">✦</div>
     <div class="mensagem-nome" id="mensagemNome"></div>
@@ -228,29 +246,14 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <h2 class="secao-titulo">Lista de Presença</h2>
   <p class="secao-sub">Confirme sua presença no evento</p>
   <div class="presenca-contadores">
-    <div class="presenca-contador">
-      <div class="presenca-contador-num" id="totalConfirmados">0</div>
-      <div class="presenca-contador-label">✅ Confirmados</div>
-    </div>
-    <div class="presenca-contador">
-      <div class="presenca-contador-num" id="totalTalvez">0</div>
-      <div class="presenca-contador-label">🤔 Talvez</div>
-    </div>
-    <div class="presenca-contador">
-      <div class="presenca-contador-num" id="totalNaoVai">0</div>
-      <div class="presenca-contador-label">❌ Não vai</div>
-    </div>
+    <div class="presenca-contador"><div class="presenca-contador-num" id="totalConfirmados">0</div><div class="presenca-contador-label">✅ Confirmados</div></div>
+    <div class="presenca-contador"><div class="presenca-contador-num" id="totalTalvez">0</div><div class="presenca-contador-label">🤔 Talvez</div></div>
+    <div class="presenca-contador"><div class="presenca-contador-num" id="totalNaoVai">0</div><div class="presenca-contador-label">❌ Não vai</div></div>
   </div>
   <div class="form-presenca">
     <h3>✦ Confirme sua presença</h3>
-    <div class="form-field">
-      <label>Seu nome</label>
-      <input type="text" id="presencaNome" placeholder="Como você se chama?">
-    </div>
-    <div class="form-field">
-      <label>Número de acompanhantes</label>
-      <input type="number" id="presencaAcompanhantes" placeholder="0" min="0" max="10" value="0">
-    </div>
+    <div class="form-field"><label>Seu nome</label><input type="text" id="presencaNome" placeholder="Como você se chama?"></div>
+    <div class="form-field"><label>Número de acompanhantes</label><input type="number" id="presencaAcompanhantes" placeholder="0" min="0" max="10" value="0"></div>
     <div class="form-field">
       <label>Sua confirmação</label>
       <div class="presenca-opcoes">
@@ -262,14 +265,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <button class="btn-confirmar-presenca" onclick="confirmarPresenca()">✦ Confirmar presença</button>
     <div class="presenca-sucesso" id="presencaSucesso">🎉 Presença confirmada com sucesso!</div>
   </div>
-  <div class="secao-divider">
-    <div class="secao-divider-linha"></div>
-    <div class="secao-divider-icon">✦</div>
-    <div class="secao-divider-linha"></div>
-  </div>
-  <div id="presencasLista">
-    <div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div>
-  </div>
+  <div class="secao-divider"><div class="secao-divider-linha"></div><div class="secao-divider-icon">✦</div><div class="secao-divider-linha"></div></div>
+  <div id="presencasLista"><div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div></div>
 </div>
 
 <div class="secao" id="secao-convite">
@@ -284,7 +281,26 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">💚 Enviar pelo WhatsApp</button>
 </div>
 
-<button class="btn-flutuante" onclick="irParaPresentes()">🎁 Ver Lista de Presentes</button>
+<!-- ✦ BOTÕES FLUTUANTES — Um ou Dois dependendo do Cofrinho -->
+<button class="btn-flutuante-unico" id="btnFlutuanteUnico" onclick="irParaPresentes()">🎁 Ver Lista de Presentes</button>
+<div class="btns-flutuantes" id="btnsFlutuantesDuplos" style="display:none;">
+  <button class="btn-flutuante" onclick="irParaPresentes()">🎁 Ver Presentes</button>
+  <button class="btn-flutuante" onclick="abrirCofrinho()">💛 Contribuir com Pix</button>
+</div>
+
+<!-- ✦ POPUP COFRINHO PIX -->
+<div class="popup-cofrinho" id="popupCofrinho">
+  <div class="popup-cofrinho-box">
+    <div class="popup-cofrinho-icon">💛</div>
+    <div class="popup-cofrinho-titulo">Contribuir com nosso Cofrinho</div>
+    <p class="popup-cofrinho-texto">Quer tornar esse momento ainda mais especial? Qualquer contribuição é recebida com muito amor e gratidão ✦</p>
+    <div class="popup-cofrinho-chave-label">Chave Pix</div>
+    <div class="popup-cofrinho-chave" id="popupChavePix"></div>
+    <div class="pix-copiado" id="pixCopiado">✦ Chave Pix copiada com sucesso!</div>
+    <button class="btn-copiar-pix" onclick="copiarPix()">✦ Copiar chave Pix</button>
+    <button class="btn-fechar-cofrinho" onclick="fecharCofrinho()">Fechar</button>
+  </div>
+</div>
 
 <div class="lightbox" id="lightbox" onclick="fecharLightbox()">
   <button class="lightbox-fechar" onclick="fecharLightbox()">✕</button>
@@ -296,6 +312,7 @@ var listaId = "{{ lista_id }}";
 var dadosPremium = {};
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
+var chavePix = '';
 
 function aplicarPaleta(paleta) {
   var paletas = {
@@ -325,6 +342,14 @@ async function carregarPremium() {
 
     if (data.config && data.config.paleta) aplicarPaleta(data.config.paleta);
 
+    // ✦ Configura botões flutuantes conforme cofrinho ativo
+    if (data.config && data.config.cofrinho_ativo && data.config.chave_pix) {
+      chavePix = data.config.chave_pix;
+      document.getElementById('popupChavePix').textContent = chavePix;
+      document.getElementById('btnFlutuanteUnico').style.display = 'none';
+      document.getElementById('btnsFlutuantesDuplos').style.display = 'flex';
+    }
+
     renderHero(data.config);
     renderLocalEvento(data.config);
     renderMensagem(data.config);
@@ -350,10 +375,9 @@ function renderHero(config) {
 
 function renderLocalEvento(config) {
   if (!config || !config.local_evento || config.local_evento.trim() === '') return;
-  var card = document.getElementById('localCard');
   document.getElementById('localEndereco').textContent = config.local_evento;
   document.getElementById('btnVerMaps').href = 'https://www.google.com/maps/search/' + encodeURIComponent(config.local_evento);
-  card.style.display = 'flex';
+  document.getElementById('localCard').style.display = 'flex';
 }
 
 function renderMensagem(config) {
@@ -437,6 +461,16 @@ function renderConvite(config) {
   document.getElementById('conviteTexto').textContent = conviteTextoFinal;
 }
 
+function abrirCofrinho() { document.getElementById('popupCofrinho').classList.add('show'); }
+function fecharCofrinho() { document.getElementById('popupCofrinho').classList.remove('show'); document.getElementById('pixCopiado').style.display = 'none'; }
+
+function copiarPix() {
+  navigator.clipboard.writeText(chavePix).then(function() {
+    document.getElementById('pixCopiado').style.display = 'block';
+    setTimeout(function() { document.getElementById('pixCopiado').style.display = 'none'; }, 3000);
+  });
+}
+
 function selecionarPresenca(status) {
   presencaSelecionada = status;
   document.querySelectorAll('.presenca-opcao').forEach(function(el) { el.style.opacity = '0.4'; el.style.transform = 'scale(0.95)'; });
@@ -462,10 +496,7 @@ async function confirmarPresenca() {
 }
 
 async function carregarPresencas() {
-  try {
-    var r = await fetch('/api/presencas/' + listaId);
-    renderPresencas(await r.json());
-  } catch(e) { console.error(e); }
+  try { renderPresencas(await (await fetch('/api/presencas/' + listaId)).json()); } catch(e) { console.error(e); }
 }
 
 function renderPresencas(presencas) {
