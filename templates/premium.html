@@ -183,10 +183,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .floral .convite-link-visual { background: rgba(168,114,42,0.08); color: #A8722A; border: 1px solid rgba(168,114,42,0.2); }
 .livre .convite-link-visual { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
 
-/* ✦ TARJA */
-.convite-tarja { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); background: rgba(200,200,200,0.88); backdrop-filter: blur(4px); padding: 14px; text-align: center; z-index: 10; }
-.convite-tarja-texto { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #888; letter-spacing: 0.08em; text-transform: uppercase; }
-.convite-tarja-sub { font-size: 11px; color: #aaa; margin-top: 3px; font-family: 'Inter', sans-serif; }
 
 /* ✦ BOTÕES CONVITE */
 .convite-acoes { display: flex; gap: 10px; margin-bottom: 12px; }
@@ -358,10 +354,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
         <div class="convite-texto-visual" id="conviteTextoVisual"></div>
         <div class="convite-local-visual" id="conviteLocalVisual" style="display:none;">📍 <span id="conviteLocalTexto"></span></div>
       </div>
-      <div class="convite-tarja" id="conviteTarja" style="display:none;">
-        <div class="convite-tarja-texto">InstaGift</div>
-        <div class="convite-tarja-sub">Crie sua lista de presentes grátis</div>
-      </div>
+
     </div>
   </div>
 
@@ -591,19 +584,9 @@ function renderConvite(config) {
     '🎉 Você está convidado!\n\n' + (config.nome_celebrante || 'Celebração Especial') + ' convida você para uma celebração especial.\n\n📅 Data: ' + dataStr + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
 
   // Tarja se sem produtos
-  verificarTarja();
+
 }
 
-async function verificarTarja() {
-  try {
-    var r = await fetch('/api/produtos/' + listaId);
-    var produtos = await r.json();
-    var tarja = document.getElementById('conviteTarja');
-    if (tarja) {
-      tarja.style.display = (!produtos || produtos.length === 0) ? 'block' : 'none';
-    }
-  } catch(e) { console.error(e); }
-}
 
 async function compartilharWhatsApp() {
   var el = document.getElementById('conviteVisual');
