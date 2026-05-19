@@ -633,7 +633,7 @@ def salvar_config_premium():
     lista_id = data.get("lista_id", "").strip()
     if not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     config_existente = sb_get("config_premium", f"lista_id=eq.{lista_id}")
-    payload = {
+  payload = {
         "lista_id": lista_id,
         "mensagem_celebrante": data.get("mensagem_celebrante", ""),
         "texto_convite": data.get("texto_convite", ""),
@@ -642,7 +642,9 @@ def salvar_config_premium():
         "data_evento": data.get("data_evento", ""),
         "paleta": data.get("paleta", "dourado"),
         "estilo_mural": data.get("estilo_mural", "normal"),
-        "local_evento": data.get("local_evento", ""),  # ✦ NOVO: Localização do evento
+        "local_evento": data.get("local_evento", ""),
+        "chave_pix": data.get("chave_pix", ""),
+        "cofrinho_ativo": data.get("cofrinho_ativo", False),
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
