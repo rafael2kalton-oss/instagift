@@ -1,32 +1,24 @@
-import os
-import re
-import uuid
-import datetime
-from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify, redirect
-import requests
-import resend
-import stripe
+import uuid, re, requests, resend, stripe
 from bs4 import BeautifulSoup
+from datetime import datetime, timedelta
 
-app = Flask(__name__, template_folder="templates")
+app = Flask(_name_, template_folder="templates")
 
-# --- CONFIGURAÇÕES DE SEGURANÇA (VARIÁVEIS DE AMBIENTE COM FALLBACK) ---
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://xmivfkpywjbrcrkniqbu.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz")
-SCRAPER_KEY = os.environ.get("SCRAPER_KEY", "3388267b140bf86c58e9ab0c2057c124")
-RESEND_KEY = os.environ.get("RESEND_KEY", "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv")
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7")
-
-# --- IDENTIFICADORES DE AFILIADOS ---
+SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
+SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
+SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 SHOPEE_ID = "18374451025"
 MAGALU_ID = "magazinevitrinedodanilo"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
+RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
+STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
+STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7"
 
+# Pacotes de fotos
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
     "10": {"price_id": "price_1TXSBn41uxxrCBOGWfYbpFCt", "fotos": 10, "valor": "R$ 19,90"},
@@ -45,7 +37,6 @@ HEADERS_SB = {
 
 ml_token_cache = {"token": None}
 
-# --- FUNÇÕES AUXILIARES / SUPABASE API ---
 def sb_get(tabela, filtro=None):
     url = f"{SUPABASE_URL}/rest/v1/{tabela}"
     if filtro:
@@ -79,7 +70,7 @@ def resolver_redirect(link):
 def detectar_plataforma(link):
     l = link.lower()
     if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l: return "amazon"
-    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
+    if "magazinevoc e.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
     if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l: return "mercadolivre"
     if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l: return "shopee"
     if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l: return "shein"
@@ -321,13 +312,29 @@ def extrair_dados(link, plataforma):
 
 def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto=""):
     link_confirmacao = f"{base_url}/confirmar-compra/{token}"
-    link_btn = f'<a href="{link_produto}" style="display:block;background:#1a1a2e;color:#8A63D2;text-align:center;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px;border:1px solid rgba(138,99,210,0.3);">Acessar o presente novamente</a>' if link_produto else ""
+    link_btn = f'<a href="{link_produto}" style="display:block;background:#1a1a2e;color:#8A63D2;text-align:center;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px;border:1px solid rgba(138,99,210,0.3);">🛍️ Acessar o presente novamente</a>' if link_produto else ""
     try:
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_comprador,
-            "subject": "Confirme que voce comprou o presente!",
-            "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;'><h2 style='color:#8A63D2;'>Ola, {nome_comprador}!</h2><p style='color:#fff;font-weight:700;'>{nome_produto}</p>{link_btn}<a href='{link_confirmacao}' style='display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;'>Sim, eu comprei o presente!</a><p style='color:#444;font-size:12px;text-align:center;'>Com carinho, InstaGift</p></div>"
+            "subject": "🎁 Confirme que você comprou o presente!",
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <div style="font-size:48px;margin-bottom:8px;">🎁</div>
+                    <h2 style="color:#8A63D2;margin-bottom:4px;">Olá, {nome_comprador}!</h2>
+                    <p style="color:#666;font-size:13px;">Sua reserva está confirmada</p>
+                </div>
+                <div style="background:#1a1a1a;border-radius:12px;padding:16px;margin-bottom:24px;">
+                    <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Presente reservado</p>
+                    <p style="color:#fff;font-weight:700;font-size:16px;">{nome_produto}</p>
+                </div>
+                <p style="color:#aaa;margin-bottom:16px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. 💜</p>
+                {link_btn}
+                <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
+                <p style="color:#444;font-size:12px;text-align:center;">Com carinho, InstaGift 💜</p>
+            </div>
+            """
         })
     except Exception as e:
         print("Erro email comprador:", e)
@@ -337,13 +344,27 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_aniversariante,
-            "subject": "Voce ganhou um presente!",
-            "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;'><h2 style='color:#8A63D2;'>Que surpresa incrivel!</h2><p style='color:#fff;font-weight:700;'>{nome_produto}</p><p style='color:#888;'>presenteado por {nome_comprador}</p></div>"
+            "subject": "🎉 Você ganhou um presente!",
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
+                <div style="text-align:center;margin-bottom:28px;">
+                    <div style="font-size:56px;margin-bottom:12px;">🎉</div>
+                    <h2 style="color:#8A63D2;font-size:22px;margin-bottom:6px;">Que surpresa incrível!</h2>
+                </div>
+                <div style="background:linear-gradient(135deg,rgba(138,99,210,0.15),rgba(176,136,245,0.08));border:1px solid rgba(138,99,210,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px;">
+                    <p style="color:#fff;font-weight:700;font-size:18px;margin-bottom:12px;">{nome_produto}</p>
+                    <p style="color:#888;font-size:13px;">presenteado por</p>
+                    <p style="color:#fff;font-weight:600;font-size:16px;margin-top:4px;">{nome_comprador}</p>
+                </div>
+                <p style="color:#444;font-size:12px;text-align:center;">Com muito carinho, InstaGift 💜</p>
+            </div>
+            """
         })
     except Exception as e:
         print("Erro email aniversariante:", e)
 
-# --- ROTAS WEB / RENDER TEMPLATES ---
+# ── ROTAS ──
+
 @app.route("/")
 def index():
     return render_template("criar_story.html")
@@ -361,7 +382,6 @@ def lista_page(lista_id):
 def vitrine(lista_id):
     return render_template("vitrine.html", lista_id=lista_id)
 
-# --- ROTAS DA API ---
 @app.route("/api/lista-info/<lista_id>")
 def lista_info(lista_id):
     lista = sb_get("listas", f"id=eq.{lista_id}")
@@ -398,7 +418,7 @@ def adicionar_produto():
     data = request.json
     link = data.get("link", "").strip()
     lista_id = data.get("lista_id", "").strip()
-    if not link or not lista_id: return jsonify({"erro": "Dados invalidos"}), 400
+    if not link or not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     link = resolver_redirect(link)
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
@@ -408,7 +428,10 @@ def adicionar_produto():
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
-    produto = sb_post("produtos", {"lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem, "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0})
+    produto = sb_post("produtos", {
+        "lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem,
+        "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0
+    })
     p = produto[0] if isinstance(produto, list) else produto
     return jsonify({"ok": True, "produto": p, "manual": precisa_manual, "plataforma": plataforma})
 
@@ -424,7 +447,10 @@ def remover_produto(produto_id):
 
 @app.route("/api/liberar-produto/<int:produto_id>", methods=["POST"])
 def liberar_produto(produto_id):
-    sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 0, "token_confirmacao": None, "reservado_em": None, "nome_comprador": None, "email_comprador": None})
+    sb_patch("produtos", f"id=eq.{produto_id}", {
+        "reservado": 0, "token_confirmacao": None,
+        "reservado_em": None, "nome_comprador": None, "email_comprador": None
+    })
     return jsonify({"ok": True})
 
 @app.route("/api/adicionar-produto-manual", methods=["POST"])
@@ -436,12 +462,15 @@ def adicionar_produto_manual():
     preco = data.get("preco", "").strip()
     imagem_base64 = data.get("imagem_base64", "")
     plataforma = data.get("plataforma", "outro")
-    if not link or not lista_id: return jsonify({"erro": "Dados invalidos"}), 400
+    if not link or not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     link_afiliado = injetar_afiliado(link, plataforma)
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
-    produto = sb_post("produtos", {"lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem_base64, "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0})
+    produto = sb_post("produtos", {
+        "lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem_base64,
+        "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0
+    })
     if isinstance(produto, list): return jsonify({"ok": True, "produto": produto[0]})
     return jsonify({"ok": True, "produto": produto})
 
@@ -451,15 +480,18 @@ def reservar(produto_id):
     nome_comprador = data.get("nome", "").strip()
     email_comprador = data.get("email", "").strip()
     if not nome_comprador or not email_comprador:
-        return jsonify({"erro": "Nome e e-mail obrigatorios"}), 400
+        return jsonify({"erro": "Nome e e-mail obrigatórios"}), 400
     produtos = sb_get("produtos", f"id=eq.{produto_id}")
     if not produtos or not isinstance(produtos, list):
-        return jsonify({"erro": "Produto nao encontrado"}), 404
+        return jsonify({"erro": "Produto não encontrado"}), 404
     if produtos[0].get("reservado"):
-        return jsonify({"erro": "Ja reservado"}), 400
+        return jsonify({"erro": "Já reservado"}), 400
     token = str(uuid.uuid4())
     agora = datetime.utcnow().isoformat()
-    sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 1, "token_confirmacao": token, "reservado_em": agora, "nome_comprador": nome_comprador, "email_comprador": email_comprador})
+    sb_patch("produtos", f"id=eq.{produto_id}", {
+        "reservado": 1, "token_confirmacao": token,
+        "reservado_em": agora, "nome_comprador": nome_comprador, "email_comprador": email_comprador
+    })
     nome_produto = produtos[0].get("nome", "Produto")
     link_produto = produtos[0].get("link_afiliado", "")
     base_url = request.host_url.rstrip('/')
@@ -470,20 +502,23 @@ def reservar(produto_id):
 def confirmar_compra(token):
     produtos = sb_get("produtos", f"token_confirmacao=eq.{token}")
     if not produtos or not isinstance(produtos, list):
-        return "<h2>Link invalido ou expirado.</h2>", 404
+        return "<h2>Link inválido ou expirado.</h2>", 404
     produto = produtos[0]
     reservado_em = produto.get("reservado_em")
     if reservado_em:
         dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
         if datetime.utcnow() > dt + timedelta(hours=3):
-            sb_patch("produtos", f"id=eq.{produto['id']}", {"reservado": 0, "token_confirmacao": None, "reservado_em": None, "nome_comprador": None, "email_comprador": None})
+            sb_patch("produtos", f"id=eq.{produto['id']}", {
+                "reservado": 0, "token_confirmacao": None,
+                "reservado_em": None, "nome_comprador": None, "email_comprador": None
+            })
             return render_template("confirmacao.html", status="expirado")
     sb_patch("produtos", f"id=eq.{produto['id']}", {"reservado": 2, "token_confirmacao": None})
     lista = sb_get("listas", f"id=eq.{produto['lista_id']}")
     if lista and isinstance(lista, list):
         email_aniversariante = lista[0].get("email_aniversariante")
         if email_aniversariante:
-            enviar_email_aniversariante(email_aniversariante, produto.get("nome_comprador", "Alguem"), produto.get("nome", "Produto"))
+            enviar_email_aniversariante(email_aniversariante, produto.get("nome_comprador", "Alguém"), produto.get("nome", "Produto"))
     return render_template("confirmacao.html", status="confirmado", nome_produto=produto.get("nome", "Produto"))
 
 @app.route("/api/limpar-reservas-expiradas", methods=["POST"])
@@ -499,7 +534,10 @@ def limpar_reservas_expiradas():
             if reservado_em:
                 dt_reserva = datetime.fromisoformat(reservado_em.replace('Z', ''))
                 if dt_reserva < prazo_limite:
-                    sb_patch("produtos", f"id=eq.{p['id']}", {"reservado": 0, "token_confirmacao": None, "reservado_em": None, "nome_comprador": None, "email_comprador": None})
+                    sb_patch("produtos", f"id=eq.{p['id']}", {
+                        "reservado": 0, "token_confirmacao": None,
+                        "reservado_em": None, "nome_comprador": None, "email_comprador": None
+                    })
                     liberados += 1
         return jsonify({"status": "sucesso", "liberados": liberados}), 200
     except Exception as e:
@@ -518,14 +556,15 @@ def editar_produto(produto_id):
     if atualizacao: sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
     return jsonify({"ok": True})
 
-# --- MÓDULO STRIPE E MONETIZAÇÃO ---
+# ── STRIPE ──
+
 @app.route("/api/stripe/checkout", methods=["POST"])
 def stripe_checkout():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
     pacote = data.get("pacote", "").strip()
     if not lista_id or pacote not in STRIPE_PACOTES:
-        return jsonify({"erro": "Dados invalidos"}), 400
+        return jsonify({"erro": "Dados inválidos"}), 400
     info = STRIPE_PACOTES[pacote]
     base_url = request.host_url.rstrip('/')
     try:
@@ -555,7 +594,8 @@ def stripe_sucesso():
             fotos_extras = STRIPE_PACOTES[pacote]["fotos"]
             config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
             if config and isinstance(config, list) and len(config) > 0:
-                novo_limite = config[0].get("limite_fotos", 10) + fotos_extras
+                limite_atual = config[0].get("limite_fotos", 10)
+                novo_limite = limite_atual + fotos_extras
                 sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"limite_fotos": novo_limite})
             else:
                 sb_post("config_premium", {"lista_id": lista_id, "limite_fotos": 10 + fotos_extras})
@@ -569,6 +609,8 @@ def get_limite_fotos(lista_id):
     if config and isinstance(config, list) and len(config) > 0:
         return jsonify({"limite": config[0].get("limite_fotos", 10)})
     return jsonify({"limite": 10})
+
+# ── ROTAS PREMIUM ──
 
 @app.route("/configurar-premium/<lista_id>")
 def configurar_premium(lista_id):
@@ -589,7 +631,7 @@ def get_config_premium(lista_id):
 def salvar_config_premium():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
-    if not lista_id: return jsonify({"erro": "Dados invalidos"}), 400
+    if not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
     config_existente = sb_get("config_premium", f"lista_id=eq.{lista_id}")
     payload = {
         "lista_id": lista_id,
@@ -600,9 +642,7 @@ def salvar_config_premium():
         "data_evento": data.get("data_evento", ""),
         "paleta": data.get("paleta", "dourado"),
         "estilo_mural": data.get("estilo_mural", "normal"),
-        "local_evento": data.get("local_evento", ""),
-        "chave_pix": data.get("chave_pix", ""),
-        "cofrinho_ativo": data.get("cofrinho_ativo", False),
+        "local_evento": data.get("local_evento", ""),  # ✦ NOVO: Localização do evento
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
@@ -616,7 +656,7 @@ def salvar_foto_mural():
     lista_id = data.get("lista_id", "").strip()
     url_foto = data.get("url_foto", "").strip()
     ordem = data.get("ordem", 0)
-    if not lista_id or not url_foto: return jsonify({"erro": "Dados invalidos"}), 400
+    if not lista_id or not url_foto: return jsonify({"erro": "Dados inválidos"}), 400
     config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
     limite = 10
     if config and isinstance(config, list) and len(config) > 0:
@@ -652,7 +692,6 @@ def listar_recados(lista_id):
     recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
     return jsonify(recados if isinstance(recados, list) else [])
 
-# --- CORREÇÃO DA ROTA DE PRESENÇA (TRUNCADA ANTERIORMENTE) ---
 @app.route("/api/salvar-presenca", methods=["POST"])
 def salvar_presenca():
     data = request.json or {}
@@ -660,17 +699,70 @@ def salvar_presenca():
     nome = data.get("nome", "").strip()
     status = data.get("status", "confirmado")
     acompanhantes = data.get("acompanhantes", 0)
-    
-    if not lista_id or not nome: 
-        return jsonify({"erro": "Dados invalidos"}), 400
-        
-    presenca = sb_post("presencas", {
-        "lista_id": lista_id, 
-        "nome": nome, 
-        "status": status, 
-        "acompanhantes": acompanhantes
-    })
+    if not lista_id or not nome: return jsonify({"erro": "Dados inválidos"}), 400
+    presenca = sb_post("presencas", {"lista_id": lista_id, "nome": nome, "status": status, "acompanhantes": acompanhantes})
+    try:
+        lista = sb_get("listas", f"id=eq.{lista_id}")
+        config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+        if lista and isinstance(lista, list) and lista[0].get("email_aniversariante"):
+            email_dest = lista[0]["email_aniversariante"]
+            nome_evento = config[0].get("nome_celebrante", "seu evento") if config and isinstance(config, list) else "seu evento"
+            status_label = "✅ Confirmou presença" if status == "confirmado" else "🤔 Talvez compareça" if status == "talvez" else "❌ Não vai comparecer"
+            acomp_texto = f" com {acompanhantes} acompanhante(s)" if acompanhantes > 0 else ""
+            resend.Emails.send({
+                "from": "InstaGift <onboarding@resend.dev>",
+                "to": email_dest,
+                "subject": f"🎉 Nova confirmação de presença — {nome_evento}",
+                "html": f"""
+                <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);">
+                    <div style="text-align:center;margin-bottom:24px;">
+                        <div style="font-size:48px;margin-bottom:8px;">🎉</div>
+                        <h2 style="color:#C9A84C;font-family:'Georgia',serif;margin-bottom:4px;">Nova confirmação!</h2>
+                        <p style="color:#aaa;font-size:13px;font-style:italic;">{nome_evento}</p>
+                    </div>
+                    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid rgba(201,168,76,0.2);">
+                        <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Convidado</p>
+                        <p style="color:#2C2C2C;font-weight:700;font-size:18px;margin-bottom:8px;">{nome}{acomp_texto}</p>
+                        <p style="color:#C9A84C;font-size:14px;font-weight:600;">{status_label}</p>
+                    </div>
+                    <p style="color:#444;font-size:12px;text-align:center;font-style:italic;">Com carinho, InstaGift ✦</p>
+                </div>
+                """
+            })
+    except Exception as e:
+        print("Erro email presença:", e)
     return jsonify({"ok": True, "presenca": presenca[0] if isinstance(presenca, list) else presenca})
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+@app.route("/api/presencas/<lista_id>")
+def listar_presencas(lista_id):
+    presencas = sb_get("presencas", f"lista_id=eq.{lista_id}&order=criado_em.asc")
+    return jsonify(presencas if isinstance(presencas, list) else [])
+
+@app.route("/premium/<lista_id>")
+def premium(lista_id):
+    return render_template("premium.html", lista_id=lista_id)
+
+@app.route("/api/verificar-expiracao/<lista_id>")
+def verificar_expiracao(lista_id):
+    try:
+        config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+        if not config or not isinstance(config, list) or len(config) == 0:
+            return jsonify({"expirada": False, "motivo": None})
+        cfg = config[0]
+        data_evento_str = cfg.get("data_evento")
+        criado_em_str = cfg.get("criado_em")
+        hoje = datetime.utcnow()
+        if data_evento_str:
+            data_evento = datetime.fromisoformat(data_evento_str)
+            if hoje > data_evento + timedelta(days=7):
+                return jsonify({"expirada": True, "motivo": "evento_encerrado"})
+        if criado_em_str:
+            criado_em = datetime.fromisoformat(criado_em_str.replace('Z', ''))
+            if hoje > criado_em + timedelta(days=180):
+                return jsonify({"expirada": True, "motivo": "prazo_expirado"})
+        return jsonify({"expirada": False, "motivo": None})
+    except Exception as e:
+        return jsonify({"expirada": False, "motivo": None})
+
+if _name_ == "_main_":
+    app.run(host="0.0.0.0", port=10000, debug=False)
