@@ -109,6 +109,22 @@ input:checked + .slider:before { transform: translateX(22px); }
 .cofrinho-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; text-align: center; }
 .cofrinho-preview-titulo { font-family: 'Playfair Display', serif; color: #C9A84C; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .cofrinho-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.7; font-style: italic; }
+
+/* ✦ ESTILOS DE CONVITE */
+.convite-estilos { display: flex; gap: 10px; margin-bottom: 20px; }
+.convite-estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: #fff; }
+.convite-estilo-card.ativo { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
+.convite-estilo-thumb { width: 100%; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; padding: 6px; line-height: 1.4; }
+.convite-estilo-thumb.classico { background: linear-gradient(135deg, #2C1A00, #1a0f00); color: #C9A84C; font-family: 'Playfair Display', serif; font-style: italic; }
+.convite-estilo-thumb.floral { background: linear-gradient(135deg, #FFF8EC, #F5EDD8); color: #A8722A; font-family: 'Playfair Display', serif; font-style: italic; border-bottom: 1px solid rgba(201,168,76,0.2); }
+.convite-estilo-thumb.livre { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; font-family: 'Inter', sans-serif; font-size: 9px; }
+.convite-estilo-nome { font-size: 11px; font-weight: 600; color: #aaa; text-align: center; padding: 6px 4px; }
+.convite-estilo-card.ativo .convite-estilo-nome { color: #C9A84C; }
+.upload-fundo-area { border: 2px dashed rgba(201,168,76,0.3); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; display: none; }
+.upload-fundo-area.visivel { display: block; }
+.upload-fundo-area:hover { border-color: #C9A84C; }
+.upload-fundo-preview { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
+
 </style>
 </head>
 <body>
@@ -299,18 +315,42 @@ input:checked + .slider:before { transform: translateX(22px); }
       <div class="secao-config-icon">✉️</div>
       <div>
         <div class="secao-config-titulo">Convite Digital</div>
-        <div class="secao-config-sub">Para enviar pelo WhatsApp</div>
+        <div class="secao-config-sub">Escolha o estilo e personalize</div>
       </div>
     </div>
-    <div class="toggle-group">
-      <div class="toggle-btn active" id="btnPadrao" onclick="toggleConvite(true)">✦ Usar texto padrão</div>
+
+    <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-bottom:12px;">Estilo do convite</p>
+    <div class="convite-estilos">
+      <div class="convite-estilo-card ativo" id="estiloConviteClassico" onclick="selecionarEstiloConvite('classico')">
+        <div class="convite-estilo-thumb classico">✦<br>Elegante<br>& Sofisticado</div>
+        <div class="convite-estilo-nome">Clássico</div>
+      </div>
+      <div class="convite-estilo-card" id="estiloConviteFloral" onclick="selecionarEstiloConvite('floral')">
+        <div class="convite-estilo-thumb floral">❀<br>Delicado<br>& Romântico</div>
+        <div class="convite-estilo-nome">Floral</div>
+      </div>
+      <div class="convite-estilo-card" id="estiloConviteLivre" onclick="selecionarEstiloConvite('livre')">
+        <div class="convite-estilo-thumb livre">🖼️<br>Sua foto<br>de fundo</div>
+        <div class="convite-estilo-nome">Livre</div>
+      </div>
+    </div>
+
+    <div class="upload-fundo-area" id="uploadFundoArea" onclick="document.getElementById('inputFundoConvite').click()">
+      <input type="file" id="inputFundoConvite" accept="image/*" style="display:none" onchange="processarFundoConvite(event)">
+      <div style="font-size:24px;margin-bottom:6px;">🖼️</div>
+      <p style="font-size:13px;color:#aaa;font-family:'Playfair Display',serif;font-style:italic;"><strong style="color:#C9A84C;font-style:normal;">Clique aqui</strong> para escolher a foto de fundo</p>
+      <img id="fundoConvitePreview" class="upload-fundo-preview" src="" alt="preview">
+    </div>
+
+    <div class="toggle-group" style="margin-top:4px;">
+      <div class="toggle-btn active" id="btnPadrao" onclick="toggleConvite(true)">✦ Texto padrão</div>
       <div class="toggle-btn" id="btnPersonalizado" onclick="toggleConvite(false)">✏️ Personalizar</div>
     </div>
-    <div id="convitePadraoInfo" style="font-size:13px; color:#aaa; font-style:italic; margin-bottom:12px;">O texto será gerado automaticamente com o nome e data do evento.</div>
+    <div id="convitePadraoInfo" style="font-size:13px; color:#aaa; font-style:italic; margin-bottom:12px;">Gerado automaticamente com nome e data do evento.</div>
     <div id="convitePersonalizadoArea" style="display:none;">
       <div class="campo">
         <label>Seu texto personalizado</label>
-        <textarea id="textoConvite" rows="6" placeholder="Escreva o texto do seu convite aqui..."></textarea>
+        <textarea id="textoConvite" rows="5" placeholder="Escreva o texto do seu convite aqui..."></textarea>
       </div>
     </div>
     <div class="convite-preview" id="convitePreview">
@@ -374,6 +414,8 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 <script>
 var listaId = "{{ lista_id }}";
+var estiloConviteSelecionado = 'classico';
+var imagemFundoConviteBase64 = '';
 var usaConvitePadrao = true;
 var fotosExistentes = [];
 var eventoAtual = 'aniversario';
@@ -470,6 +512,12 @@ async function carregarConfig() {
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
       if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
       if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
+      if (data.config.estilo_convite) selecionarEstiloConvite(data.config.estilo_convite);
+      if (data.config.imagem_fundo_convite) {
+        imagemFundoConviteBase64 = data.config.imagem_fundo_convite;
+        var prev = document.getElementById('fundoConvitePreview');
+        if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
+      }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
       if (data.config.cofrinho_ativo) {
         document.getElementById('cofrinhoAtivo').checked = true;
@@ -492,6 +540,31 @@ async function carregarConfig() {
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
   } catch(e) { console.error(e); }
+}
+
+
+function selecionarEstiloConvite(estilo) {
+  estiloConviteSelecionado = estilo;
+  ['classico','floral','livre'].forEach(function(e) {
+    var el = document.getElementById('estiloConvite' + e.charAt(0).toUpperCase() + e.slice(1));
+    if (el) el.className = 'convite-estilo-card' + (e === estilo ? ' ativo' : '');
+  });
+  var uploadArea = document.getElementById('uploadFundoArea');
+  if (uploadArea) uploadArea.className = 'upload-fundo-area' + (estilo === 'livre' ? ' visivel' : '');
+  atualizarPreviewConvite();
+}
+
+function processarFundoConvite(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    imagemFundoConviteBase64 = ev.target.result;
+    var preview = document.getElementById('fundoConvitePreview');
+    if (preview) { preview.src = imagemFundoConviteBase64; preview.style.display = 'block'; }
+    atualizarPreviewConvite();
+  };
+  reader.readAsDataURL(file);
 }
 
 function renderFrases() {
@@ -669,6 +742,8 @@ async function salvarConfig() {
         paleta: paletaSelecionada,
         estilo_mural: estiloMural,
         local_evento: localEvento,
+        estilo_convite: estiloConviteSelecionado,
+        imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
         cofrinho_ativo: cofrinhoAtivo
       })
