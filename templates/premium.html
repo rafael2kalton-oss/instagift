@@ -368,10 +368,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     </div>
   </div>
 
-  <div class="convite-acoes">
-    <button class="btn-salvar-convite" onclick="salvarConviteImagem()">📥 Salvar imagem</button>
-    <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">💚 WhatsApp</button>
-  </div>
+  <button class="btn-whatsapp-convite" style="width:100%;margin-bottom:10px;padding:16px;font-size:15px;" onclick="compartilharWhatsApp()">💚 Compartilhar no WhatsApp</button>
   <button class="btn-copiar-convite" onclick="copiarConvite()">📋 Copiar texto do convite</button>
 </div>
 
@@ -611,44 +608,52 @@ async function verificarTarja() {
   } catch(e) { console.error(e); }
 }
 
-async function salvarConviteImagem() {
-  var wrapper = document.getElementById('conviteVisual');
-  if (!wrapper) return;
-  // html2canvas
-  if (typeof html2canvas === 'undefined') {
-    var script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    script.onload = function() { _capturarConvite(wrapper); };
-    document.head.appendChild(script);
-  } else {
-    _capturarConvite(wrapper);
-  }
-}
+async function compartilharWhatsApp() {
+  var el = document.getElementById('conviteVisual');
+  if (!el) return;
 
-function _capturarConvite(el) {
   var config = dadosPremium.config || {};
   var estilo = config.estilo_convite || 'classico';
   var imagemFundo = config.imagem_fundo_convite || '';
 
-  // Para estilo livre com imagem, injeta inline antes de capturar
   if (estilo === 'livre' && imagemFundo) {
     el.style.backgroundImage = 'url(' + imagemFundo + ')';
     el.style.backgroundSize = 'cover';
     el.style.backgroundPosition = 'center';
   }
 
-  html2canvas(el, {
-    scale: 2,
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: estilo === 'classico' ? '#1a0f00' : estilo === 'floral' ? '#FFF8EC' : null,
-    logging: false
-  }).then(function(canvas) {
-    var a = document.createElement('a');
-    a.download = 'convite-instagift.png';
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-  });
+  var bgColor = estilo === 'classico' ? '#1a0f00' : estilo === 'floral' ? '#FFF8EC' : null;
+
+  function _capturarECompartilhar() {
+    html2canvas(el, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: bgColor, logging: false }).then(function(canvas) {
+      canvas.toBlob(function(blob) {
+        var arquivo = new File([blob], 'convite-instagift.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+          navigator.share({
+            files: [arquivo],
+            text: conviteTextoFinal
+          }).catch(function(e) {
+            if (e.name !== 'AbortError') _fallbackWhatsApp();
+          });
+        } else {
+          _fallbackWhatsApp();
+        }
+      }, 'image/png');
+    });
+  }
+
+  if (typeof html2canvas === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    script.onload = _capturarECompartilhar;
+    document.head.appendChild(script);
+  } else {
+    _capturarECompartilhar();
+  }
+}
+
+function _fallbackWhatsApp() {
+  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank');
 }
 
 function abrirCofrinho() { document.getElementById('popupCofrinho').classList.add('show'); }
@@ -725,11 +730,7 @@ async function enviarRecado() {
 }
 
 function copiarConvite() { navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); }); }
-function enviarWhatsApp() {
-  var link = window.location.origin + '/premium/' + listaId;
-  var texto = conviteTextoFinal || ('Você está convidado! Acesse: ' + link);
-  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(texto), '_blank');
-}
+function enviarWhatsApp() { _fallbackWhatsApp(); }
 function irParaPresentes() { window.location.href = '/vitrine/' + listaId; }
 function explorarPagina() { var nav = document.querySelector('.nav-premium'); if (nav) { window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' }); } }
 function trocarAba(aba) {
