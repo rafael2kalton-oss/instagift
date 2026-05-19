@@ -1,23 +1,34 @@
-python3 - << 'PYEOF'
-content = """from flask import Flask, render_template, request, jsonify, redirect
-import uuid, re, requests, resend, stripe
-from bs4 import BeautifulSoup
+# ==============================================================================
+# SAAS INSTAGIFT - BACKEND CORE (FLASK + SUPABASE + STRIPE + RESEND)
+# ==============================================================================
+import os
+import re
+import uuid
+import datetime
 from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify, redirect
+import requests
+import resend
+import stripe
+from bs4 import BeautifulSoup
 
 app = Flask(__name__, template_folder="templates")
 
-SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
-SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
-SCRAPER_KEY = "3388267b140bf86c58e9ab0c2057c124"
+# --- CONFIGURAÇÕES DE SEGURANÇA (VARIÁVEIS DE AMBIENTE COM FALLBACK) ---
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://xmivfkpywjbrcrkniqbu.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz")
+SCRAPER_KEY = os.environ.get("SCRAPER_KEY", "3388267b140bf86c58e9ab0c2057c124")
+RESEND_KEY = os.environ.get("RESEND_KEY", "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv")
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7")
+
+# --- IDENTIFICADORES DE AFILIADOS ---
 AMAZON_TAG = "instagift20-20"
 ML_ID = "DaniloBasilio40"
 SHOPEE_ID = "18374451025"
 MAGALU_ID = "magazinevitrinedodanilo"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
-RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
-STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
-STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7"
 
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
@@ -37,6 +48,7 @@ HEADERS_SB = {
 
 ml_token_cache = {"token": None}
 
+# --- FUNÇÕES AUXILIARES / SUPABASE API ---
 def sb_get(tabela, filtro=None):
     url = f"{SUPABASE_URL}/rest/v1/{tabela}"
     if filtro:
@@ -126,14 +138,14 @@ def extrair_ml(link):
         token = get_ml_token()
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
-        m2 = re.search(r'MLB[-_]?(\\d+)', link_limpo, re.IGNORECASE)
+        m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
         if not m2:
             try:
                 r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
                 link_limpo = r_red.url
-                m2 = re.search(r'MLB[-_]?(\\d+)', link_limpo, re.IGNORECASE)
+                m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
             except: pass
-        m = re.search(r'/p/(MLB\\w+)', link_limpo, re.IGNORECASE)
+        m = re.search(r'/p/(MLB\w+)', link_limpo, re.IGNORECASE)
         if m:
             catalog_id = m.group(1)
             r = requests.get(f"https://api.mercadolibre.com/products/{catalog_id}", headers=auth, timeout=10).json()
@@ -176,7 +188,7 @@ def extrair_shopee(link):
         t = soup.find("meta", property="og:title")
         if t:
             nome = t.get("content", "")[:100]
-            nome = re.sub(r'\\s*[:|]\\s*Shopee.*$', '', nome)
+            nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
         imagem = ""
         i = soup.find("meta", property="og:image")
         if i: imagem = i.get("content", "")
@@ -193,11 +205,11 @@ def extrair_magalu(link):
         t = soup.find("meta", property="og:title")
         if t:
             nome = t.get("content", "")[:100]
-            nome = re.sub(r'\\s*[:|]\\s*Magazine Luiza.*$', '', nome)
-            nome = re.sub(r'\\s*[:|]\\s*Magalu.*$', '', nome)
+            nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
+            nome = re.sub(r'\s*[:|]\s*Magalu.*$', '', nome)
         i = soup.find("meta", property="og:image")
         if i: imagem = i.get("content", "")
-        pm = re.search(r'R\\$\\s*[\\d.,]+', html)
+        pm = re.search(r'R\$\s*[\d.,]+', html)
         if pm: preco = pm.group(0).replace("R$", "").strip()
         return nome, imagem, preco
     except Exception as e:
@@ -214,9 +226,9 @@ def extrair_shein(link):
                 print("Shein redirect erro:", e)
         nome = imagem = preco = ""
         goods_id = None
-        m = re.search(r'goods[_-]id[=/-](\\d+)', link, re.IGNORECASE)
-        if not m: m = re.search(r'/(\\d{6,12})\\.html', link)
-        if not m: m = re.search(r'[?&]goods_id=(\\d+)', link)
+        m = re.search(r'goods[_-]id[=/-](\d+)', link, re.IGNORECASE)
+        if not m: m = re.search(r'/(\d{6,12})\.html', link)
+        if not m: m = re.search(r'[?&]goods_id=(\d+)', link)
         if m: goods_id = m.group(1)
         if goods_id:
             try:
@@ -239,7 +251,7 @@ def extrair_shein(link):
                     t = soup.find("meta", property="og:title")
                     if t:
                         nome = t.get("content", "")[:100]
-                        nome = re.sub(r'\\s*[:|]\\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
+                        nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
                 if not imagem:
                     i = soup.find("meta", property="og:image")
                     if i: imagem = i.get("content", "")
@@ -247,7 +259,7 @@ def extrair_shein(link):
                     img = soup.find("img", {"class": re.compile(r'crop-image-container|goods-img', re.I)})
                     if img: imagem = img.get("src", "") or img.get("data-src", "")
                 if not preco:
-                    pm = re.search(r'R\\$\\s*[\\d.,]+', html)
+                    pm = re.search(r'R\$\s*[\d.,]+', html)
                     if pm: preco = pm.group(0).replace("R$", "").strip()
             except Exception as e:
                 print("Shein ScraperAPI erro:", e)
@@ -295,10 +307,10 @@ def extrair_dados(link, plataforma):
             img = soup.find("img", {"data-old-hires": True})
             if img: imagem = img["data-old-hires"]
     if nome:
-        nome = re.sub(r'\\s*[:|]\\s*Amazon.*$', '', nome)
-        nome = re.sub(r'\\s*[:|]\\s*Mercado Livre.*$', '', nome)
-        nome = re.sub(r'\\s*[:|]\\s*Shopee.*$', '', nome)
-        nome = re.sub(r'\\s*[:|]\\s*Magazine Luiza.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+        nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
     if plataforma == "amazon":
         preco_tag = soup.find("span", {"class": "a-price-whole"})
         if preco_tag:
@@ -306,7 +318,7 @@ def extrair_dados(link, plataforma):
             preco = preco_tag.text.strip().replace('.', '').replace(',', '')
             if preco_frac: preco = preco + ',' + preco_frac.text.strip()
     if not preco and plataforma != "mercadolivre":
-        pm = re.search(r'R\\$\\s*[\\d.,]+', html)
+        pm = re.search(r'R\$\s*[\d.,]+', html)
         if pm: preco = pm.group(0).replace("R$", "").strip()
     return nome, imagem, preco
 
@@ -334,6 +346,7 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
     except Exception as e:
         print("Erro email aniversariante:", e)
 
+# --- ROTAS WEB / RENDER TEMPLATES ---
 @app.route("/")
 def index():
     return render_template("criar_story.html")
@@ -351,6 +364,7 @@ def lista_page(lista_id):
 def vitrine(lista_id):
     return render_template("vitrine.html", lista_id=lista_id)
 
+# --- ROTAS DA API ---
 @app.route("/api/lista-info/<lista_id>")
 def lista_info(lista_id):
     lista = sb_get("listas", f"id=eq.{lista_id}")
@@ -507,6 +521,7 @@ def editar_produto(produto_id):
     if atualizacao: sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
     return jsonify({"ok": True})
 
+# --- MÓDULO STRIPE E MONETIZAÇÃO ---
 @app.route("/api/stripe/checkout", methods=["POST"])
 def stripe_checkout():
     data = request.json or {}
@@ -640,6 +655,7 @@ def listar_recados(lista_id):
     recados = sb_get("recados", f"lista_id=eq.{lista_id}&order=criado_em.desc")
     return jsonify(recados if isinstance(recados, list) else [])
 
+# --- CORREÇÃO DA ROTA DE PRESENÇA (TRUNCADA ANTERIORMENTE) ---
 @app.route("/api/salvar-presenca", methods=["POST"])
 def salvar_presenca():
     data = request.json or {}
@@ -647,69 +663,17 @@ def salvar_presenca():
     nome = data.get("nome", "").strip()
     status = data.get("status", "confirmado")
     acompanhantes = data.get("acompanhantes", 0)
-    if not lista_id or not nome: return jsonify({"erro": "Dados invalidos"}), 400
-    presenca = sb_post("presencas", {"lista_id": lista_id, "nome": nome, "status": status, "acompanhantes": acompanhantes})
-    try:
-        lista = sb_get("listas", f"id=eq.{lista_id}")
-        config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
-        if lista and isinstance(lista, list) and lista[0].get("email_aniversariante"):
-            email_dest = lista[0]["email_aniversariante"]
-            nome_evento = config[0].get("nome_celebrante", "seu evento") if config and isinstance(config, list) else "seu evento"
-            status_label = "Confirmou presenca" if status == "confirmado" else "Talvez" if status == "talvez" else "Nao vai comparecer"
-            acomp_texto = f" com {acompanhantes} acompanhante(s)" if acompanhantes > 0 else ""
-            resend.Emails.send({
-                "from": "InstaGift <onboarding@resend.dev>",
-                "to": email_dest,
-                "subject": f"Nova confirmacao de presenca - {nome_evento}",
-                "html": f"<div style='font-family:Arial;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;'><h2 style='color:#C9A84C;'>Nova confirmacao!</h2><p><strong>{nome}{acomp_texto}</strong> - {status_label}</p></div>"
-            })
-    except Exception as e:
-        print("Erro email presenca:", e)
+    
+    if not lista_id or not nome: 
+        return jsonify({"erro": "Dados invalidos"}), 400
+        
+    presenca = sb_post("presencas", {
+        "lista_id": lista_id, 
+        "nome": nome, 
+        "status": status, 
+        "acompanhantes": acompanhantes
+    })
     return jsonify({"ok": True, "presenca": presenca[0] if isinstance(presenca, list) else presenca})
 
-@app.route("/api/presencas/<lista_id>")
-def listar_presencas(lista_id):
-    presencas = sb_get("presencas", f"lista_id=eq.{lista_id}&order=criado_em.asc")
-    return jsonify(presencas if isinstance(presencas, list) else [])
-
-@app.route("/premium/<lista_id>")
-def premium(lista_id):
-    return render_template("premium.html", lista_id=lista_id)
-
-@app.route("/api/verificar-expiracao/<lista_id>")
-def verificar_expiracao(lista_id):
-    try:
-        config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
-        if not config or not isinstance(config, list) or len(config) == 0:
-            return jsonify({"expirada": False, "motivo": None})
-        cfg = config[0]
-        data_evento_str = cfg.get("data_evento")
-        criado_em_str = cfg.get("criado_em")
-        hoje = datetime.utcnow()
-        if data_evento_str:
-            data_evento = datetime.fromisoformat(data_evento_str)
-            if hoje > data_evento + timedelta(days=7):
-                return jsonify({"expirada": True, "motivo": "evento_encerrado"})
-        if criado_em_str:
-            criado_em = datetime.fromisoformat(criado_em_str.replace('Z', ''))
-            if hoje > criado_em + timedelta(days=180):
-                return jsonify({"expirada": True, "motivo": "prazo_expirado"})
-        return jsonify({"expirada": False, "motivo": None})
-    except Exception as e:
-        return jsonify({"expirada": False, "motivo": None})
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000, debug=False)
-"""
-
-with open('/mnt/user-data/outputs/api.py', 'w') as f:
-    f.write(content)
-
-# Verificar indentacao do payload
-import ast
-try:
-    ast.parse(content)
-    print("SYNTAX OK")
-except SyntaxError as e:
-    print(f"ERRO: {e}")
-PYEOF
+    app.run(debug=True, port=5000)
