@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify, redirect
+python3 - << 'PYEOF'
+content = """from flask import Flask, render_template, request, jsonify, redirect
 import uuid, re, requests, resend, stripe
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
@@ -18,7 +19,6 @@ RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
 STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
 STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7"
 
-# Pacotes de fotos
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
     "10": {"price_id": "price_1TXSBn41uxxrCBOGWfYbpFCt", "fotos": 10, "valor": "R$ 19,90"},
@@ -70,7 +70,7 @@ def resolver_redirect(link):
 def detectar_plataforma(link):
     l = link.lower()
     if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l: return "amazon"
-    if "magazinevoc e.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
+    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
     if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l: return "mercadolivre"
     if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l: return "shopee"
     if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l: return "shein"
@@ -126,14 +126,14 @@ def extrair_ml(link):
         token = get_ml_token()
         auth = {"Authorization": f"Bearer {token}"} if token else {"User-Agent": "Mozilla/5.0"}
         link_limpo = link.split('#')[0]
-        m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
+        m2 = re.search(r'MLB[-_]?(\\d+)', link_limpo, re.IGNORECASE)
         if not m2:
             try:
                 r_red = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=8, allow_redirects=True)
                 link_limpo = r_red.url
-                m2 = re.search(r'MLB[-_]?(\d+)', link_limpo, re.IGNORECASE)
+                m2 = re.search(r'MLB[-_]?(\\d+)', link_limpo, re.IGNORECASE)
             except: pass
-        m = re.search(r'/p/(MLB\w+)', link_limpo, re.IGNORECASE)
+        m = re.search(r'/p/(MLB\\w+)', link_limpo, re.IGNORECASE)
         if m:
             catalog_id = m.group(1)
             r = requests.get(f"https://api.mercadolibre.com/products/{catalog_id}", headers=auth, timeout=10).json()
@@ -176,7 +176,7 @@ def extrair_shopee(link):
         t = soup.find("meta", property="og:title")
         if t:
             nome = t.get("content", "")[:100]
-            nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
+            nome = re.sub(r'\\s*[:|]\\s*Shopee.*$', '', nome)
         imagem = ""
         i = soup.find("meta", property="og:image")
         if i: imagem = i.get("content", "")
@@ -193,11 +193,11 @@ def extrair_magalu(link):
         t = soup.find("meta", property="og:title")
         if t:
             nome = t.get("content", "")[:100]
-            nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
-            nome = re.sub(r'\s*[:|]\s*Magalu.*$', '', nome)
+            nome = re.sub(r'\\s*[:|]\\s*Magazine Luiza.*$', '', nome)
+            nome = re.sub(r'\\s*[:|]\\s*Magalu.*$', '', nome)
         i = soup.find("meta", property="og:image")
         if i: imagem = i.get("content", "")
-        pm = re.search(r'R\$\s*[\d.,]+', html)
+        pm = re.search(r'R\\$\\s*[\\d.,]+', html)
         if pm: preco = pm.group(0).replace("R$", "").strip()
         return nome, imagem, preco
     except Exception as e:
@@ -214,9 +214,9 @@ def extrair_shein(link):
                 print("Shein redirect erro:", e)
         nome = imagem = preco = ""
         goods_id = None
-        m = re.search(r'goods[_-]id[=/-](\d+)', link, re.IGNORECASE)
-        if not m: m = re.search(r'/(\d{6,12})\.html', link)
-        if not m: m = re.search(r'[?&]goods_id=(\d+)', link)
+        m = re.search(r'goods[_-]id[=/-](\\d+)', link, re.IGNORECASE)
+        if not m: m = re.search(r'/(\\d{6,12})\\.html', link)
+        if not m: m = re.search(r'[?&]goods_id=(\\d+)', link)
         if m: goods_id = m.group(1)
         if goods_id:
             try:
@@ -239,7 +239,7 @@ def extrair_shein(link):
                     t = soup.find("meta", property="og:title")
                     if t:
                         nome = t.get("content", "")[:100]
-                        nome = re.sub(r'\s*[:|]\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
+                        nome = re.sub(r'\\s*[:|]\\s*SHEIN.*$', '', nome, flags=re.IGNORECASE)
                 if not imagem:
                     i = soup.find("meta", property="og:image")
                     if i: imagem = i.get("content", "")
@@ -247,7 +247,7 @@ def extrair_shein(link):
                     img = soup.find("img", {"class": re.compile(r'crop-image-container|goods-img', re.I)})
                     if img: imagem = img.get("src", "") or img.get("data-src", "")
                 if not preco:
-                    pm = re.search(r'R\$\s*[\d.,]+', html)
+                    pm = re.search(r'R\\$\\s*[\\d.,]+', html)
                     if pm: preco = pm.group(0).replace("R$", "").strip()
             except Exception as e:
                 print("Shein ScraperAPI erro:", e)
@@ -295,10 +295,10 @@ def extrair_dados(link, plataforma):
             img = soup.find("img", {"data-old-hires": True})
             if img: imagem = img["data-old-hires"]
     if nome:
-        nome = re.sub(r'\s*[:|]\s*Amazon.*$', '', nome)
-        nome = re.sub(r'\s*[:|]\s*Mercado Livre.*$', '', nome)
-        nome = re.sub(r'\s*[:|]\s*Shopee.*$', '', nome)
-        nome = re.sub(r'\s*[:|]\s*Magazine Luiza.*$', '', nome)
+        nome = re.sub(r'\\s*[:|]\\s*Amazon.*$', '', nome)
+        nome = re.sub(r'\\s*[:|]\\s*Mercado Livre.*$', '', nome)
+        nome = re.sub(r'\\s*[:|]\\s*Shopee.*$', '', nome)
+        nome = re.sub(r'\\s*[:|]\\s*Magazine Luiza.*$', '', nome)
     if plataforma == "amazon":
         preco_tag = soup.find("span", {"class": "a-price-whole"})
         if preco_tag:
@@ -306,35 +306,19 @@ def extrair_dados(link, plataforma):
             preco = preco_tag.text.strip().replace('.', '').replace(',', '')
             if preco_frac: preco = preco + ',' + preco_frac.text.strip()
     if not preco and plataforma != "mercadolivre":
-        pm = re.search(r'R\$\s*[\d.,]+', html)
+        pm = re.search(r'R\\$\\s*[\\d.,]+', html)
         if pm: preco = pm.group(0).replace("R$", "").strip()
     return nome, imagem, preco
 
 def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token, base_url, link_produto=""):
     link_confirmacao = f"{base_url}/confirmar-compra/{token}"
-    link_btn = f'<a href="{link_produto}" style="display:block;background:#1a1a2e;color:#8A63D2;text-align:center;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px;border:1px solid rgba(138,99,210,0.3);">🛍️ Acessar o presente novamente</a>' if link_produto else ""
+    link_btn = f'<a href="{link_produto}" style="display:block;background:#1a1a2e;color:#8A63D2;text-align:center;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px;border:1px solid rgba(138,99,210,0.3);">Acessar o presente novamente</a>' if link_produto else ""
     try:
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_comprador,
-            "subject": "🎁 Confirme que você comprou o presente!",
-            "html": f"""
-            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
-                <div style="text-align:center;margin-bottom:24px;">
-                    <div style="font-size:48px;margin-bottom:8px;">🎁</div>
-                    <h2 style="color:#8A63D2;margin-bottom:4px;">Olá, {nome_comprador}!</h2>
-                    <p style="color:#666;font-size:13px;">Sua reserva está confirmada</p>
-                </div>
-                <div style="background:#1a1a1a;border-radius:12px;padding:16px;margin-bottom:24px;">
-                    <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Presente reservado</p>
-                    <p style="color:#fff;font-weight:700;font-size:16px;">{nome_produto}</p>
-                </div>
-                <p style="color:#aaa;margin-bottom:16px;line-height:1.6;">Após finalizar sua compra, clique no botão abaixo para confirmar. 💜</p>
-                {link_btn}
-                <a href="{link_confirmacao}" style="display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;">✅ Sim, eu comprei o presente!</a>
-                <p style="color:#444;font-size:12px;text-align:center;">Com carinho, InstaGift 💜</p>
-            </div>
-            """
+            "subject": "Confirme que voce comprou o presente!",
+            "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;'><h2 style='color:#8A63D2;'>Ola, {nome_comprador}!</h2><p style='color:#fff;font-weight:700;'>{nome_produto}</p>{link_btn}<a href='{link_confirmacao}' style='display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;'>Sim, eu comprei o presente!</a><p style='color:#444;font-size:12px;text-align:center;'>Com carinho, InstaGift</p></div>"
         })
     except Exception as e:
         print("Erro email comprador:", e)
@@ -344,26 +328,11 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email_aniversariante,
-            "subject": "🎉 Você ganhou um presente!",
-            "html": f"""
-            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;">
-                <div style="text-align:center;margin-bottom:28px;">
-                    <div style="font-size:56px;margin-bottom:12px;">🎉</div>
-                    <h2 style="color:#8A63D2;font-size:22px;margin-bottom:6px;">Que surpresa incrível!</h2>
-                </div>
-                <div style="background:linear-gradient(135deg,rgba(138,99,210,0.15),rgba(176,136,245,0.08));border:1px solid rgba(138,99,210,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px;">
-                    <p style="color:#fff;font-weight:700;font-size:18px;margin-bottom:12px;">{nome_produto}</p>
-                    <p style="color:#888;font-size:13px;">presenteado por</p>
-                    <p style="color:#fff;font-weight:600;font-size:16px;margin-top:4px;">{nome_comprador}</p>
-                </div>
-                <p style="color:#444;font-size:12px;text-align:center;">Com muito carinho, InstaGift 💜</p>
-            </div>
-            """
+            "subject": "Voce ganhou um presente!",
+            "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;'><h2 style='color:#8A63D2;'>Que surpresa incrivel!</h2><p style='color:#fff;font-weight:700;'>{nome_produto}</p><p style='color:#888;'>presenteado por {nome_comprador}</p></div>"
         })
     except Exception as e:
         print("Erro email aniversariante:", e)
-
-# ── ROTAS ──
 
 @app.route("/")
 def index():
@@ -418,7 +387,7 @@ def adicionar_produto():
     data = request.json
     link = data.get("link", "").strip()
     lista_id = data.get("lista_id", "").strip()
-    if not link or not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
+    if not link or not lista_id: return jsonify({"erro": "Dados invalidos"}), 400
     link = resolver_redirect(link)
     plataforma = detectar_plataforma(link)
     link_afiliado = injetar_afiliado(link, plataforma)
@@ -428,10 +397,7 @@ def adicionar_produto():
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
-    produto = sb_post("produtos", {
-        "lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem,
-        "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0
-    })
+    produto = sb_post("produtos", {"lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem, "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0})
     p = produto[0] if isinstance(produto, list) else produto
     return jsonify({"ok": True, "produto": p, "manual": precisa_manual, "plataforma": plataforma})
 
@@ -447,10 +413,7 @@ def remover_produto(produto_id):
 
 @app.route("/api/liberar-produto/<int:produto_id>", methods=["POST"])
 def liberar_produto(produto_id):
-    sb_patch("produtos", f"id=eq.{produto_id}", {
-        "reservado": 0, "token_confirmacao": None,
-        "reservado_em": None, "nome_comprador": None, "email_comprador": None
-    })
+    sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 0, "token_confirmacao": None, "reservado_em": None, "nome_comprador": None, "email_comprador": None})
     return jsonify({"ok": True})
 
 @app.route("/api/adicionar-produto-manual", methods=["POST"])
@@ -462,15 +425,12 @@ def adicionar_produto_manual():
     preco = data.get("preco", "").strip()
     imagem_base64 = data.get("imagem_base64", "")
     plataforma = data.get("plataforma", "outro")
-    if not link or not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
+    if not link or not lista_id: return jsonify({"erro": "Dados invalidos"}), 400
     link_afiliado = injetar_afiliado(link, plataforma)
     lista = sb_get("listas", f"id=eq.{lista_id}")
     if not lista or not isinstance(lista, list) or len(lista) == 0:
         sb_post("listas", {"id": lista_id, "nome": "Minha Lista"})
-    produto = sb_post("produtos", {
-        "lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem_base64,
-        "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0
-    })
+    produto = sb_post("produtos", {"lista_id": lista_id, "nome": nome, "preco": preco, "imagem_url": imagem_base64, "link_original": link, "link_afiliado": link_afiliado, "plataforma": plataforma, "reservado": 0})
     if isinstance(produto, list): return jsonify({"ok": True, "produto": produto[0]})
     return jsonify({"ok": True, "produto": produto})
 
@@ -480,18 +440,15 @@ def reservar(produto_id):
     nome_comprador = data.get("nome", "").strip()
     email_comprador = data.get("email", "").strip()
     if not nome_comprador or not email_comprador:
-        return jsonify({"erro": "Nome e e-mail obrigatórios"}), 400
+        return jsonify({"erro": "Nome e e-mail obrigatorios"}), 400
     produtos = sb_get("produtos", f"id=eq.{produto_id}")
     if not produtos or not isinstance(produtos, list):
-        return jsonify({"erro": "Produto não encontrado"}), 404
+        return jsonify({"erro": "Produto nao encontrado"}), 404
     if produtos[0].get("reservado"):
-        return jsonify({"erro": "Já reservado"}), 400
+        return jsonify({"erro": "Ja reservado"}), 400
     token = str(uuid.uuid4())
     agora = datetime.utcnow().isoformat()
-    sb_patch("produtos", f"id=eq.{produto_id}", {
-        "reservado": 1, "token_confirmacao": token,
-        "reservado_em": agora, "nome_comprador": nome_comprador, "email_comprador": email_comprador
-    })
+    sb_patch("produtos", f"id=eq.{produto_id}", {"reservado": 1, "token_confirmacao": token, "reservado_em": agora, "nome_comprador": nome_comprador, "email_comprador": email_comprador})
     nome_produto = produtos[0].get("nome", "Produto")
     link_produto = produtos[0].get("link_afiliado", "")
     base_url = request.host_url.rstrip('/')
@@ -502,23 +459,20 @@ def reservar(produto_id):
 def confirmar_compra(token):
     produtos = sb_get("produtos", f"token_confirmacao=eq.{token}")
     if not produtos or not isinstance(produtos, list):
-        return "<h2>Link inválido ou expirado.</h2>", 404
+        return "<h2>Link invalido ou expirado.</h2>", 404
     produto = produtos[0]
     reservado_em = produto.get("reservado_em")
     if reservado_em:
         dt = datetime.fromisoformat(reservado_em.replace('Z', ''))
         if datetime.utcnow() > dt + timedelta(hours=3):
-            sb_patch("produtos", f"id=eq.{produto['id']}", {
-                "reservado": 0, "token_confirmacao": None,
-                "reservado_em": None, "nome_comprador": None, "email_comprador": None
-            })
+            sb_patch("produtos", f"id=eq.{produto['id']}", {"reservado": 0, "token_confirmacao": None, "reservado_em": None, "nome_comprador": None, "email_comprador": None})
             return render_template("confirmacao.html", status="expirado")
     sb_patch("produtos", f"id=eq.{produto['id']}", {"reservado": 2, "token_confirmacao": None})
     lista = sb_get("listas", f"id=eq.{produto['lista_id']}")
     if lista and isinstance(lista, list):
         email_aniversariante = lista[0].get("email_aniversariante")
         if email_aniversariante:
-            enviar_email_aniversariante(email_aniversariante, produto.get("nome_comprador", "Alguém"), produto.get("nome", "Produto"))
+            enviar_email_aniversariante(email_aniversariante, produto.get("nome_comprador", "Alguem"), produto.get("nome", "Produto"))
     return render_template("confirmacao.html", status="confirmado", nome_produto=produto.get("nome", "Produto"))
 
 @app.route("/api/limpar-reservas-expiradas", methods=["POST"])
@@ -534,10 +488,7 @@ def limpar_reservas_expiradas():
             if reservado_em:
                 dt_reserva = datetime.fromisoformat(reservado_em.replace('Z', ''))
                 if dt_reserva < prazo_limite:
-                    sb_patch("produtos", f"id=eq.{p['id']}", {
-                        "reservado": 0, "token_confirmacao": None,
-                        "reservado_em": None, "nome_comprador": None, "email_comprador": None
-                    })
+                    sb_patch("produtos", f"id=eq.{p['id']}", {"reservado": 0, "token_confirmacao": None, "reservado_em": None, "nome_comprador": None, "email_comprador": None})
                     liberados += 1
         return jsonify({"status": "sucesso", "liberados": liberados}), 200
     except Exception as e:
@@ -556,15 +507,13 @@ def editar_produto(produto_id):
     if atualizacao: sb_patch("produtos", f"id=eq.{produto_id}", atualizacao)
     return jsonify({"ok": True})
 
-# ── STRIPE ──
-
 @app.route("/api/stripe/checkout", methods=["POST"])
 def stripe_checkout():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
     pacote = data.get("pacote", "").strip()
     if not lista_id or pacote not in STRIPE_PACOTES:
-        return jsonify({"erro": "Dados inválidos"}), 400
+        return jsonify({"erro": "Dados invalidos"}), 400
     info = STRIPE_PACOTES[pacote]
     base_url = request.host_url.rstrip('/')
     try:
@@ -594,8 +543,7 @@ def stripe_sucesso():
             fotos_extras = STRIPE_PACOTES[pacote]["fotos"]
             config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
             if config and isinstance(config, list) and len(config) > 0:
-                limite_atual = config[0].get("limite_fotos", 10)
-                novo_limite = limite_atual + fotos_extras
+                novo_limite = config[0].get("limite_fotos", 10) + fotos_extras
                 sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"limite_fotos": novo_limite})
             else:
                 sb_post("config_premium", {"lista_id": lista_id, "limite_fotos": 10 + fotos_extras})
@@ -609,8 +557,6 @@ def get_limite_fotos(lista_id):
     if config and isinstance(config, list) and len(config) > 0:
         return jsonify({"limite": config[0].get("limite_fotos", 10)})
     return jsonify({"limite": 10})
-
-# ── ROTAS PREMIUM ──
 
 @app.route("/configurar-premium/<lista_id>")
 def configurar_premium(lista_id):
@@ -631,9 +577,9 @@ def get_config_premium(lista_id):
 def salvar_config_premium():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
-    if not lista_id: return jsonify({"erro": "Dados inválidos"}), 400
+    if not lista_id: return jsonify({"erro": "Dados invalidos"}), 400
     config_existente = sb_get("config_premium", f"lista_id=eq.{lista_id}")
-  payload = {
+    payload = {
         "lista_id": lista_id,
         "mensagem_celebrante": data.get("mensagem_celebrante", ""),
         "texto_convite": data.get("texto_convite", ""),
@@ -658,7 +604,7 @@ def salvar_foto_mural():
     lista_id = data.get("lista_id", "").strip()
     url_foto = data.get("url_foto", "").strip()
     ordem = data.get("ordem", 0)
-    if not lista_id or not url_foto: return jsonify({"erro": "Dados inválidos"}), 400
+    if not lista_id or not url_foto: return jsonify({"erro": "Dados invalidos"}), 400
     config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
     limite = 10
     if config and isinstance(config, list) and len(config) > 0:
@@ -701,7 +647,7 @@ def salvar_presenca():
     nome = data.get("nome", "").strip()
     status = data.get("status", "confirmado")
     acompanhantes = data.get("acompanhantes", 0)
-    if not lista_id or not nome: return jsonify({"erro": "Dados inválidos"}), 400
+    if not lista_id or not nome: return jsonify({"erro": "Dados invalidos"}), 400
     presenca = sb_post("presencas", {"lista_id": lista_id, "nome": nome, "status": status, "acompanhantes": acompanhantes})
     try:
         lista = sb_get("listas", f"id=eq.{lista_id}")
@@ -709,30 +655,16 @@ def salvar_presenca():
         if lista and isinstance(lista, list) and lista[0].get("email_aniversariante"):
             email_dest = lista[0]["email_aniversariante"]
             nome_evento = config[0].get("nome_celebrante", "seu evento") if config and isinstance(config, list) else "seu evento"
-            status_label = "✅ Confirmou presença" if status == "confirmado" else "🤔 Talvez compareça" if status == "talvez" else "❌ Não vai comparecer"
+            status_label = "Confirmou presenca" if status == "confirmado" else "Talvez" if status == "talvez" else "Nao vai comparecer"
             acomp_texto = f" com {acompanhantes} acompanhante(s)" if acompanhantes > 0 else ""
             resend.Emails.send({
                 "from": "InstaGift <onboarding@resend.dev>",
                 "to": email_dest,
-                "subject": f"🎉 Nova confirmação de presença — {nome_evento}",
-                "html": f"""
-                <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);">
-                    <div style="text-align:center;margin-bottom:24px;">
-                        <div style="font-size:48px;margin-bottom:8px;">🎉</div>
-                        <h2 style="color:#C9A84C;font-family:'Georgia',serif;margin-bottom:4px;">Nova confirmação!</h2>
-                        <p style="color:#aaa;font-size:13px;font-style:italic;">{nome_evento}</p>
-                    </div>
-                    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;border:1px solid rgba(201,168,76,0.2);">
-                        <p style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Convidado</p>
-                        <p style="color:#2C2C2C;font-weight:700;font-size:18px;margin-bottom:8px;">{nome}{acomp_texto}</p>
-                        <p style="color:#C9A84C;font-size:14px;font-weight:600;">{status_label}</p>
-                    </div>
-                    <p style="color:#444;font-size:12px;text-align:center;font-style:italic;">Com carinho, InstaGift ✦</p>
-                </div>
-                """
+                "subject": f"Nova confirmacao de presenca - {nome_evento}",
+                "html": f"<div style='font-family:Arial;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;'><h2 style='color:#C9A84C;'>Nova confirmacao!</h2><p><strong>{nome}{acomp_texto}</strong> - {status_label}</p></div>"
             })
     except Exception as e:
-        print("Erro email presença:", e)
+        print("Erro email presenca:", e)
     return jsonify({"ok": True, "presenca": presenca[0] if isinstance(presenca, list) else presenca})
 
 @app.route("/api/presencas/<lista_id>")
@@ -768,3 +700,16 @@ def verificar_expiracao(lista_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
+"""
+
+with open('/mnt/user-data/outputs/api.py', 'w') as f:
+    f.write(content)
+
+# Verificar indentacao do payload
+import ast
+try:
+    ast.parse(content)
+    print("SYNTAX OK")
+except SyntaxError as e:
+    print(f"ERRO: {e}")
+PYEOF
