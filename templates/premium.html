@@ -158,6 +158,57 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .carrossel-dot.ativo { background: var(--cor-primaria); transform: scale(1.3); }
 .carrossel-contador { position: absolute; bottom: 12px; right: 14px; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-family: 'Inter', sans-serif; backdrop-filter: blur(4px); }
 
+
+/* ✦ CONVITES VISUAIS */
+.convite-visual-wrapper { position: relative; width: 100%; margin-bottom: 20px; border-radius: 16px; overflow: hidden; }
+.convite-visual { width: 100%; min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px 28px; text-align: center; position: relative; }
+.convite-visual.classico { background: linear-gradient(135deg, #2C1A00, #1a0f00, #2C1A00); }
+.convite-visual.floral { background: linear-gradient(135deg, #FFF8EC, #F5EDD8, #FFF8EC); border: 1px solid rgba(201,168,76,0.3); }
+.convite-visual.livre { background-size: cover; background-position: center; }
+.convite-visual.livre::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+.convite-visual-inner { position: relative; z-index: 1; width: 100%; }
+.convite-ornamento-visual { font-size: 11px; letter-spacing: 6px; margin-bottom: 14px; }
+.classico .convite-ornamento-visual { color: #C9A84C; }
+.floral .convite-ornamento-visual { color: #A8722A; }
+.livre .convite-ornamento-visual { color: rgba(255,255,255,0.8); }
+.convite-titulo-visual { font-family: 'Playfair Display', serif; font-size: clamp(22px, 6vw, 32px); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+.classico .convite-titulo-visual { color: #C9A84C; }
+.floral .convite-titulo-visual { color: #2C1A00; }
+.livre .convite-titulo-visual { color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+.convite-linha-divisor { display: flex; align-items: center; gap: 10px; margin: 14px auto; max-width: 200px; }
+.convite-linha-divisor-barra { flex: 1; height: 1px; }
+.classico .convite-linha-divisor-barra { background: rgba(201,168,76,0.4); }
+.floral .convite-linha-divisor-barra { background: rgba(168,114,42,0.3); }
+.livre .convite-linha-divisor-barra { background: rgba(255,255,255,0.4); }
+.convite-linha-divisor-icon { font-size: 10px; }
+.classico .convite-linha-divisor-icon { color: #C9A84C; }
+.floral .convite-linha-divisor-icon { color: #A8722A; }
+.livre .convite-linha-divisor-icon { color: rgba(255,255,255,0.8); }
+.convite-data-visual { font-family: 'Playfair Display', serif; font-size: 14px; margin-bottom: 8px; }
+.classico .convite-data-visual { color: rgba(245,237,216,0.8); }
+.floral .convite-data-visual { color: #666; }
+.livre .convite-data-visual { color: rgba(255,255,255,0.85); }
+.convite-texto-visual { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; line-height: 1.8; white-space: pre-line; }
+.classico .convite-texto-visual { color: rgba(245,237,216,0.75); }
+.floral .convite-texto-visual { color: #888; }
+.livre .convite-texto-visual { color: rgba(255,255,255,0.75); }
+.convite-link-visual { font-size: 11px; margin-top: 14px; padding: 8px 16px; border-radius: 20px; display: inline-block; font-family: 'Inter', sans-serif; font-weight: 600; }
+.classico .convite-link-visual { background: rgba(201,168,76,0.15); color: #C9A84C; border: 1px solid rgba(201,168,76,0.3); }
+.floral .convite-link-visual { background: rgba(168,114,42,0.08); color: #A8722A; border: 1px solid rgba(168,114,42,0.2); }
+.livre .convite-link-visual { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+
+/* ✦ TARJA */
+.convite-tarja { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); background: rgba(200,200,200,0.88); backdrop-filter: blur(4px); padding: 14px; text-align: center; z-index: 10; }
+.convite-tarja-texto { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #888; letter-spacing: 0.08em; text-transform: uppercase; }
+.convite-tarja-sub { font-size: 11px; color: #aaa; margin-top: 3px; font-family: 'Inter', sans-serif; }
+
+/* ✦ BOTÕES CONVITE */
+.convite-acoes { display: flex; gap: 10px; margin-bottom: 12px; }
+.btn-salvar-convite { flex: 1; padding: 13px; background: rgba(201,168,76,0.1); color: var(--cor-primaria); border: 1px solid rgba(201,168,76,0.3); border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-salvar-convite:hover { background: rgba(201,168,76,0.15); }
+.btn-whatsapp-convite { flex: 1; padding: 13px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-whatsapp-convite:hover { transform: translateY(-2px); }
+
 </style>
 </head>
 <body>
@@ -287,13 +338,34 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 <div class="secao" id="secao-convite">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Convite Digital</h2>
-  <p class="secao-sub">Compartilhe com seus convidados pelo WhatsApp</p>
-  <div class="convite-card">
-    <div class="convite-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
-    <p class="convite-texto" id="conviteTexto">Carregando convite...</p>
+  <p class="secao-sub">Salve a imagem ou envie pelo WhatsApp</p>
+
+  <div class="convite-visual-wrapper" id="conviteVisualWrapper">
+    <div class="convite-visual classico" id="conviteVisual">
+      <div class="convite-visual-inner" id="conviteVisualInner">
+        <div class="convite-ornamento-visual">✦ &nbsp; ✦ &nbsp; ✦</div>
+        <div class="convite-titulo-visual" id="conviteTituloVisual">Carregando...</div>
+        <div class="convite-linha-divisor">
+          <div class="convite-linha-divisor-barra"></div>
+          <div class="convite-linha-divisor-icon">✦</div>
+          <div class="convite-linha-divisor-barra"></div>
+        </div>
+        <div class="convite-data-visual" id="conviteDataVisual"></div>
+        <div class="convite-texto-visual" id="conviteTextoVisual"></div>
+        <div class="convite-link-visual" id="conviteLinkVisual">🎁 Ver Lista de Presentes</div>
+      </div>
+      <div class="convite-tarja" id="conviteTarja" style="display:none;">
+        <div class="convite-tarja-texto">InstaGift</div>
+        <div class="convite-tarja-sub">Crie sua lista de presentes grátis</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="convite-acoes">
+    <button class="btn-salvar-convite" onclick="salvarConviteImagem()">📥 Salvar imagem</button>
+    <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">💚 WhatsApp</button>
   </div>
   <button class="btn-copiar-convite" onclick="copiarConvite()">📋 Copiar texto do convite</button>
-  <button class="btn-whatsapp-convite" onclick="enviarWhatsApp()">💚 Enviar pelo WhatsApp</button>
 </div>
 
 <!-- ✦ BOTÕES FLUTUANTES — Um ou Dois dependendo do Cofrinho -->
@@ -470,12 +542,70 @@ function renderRecados(recados) {
 
 function renderConvite(config) {
   if (!config) return;
-  var nome = config.nome_celebrante || 'o evento';
-  var data = config.data_evento ? formatarData(config.data_evento) : 'em breve';
+  var nome = config.nome_celebrante || 'Celebração Especial';
+  var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
   var link = window.location.origin + '/premium/' + listaId;
+  var estilo = config.estilo_convite || 'classico';
+  var imagemFundo = config.imagem_fundo_convite || '';
+
   conviteTextoFinal = (config.texto_convite && !config.usa_convite_padrao) ? config.texto_convite :
-    '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + data + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
-  document.getElementById('conviteTexto').textContent = conviteTextoFinal;
+    'Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\nData: ' + dataStr + '\n\nAcesse a Página de Celebração:\n' + link;
+
+  // Aplicar estilo visual
+  var visual = document.getElementById('conviteVisual');
+  if (visual) {
+    visual.className = 'convite-visual ' + estilo;
+    if (estilo === 'livre' && imagemFundo) {
+      visual.style.backgroundImage = 'url(' + imagemFundo + ')';
+    }
+  }
+
+  var tituloEl = document.getElementById('conviteTituloVisual');
+  var dataEl = document.getElementById('conviteDataVisual');
+  var textoEl = document.getElementById('conviteTextoVisual');
+  var linkEl = document.getElementById('conviteLinkVisual');
+
+  if (tituloEl) tituloEl.textContent = nome;
+  if (dataEl) dataEl.textContent = '📅 ' + dataStr;
+  if (textoEl) textoEl.textContent = config.texto_convite && !config.usa_convite_padrao ? config.texto_convite : 'Venha celebrar esse momento especial conosco ✦';
+  if (linkEl) linkEl.textContent = '🎁 ' + link;
+
+  // Tarja se sem produtos
+  verificarTarja();
+}
+
+async function verificarTarja() {
+  try {
+    var r = await fetch('/api/produtos/' + listaId);
+    var produtos = await r.json();
+    var tarja = document.getElementById('conviteTarja');
+    if (tarja) {
+      tarja.style.display = (!produtos || produtos.length === 0) ? 'block' : 'none';
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function salvarConviteImagem() {
+  var wrapper = document.getElementById('conviteVisual');
+  if (!wrapper) return;
+  // html2canvas
+  if (typeof html2canvas === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    script.onload = function() { _capturarConvite(wrapper); };
+    document.head.appendChild(script);
+  } else {
+    _capturarConvite(wrapper);
+  }
+}
+
+function _capturarConvite(el) {
+  html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(function(canvas) {
+    var link = document.createElement('a');
+    link.download = 'convite-instagift.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
 }
 
 function abrirCofrinho() { document.getElementById('popupCofrinho').classList.add('show'); }
@@ -552,7 +682,11 @@ async function enviarRecado() {
 }
 
 function copiarConvite() { navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); }); }
-function enviarWhatsApp() { window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank'); }
+function enviarWhatsApp() {
+  var link = window.location.origin + '/premium/' + listaId;
+  var texto = conviteTextoFinal || ('Você está convidado! Acesse: ' + link);
+  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(texto), '_blank');
+}
 function irParaPresentes() { window.location.href = '/vitrine/' + listaId; }
 function explorarPagina() { var nav = document.querySelector('.nav-premium'); if (nav) { window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' }); } }
 function trocarAba(aba) {
