@@ -22,6 +22,8 @@ STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
     "10": {"price_id": "price_1TXSBn41uxxrCBOGWfYbpFCt", "fotos": 10, "valor": "R$ 19,90"},
     "25": {"price_id": "price_1TXSCB41uxxrCBOGaliEnmy3", "fotos": 25, "valor": "R$ 49,90"},
+    "cofrinho": {"price_id": "price_1TYuZj41uxxrCBOGVDjlG7Pf", "fotos": 0, "valor": "R$ 15,90"},
+    "celebracao": {"price_id": "price_1TYudb41uxxrCBOGuOcE4aeo", "fotos": 5, "valor": "R$ 25,90"},
 }
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -541,11 +543,22 @@ def stripe_sucesso():
         if session.payment_status == "paid":
             fotos_extras = STRIPE_PACOTES[pacote]["fotos"]
             config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
-            if config and isinstance(config, list) and len(config) > 0:
-                novo_limite = config[0].get("limite_fotos", 10) + fotos_extras
-                sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"limite_fotos": novo_limite})
-            else:
-                sb_post("config_premium", {"lista_id": lista_id, "limite_fotos": 10 + fotos_extras})
+            config_existe = config and isinstance(config, list) and len(config) > 0
+            atualizacao = {}
+            if fotos_extras > 0:
+                limite_atual = config[0].get("limite_fotos", 10) if config_existe else 10
+                atualizacao["limite_fotos"] = limite_atual + fotos_extras
+            if pacote == "cofrinho":
+                atualizacao["cofrinho_ativo"] = True
+            if pacote == "celebracao":
+                atualizacao["cofrinho_ativo"] = True
+                atualizacao["estilo_mural"] = "carrossel"
+            if atualizacao:
+                if config_existe:
+                    sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
+                else:
+                    atualizacao["lista_id"] = lista_id
+                    sb_post("config_premium", atualizacao)
     except Exception as e:
         print("Stripe sucesso erro:", e)
     return redirect(f"/configurar-premium/{lista_id}?compra=ok&fotos={STRIPE_PACOTES.get(pacote, {}).get('fotos', 0)}")
