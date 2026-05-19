@@ -8,44 +8,59 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; padding: 20px; }
-.header { display: flex; align-items: center; justify-content: space-between; max-width: 900px; margin: 0 auto 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.2); }
+.header { display: flex; align-items: center; justify-content: space-between; max-width: 960px; margin: 0 auto 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(201,168,76,0.2); }
 .logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: #C9A84C; }
 .badge-presidente { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; letter-spacing: 0.06em; }
-.container { max-width: 900px; margin: 0 auto; }
+.container { max-width: 960px; margin: 0 auto; }
 .grid-metricas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
 @media(min-width:600px) { .grid-metricas { grid-template-columns: repeat(4, 1fr); } }
 .metrica-card { background: #1a1a1a; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 20px; text-align: center; }
 .metrica-valor { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; margin-bottom: 4px; }
 .metrica-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.06em; }
 .secao { background: #1a1a1a; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
-.secao-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #C9A84C; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.secao-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #C9A84C; margin-bottom: 20px; }
 .tabela { width: 100%; border-collapse: collapse; }
 .tabela th { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.tabela td { padding: 12px; font-size: 13px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.tabela td { padding: 12px; font-size: 13px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
 .tabela tr:last-child td { border-bottom: none; }
-.tabela tr:hover td { background: rgba(201,168,76,0.04); }
+.tabela tr:hover td { background: rgba(201,168,76,0.03); }
 .badge-pacote { font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
 .badge-celebracao { background: rgba(201,168,76,0.15); color: #C9A84C; }
 .badge-cofrinho { background: rgba(251,191,36,0.15); color: #fbbf24; }
 .badge-fotos { background: rgba(59,130,246,0.15); color: #60a5fa; }
-.badge-carrossel { background: rgba(167,139,250,0.15); color: #a78bfa; }
-.loading { text-align: center; padding: 40px; color: #555; font-style: italic; font-family: 'Playfair Display', serif; }
 .faturamento-destaque { background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(168,114,42,0.05)); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
 .faturamento-valor { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #C9A84C; }
 .faturamento-label { font-size: 12px; color: #888; margin-top: 4px; }
-.infra-barra-wrapper { background: #0D0D0D; border-radius: 8px; height: 10px; overflow: hidden; margin: 10px 0; }
-.infra-barra { height: 100%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 8px; transition: width 0.5s; }
-.status-ok { color: #22c55e; font-size: 12px; }
-.status-alerta { color: #f59e0b; font-size: 12px; }
-.status-critico { color: #ef4444; font-size: 12px; }
-.btn-atualizar { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-.btn-atualizar:hover { background: rgba(201,168,76,0.2); }
-.lista-usuario { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-.lista-usuario:last-child { border-bottom: none; }
-.usuario-email { font-size: 13px; color: #ccc; }
-.usuario-lista { font-size: 11px; color: #555; margin-top: 2px; }
-.usuario-data { font-size: 11px; color: #444; }
 .vazio { text-align: center; padding: 30px; color: #444; font-style: italic; font-size: 13px; }
+.loading { text-align: center; padding: 30px; color: #555; font-style: italic; }
+.btn-atualizar { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-atualizar:hover { background: rgba(201,168,76,0.2); }
+.btn-acao { font-size: 11px; padding: 5px 10px; border-radius: 20px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600; border: none; transition: all 0.2s; }
+.btn-premium { background: rgba(201,168,76,0.15); color: #C9A84C; border: 1px solid rgba(201,168,76,0.3); }
+.btn-premium:hover { background: rgba(201,168,76,0.3); }
+.btn-excluir { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+.btn-excluir:hover { background: rgba(239,68,68,0.2); }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; flex-shrink: 0; }
+.dot-verde { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+.dot-amarelo { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+.dot-vermelho { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); animation: pisca 1.5s infinite; }
+@keyframes pisca { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.status-info { display: flex; align-items: center; font-size: 11px; }
+.status-verde { color: #22c55e; }
+.status-amarelo { color: #f59e0b; }
+.status-vermelho { color: #ef4444; }
+.popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+.popup-overlay.show { display: flex; }
+.popup-box { background: #1a1a1a; border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 28px; max-width: 380px; width: 100%; }
+.popup-titulo { font-family: 'Playfair Display', serif; font-size: 18px; color: #C9A84C; margin-bottom: 16px; }
+.popup-campo { margin-bottom: 14px; }
+.popup-campo label { font-size: 11px; color: #666; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+.popup-campo input { width: 100%; background: #0D0D0D; border: 1px solid rgba(201,168,76,0.2); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; }
+.popup-campo input:focus { border-color: #C9A84C; }
+.popup-btns { display: flex; gap: 10px; margin-top: 20px; }
+.popup-btn-confirmar { flex: 1; padding: 12px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+.popup-btn-cancelar { flex: 1; padding: 12px; background: transparent; color: #666; border: 1px solid #333; border-radius: 50px; font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.acoes-flex { display: flex; gap: 6px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
@@ -60,7 +75,6 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
 
 <div class="container">
 
-  <!-- MÉTRICAS RÁPIDAS -->
   <div class="grid-metricas">
     <div class="metrica-card">
       <div class="metrica-valor" id="totalListas">—</div>
@@ -87,7 +101,7 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
       <div class="faturamento-valor" id="faturamentoTotal">R$ 0,00</div>
       <div class="faturamento-label">Faturamento bruto total</div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;" id="faturamentoDetalhes">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
       <div style="background:#0D0D0D;border-radius:10px;padding:14px;text-align:center;">
         <div style="font-size:20px;font-weight:700;color:#C9A84C;" id="vendasCelebracao">0</div>
         <div style="font-size:11px;color:#555;margin-top:3px;">Pacote Celebração</div>
@@ -110,20 +124,54 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
   <!-- VENDAS RECENTES -->
   <div class="secao">
     <div class="secao-titulo">💳 Vendas Recentes</div>
-    <div id="vendasLista"><div class="loading">Carregando vendas...</div></div>
+    <div id="vendasLista"><div class="loading">Carregando...</div></div>
   </div>
 
-  <!-- USUÁRIOS RECENTES -->
+  <!-- PÁGINAS ATIVAS com status de expiração -->
   <div class="secao">
-    <div class="secao-titulo">👥 Usuários Recentes</div>
-    <div id="usuariosLista"><div class="loading">Carregando usuários...</div></div>
+    <div class="secao-titulo">🎉 Páginas Ativas
+      <span style="font-size:11px;font-weight:400;color:#555;margin-left:12px;">
+        <span style="color:#22c55e;">●</span> Saudável &nbsp;
+        <span style="color:#f59e0b;">●</span> Próximo de 6 meses &nbsp;
+        <span style="color:#ef4444;">●</span> Últimos 7 dias
+      </span>
+    </div>
+    <div id="paginasLista"><div class="loading">Carregando...</div></div>
   </div>
 
 </div>
 
+<!-- POPUP LIBERAR PREMIUM -->
+<div class="popup-overlay" id="popupPremium">
+  <div class="popup-box">
+    <div class="popup-titulo">✦ Liberar Acesso Premium</div>
+    <div class="popup-campo">
+      <label>Lista ID</label>
+      <input type="text" id="premiumListaId" placeholder="ID da lista">
+    </div>
+    <div class="popup-campo">
+      <label>Limite de fotos</label>
+      <input type="number" id="premiumLimiteFotos" value="20" min="10" max="100">
+    </div>
+    <div class="popup-campo">
+      <label>Ativar Cofrinho?</label>
+      <select id="premiumCofrinho" style="width:100%;background:#0D0D0D;border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:10px 14px;color:#fff;font-family:'Inter',sans-serif;outline:none;">
+        <option value="false">Não</option>
+        <option value="true">Sim</option>
+      </select>
+    </div>
+    <div class="popup-btns">
+      <button class="popup-btn-cancelar" onclick="fecharPopup()">Cancelar</button>
+      <button class="popup-btn-confirmar" onclick="confirmarPremium()">✦ Liberar</button>
+    </div>
+  </div>
+</div>
+
 <script>
+var paginasCache = [];
+
 async function carregarTudo() {
-  await Promise.all([carregarMetricas(), carregarVendas()]);
+  await Promise.all([carregarMetricas(), carregarVendas(), carregarPaginas()]);
 }
 
 async function carregarMetricas() {
@@ -138,16 +186,7 @@ async function carregarMetricas() {
     document.getElementById('vendasCelebracao').textContent = data.vendas_por_pacote?.celebracao || 0;
     document.getElementById('vendasCofrinho').textContent = data.vendas_por_pacote?.cofrinho || 0;
     document.getElementById('vendasFotos').textContent = (data.vendas_por_pacote?.['5'] || 0) + (data.vendas_por_pacote?.['10'] || 0) + (data.vendas_por_pacote?.['25'] || 0);
-
-    // Usuarios recentes
-    var usuariosEl = document.getElementById('usuariosLista');
-    if (data.usuarios_recentes && data.usuarios_recentes.length > 0) {
-      usuariosEl.innerHTML = data.usuarios_recentes.map(function(u) {
-        return '<div class="lista-usuario"><div><div class="usuario-email">' + (u.email_aniversariante || 'Sem e-mail') + '</div><div class="usuario-lista">Lista: ' + u.id + '</div></div><div class="usuario-data">' + formatarData(u.criado_em) + '</div></div>';
-      }).join('');
-    } else {
-      usuariosEl.innerHTML = '<div class="vazio">Nenhum usuário ainda.</div>';
-    }
+    document.getElementById('vendasCarrossel').textContent = data.vendas_por_pacote?.carrossel || 0;
   } catch(e) { console.error(e); }
 }
 
@@ -166,6 +205,93 @@ async function carregarVendas() {
         return '<tr><td>' + formatarData(v.criado_em) + '</td><td style="font-size:11px;color:#555;">' + v.lista_id + '</td><td><span class="badge-pacote ' + badge + '">' + nome + '</span></td><td style="color:#C9A84C;font-weight:600;">R$ ' + parseFloat(v.valor).toFixed(2).replace('.', ',') + '</td></tr>';
       }).join('') + '</tbody></table>';
   } catch(e) { console.error(e); }
+}
+
+async function carregarPaginas() {
+  try {
+    var r = await fetch('/api/presidente/paginas');
+    var data = await r.json();
+    paginasCache = data;
+    var el = document.getElementById('paginasLista');
+    if (!data || data.length === 0) { el.innerHTML = '<div class="vazio">Nenhuma página ainda.</div>'; return; }
+    var hoje = new Date();
+    el.innerHTML = '<table class="tabela"><thead><tr><th>Status</th><th>Nome</th><th>Lista ID</th><th>Criado em</th><th>Expira em</th><th>Ações</th></tr></thead><tbody>' +
+      data.map(function(p) {
+        var criado = p.criado_em ? new Date(p.criado_em) : null;
+        var diasDecorridos = criado ? Math.floor((hoje - criado) / (1000*60*60*24)) : 0;
+        var diasRestantes = 180 - diasDecorridos;
+        var dotClass, statusClass, statusTxt;
+        if (diasRestantes <= 7) {
+          dotClass = 'dot-vermelho'; statusClass = 'status-vermelho';
+          statusTxt = diasRestantes <= 0 ? 'Expirado' : diasRestantes + 'd restantes';
+        } else if (diasRestantes <= 30) {
+          dotClass = 'dot-amarelo'; statusClass = 'status-amarelo';
+          statusTxt = diasRestantes + 'd restantes';
+        } else {
+          dotClass = 'dot-verde'; statusClass = 'status-verde';
+          statusTxt = diasRestantes + 'd restantes';
+        }
+        var expiraEm = criado ? new Date(criado.getTime() + 180*24*60*60*1000) : null;
+        return '<tr>' +
+          '<td><div class="status-info"><span class="status-dot ' + dotClass + '"></span><span class="' + statusClass + '">' + statusTxt + '</span></div></td>' +
+          '<td style="font-weight:600;">' + (p.nome_celebrante || '—') + '</td>' +
+          '<td style="font-size:11px;color:#555;">' + p.lista_id + '</td>' +
+          '<td>' + (criado ? formatarData(p.criado_em) : '—') + '</td>' +
+          '<td>' + (expiraEm ? formatarData(expiraEm.toISOString()) : '—') + '</td>' +
+          '<td><div class="acoes-flex">' +
+            '<button class="btn-acao btn-premium" onclick="abrirPremium('' + p.lista_id + '')">⭐ Premium</button>' +
+            '<button class="btn-acao btn-excluir" onclick="excluirPagina('' + p.lista_id + '')">🗑️ Excluir</button>' +
+          '</div></td>' +
+        '</tr>';
+      }).join('') + '</tbody></table>';
+  } catch(e) { console.error(e); }
+}
+
+function abrirPremium(listaId) {
+  document.getElementById('premiumListaId').value = listaId;
+  document.getElementById('popupPremium').classList.add('show');
+}
+
+function fecharPopup() {
+  document.getElementById('popupPremium').classList.remove('show');
+}
+
+async function confirmarPremium() {
+  var listaId = document.getElementById('premiumListaId').value.trim();
+  var limite = parseInt(document.getElementById('premiumLimiteFotos').value) || 20;
+  var cofrinho = document.getElementById('premiumCofrinho').value === 'true';
+  if (!listaId) { alert('Digite o ID da lista!'); return; }
+  try {
+    var r = await fetch('/api/presidente/liberar-premium', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ lista_id: listaId, limite_fotos: limite, cofrinho_ativo: cofrinho })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      alert('✦ Premium liberado com sucesso!');
+      fecharPopup();
+      carregarPaginas();
+    } else {
+      alert('Erro: ' + (data.erro || 'Tente novamente'));
+    }
+  } catch(e) { alert('Erro de conexão.'); }
+}
+
+async function excluirPagina(listaId) {
+  if (!confirm('Tem certeza que deseja excluir a página ' + listaId + '? Esta ação não pode ser desfeita!')) return;
+  try {
+    var r = await fetch('/api/presidente/excluir-pagina', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ lista_id: listaId })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      alert('Página excluída com sucesso!');
+      carregarPaginas();
+    }
+  } catch(e) { alert('Erro ao excluir.'); }
 }
 
 function formatarData(dataStr) {
