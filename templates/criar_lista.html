@@ -117,8 +117,6 @@
         .divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
         .evento-badge-mini { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #C9A84C; margin-bottom: 20px; font-style: italic; font-family: 'Playfair Display', serif; }
         .nav-etapa4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-
-        /* BANNER 2 BOTÕES */
         .banner-celebracao { background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03)); border: 1px solid rgba(201,168,76,0.3); border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; }
         .banner-celebracao-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .banner-celebracao-icone { font-size: 20px; flex-shrink: 0; color: #C9A84C; }
@@ -141,7 +139,7 @@
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
             <span id="stepIndicator" style="font-size:11px; color:#aaa;">1 de 4</span>
-            <button onclick="window.open('/configurar-premium/'+LISTA_ID,'_blank')" style="background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:20px; padding:5px 10px; font-size:10px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; letter-spacing:0.03em; white-space:nowrap; animation:brilhoPremium 2s infinite;">🎉 Minha Página do Evento</button>
+            <button onclick="abrirConfigurarPagina()" style="background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:20px; padding:5px 10px; font-size:10px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; letter-spacing:0.03em; white-space:nowrap; animation:brilhoPremium 2s infinite;">🎉 Minha Página do Evento</button>
         </div>
     </header>
 
@@ -154,8 +152,6 @@
 
     <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
-
-        <!-- BANNER COM 2 BOTÕES -->
         <div class="banner-celebracao">
             <div class="banner-celebracao-topo">
                 <div class="banner-celebracao-icone">✦</div>
@@ -165,8 +161,8 @@
                 </div>
             </div>
             <div class="banner-celebracao-botoes">
-                <button class="banner-btn-configurar" onclick="window.open('/configurar-premium/'+LISTA_ID,'_blank')">⚙️ Configurar Página</button>
-                <button class="banner-btn-ver" onclick="window.open('/premium/'+LISTA_ID,'_blank')">👁 Ver Página</button>
+                <button class="banner-btn-configurar" onclick="abrirConfigurarPagina()">⚙️ Configurar Página</button>
+                <button class="banner-btn-ver" onclick="abrirVerPagina()">👁 Ver Página</button>
             </div>
         </div>
 
@@ -176,42 +172,27 @@
             <div class="evento-card selected" data-evento="aniversario" onclick="selecionarEvento(this)">
                 <img class="evento-foto" src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
                 <div class="evento-check">✓</div>
-                <div class="evento-info">
-                    <div class="evento-nome">Aniversário</div>
-                    <div class="evento-sub">Celebre seu dia!</div>
-                </div>
+                <div class="evento-info"><div class="evento-nome">Aniversário</div><div class="evento-sub">Celebre seu dia!</div></div>
             </div>
             <div class="evento-card" data-evento="casamento" onclick="selecionarEvento(this)">
                 <img class="evento-foto" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
                 <div class="evento-check">✓</div>
-                <div class="evento-info">
-                    <div class="evento-nome">Casamento</div>
-                    <div class="evento-sub">Lista de presentes</div>
-                </div>
+                <div class="evento-info"><div class="evento-nome">Casamento</div><div class="evento-sub">Lista de presentes</div></div>
             </div>
             <div class="evento-card" data-evento="casa-nova" onclick="selecionarEvento(this)">
                 <img class="evento-foto" src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
                 <div class="evento-check">✓</div>
-                <div class="evento-info">
-                    <div class="evento-nome">Casa Nova</div>
-                    <div class="evento-sub">Novo lar, nova vida!</div>
-                </div>
+                <div class="evento-info"><div class="evento-nome">Casa Nova</div><div class="evento-sub">Novo lar, nova vida!</div></div>
             </div>
             <div class="evento-card" data-evento="cha-bebe" onclick="selecionarEvento(this)">
                 <img class="evento-foto" src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
                 <div class="evento-check">✓</div>
-                <div class="evento-info">
-                    <div class="evento-nome">Chá de Bebê</div>
-                    <div class="evento-sub">Bem-vindo pequeno!</div>
-                </div>
+                <div class="evento-info"><div class="evento-nome">Chá de Bebê</div><div class="evento-sub">Bem-vindo pequeno!</div></div>
             </div>
             <div class="evento-card" data-evento="outros" onclick="selecionarEvento(this)">
                 <img class="evento-foto" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&q=80&fit=crop" crossorigin="anonymous" onerror="this.style.display='none'">
                 <div class="evento-check">✓</div>
-                <div class="evento-info">
-                    <div class="evento-nome">Outros Eventos</div>
-                    <div class="evento-sub">Formatura, Natal, Dia das Mães e mais...</div>
-                </div>
+                <div class="evento-info"><div class="evento-nome">Outros Eventos</div><div class="evento-sub">Formatura, Natal, Dia das Mães e mais...</div></div>
             </div>
         </div>
         <button class="btn-proximo" onclick="irParaEtapa(2)">Continuar →</button>
@@ -228,11 +209,11 @@
             <input type="text" id="inputNomeEvento" placeholder="Ex: Aniversário da Maria">
         </div>
         <div class="campo">
-    <label>Data do evento <span style="color:#C9A84C;font-size:10px;">— máximo 12 meses</span></label>
-    <input type="date" id="inputDataEvento" onchange="validarDataEvento()">
-    <p id="dataEventoErro" style="display:none;font-size:12px;color:#ef4444;margin-top:8px;font-style:italic;">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
-    <p id="dataEventoAviso" style="display:none;font-size:12px;color:#C9A84C;margin-top:8px;font-style:italic;"></p>
-</div>
+            <label>Data do evento <span style="color:#C9A84C;font-size:10px;">— máximo 12 meses</span></label>
+            <input type="date" id="inputDataEvento" onchange="validarDataEvento()">
+            <p id="dataEventoErro" style="display:none;font-size:12px;color:#ef4444;margin-top:8px;font-style:italic;">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
+            <p id="dataEventoAviso" style="display:none;font-size:12px;color:#C9A84C;margin-top:8px;font-style:italic;"></p>
+        </div>
         <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
         <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
@@ -266,22 +247,15 @@
             </div>
         </div>
         <div class="platform-chips">
-            <span class="chip">Amazon</span>
-            <span class="chip">Mercado Livre</span>
-            <span class="chip">Shopee</span>
-            <span class="chip">Magalu</span>
-            <span class="chip">Shein</span>
+            <span class="chip">Amazon</span><span class="chip">Mercado Livre</span>
+            <span class="chip">Shopee</span><span class="chip">Magalu</span><span class="chip">Shein</span>
         </div>
         <div class="input-group">
             <input type="text" id="inputLink" placeholder="Cole o link do produto aqui...">
             <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
         </div>
         <div class="loading" id="loading">✦ Buscando produto...</div>
-        <div class="divider">
-            <div class="divider-linha"></div>
-            <div class="divider-icon">✦</div>
-            <div class="divider-linha"></div>
-        </div>
+        <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
         <div class="section-header">
             <h3>Seus presentes</h3>
             <span id="contador">0 itens</span>
@@ -320,7 +294,6 @@
             <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
         </div>
     </div>
-
 </div>
 
 <!-- Popup story -->
@@ -612,9 +585,9 @@
         el.innerHTML = produtos.map(p => {
             const badge = { amazon:"badge-amazon", mercadolivre:"badge-mercadolivre", shopee:"badge-shopee", magalu:"badge-magalu", shein:"badge-shein" }[p.plataforma] || "badge-outro";
             const label = { amazon:"Amazon", mercadolivre:"Mercado Livre", shopee:"Shopee", magalu:"Magalu", shein:"Shein" }[p.plataforma] || p.plataforma;
-            const imgHtml = p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>🎁</div>'">` : `<div class="product-img-placeholder">🎁</div>`;
-            const nomeEscapado = (p.nome||'').replace(/'/g,"\\'");
-            const precoEscapado = (p.preco||'').replace(/'/g,"\\'");
+            const imgHtml = p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.parentElement.innerHTML='<div class=\'product-img-placeholder\'>🎁</div>'">` : `<div class="product-img-placeholder">🎁</div>`;
+            const nomeEscapado = (p.nome||'').replace(/'/g,"\'");
+            const precoEscapado = (p.preco||'').replace(/'/g,"\'");
             const editBtn = `<button class="btn-editar" onclick="abrirEditarProduto(${p.id},'${nomeEscapado}','${precoEscapado}','${p.plataforma}')">✏️</button>`;
             return `<div class="product-card" id="prod-${p.id}">
                 <div class="product-img-wrap">${imgHtml}</div>
@@ -775,33 +748,59 @@
     function verVitrine() { salvarEstado(); window.open(`/vitrine/${LISTA_ID}?admin=true`,'_blank'); }
     function compartilharWhatsApp() {
         var nomeEvento=document.getElementById('inputNomeEvento').value.trim()||'meu evento';
-       var linkCelebracao=window.location.origin+'/premium/'+LISTA_ID;
-var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+'! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n'+linkCelebracao+'\n\nValeu pelo carinho! 🙏✦';
+        var linkCelebracao=window.location.origin+'/premium/'+LISTA_ID;
+        var mensagem='Oi! 🎉 Preparei tudo para '+nomeEvento+'! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n'+linkCelebracao+'\n\nValeu pelo carinho! 🙏✦';
         window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(mensagem),'_blank');
     }
-    function abrirPaginaPremium() { window.open('/configurar-premium/' + LISTA_ID, '_blank'); }
     function copiarLink() { navigator.clipboard.writeText(`${window.location.origin}/premium/${LISTA_ID}`).then(()=>alert("Link copiado!")); }
     function validarDataEvento() {
-    var dataStr = document.getElementById('inputDataEvento').value;
-    var erro = document.getElementById('dataEventoErro');
-    var aviso = document.getElementById('dataEventoAviso');
-    erro.style.display = 'none';
-    aviso.style.display = 'none';
-    if (!dataStr) return;
-    var dataSelecionada = new Date(dataStr + 'T00:00:00');
-    var hoje = new Date(); hoje.setHours(0,0,0,0);
-    var maxData = new Date(hoje);
-    maxData.setMonth(maxData.getMonth() + 12);
-    if (dataSelecionada > maxData) {
-        document.getElementById('inputDataEvento').value = '';
-        erro.style.display = 'block';
-        return;
+        var dataStr = document.getElementById('inputDataEvento').value;
+        var erro = document.getElementById('dataEventoErro');
+        var aviso = document.getElementById('dataEventoAviso');
+        erro.style.display = 'none'; aviso.style.display = 'none';
+        if (!dataStr) return;
+        var dataSelecionada = new Date(dataStr + 'T00:00:00');
+        var hoje = new Date(); hoje.setHours(0,0,0,0);
+        var maxData = new Date(hoje); maxData.setMonth(maxData.getMonth() + 12);
+        if (dataSelecionada > maxData) { document.getElementById('inputDataEvento').value = ''; erro.style.display = 'block'; return; }
+        var expiracao = new Date(dataSelecionada); expiracao.setDate(expiracao.getDate() + 7);
+        aviso.textContent = '✦ Sua página expirará em ' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+        aviso.style.display = 'block';
     }
-    var expiracao = new Date(dataSelecionada);
-    expiracao.setDate(expiracao.getDate() + 7);
-    aviso.textContent = '✦ Sua página expirará em ' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
-    aviso.style.display = 'block';
-}
+
+    // ✦ VERIFICAR ACESSO À PÁGINA DO EVENTO
+    async function verificarAcessoConfigurar() {
+        try {
+            var temStory = false;
+            try { temStory = localStorage.getItem(WHATSAPP_KEY) === 'true'; } catch(e) {}
+            if (temStory) return true;
+            var r = await fetch('/api/config-premium/' + LISTA_ID);
+            var data = await r.json();
+            if (data.config && data.config.cofrinho_ativo) return true;
+            return false;
+        } catch(e) { return false; }
+    }
+
+    async function abrirConfigurarPagina() {
+        var liberado = await verificarAcessoConfigurar();
+        if (!liberado) {
+            alert('✦ Quase lá!\n\nPara acessar a Página do Evento, finalize uma das etapas:\n\n📸 Crie seu Story no Instagram\n💛 Ative o Cofrinho Pix');
+            return;
+        }
+        window.open('/configurar-premium/' + LISTA_ID, '_blank');
+    }
+
+    async function abrirVerPagina() {
+        var liberado = await verificarAcessoConfigurar();
+        if (!liberado) {
+            alert('✦ Quase lá!\n\nPara ver a Página do Evento, finalize uma das etapas:\n\n📸 Crie seu Story no Instagram\n💛 Ative o Cofrinho Pix');
+            return;
+        }
+        window.open('/minha-celebracao/' + LISTA_ID, '_blank');
+    }
+
+    function abrirPaginaPremium() { abrirConfigurarPagina(); }
+
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("inputLink").addEventListener("keypress", function(e) { if(e.key==="Enter") adicionarProduto(); });
         restaurarEstado();
