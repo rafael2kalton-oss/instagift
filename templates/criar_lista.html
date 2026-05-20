@@ -784,7 +784,7 @@
     async function abrirConfigurarPagina() {
         var liberado = await verificarAcessoConfigurar();
         if (!liberado) {
-            alert('✦ Quase lá!\n\nPara acessar a Página do Evento, finalize uma das etapas:\n\n📸 Crie seu Story no Instagram\n💛 Ative o Cofrinho Pix');
+            alert('✦ Finalize o cadastro do evento!\n\nCrie sua lista de presentes ou ative o Cofrinho Pix para acessar a Página do Evento.');
             return;
         }
         window.open('/configurar-premium/' + LISTA_ID, '_blank');
@@ -793,7 +793,7 @@
     async function abrirVerPagina() {
         var liberado = await verificarAcessoConfigurar();
         if (!liberado) {
-            alert('✦ Quase lá!\n\nPara ver a Página do Evento, finalize uma das etapas:\n\n📸 Crie seu Story no Instagram\n💛 Ative o Cofrinho Pix');
+            alert('✦ Finalize o cadastro do evento!\n\nCrie sua lista de presentes ou ative o Cofrinho Pix para ver a Página do Evento.');
             return;
         }
         window.open('/minha-celebracao/' + LISTA_ID, '_blank');
