@@ -869,7 +869,7 @@ async function salvarConfig() {
 }
 
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
-function verPagina() { window.open('/premium/' + listaId, '_blank'); }
+function verPagina() { window.open('/minha-celebracao/' + listaId, '_blank'); }
 
 async function detectarEvento() {
   try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
