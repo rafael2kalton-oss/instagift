@@ -578,7 +578,7 @@ def get_limite_fotos(lista_id):
 
 @app.route("/configurar-premium/<lista_id>")
 def configurar_premium(lista_id):
-    return render_template("configurar_premium.html", lista_id=lista_id)
+    return redirect(f"/minha-celebracao/{lista_id}")
 
 @app.route("/api/config-premium/<lista_id>")
 def get_config_premium(lista_id):
@@ -696,6 +696,10 @@ def listar_presencas(lista_id):
 def premium(lista_id):
     return render_template("premium.html", lista_id=lista_id)
 
+@app.route("/minha-celebracao/<lista_id>")
+def minha_celebracao(lista_id):
+    return render_template("minha_celebracao.html", lista_id=lista_id)
+
 @app.route("/api/verificar-expiracao/<lista_id>")
 def verificar_expiracao(lista_id):
     try:
@@ -728,7 +732,7 @@ def login_page():
 @app.route("/acesso/<lista_id>")
 def acesso_direto(lista_id):
     """Link direto para configurar sem magic link — compatibilidade"""
-    return render_template("configurar_premium.html", lista_id=lista_id)
+    return redirect(f"/minha-celebracao/{lista_id}")
 
 @app.route("/api/enviar-magic-link", methods=["POST"])
 def enviar_magic_link():
@@ -782,7 +786,7 @@ def acesso_magico(token):
     # Marcar como usado
     sb_patch("magic_links", f"token=eq.{token}", {"usado": True})
     lista_id = link["lista_id"]
-    return render_template("configurar_premium.html", lista_id=lista_id)
+    return redirect(f"/minha-celebracao/{lista_id}")
 
 # ── PRESIDENTE ──
 
