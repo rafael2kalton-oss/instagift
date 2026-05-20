@@ -430,6 +430,17 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
 </div>
 
+<!-- POPUP PAGAMENTO BLOQUEADO -->
+<div class="popup-overlay" id="popupPagamento">
+  <div class="popup-box">
+    <div class="popup-icon" style="font-size:36px;margin-bottom:12px;">🔒</div>
+    <h3 class="popup-titulo" id="popupPagamentoTitulo">Recurso Premium</h3>
+    <p class="popup-texto" id="popupPagamentoTexto"></p>
+    <button class="popup-btn-confirmar" id="popupPagamentoBtn">✦ Adquirir</button>
+    <button class="popup-btn-cancelar" onclick="fecharPopupPagamento()" style="margin-top:10px;">Agora não</button>
+  </div>
+</div>
+
 <!-- POPUP COMPRAR MAIS FOTOS -->
 <div id="popupComprarFotos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
   <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
@@ -449,6 +460,8 @@ input:checked + .slider:before { transform: translateX(22px); }
 var listaId = "{{ lista_id }}";
 var estiloConviteSelecionado = 'classico';
 var imagemFundoConviteBase64 = '';
+var cofrinhoFoiPago = false;
+var carrosselFoiPago = false;
 var usaConvitePadrao = true;
 var fotosExistentes = [];
 var eventoAtual = 'aniversario';
@@ -467,9 +480,40 @@ var paletas = {
 };
 
 function toggleCofrinho() {
-  var ativo = document.getElementById('cofrinhoAtivo').checked;
+  var checkbox = document.getElementById('cofrinhoAtivo');
+  var ativo = checkbox.checked;
+  if (ativo && !cofrinhoFoiPago) {
+    checkbox.checked = false;
+    // Mostrar popup de pagamento
+    document.getElementById('cofrinhoArea').className = 'cofrinho-area';
+    mostrarAvisoPagamento('cofrinho');
+    return;
+  }
   var area = document.getElementById('cofrinhoArea');
   area.className = 'cofrinho-area' + (ativo ? ' ativa' : '');
+}
+
+function mostrarAvisoPagamento(tipo) {
+  var popup = document.getElementById('popupPagamento');
+  var titulo = document.getElementById('popupPagamentoTitulo');
+  var texto = document.getElementById('popupPagamentoTexto');
+  var btn = document.getElementById('popupPagamentoBtn');
+  if (tipo === 'cofrinho') {
+    titulo.textContent = '💛 Ativar Cofrinho Pix';
+    texto.textContent = 'Para ativar o Cofrinho Pix e receber contribuições dos seus convidados, adquira por R$ 15,90.';
+    btn.textContent = '✦ Ativar Cofrinho — R$ 15,90';
+    btn.onclick = function() { fecharPopupPagamento(); comprarCofrinho(); };
+  } else if (tipo === 'carrossel') {
+    titulo.textContent = '🎠 Estilo Carrossel';
+    texto.textContent = 'O estilo Carrossel está disponível no Pacote Celebração por R$ 25,90 (inclui Cofrinho Pix + 5 fotos extras).';
+    btn.textContent = '✦ Adquirir Pacote Celebração — R$ 25,90';
+    btn.onclick = function() { fecharPopupPagamento(); comprarPacotao(); };
+  }
+  popup.classList.add('show');
+}
+
+function fecharPopupPagamento() {
+  document.getElementById('popupPagamento').classList.remove('show');
 }
 
 function validarData() {
@@ -514,6 +558,10 @@ function selecionarPaleta(nome) {
 }
 
 function selecionarEstilo(estilo) {
+  if (estilo === 'carrossel' && !carrosselFoiPago) {
+    mostrarAvisoPagamento('carrossel');
+    return;
+  }
   estiloMural = estilo;
   document.querySelectorAll('.estilo-card').forEach(function(el) { el.classList.remove('ativo'); });
   var ids = { normal: 'estiloNormal', polaroid: 'estiloPolaroid', colagem: 'estiloColagem', carrossel: 'estiloCarrossel' };
@@ -553,8 +601,12 @@ async function carregarConfig() {
       }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
       if (data.config.cofrinho_ativo) {
+        cofrinhoFoiPago = true;
         document.getElementById('cofrinhoAtivo').checked = true;
         toggleCofrinho();
+      }
+      if (data.config.estilo_mural === 'carrossel') {
+        carrosselFoiPago = true;
       }
       if (data.config.data_evento && data.config.data_evento.trim() !== '') {
         document.getElementById('dataEvento').value = data.config.data_evento;
