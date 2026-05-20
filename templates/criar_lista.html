@@ -127,6 +127,148 @@
         .banner-btn-configurar:hover { transform: translateY(-1px); }
         .banner-btn-ver { flex: 1; padding: 9px 10px; background: transparent; color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); border-radius: 20px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-align: center; transition: all 0.2s; white-space: nowrap; }
         .banner-btn-ver:hover { background: rgba(201,168,76,0.08); }
+
+        /* =============================================
+           ✦ PACOTE CELEBRAÇÃO — CARD PREMIUM ETAPA 1
+           ============================================= */
+        .pacote-card {
+            background: #fffdf7;
+            border: 1.5px solid #C9A84C;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+        .pacote-topo {
+            background: #C9A84C;
+            padding: 6px 0;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: #fff8e1;
+        }
+        .pacote-body {
+            padding: 20px 18px 0;
+        }
+        .pacote-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #FFF3CD;
+            border: 1px solid rgba(201,168,76,0.4);
+            border-radius: 20px;
+            padding: 3px 11px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #85600A;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+        .pacote-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #2C2C2C;
+            margin-bottom: 6px;
+        }
+        .pacote-preco-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .pacote-preco-valor {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #C9A84C;
+        }
+        .pacote-preco-label {
+            font-size: 12px;
+            color: #aaa;
+            font-style: italic;
+        }
+        .pacote-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.35), transparent);
+            margin: 0;
+        }
+        .pacote-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        .pacote-toggle-texto {
+            font-size: 12px;
+            color: #C9A84C;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+        .pacote-toggle-seta {
+            font-size: 11px;
+            color: #C9A84C;
+            transition: transform 0.25s;
+        }
+        .pacote-toggle-seta.aberto { transform: rotate(180deg); }
+        .pacote-itens {
+            display: flex;
+            flex-direction: column;
+            padding: 0 18px 16px;
+        }
+        .pacote-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(201,168,76,0.1);
+        }
+        .pacote-item:last-child { border-bottom: none; }
+        .pacote-item-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .pacote-item-texto {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .pacote-item-texto strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2C2C2C;
+            display: block;
+        }
+        .pacote-item-texto span {
+            font-size: 11px;
+            color: #aaa;
+            font-style: italic;
+        }
+        .pacote-btn-wrap {
+            padding: 0 18px 18px;
+        }
+        .pacote-btn {
+            width: 100%;
+            background: #C9A84C;
+            border: none;
+            border-radius: 50px;
+            padding: 14px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.04em;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .pacote-btn:hover { opacity: 0.88; transform: translateY(-1px); }
     </style>
 </head>
 <body>
@@ -152,30 +294,51 @@
 
     <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
-        <!-- ✦ CARD PACOTE CELEBRAÇÃO -->
+
+        <!-- ✦ CARD PACOTE CELEBRAÇÃO — NOVO VISUAL -->
         <div class="pacote-card" id="pacoteCard">
-            <div class="pacote-top">
-                <div class="pacote-badge">✦ &nbsp;MAIS POPULAR</div>
+            <div class="pacote-topo">✦ &nbsp; MAIS POPULAR &nbsp; ✦</div>
+            <div class="pacote-body">
+                <div class="pacote-badge">✦ &nbsp;Oferta especial</div>
                 <div class="pacote-titulo">Pacote Celebração</div>
                 <div class="pacote-preco-wrap">
                     <div class="pacote-preco-valor">R$ 25,90</div>
                     <div class="pacote-preco-label">pagamento único</div>
                 </div>
             </div>
-            <div class="pacote-toggle" onclick="togglePacote()">
-                <div class="pacote-toggle-texto">Ver o que está incluído</div>
-                <div class="pacote-toggle-seta" id="pacoteSeta">▼</div>
-            </div>
+            <div class="pacote-divider"></div>
+            <button class="pacote-toggle" onclick="togglePacote()">
+                <span class="pacote-toggle-texto">Ver o que está incluído</span>
+                <span class="pacote-toggle-seta" id="pacoteSeta">▼</span>
+            </button>
             <div id="pacoteItens" style="display:none;">
+                <div class="pacote-divider"></div>
                 <div class="pacote-itens">
-                    <div class="pacote-item"><div class="pacote-item-icon">💛</div><div class="pacote-item-texto"><strong>Cofrinho Pix</strong>Receba contribuições dos convidados</div></div>
-                    <div class="pacote-item"><div class="pacote-item-icon">🎠</div><div class="pacote-item-texto"><strong>Mural Carrossel</strong>Fotos em slideshow automático</div></div>
-                    <div class="pacote-item"><div class="pacote-item-icon">📸</div><div class="pacote-item-texto"><strong>+5 Fotos extras</strong>Mais espaço no seu mural</div></div>
-                    <div class="pacote-item"><div class="pacote-item-icon">✉️</div><div class="pacote-item-texto"><strong>Convite Digital</strong>Compartilhe pelo WhatsApp</div></div>
-                    <div class="pacote-item"><div class="pacote-item-icon">💌</div><div class="pacote-item-texto"><strong>Livro de Recados</strong>Mensagens dos seus convidados</div></div>
+                    <div class="pacote-item">
+                        <div class="pacote-item-icon">💛</div>
+                        <div class="pacote-item-texto"><strong>Cofrinho Pix</strong><span>Receba contribuições dos convidados</span></div>
+                    </div>
+                    <div class="pacote-item">
+                        <div class="pacote-item-icon">🎠</div>
+                        <div class="pacote-item-texto"><strong>Mural Carrossel</strong><span>Fotos em slideshow automático</span></div>
+                    </div>
+                    <div class="pacote-item">
+                        <div class="pacote-item-icon">📸</div>
+                        <div class="pacote-item-texto"><strong>+5 Fotos extras</strong><span>Mais espaço no seu mural</span></div>
+                    </div>
+                    <div class="pacote-item">
+                        <div class="pacote-item-icon">✉️</div>
+                        <div class="pacote-item-texto"><strong>Convite Digital</strong><span>Compartilhe com os convidados</span></div>
+                    </div>
+                    <div class="pacote-item">
+                        <div class="pacote-item-icon">💌</div>
+                        <div class="pacote-item-texto"><strong>Livro de Recados</strong><span>Mensagens dos seus convidados</span></div>
+                    </div>
                 </div>
             </div>
-            <button class="pacote-btn" onclick="comprarPacotao()">✦ &nbsp;Adquirir Pacote Celebração — R$ 25,90</button>
+            <div class="pacote-btn-wrap">
+                <button class="pacote-btn" onclick="comprarPacotao()">✦ &nbsp;Adquirir Pacote Celebração — R$ 25,90</button>
+            </div>
         </div>
 
         <p class="secao-titulo">Qual é o seu evento?</p>
@@ -519,7 +682,6 @@
         } catch(e) {}
     }
 
-    // Persistir lista_id no localStorage
     try {
         var savedListaId = localStorage.getItem('instagift_lista_id');
         if (savedListaId && savedListaId !== LISTA_ID && window.location.pathname === '/criar-lista') {
@@ -802,7 +964,6 @@
         aviso.style.display = 'block';
     }
 
-    // ✦ VERIFICAR ACESSO À PÁGINA DO EVENTO
     async function verificarAcessoConfigurar() {
         try {
             var temStory = false;
@@ -834,13 +995,9 @@
     }
 
     function abrirPaginaPremium() { abrirPopupAcesso(); }
+    function abrirPopupAcesso() { document.getElementById('popupAcesso').style.display = 'flex'; }
+    function fecharPopupAcesso() { document.getElementById('popupAcesso').style.display = 'none'; }
 
-    function abrirPopupAcesso() {
-        document.getElementById('popupAcesso').style.display = 'flex';
-    }
-    function fecharPopupAcesso() {
-        document.getElementById('popupAcesso').style.display = 'none';
-    }
     async function acessoViaProdutos() {
         fecharPopupAcesso();
         var liberado = await verificarAcessoConfigurar();
@@ -875,11 +1032,13 @@
             else { alert('Erro ao processar. Tente novamente.'); }
         } catch(e) { alert('Erro de conexão. Tente novamente.'); }
     }
+
     function togglePacote() {
         var itens = document.getElementById('pacoteItens');
         var seta = document.getElementById('pacoteSeta');
-        if (itens.style.display === 'none') {
+        if (itens.style.display === 'none' || itens.style.display === '') {
             itens.style.display = 'flex';
+            itens.style.flexDirection = 'column';
             seta.classList.add('aberto');
         } else {
             itens.style.display = 'none';
