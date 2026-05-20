@@ -788,7 +788,7 @@ def acesso_magico(token):
     if datetime.utcnow() > expira_em:
         return render_template("login.html")
     lista_id = link["lista_id"]
-    return render_template("configurar_premium.html", lista_id=lista_id)
+    return render_template("criar_story.html", lista_id=lista_id)
 
 # ── PRESIDENTE ──
 
