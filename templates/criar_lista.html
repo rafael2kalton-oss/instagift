@@ -669,7 +669,8 @@
     function salvarEstado() {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                evento: eventoAtual, step: stepAtual,
+                evento: eventoAtual,
+                step: stepAtual,
                 nomeEvento: document.getElementById('inputNomeEvento').value,
                 dataEvento: document.getElementById('inputDataEvento').value,
                 email: document.getElementById('inputEmail').value
@@ -686,22 +687,50 @@
         }
     } catch(e) {}
 
-    function restaurarEstado() {
+    function aplicarEstadoSalvo(estado) {
+        // Restaura evento selecionado
+        if (estado.evento) {
+            eventoAtual = estado.evento;
+            document.querySelectorAll('.evento-card').forEach(function(c) {
+                c.classList.remove('selected');
+                if (c.dataset.evento === eventoAtual) c.classList.add('selected');
+            });
+        }
+        // Restaura campos
+        if (estado.nomeEvento) document.getElementById('inputNomeEvento').value = estado.nomeEvento;
+        if (estado.dataEvento) {
+            document.getElementById('inputDataEvento').value = estado.dataEvento;
+            validarDataEvento();
+        }
+        if (estado.email) document.getElementById('inputEmail').value = estado.email;
+    }
+
+    async function restaurarEstado() {
         try {
             var saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) return;
             var estado = JSON.parse(saved);
-            if (estado.evento) {
-                eventoAtual = estado.evento;
-                document.querySelectorAll('.evento-card').forEach(function(c) {
-                    c.classList.remove('selected');
-                    if (c.dataset.evento === eventoAtual) c.classList.add('selected');
-                });
+
+            aplicarEstadoSalvo(estado);
+
+            // Verifica se já tem produtos salvos no servidor
+            var temProdutos = false;
+            try {
+                var r = await fetch('/api/produtos/' + LISTA_ID);
+                var produtos = await r.json();
+                temProdutos = Array.isArray(produtos) && produtos.length > 0;
+            } catch(e) {}
+
+            // Se tinha produtos OU estava na etapa 4, volta direto pra etapa 4
+            if (temProdutos || (estado.step && estado.step >= 4)) {
+                irParaEtapa(4);
+                return;
             }
-            if (estado.nomeEvento) document.getElementById('inputNomeEvento').value = estado.nomeEvento;
-            if (estado.dataEvento) document.getElementById('inputDataEvento').value = estado.dataEvento;
-            if (estado.email) document.getElementById('inputEmail').value = estado.email;
-            if (estado.step && estado.step >= 4) irParaEtapa(4);
+
+            // Se estava em etapa intermediária, volta pra ela
+            if (estado.step && estado.step >= 2) {
+                irParaEtapa(estado.step);
+            }
         } catch(e) {}
     }
 
@@ -1041,9 +1070,9 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById("inputLink").addEventListener("keypress", function(e) { if(e.key==="Enter") adicionarProduto(); });
-        restaurarEstado();
+        await restaurarEstado();
     });
 </script>
 </body>
