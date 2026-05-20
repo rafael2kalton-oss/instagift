@@ -990,12 +990,16 @@
 
     async function verificarAcessoConfigurar() {
         try {
-            var temStory = false;
-            try { temStory = localStorage.getItem(WHATSAPP_KEY) === 'true'; } catch(e) {}
-            if (temStory) return true;
-            var r = await fetch('/api/config-premium/' + LISTA_ID);
-            var data = await r.json();
+            // 1) Tem produtos na lista? → libera
+            var r1 = await fetch('/api/produtos/' + LISTA_ID);
+            var produtos = await r1.json();
+            if (Array.isArray(produtos) && produtos.length > 0) return true;
+
+            // 2) Já pagou cofrinho? → libera
+            var r2 = await fetch('/api/config-premium/' + LISTA_ID);
+            var data = await r2.json();
             if (data.config && data.config.cofrinho_ativo) return true;
+
             return false;
         } catch(e) { return false; }
     }
@@ -1003,7 +1007,7 @@
     async function abrirConfigurarPagina() {
         var liberado = await verificarAcessoConfigurar();
         if (!liberado) {
-            alert('✦ Finalize o cadastro do evento!\n\nCrie sua lista de presentes ou ative o Cofrinho Pix para acessar a Página do Evento.');
+            alert('✦ Adicione pelo menos 1 presente na lista para acessar a Página do Evento!');
             return;
         }
         window.open('/configurar-premium/' + LISTA_ID, '_blank');
@@ -1012,7 +1016,7 @@
     async function abrirVerPagina() {
         var liberado = await verificarAcessoConfigurar();
         if (!liberado) {
-            alert('✦ Finalize o cadastro do evento!\n\nCrie sua lista de presentes ou ative o Cofrinho Pix para ver a Página do Evento.');
+            alert('✦ Adicione pelo menos 1 presente na lista para ver a Página do Evento!');
             return;
         }
         window.open('/minha-celebracao/' + LISTA_ID, '_blank');
@@ -1024,11 +1028,16 @@
 
     async function acessoViaProdutos() {
         fecharPopupAcesso();
-        var liberado = await verificarAcessoConfigurar();
-        if (liberado) {
-            window.open('/configurar-premium/' + LISTA_ID, '_blank');
-        } else {
-            alert('✦ Adicione pelo menos 1 presente na lista para liberar o acesso!');
+        try {
+            var r = await fetch('/api/produtos/' + LISTA_ID);
+            var produtos = await r.json();
+            if (Array.isArray(produtos) && produtos.length > 0) {
+                window.open('/configurar-premium/' + LISTA_ID, '_blank');
+            } else {
+                alert('✦ Adicione pelo menos 1 presente na lista para liberar o acesso!');
+            }
+        } catch(e) {
+            alert('✦ Erro ao verificar lista. Tente novamente.');
         }
     }
     async function acessoViaCofrinho() {
