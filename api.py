@@ -341,7 +341,9 @@ def index():
 
 @app.route("/criar-lista")
 def criar_lista_page():
-    lista_id = str(uuid.uuid4())[:8]
+    lista_id = request.args.get("id", "").strip()
+    if not lista_id:
+        lista_id = str(uuid.uuid4())[:8]
     return render_template("criar_lista.html", lista_id=lista_id)
 
 @app.route("/lista/<lista_id>")
