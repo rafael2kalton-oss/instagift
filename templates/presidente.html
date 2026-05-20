@@ -239,8 +239,8 @@ async function carregarPaginas() {
           '<td>' + (criado ? formatarData(p.criado_em) : '—') + '</td>' +
           '<td>' + (expiraEm ? formatarData(expiraEm.toISOString()) : '—') + '</td>' +
           '<td><div class="acoes-flex">' +
-            '<button class="btn-acao btn-premium" onclick="abrirPremium('' + p.lista_id + '')">⭐ Premium</button>' +
-            '<button class="btn-acao btn-excluir" onclick="excluirPagina('' + p.lista_id + '')">🗑️ Excluir</button>' +
+            '<button class="btn-acao btn-premium" onclick="abrirPremium(\'' + p.lista_id + '\')">⭐ Premium</button>' +
+            '<button class="btn-acao btn-excluir" onclick="excluirPagina(\'' + p.lista_id + '\')">🗑️ Excluir</button>' +
           '</div></td>' +
         '</tr>';
       }).join('') + '</tbody></table>';
