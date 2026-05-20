@@ -797,10 +797,10 @@ def presidente(token):
 @app.route("/api/presidente/metricas")
 def presidente_metricas():
     try:
-        listas = sb_get("listas", None) or []
-        paginas = sb_get("config_premium", None) or []
-        recados = sb_get("recados", None) or []
-        vendas = sb_get("vendas", None) or []
+        listas = sb_get("listas", "order=criado_em.desc&limit=100") or []
+        paginas = sb_get("config_premium", "limit=100") or []
+        recados = sb_get("recados", "limit=100") or []
+        vendas = sb_get("vendas", "order=criado_em.desc&limit=100") or []
         # Faturamento
         faturamento = 0
         vendas_por_pacote = {}
@@ -834,17 +834,21 @@ def presidente_metricas():
 def presidente_vendas():
     try:
         vendas = sb_get("vendas", "order=criado_em.desc&limit=50")
-        return jsonify(vendas if isinstance(vendas, list) else [])
+        if not isinstance(vendas, list):
+            return jsonify([])
+        return jsonify(vendas)
     except Exception as e:
+        print("Erro presidente vendas:", e)
         return jsonify([])
 
 
 @app.route("/api/presidente/paginas")
 def presidente_paginas():
     try:
-        paginas = sb_get("config_premium", "order=criado_em.desc")
+        paginas = sb_get("config_premium", "order=criado_em.desc&limit=100")
         return jsonify(paginas if isinstance(paginas, list) else [])
     except Exception as e:
+        print("Erro presidente paginas:", e)
         return jsonify([])
 
 @app.route("/api/presidente/liberar-premium", methods=["POST"])
