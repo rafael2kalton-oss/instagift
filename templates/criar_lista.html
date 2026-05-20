@@ -154,25 +154,28 @@
     <div class="secao ativa" id="secao1">
         <!-- ✦ CARD PACOTE CELEBRAÇÃO -->
         <div class="pacote-card" id="pacoteCard">
-            <div class="pacote-header" onclick="togglePacote()">
-                <div class="pacote-header-esq">
-                    <div class="pacote-badge">⭐ MAIS POPULAR</div>
-                    <div class="pacote-titulo">Pacote Celebração</div>
-                    <div class="pacote-preco">R$ 25,90 &nbsp;·&nbsp; <span>pagamento único</span></div>
+            <div class="pacote-top">
+                <div class="pacote-badge">✦ &nbsp;MAIS POPULAR</div>
+                <div class="pacote-titulo">Pacote Celebração</div>
+                <div class="pacote-preco-wrap">
+                    <div class="pacote-preco-valor">R$ 25,90</div>
+                    <div class="pacote-preco-label">pagamento único</div>
                 </div>
-                <div class="pacote-seta" id="pacoteSeta">▼</div>
+            </div>
+            <div class="pacote-toggle" onclick="togglePacote()">
+                <div class="pacote-toggle-texto">Ver o que está incluído</div>
+                <div class="pacote-toggle-seta" id="pacoteSeta">▼</div>
             </div>
             <div id="pacoteItens" style="display:none;">
-                <div class="pacote-divider"></div>
                 <div class="pacote-itens">
-                    <div class="pacote-item"><span class="pacote-item-icon">💛</span>Cofrinho Pix para receber contribuições</div>
-                    <div class="pacote-item"><span class="pacote-item-icon">🎠</span>Mural em Carrossel automático</div>
-                    <div class="pacote-item"><span class="pacote-item-icon">📸</span>+5 fotos extras no mural</div>
-                    <div class="pacote-item"><span class="pacote-item-icon">✉️</span>Convite digital para compartilhar</div>
-                    <div class="pacote-item"><span class="pacote-item-icon">💌</span>Livro de recados dos convidados</div>
+                    <div class="pacote-item"><div class="pacote-item-icon">💛</div><div class="pacote-item-texto"><strong>Cofrinho Pix</strong>Receba contribuições dos convidados</div></div>
+                    <div class="pacote-item"><div class="pacote-item-icon">🎠</div><div class="pacote-item-texto"><strong>Mural Carrossel</strong>Fotos em slideshow automático</div></div>
+                    <div class="pacote-item"><div class="pacote-item-icon">📸</div><div class="pacote-item-texto"><strong>+5 Fotos extras</strong>Mais espaço no seu mural</div></div>
+                    <div class="pacote-item"><div class="pacote-item-icon">✉️</div><div class="pacote-item-texto"><strong>Convite Digital</strong>Compartilhe pelo WhatsApp</div></div>
+                    <div class="pacote-item"><div class="pacote-item-icon">💌</div><div class="pacote-item-texto"><strong>Livro de Recados</strong>Mensagens dos seus convidados</div></div>
                 </div>
             </div>
-            <button class="pacote-btn" onclick="comprarPacotao()">Adquirir agora — R$ 25,90</button>
+            <button class="pacote-btn" onclick="comprarPacotao()">✦ &nbsp;Adquirir Pacote Celebração — R$ 25,90</button>
         </div>
 
         <p class="secao-titulo">Qual é o seu evento?</p>
@@ -515,6 +518,16 @@
             }));
         } catch(e) {}
     }
+
+    // Persistir lista_id no localStorage
+    try {
+        var savedListaId = localStorage.getItem('instagift_lista_id');
+        if (savedListaId && savedListaId !== LISTA_ID && window.location.pathname === '/criar-lista') {
+            window.location.href = '/lista/' + savedListaId;
+        } else {
+            localStorage.setItem('instagift_lista_id', LISTA_ID);
+        }
+    } catch(e) {}
 
     function restaurarEstado() {
         try {
