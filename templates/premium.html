@@ -209,6 +209,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .carrossel-dot.ativo { background: var(--cor-primaria); transform: scale(1.3); }
 .carrossel-contador { position: absolute; bottom: 12px; right: 14px; background: rgba(0,0,0,0.45); color: #fff; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-family: 'Inter', sans-serif; z-index: 2; }
 
+
+/* ✦ TARJA BLOQUEIO CONVITE */
+.convite-bloqueado-overlay { position: absolute; inset: 0; background: rgba(44,44,44,0.75); backdrop-filter: blur(3px); border-radius: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; padding: 20px; text-align: center; }
+.convite-bloqueado-texto { color: #fff; font-family: 'Playfair Display', serif; font-size: 13px; line-height: 1.7; }
+.convite-bloqueado-titulo { font-size: 16px; font-weight: 700; color: #C9A84C; margin-bottom: 8px; }
+.btn-whatsapp-bloqueado { width: 100%; padding: 14px; background: #555; color: #999; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: not-allowed; font-family: 'Inter', sans-serif; margin-bottom: 10px; }
+
 </style>
 </head>
 <body>
@@ -340,7 +347,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <h2 class="secao-titulo">Convite Digital</h2>
   <p class="secao-sub">Salve a imagem ou envie pelo WhatsApp</p>
 
-  <div class="convite-visual-wrapper" id="conviteVisualWrapper">
+  <div class="convite-visual-wrapper" id="conviteVisualWrapper" style="position:relative;">
     <div class="convite-visual classico" id="conviteVisual">
       <div class="convite-visual-inner" id="conviteVisualInner">
         <div class="convite-ornamento-visual">✦ &nbsp; ✦ &nbsp; ✦</div>
@@ -358,7 +365,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     </div>
   </div>
 
-  <button class="btn-whatsapp-convite" style="width:100%;margin-bottom:10px;padding:16px;font-size:15px;" onclick="compartilharWhatsApp()">💚 Compartilhar no WhatsApp</button>
+  <button class="btn-whatsapp-convite" id="btnCompartilharWpp" style="width:100%;margin-bottom:10px;padding:16px;font-size:15px;" onclick="tentarCompartilhar()">💚 Compartilhar no WhatsApp</button>
   <button class="btn-copiar-convite" onclick="copiarConvite()">📋 Copiar texto do convite</button>
 </div>
 
@@ -437,6 +444,7 @@ async function carregarPremium() {
     renderMural(data.fotos);
     renderRecados(data.recados);
     renderConvite(data.config);
+    verificarAcessoConvite();
     carregarPresencas();
   } catch(e) { console.error('Erro ao carregar:', e); }
 }
@@ -711,6 +719,42 @@ async function enviarRecado() {
 
 function copiarConvite() { navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); }); }
 function enviarWhatsApp() { _fallbackWhatsApp(); }
+async function verificarAcessoConvite() {
+  try {
+    var config = dadosPremium.config || {};
+    var cofrinhoAtivo = config.cofrinho_ativo || false;
+    var r = await fetch('/api/produtos/' + listaId);
+    var produtos = await r.json();
+    var temProdutos = Array.isArray(produtos) && produtos.length > 0;
+    var liberado = cofrinhoAtivo || temProdutos;
+    var wrapper = document.getElementById('conviteVisualWrapper');
+    var btnWpp = document.getElementById('btnCompartilharWpp');
+    var oldOverlay = document.getElementById('conviteBloqueadoOverlay');
+    if (oldOverlay) oldOverlay.remove();
+    if (!liberado) {
+      var overlay = document.createElement('div');
+      overlay.id = 'conviteBloqueadoOverlay';
+      overlay.className = 'convite-bloqueado-overlay';
+      overlay.innerHTML = '<div class="convite-bloqueado-texto"><div class="convite-bloqueado-titulo">🔒 InstaGift</div>Para compartilhar seu convite, crie sua lista de presentes ou ative o Cofrinho Pix</div>';
+      if (wrapper) wrapper.appendChild(overlay);
+      if (btnWpp) {
+        btnWpp.className = 'btn-whatsapp-bloqueado';
+        btnWpp.textContent = '🔒 Compartilhar no WhatsApp';
+        btnWpp.onclick = function() { alert('Para compartilhar o convite, crie sua lista de presentes ou ative o Cofrinho Pix ✦'); };
+      }
+    } else {
+      if (btnWpp) {
+        btnWpp.className = 'btn-whatsapp-convite';
+        btnWpp.setAttribute('style', 'width:100%;margin-bottom:10px;padding:16px;font-size:15px;');
+        btnWpp.textContent = '💚 Compartilhar no WhatsApp';
+        btnWpp.onclick = compartilharWhatsApp;
+      }
+    }
+  } catch(e) { console.error(e); }
+}
+
+function tentarCompartilhar() { compartilharWhatsApp(); }
+
 function irParaPresentes() { window.location.href = '/vitrine/' + listaId; }
 function explorarPagina() { var nav = document.querySelector('.nav-premium'); if (nav) { window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' }); } }
 function trocarAba(aba) {
