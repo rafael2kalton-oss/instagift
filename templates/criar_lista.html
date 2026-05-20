@@ -152,18 +152,24 @@
 
     <!-- ETAPA 1 -->
     <div class="secao ativa" id="secao1">
-        <div class="banner-celebracao">
-            <div class="banner-celebracao-topo">
-                <div class="banner-celebracao-icone">✦</div>
-                <div class="banner-celebracao-texto">
-                    <p>Acesse a sua Página de Celebração!</p>
-                    <p>Mural de fotos, recados, presença e convite digital ✦</p>
+        <!-- ✦ CARD PACOTE CELEBRAÇÃO -->
+        <div class="pacote-card" id="pacoteCard">
+            <div class="pacote-header" onclick="togglePacote()">
+                <div class="pacote-header-esq">
+                    <div class="pacote-badge">⭐ Mais popular</div>
+                    <div class="pacote-titulo">✦ Pacote Celebração</div>
+                    <div class="pacote-preco">R$ 25,90 <span>pagamento único</span></div>
                 </div>
+                <div class="pacote-seta" id="pacoteSeta">▼</div>
             </div>
-            <div class="banner-celebracao-botoes">
-                <button class="banner-btn-configurar" onclick="abrirConfigurarPagina()">⚙️ Configurar Página</button>
-                <button class="banner-btn-ver" onclick="abrirVerPagina()">👁 Ver Página</button>
+            <div class="pacote-itens" id="pacoteItens" style="display:none;">
+                <div class="pacote-item">💛 <span>Cofrinho Pix para receber contribuições</span></div>
+                <div class="pacote-item">🎠 <span>Mural em Carrossel automático</span></div>
+                <div class="pacote-item">📸 <span>+5 fotos extras no mural</span></div>
+                <div class="pacote-item">✉️ <span>Convite digital para compartilhar</span></div>
+                <div class="pacote-item">💌 <span>Livro de recados dos convidados</span></div>
             </div>
+            <button class="pacote-btn" onclick="comprarPacotao()">✦ Adquirir Pacote Celebração — R$ 25,90</button>
         </div>
 
         <p class="secao-titulo">Qual é o seu evento?</p>
@@ -284,7 +290,7 @@
                         <div class="card-premium-item">✅ Lista de presença</div>
                         <div class="card-premium-item">✉️ Convite para WhatsApp</div>
                     </div>
-                    <button class="btn-premium-cta" onclick="abrirPaginaPremium()">🎉 Criar minha Página do Evento</button>
+                    <button class="btn-premium-cta" onclick="abrirPopupAcesso()">🎉 Criar minha Página do Evento</button>
                 </div>
             </div>
             <button class="btn-criar-story" onclick="abrirPopupStory()">📸 Criar meu story no Instagram</button>
@@ -293,6 +299,18 @@
             <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
             <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
         </div>
+    </div>
+</div>
+
+<!-- Popup Acesso Pagina -->
+<div id="popupAcesso" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.7); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+        <div style="color:#C9A84C; font-size:14px; letter-spacing:6px; margin-bottom:14px;">✦ ✦ ✦</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Libere sua Página do Evento</h3>
+        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:24px; font-style:italic;">Escolha uma das opções para ter acesso completo à sua Página de Celebração</p>
+        <button onclick="acessoViaProdutos()" style="width:100%; padding:15px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">📋 Já tenho lista de presentes</button>
+        <button onclick="acessoViaCofrinho()" style="width:100%; padding:15px; background:linear-gradient(135deg,#2C1A00,#1a0f00); color:#C9A84C; border:1px solid rgba(201,168,76,0.4); border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">💛 Adquirir Cofrinho Pix — R$ 15,90</button>
+        <button onclick="fecharPopupAcesso()" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.2); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Agora não</button>
     </div>
 </div>
 
@@ -799,7 +817,59 @@
         window.open('/minha-celebracao/' + LISTA_ID, '_blank');
     }
 
-    function abrirPaginaPremium() { abrirConfigurarPagina(); }
+    function abrirPaginaPremium() { abrirPopupAcesso(); }
+
+    function abrirPopupAcesso() {
+        document.getElementById('popupAcesso').style.display = 'flex';
+    }
+    function fecharPopupAcesso() {
+        document.getElementById('popupAcesso').style.display = 'none';
+    }
+    async function acessoViaProdutos() {
+        fecharPopupAcesso();
+        var liberado = await verificarAcessoConfigurar();
+        if (liberado) {
+            window.open('/configurar-premium/' + LISTA_ID, '_blank');
+        } else {
+            alert('✦ Adicione pelo menos 1 presente na lista para liberar o acesso!');
+        }
+    }
+    async function acessoViaCofrinho() {
+        fecharPopupAcesso();
+        try {
+            var r = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ lista_id: LISTA_ID, pacote: 'cofrinho' })
+            });
+            var data = await r.json();
+            if (data.url) { window.location.href = data.url; }
+            else { alert('Erro ao processar. Tente novamente.'); }
+        } catch(e) { alert('Erro de conexão. Tente novamente.'); }
+    }
+    async function comprarPacotao() {
+        try {
+            var r = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ lista_id: LISTA_ID, pacote: 'celebracao' })
+            });
+            var data = await r.json();
+            if (data.url) { window.location.href = data.url; }
+            else { alert('Erro ao processar. Tente novamente.'); }
+        } catch(e) { alert('Erro de conexão. Tente novamente.'); }
+    }
+    function togglePacote() {
+        var itens = document.getElementById('pacoteItens');
+        var seta = document.getElementById('pacoteSeta');
+        if (itens.style.display === 'none') {
+            itens.style.display = 'flex';
+            seta.classList.add('aberto');
+        } else {
+            itens.style.display = 'none';
+            seta.classList.remove('aberto');
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("inputLink").addEventListener("keypress", function(e) { if(e.key==="Enter") adicionarProduto(); });
