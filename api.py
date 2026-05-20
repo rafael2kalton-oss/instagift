@@ -745,11 +745,15 @@ def enviar_magic_link():
         return jsonify({"erro": "Nenhuma lista encontrada com este e-mail"}), 404
     lista = listas[0]
     lista_id = lista["id"]
-    # Gerar token
-    token = str(uuid.uuid4())
-    expira_em = (datetime.utcnow() + timedelta(hours=24)).isoformat()
-    sb_post("magic_links", {"lista_id": lista_id, "email": email, "token": token, "expira_em": expira_em})
-    # Enviar email
+    # Verificar se ja existe link valido para este email
+    links_existentes = sb_get("magic_links", f"email=eq.{email}&usado=eq.false")
+    if links_existentes and isinstance(links_existentes, list) and len(links_existentes) > 0:
+        token = links_existentes[0]["token"]
+    else:
+        token = str(uuid.uuid4())
+        expira_em = (datetime.utcnow() + timedelta(days=180)).isoformat()
+        sb_post("magic_links", {"lista_id": lista_id, "email": email, "token": token, "expira_em": expira_em})
+    # Enviar email com o mesmo link
     link = request.host_url.rstrip("/") + f"/acesso-magico/{token}"
     try:
         resend.Emails.send({
@@ -783,8 +787,6 @@ def acesso_magico(token):
     expira_em = datetime.fromisoformat(link["expira_em"].replace("Z",""))
     if datetime.utcnow() > expira_em:
         return render_template("login.html")
-    # Marcar como usado
-    sb_patch("magic_links", f"token=eq.{token}", {"usado": True})
     lista_id = link["lista_id"]
     return render_template("configurar_premium.html", lista_id=lista_id)
 
