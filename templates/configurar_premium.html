@@ -324,7 +324,7 @@ input:checked + .slider:before { transform: translateX(22px); }
       </div>
     </div>
 
-    <label class="cofrinho-toggle" onclick="toggleCofrinho()">
+    <div class="cofrinho-toggle" onclick="document.getElementById('cofrinhoAtivo').click()">
       <div>
         <div class="cofrinho-toggle-label">✦ Ativar Cofrinho Pix</div>
         <div class="cofrinho-toggle-sub">Aparece como botão flutuante para os convidados</div>
@@ -333,7 +333,7 @@ input:checked + .slider:before { transform: translateX(22px); }
         <input type="checkbox" id="cofrinhoAtivo" onchange="toggleCofrinho()">
         <span class="slider"></span>
       </label>
-    </label>
+    </div>
 
     <div class="cofrinho-area" id="cofrinhoArea">
       <div class="campo">
@@ -684,8 +684,15 @@ function atualizarContadorFotos() {
 
 function selecionarPaleta(nome) {
   paletaSelecionada = nome;
-  document.querySelectorAll('.paleta-cor').forEach(function(el) { el.classList.toggle('ativa', el.dataset.paleta === nome); });
-  document.getElementById('paletaNome').textContent = paletas[nome].nome;
+  document.querySelectorAll('.paleta-cor').forEach(function(el) {
+    if (el.dataset.paleta === nome) {
+      el.classList.add('ativa');
+    } else {
+      el.classList.remove('ativa');
+    }
+  });
+  var nomeEl = document.getElementById('paletaNome');
+  if (nomeEl && paletas[nome]) nomeEl.textContent = paletas[nome].nome;
 }
 
 function selecionarEstilo(estilo) {
@@ -694,9 +701,14 @@ function selecionarEstilo(estilo) {
     return;
   }
   estiloMural = estilo;
-  document.querySelectorAll('.estilo-card').forEach(function(el) { el.classList.remove('ativo'); });
-  var ids = { normal: 'estiloNormal', polaroid: 'estiloPolaroid', colagem: 'estiloColagem', carrossel: 'estiloCarrossel' };
-  document.getElementById(ids[estilo]).classList.add('ativo');
+  var todos = ['estiloNormal','estiloPolaroid','estiloColagem','estiloCarrossel'];
+  todos.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('ativo');
+  });
+  var mapa = { normal: 'estiloNormal', polaroid: 'estiloPolaroid', colagem: 'estiloColagem', carrossel: 'estiloCarrossel' };
+  var alvo = document.getElementById(mapa[estilo]);
+  if (alvo) alvo.classList.add('ativo');
 }
 
 var frasesPorEvento = {
