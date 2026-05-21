@@ -324,12 +324,12 @@ input:checked + .slider:before { transform: translateX(22px); }
       </div>
     </div>
 
-    <label class="cofrinho-toggle" for="cofrinhoAtivo">
+    <label class="cofrinho-toggle" onclick="toggleCofrinho()">
       <div>
         <div class="cofrinho-toggle-label">✦ Ativar Cofrinho Pix</div>
         <div class="cofrinho-toggle-sub">Aparece como botão flutuante para os convidados</div>
       </div>
-      <label class="switch">
+      <label class="switch" onclick="event.stopPropagation()">
         <input type="checkbox" id="cofrinhoAtivo" onchange="toggleCofrinho()">
         <span class="slider"></span>
       </label>
@@ -585,12 +585,7 @@ async function irParaStoryComSave() {
 function compartilharWhatsApp() {
     var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
     var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
-
-✦ ACESSAR AQUI:
-' + linkCelebracao + '
-
-Valeu pelo carinho! 🙏✦';
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
@@ -612,15 +607,16 @@ var paletas = {
 
 function toggleCofrinho() {
   var checkbox = document.getElementById('cofrinhoAtivo');
-  // Inverte manualmente o estado
-  var novoEstado = !checkbox.checked;
-  if (novoEstado && !cofrinhoFoiPago) {
-    // Não deixa ativar — mostra popup de pagamento
+  var ativo = checkbox.checked;
+  if (ativo && !cofrinhoFoiPago) {
+    checkbox.checked = false;
+    // Mostrar popup de pagamento
+    document.getElementById('cofrinhoArea').className = 'cofrinho-area';
     mostrarAvisoPagamento('cofrinho');
     return;
   }
-  checkbox.checked = novoEstado;
-  document.getElementById('cofrinhoArea').className = 'cofrinho-area' + (novoEstado ? ' ativa' : '');
+  var area = document.getElementById('cofrinhoArea');
+  area.className = 'cofrinho-area' + (ativo ? ' ativa' : '');
 }
 
 function mostrarAvisoPagamento(tipo) {
@@ -682,30 +678,20 @@ function atualizarContadorFotos() {
 }
 
 function selecionarPaleta(nome) {
-  if (!nome) return;
   paletaSelecionada = nome;
-  document.querySelectorAll('.paleta-cor').forEach(function(el) {
-    el.classList.remove('ativa');
-    if (el.getAttribute('data-paleta') === nome) el.classList.add('ativa');
-  });
-  var nomeEl = document.getElementById('paletaNome');
-  if (nomeEl && paletas && paletas[nome]) nomeEl.textContent = paletas[nome].nome;
+  document.querySelectorAll('.paleta-cor').forEach(function(el) { el.classList.toggle('ativa', el.dataset.paleta === nome); });
+  document.getElementById('paletaNome').textContent = paletas[nome].nome;
 }
 
 function selecionarEstilo(estilo) {
-  if (!estilo) return;
   if (estilo === 'carrossel' && !carrosselFoiPago) {
     mostrarAvisoPagamento('carrossel');
     return;
   }
   estiloMural = estilo;
-  ['estiloNormal','estiloPolaroid','estiloColagem','estiloCarrossel'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.classList.remove('ativo');
-  });
-  var mapa = { normal:'estiloNormal', polaroid:'estiloPolaroid', colagem:'estiloColagem', carrossel:'estiloCarrossel' };
-  var alvo = document.getElementById(mapa[estilo]);
-  if (alvo) alvo.classList.add('ativo');
+  document.querySelectorAll('.estilo-card').forEach(function(el) { el.classList.remove('ativo'); });
+  var ids = { normal: 'estiloNormal', polaroid: 'estiloPolaroid', colagem: 'estiloColagem', carrossel: 'estiloCarrossel' };
+  document.getElementById(ids[estilo]).classList.add('ativo');
 }
 
 var frasesPorEvento = {
@@ -740,12 +726,13 @@ async function carregarConfig() {
         if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
       }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
-      // ✦ Seta flags ANTES de chamar as funções que dependem delas
-      if (data.config.cofrinho_ativo) cofrinhoFoiPago = true;
-      if (data.config.estilo_mural === 'carrossel') carrosselFoiPago = true;
       if (data.config.cofrinho_ativo) {
+        cofrinhoFoiPago = true;
         document.getElementById('cofrinhoAtivo').checked = true;
-        document.getElementById('cofrinhoArea').className = 'cofrinho-area ativa';
+        toggleCofrinho();
+      }
+      if (data.config.estilo_mural === 'carrossel') {
+        carrosselFoiPago = true;
       }
       if (data.config.data_evento && data.config.data_evento.trim() !== '') {
         document.getElementById('dataEvento').value = data.config.data_evento;
