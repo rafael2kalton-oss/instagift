@@ -140,6 +140,30 @@ input:checked + .slider:before { transform: translateX(22px); }
 .btn-pacotao { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.4); letter-spacing: 0.03em; }
 .btn-pacotao:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.5); }
 
+
+        /* ✦ STORY GATE */
+        .story-gate { background: #fff; border: 2px solid rgba(201,168,76,0.4); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; text-align: center; }
+        .story-gate-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
+        .story-gate-sub { font-size: 13px; color: #888; line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+        .story-gate-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; text-align: left; }
+        .story-gate-step { display: flex; align-items: flex-start; gap: 12px; }
+        .story-gate-step-num { width: 26px; height: 26px; min-width: 26px; background: linear-gradient(135deg,#C9A84C,#A8722A); border-radius: 50%; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+        .story-gate-step-texto { font-size: 13px; color: #555; line-height: 1.6; }
+        .story-gate-step-texto strong { color: #2C2C2C; }
+        .btn-criar-story-gate { width: 100%; padding: 16px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 50px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; letter-spacing: 0.02em; margin-bottom: 12px; }
+        .btn-criar-story-gate:hover { transform: translateY(-2px); }
+        .story-gate-pago { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; padding: 12px 14px; margin-top: 4px; }
+        .story-gate-pago p { font-size: 12px; color: #C9A84C; font-style: italic; font-family: 'Playfair Display', serif; }
+        /* ✦ WHATSAPP */
+        .btn-whatsapp-config { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 50px; padding: 15px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
+        .btn-whatsapp-config:hover:not(:disabled) { transform: translateY(-2px); }
+        .btn-whatsapp-config:disabled { background: rgba(0,0,0,0.06); color: #ccc; cursor: not-allowed; border: 1px solid rgba(0,0,0,0.06); }
+        .whatsapp-hint-config { font-size: 11px; color: #bbb; text-align: center; margin-top: 6px; font-style: italic; }
+        .whatsapp-hint-config.liberado { color: #C9A84C; }
+        /* ✦ SALVAR */
+        .btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
+        .btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
+        .btn-salvar-hint.visivel { display: block; }
 </style>
 </head>
 <body>
@@ -390,7 +414,7 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
 
   <!-- ✦ PACOTE CELEBRAÇÃO -->
-  <div class="pacotao-card">
+  <div class="pacotao-card" id="pacotaoCard">
     <div class="pacotao-badge">⭐ Mais popular</div>
     <div class="pacotao-titulo">✦ Pacote Celebração</div>
     <div class="pacotao-sub">Tudo que você precisa para uma página incrível</div>
@@ -412,7 +436,37 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="divider-linha"></div>
   </div>
 
-  <button class="btn-salvar" onclick="iniciarSalvar()">✦ Salvar e publicar página</button>
+  <!-- ✦ STORY GATE — gratuitos -->
+  <div class="story-gate" id="storyGate" style="display:none;">
+    <div style="font-size:36px;margin-bottom:12px;">📸</div>
+    <div class="story-gate-titulo">Um último passo antes de salvar!</div>
+    <div class="story-gate-sub">Para ativar sua Página do Evento gratuitamente, poste nos Stories do Instagram e mostre para seus convidados onde encontrar a lista de presentes.</div>
+    <div class="story-gate-steps">
+      <div class="story-gate-step">
+        <div class="story-gate-step-num">1</div>
+        <div class="story-gate-step-texto"><strong>Clique no botão abaixo</strong> para criar seu Story personalizado</div>
+      </div>
+      <div class="story-gate-step">
+        <div class="story-gate-step-num">2</div>
+        <div class="story-gate-step-texto"><strong>Poste nos Stories do Instagram</strong> — pode ser para Melhores Amigos!</div>
+      </div>
+      <div class="story-gate-step">
+        <div class="story-gate-step-num">3</div>
+        <div class="story-gate-step-texto"><strong>Volte aqui e salve</strong> — sua página já estará ativa para os convidados</div>
+      </div>
+    </div>
+    <button class="btn-criar-story-gate" onclick="irParaStoryComSave()">📸 Criar meu Story no Instagram</button>
+    <div class="story-gate-pago">
+      <p>Ou adquira o <strong>Pacote Celebração por R$ 25,90</strong> e salve sem precisar postar ✦</p>
+    </div>
+  </div>
+
+  <!-- ✦ WHATSAPP — liberado após story -->
+  <button class="btn-whatsapp-config" id="btnWhatsappConfig" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
+  <p class="whatsapp-hint-config" id="whatsappHintConfig">📸 Poste nos Stories primeiro para liberar o WhatsApp</p>
+
+  <button class="btn-salvar" id="btnSalvar" onclick="iniciarSalvar()" disabled>✦ Salvar e publicar página</button>
+  <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
 
 </div>
@@ -469,6 +523,83 @@ var paletaSelecionada = 'dourado';
 var dataJaSalva = false;
 var limiteFotos = 10;
 var estiloMural = 'normal';
+var usuarioPago = false;
+var storyPostado = false;
+var STORY_KEY = 'instagift_story_' + listaId;
+
+// ✦ Controle do estado do salvar e whatsapp
+function atualizarEstadoSalvar() {
+    var btn = document.getElementById('btnSalvar');
+    var hint = document.getElementById('btnSalvarHint');
+    var gate = document.getElementById('storyGate');
+    var btnWpp = document.getElementById('btnWhatsappConfig');
+    var hintWpp = document.getElementById('whatsappHintConfig');
+    var pacotaoCard = document.getElementById('pacotaoCard');
+
+    if (usuarioPago || storyPostado) {
+        btn.disabled = false;
+        if (hint) hint.className = 'btn-salvar-hint';
+        if (gate) gate.style.display = 'none';
+        if (btnWpp) { btnWpp.disabled = false; }
+        if (hintWpp) { hintWpp.textContent = '✦ WhatsApp liberado! Avise seus convidados.'; hintWpp.className = 'whatsapp-hint-config liberado'; }
+        if (usuarioPago && pacotaoCard) pacotaoCard.style.display = 'none';
+    } else {
+        btn.disabled = true;
+        if (hint) hint.className = 'btn-salvar-hint visivel';
+        if (gate) gate.style.display = 'block';
+        if (btnWpp) btnWpp.disabled = true;
+        if (hintWpp) { hintWpp.textContent = '📸 Poste nos Stories primeiro para liberar o WhatsApp'; hintWpp.className = 'whatsapp-hint-config'; }
+    }
+}
+
+// ✦ Auto-save silencioso + redireciona pro story
+async function irParaStoryComSave() {
+    // Salva config em background sem o usuário ver
+    try {
+        var nome = document.getElementById('nomeCelebrante').value.trim();
+        var data = document.getElementById('dataEvento').value;
+        var mensagem = document.getElementById('mensagemCelebrante').value.trim();
+        var textoConvite = document.getElementById('textoConvite').value.trim();
+        var localEvento = document.getElementById('localEvento').value.trim();
+        var chavePix = document.getElementById('chavePix').value.trim();
+        var cofrinhoAtivo = document.getElementById('cofrinhoAtivo').checked;
+        await fetch('/api/salvar-config-premium', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                lista_id: listaId, nome_celebrante: nome, data_evento: data,
+                mensagem_celebrante: mensagem, texto_convite: textoConvite,
+                usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada,
+                estilo_mural: estiloMural, local_evento: localEvento,
+                estilo_convite: estiloConviteSelecionado,
+                imagem_fundo_convite: imagemFundoConviteBase64,
+                chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo
+            })
+        });
+    } catch(e) { console.log('Auto-save erro:', e); }
+    // Marca como pendente e redireciona
+    try { localStorage.setItem(STORY_KEY, 'pendente'); } catch(e) {}
+    window.location.href = '/?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar';
+}
+
+function compartilharWhatsApp() {
+    var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
+    var linkCelebracao = window.location.origin + '/premium/' + listaId;
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
+
+✦ ACESSAR AQUI:
+' + linkCelebracao + '
+
+Valeu pelo carinho! 🙏✦';
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
+}
+
+function verificarStoryPostado() {
+    try {
+        var val = localStorage.getItem(STORY_KEY);
+        if (val === 'true' || val === 'pendente') storyPostado = true;
+    } catch(e) {}
+}
 
 var paletas = {
   dourado:  { nome: '✦ Dourado — clássico e elegante' },
@@ -619,9 +750,34 @@ async function carregarConfig() {
     if (data.recados && data.recados.length > 0) { renderRecadosAdmin(data.recados); }
     atualizarPreviewConvite();
     atualizarContadorFotos();
+
+    // ✦ Verifica se é usuário pago (cofrinho, pacote ou fotos extras)
+    if (data.config && (data.config.cofrinho_ativo || data.config.estilo_mural === 'carrossel' || limiteFotos > 10)) {
+      usuarioPago = true;
+    }
+    // ✦ Se já salvou antes → já postou o story ou pagou → libera
+    if (data.config && (data.config.nome_celebrante || data.config.mensagem_celebrante)) {
+      storyPostado = true;
+    }
+
+    // ✦ Verifica story no localStorage
+    verificarStoryPostado();
+
+    // ✦ Atualiza estado do botão salvar e whatsapp
+    atualizarEstadoSalvar();
+
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
+      usuarioPago = true;
+      atualizarEstadoSalvar();
       alert('🎉 Parabéns! Você adicionou +' + urlParams.get('fotos') + ' fotos ao seu mural!');
+      window.history.replaceState({}, '', '/configurar-premium/' + listaId);
+    }
+    // ✦ Voltou do story
+    if (urlParams.get('origem') === 'story') {
+      try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
+      storyPostado = true;
+      atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
   } catch(e) { console.error(e); }
@@ -862,6 +1018,9 @@ async function salvarConfig() {
     });
     var result = await r.json();
     if (result.ok) {
+      try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
+      storyPostado = true;
+      atualizarEstadoSalvar();
       document.getElementById('salvoSucesso').style.display = 'block';
       setTimeout(function() { document.getElementById('salvoSucesso').style.display = 'none'; }, 3000);
     }
