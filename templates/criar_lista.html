@@ -384,7 +384,7 @@
             <p id="dataEventoErro" style="display:none;font-size:12px;color:#ef4444;margin-top:8px;font-style:italic;">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
             <p id="dataEventoAviso" style="display:none;font-size:12px;color:#C9A84C;margin-top:8px;font-style:italic;"></p>
         </div>
-        <button class="btn-proximo" onclick="salvarNomeEvento();irParaEtapa(3)">Continuar →</button>
+        <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
         <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
 
@@ -706,41 +706,30 @@
 
     async function restaurarEstado() {
         try {
-            // ✦ SEMPRE verifica produtos no servidor — funciona em qualquer navegador/dispositivo
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return;
+            var estado = JSON.parse(saved);
+
+            aplicarEstadoSalvo(estado);
+
+            // Verifica se já tem produtos salvos no servidor
             var temProdutos = false;
-            var listaBanco = [];
             try {
                 var r = await fetch('/api/produtos/' + LISTA_ID);
-                listaBanco = await r.json();
-                temProdutos = Array.isArray(listaBanco) && listaBanco.length > 0;
+                var produtos = await r.json();
+                temProdutos = Array.isArray(produtos) && produtos.length > 0;
             } catch(e) {}
 
-            // ✦ Tenta restaurar campos do localStorage se disponível
-            try {
-                var saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    var estado = JSON.parse(saved);
-                    aplicarEstadoSalvo(estado);
-                }
-            } catch(e) {}
-
-            // ✦ Se tem produtos no servidor → vai direto pra etapa 4
-            if (temProdutos) {
+            // Se tinha produtos OU estava na etapa 4, volta direto pra etapa 4
+            if (temProdutos || (estado.step && estado.step >= 4)) {
                 irParaEtapa(4);
                 return;
             }
 
-            // ✦ Sem produtos mas tem localStorage com etapa salva
-            try {
-                var saved2 = localStorage.getItem(STORAGE_KEY);
-                if (saved2) {
-                    var estado2 = JSON.parse(saved2);
-                    if (estado2.step && estado2.step >= 2) {
-                        irParaEtapa(estado2.step);
-                    }
-                }
-            } catch(e) {}
-
+            // Se estava em etapa intermediária, volta pra ela
+            if (estado.step && estado.step >= 2) {
+                irParaEtapa(estado.step);
+            }
         } catch(e) {}
     }
 
@@ -779,21 +768,6 @@
             carregarProdutos();verificarWhatsapp();
         }
         salvarEstado();window.scrollTo(0,0);
-    }
-
-    async function salvarNomeEvento() {
-        // Salva nome do evento, data e tipo no banco para pré-preencher configurar_premium
-        try {
-            var nome = document.getElementById('inputNomeEvento').value.trim();
-            var data = document.getElementById('inputDataEvento').value;
-            if (nome || data) {
-                await fetch('/api/salvar-info-lista', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ lista_id: LISTA_ID, nome: nome || 'Minha Lista', data_evento: data, evento: eventoAtual })
-                });
-            }
-        } catch(e) {}
     }
 
     async function salvarEmailEAvancar() {
@@ -974,7 +948,20 @@
         await adicionarProdutoNormal(link);
     }
 
-    async function remover(id) { await fetch(`${BASE}/api/remover-produto/${id}`,{method:"DELETE"}); await carregarProdutos(); }
+    async function remover(id) {
+        // Verifica se é o último produto
+        var r = await fetch(`${BASE}/api/remover-produto/${id}`, {method: "DELETE"});
+        var data = await r.json();
+        if (data.ultimo) {
+            // Mostra popup de confirmação
+            if (confirm('⚠️ Atenção!\n\nEste é o último presente da sua lista. Ao removê-lo, sua lista ficará vazia e você perderá o acesso à Página do Evento — e seus convidados também não conseguirão mais acessar a Página de Celebração.\n\nTem certeza que deseja remover mesmo assim?')) {
+                await fetch(`${BASE}/api/remover-produto/${id}?confirmar=sim`, {method: "DELETE"});
+                await carregarProdutos();
+            }
+        } else {
+            await carregarProdutos();
+        }
+    }
 
     function abrirPopupStory() {
         var ev=eventos[eventoAtual]||eventos['aniversario'];
