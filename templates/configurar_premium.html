@@ -585,7 +585,12 @@ async function irParaStoryComSave() {
 function compartilharWhatsApp() {
     var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
     var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
+
+✦ ACESSAR AQUI:
+' + linkCelebracao + '
+
+Valeu pelo carinho! 🙏✦';
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
@@ -709,9 +714,27 @@ async function carregarConfig() {
     var rl = await fetch('/api/limite-fotos/' + listaId);
     var dl = await rl.json();
     limiteFotos = dl.limite || 10;
+
+    // ✦ Pré-preenche com dados já salvos no criar_lista
+    try {
+      var rLista = await fetch('/api/lista-info/' + listaId);
+      var dataLista = await rLista.json();
+      if (dataLista) {
+        if (dataLista.nome && dataLista.nome !== 'Minha Lista') {
+          document.getElementById('nomeCelebrante').value = dataLista.nome;
+        }
+        if (dataLista.data_evento) {
+          document.getElementById('dataEvento').value = dataLista.data_evento;
+          validarData();
+        }
+        if (dataLista.evento) eventoAtual = dataLista.evento;
+      }
+    } catch(e) {}
+
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
     if (data.config) {
+      // config_premium tem prioridade — sobrescreve se já foi salvo
       if (data.config.nome_celebrante) document.getElementById('nomeCelebrante').value = data.config.nome_celebrante;
       if (data.config.mensagem_celebrante) document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante;
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
