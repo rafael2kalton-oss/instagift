@@ -384,7 +384,7 @@
             <p id="dataEventoErro" style="display:none;font-size:12px;color:#ef4444;margin-top:8px;font-style:italic;">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
             <p id="dataEventoAviso" style="display:none;font-size:12px;color:#C9A84C;margin-top:8px;font-style:italic;"></p>
         </div>
-        <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
+        <button class="btn-proximo" onclick="salvarNomeEvento();irParaEtapa(3)">Continuar →</button>
         <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
 
@@ -459,7 +459,8 @@
             </div>
             <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
             <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
-
+            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
+            <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
         </div>
     </div>
 </div>
@@ -647,7 +648,22 @@
         outros: { emoji: "🎁", badge: "🎁 Outro Evento", labelNome: "Nome do evento", placeholder: "Ex: Formatura da Carol", titulo: "Hora de celebrar!", texto: "Compartilhe sua vitrine com quem importa!" }
     };
 
-    function verificarWhatsapp() { /* movido para configurar_premium */ }
+    function verificarWhatsapp() {
+        try {
+            var compartilhou = localStorage.getItem(WHATSAPP_KEY);
+            var btn = document.getElementById('btnWhatsapp');
+            var hint = document.getElementById('whatsappHint');
+            if (compartilhou === 'true') {
+                btn.disabled = false;
+                hint.textContent = '✦ WhatsApp liberado! Avise seus convidados.';
+                hint.className = 'whatsapp-hint liberado';
+            } else {
+                btn.disabled = true;
+                hint.textContent = '📸 Compartilhe nos Stories primeiro para liberar o WhatsApp';
+                hint.className = 'whatsapp-hint';
+            }
+        } catch(e) {}
+    }
 
     function salvarEstado() {
         try {
@@ -690,30 +706,41 @@
 
     async function restaurarEstado() {
         try {
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (!saved) return;
-            var estado = JSON.parse(saved);
-
-            aplicarEstadoSalvo(estado);
-
-            // Verifica se já tem produtos salvos no servidor
+            // ✦ SEMPRE verifica produtos no servidor — funciona em qualquer navegador/dispositivo
             var temProdutos = false;
+            var listaBanco = [];
             try {
                 var r = await fetch('/api/produtos/' + LISTA_ID);
-                var produtos = await r.json();
-                temProdutos = Array.isArray(produtos) && produtos.length > 0;
+                listaBanco = await r.json();
+                temProdutos = Array.isArray(listaBanco) && listaBanco.length > 0;
             } catch(e) {}
 
-            // Se tinha produtos OU estava na etapa 4, volta direto pra etapa 4
-            if (temProdutos || (estado.step && estado.step >= 4)) {
+            // ✦ Tenta restaurar campos do localStorage se disponível
+            try {
+                var saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    var estado = JSON.parse(saved);
+                    aplicarEstadoSalvo(estado);
+                }
+            } catch(e) {}
+
+            // ✦ Se tem produtos no servidor → vai direto pra etapa 4
+            if (temProdutos) {
                 irParaEtapa(4);
                 return;
             }
 
-            // Se estava em etapa intermediária, volta pra ela
-            if (estado.step && estado.step >= 2) {
-                irParaEtapa(estado.step);
-            }
+            // ✦ Sem produtos mas tem localStorage com etapa salva
+            try {
+                var saved2 = localStorage.getItem(STORAGE_KEY);
+                if (saved2) {
+                    var estado2 = JSON.parse(saved2);
+                    if (estado2.step && estado2.step >= 2) {
+                        irParaEtapa(estado2.step);
+                    }
+                }
+            } catch(e) {}
+
         } catch(e) {}
     }
 
@@ -752,6 +779,21 @@
             carregarProdutos();verificarWhatsapp();
         }
         salvarEstado();window.scrollTo(0,0);
+    }
+
+    async function salvarNomeEvento() {
+        // Salva nome do evento, data e tipo no banco para pré-preencher configurar_premium
+        try {
+            var nome = document.getElementById('inputNomeEvento').value.trim();
+            var data = document.getElementById('inputDataEvento').value;
+            if (nome || data) {
+                await fetch('/api/salvar-info-lista', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ lista_id: LISTA_ID, nome: nome || 'Minha Lista', data_evento: data, evento: eventoAtual })
+                });
+            }
+        } catch(e) {}
     }
 
     async function salvarEmailEAvancar() {
