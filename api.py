@@ -374,7 +374,27 @@ def salvar_email_lista():
     else:
         sb_patch("listas", f"id=eq.{lista_id}", {"email_aniversariante": email})
     return jsonify({"ok": True})
+# Adicionar esta rota no api.py logo após a rota /api/salvar-email-lista
 
+@app.route("/api/salvar-info-lista", methods=["POST"])
+def salvar_info_lista():
+    data = request.json
+    lista_id = data.get("lista_id", "").strip()
+    if not lista_id:
+        return jsonify({"erro": "Dados incompletos"}), 400
+    atualizacao = {}
+    if data.get("nome"): atualizacao["nome"] = data["nome"]
+    if data.get("data_evento"): atualizacao["data_evento"] = data["data_evento"]
+    if data.get("evento"): atualizacao["evento"] = data["evento"]
+    lista = sb_get("listas", f"id=eq.{lista_id}")
+    if not lista or not isinstance(lista, list) or len(lista) == 0:
+        atualizacao["id"] = lista_id
+        sb_post("listas", atualizacao)
+    else:
+        if atualizacao:
+            sb_patch("listas", f"id=eq.{lista_id}", atualizacao)
+    return jsonify({"ok": True})
+    
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
     link = request.json.get("link", "").strip()
@@ -889,3 +909,4 @@ def presidente_excluir_pagina():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
+
