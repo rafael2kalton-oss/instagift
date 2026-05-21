@@ -374,7 +374,6 @@ def salvar_email_lista():
     else:
         sb_patch("listas", f"id=eq.{lista_id}", {"email_aniversariante": email})
     return jsonify({"ok": True})
-# Adicionar esta rota no api.py logo após a rota /api/salvar-email-lista
 
 @app.route("/api/salvar-info-lista", methods=["POST"])
 def salvar_info_lista():
@@ -394,7 +393,7 @@ def salvar_info_lista():
         if atualizacao:
             sb_patch("listas", f"id=eq.{lista_id}", atualizacao)
     return jsonify({"ok": True})
-    
+
 @app.route("/api/preview-produto", methods=["POST"])
 def preview_produto():
     link = request.json.get("link", "").strip()
@@ -431,6 +430,16 @@ def listar_produtos(lista_id):
 
 @app.route("/api/remover-produto/<int:produto_id>", methods=["DELETE"])
 def remover_produto(produto_id):
+    # ✦ Verifica se é o último produto — avisa o frontend antes de remover
+    produto = sb_get("produtos", f"id=eq.{produto_id}")
+    if produto and isinstance(produto, list) and len(produto) > 0:
+        lista_id = produto[0].get("lista_id", "")
+        if lista_id:
+            todos = sb_get("produtos", f"lista_id=eq.{lista_id}")
+            if isinstance(todos, list) and len(todos) == 1:
+                confirmar = request.args.get("confirmar", "")
+                if confirmar != "sim":
+                    return jsonify({"ok": False, "ultimo": True}), 200
     sb_delete("produtos", f"id=eq.{produto_id}")
     return jsonify({"ok": True})
 
@@ -583,7 +592,6 @@ def stripe_sucesso():
                     sb_post("config_premium", atualizacao)
     except Exception as e:
         print("Stripe sucesso erro:", e)
-    # Registrar venda
     try:
         valor = float(STRIPE_PACOTES.get(pacote, {}).get("valor", "R$ 0").replace("R$ ", "").replace(",", "."))
         sb_post("vendas", {"lista_id": lista_id, "pacote": pacote, "valor": valor})
@@ -633,6 +641,7 @@ def salvar_config_premium():
         "cofrinho_ativo": data.get("cofrinho_ativo", False),
         "estilo_convite": data.get("estilo_convite", "classico"),
         "imagem_fundo_convite": data.get("imagem_fundo_convite", ""),
+        "foto_capa": data.get("foto_capa", ""),
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
@@ -744,7 +753,6 @@ def verificar_expiracao(lista_id):
     except Exception as e:
         return jsonify({"expirada": False, "motivo": None})
 
-
 # ── MAGIC LINK ──
 
 @app.route("/login")
@@ -753,7 +761,6 @@ def login_page():
 
 @app.route("/acesso/<lista_id>")
 def acesso_direto(lista_id):
-    """Link direto para configurar sem magic link — compatibilidade"""
     return render_template("configurar_premium.html", lista_id=lista_id)
 
 @app.route("/api/enviar-magic-link", methods=["POST"])
@@ -761,13 +768,11 @@ def enviar_magic_link():
     data = request.json or {}
     email = data.get("email", "").strip().lower()
     if not email: return jsonify({"erro": "E-mail obrigatorio"}), 400
-    # Buscar lista por email
     listas = sb_get("listas", f"email_aniversariante=eq.{email}")
     if not listas or not isinstance(listas, list) or len(listas) == 0:
         return jsonify({"erro": "Nenhuma lista encontrada com este e-mail"}), 404
     lista = listas[0]
     lista_id = lista["id"]
-    # Verificar se ja existe link valido para este email
     links_existentes = sb_get("magic_links", f"email=eq.{email}&usado=eq.false")
     if links_existentes and isinstance(links_existentes, list) and len(links_existentes) > 0:
         token = links_existentes[0]["token"]
@@ -775,25 +780,13 @@ def enviar_magic_link():
         token = str(uuid.uuid4())
         expira_em = (datetime.utcnow() + timedelta(days=180)).isoformat()
         sb_post("magic_links", {"lista_id": lista_id, "email": email, "token": token, "expira_em": expira_em})
-    # Enviar email com o mesmo link
     link = request.host_url.rstrip("/") + f"/acesso-magico/{token}"
     try:
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email,
             "subject": "✦ Seu link de acesso — InstaGift",
-            "html": f"""
-            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);">
-                <div style="text-align:center;margin-bottom:24px;">
-                    <div style="font-family:Georgia,serif;font-size:28px;color:#C9A84C;font-weight:700;">InstaGift</div>
-                    <p style="color:#aaa;font-size:12px;letter-spacing:0.1em;">✦ &nbsp; ✦ &nbsp; ✦</p>
-                </div>
-                <h2 style="font-family:Georgia,serif;color:#2C2C2C;font-size:20px;margin-bottom:12px;text-align:center;">Seu link de acesso chegou!</h2>
-                <p style="color:#666;font-size:14px;line-height:1.7;margin-bottom:24px;text-align:center;font-style:italic;">Clique no botão abaixo para acessar e configurar sua Página do Evento. O link expira em 24 horas.</p>
-                <a href="{link}" style="display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px;border-radius:50px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:20px;">✦ Acessar minha página</a>
-                <p style="color:#bbb;font-size:11px;text-align:center;">Se você não solicitou este link, ignore este e-mail.</p>
-            </div>
-            """
+            "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);'><div style='text-align:center;margin-bottom:24px;'><div style='font-family:Georgia,serif;font-size:28px;color:#C9A84C;font-weight:700;'>InstaGift</div><p style='color:#aaa;font-size:12px;letter-spacing:0.1em;'>✦ &nbsp; ✦ &nbsp; ✦</p></div><h2 style='font-family:Georgia,serif;color:#2C2C2C;font-size:20px;margin-bottom:12px;text-align:center;'>Seu link de acesso chegou!</h2><p style='color:#666;font-size:14px;line-height:1.7;margin-bottom:24px;text-align:center;font-style:italic;'>Clique no botão abaixo para acessar e configurar sua Página do Evento.</p><a href='{link}' style='display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px;border-radius:50px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:20px;'>✦ Acessar minha página</a><p style='color:#bbb;font-size:11px;text-align:center;'>Se você não solicitou este link, ignore este e-mail.</p></div>"
         })
     except Exception as e:
         print("Erro magic link email:", e)
@@ -805,7 +798,6 @@ def acesso_magico(token):
     if not links or not isinstance(links, list) or len(links) == 0:
         return render_template("login.html")
     link = links[0]
-    # Verificar expiracao
     expira_em = datetime.fromisoformat(link["expira_em"].replace("Z",""))
     if datetime.utcnow() > expira_em:
         return render_template("login.html")
@@ -829,7 +821,6 @@ def presidente_metricas():
         paginas = sb_get("config_premium", "limit=100") or []
         recados = sb_get("recados", "limit=100") or []
         vendas = sb_get("vendas", "order=criado_em.desc&limit=100") or []
-        # Faturamento
         faturamento = 0
         vendas_por_pacote = {}
         vendas_hoje = 0
@@ -868,7 +859,6 @@ def presidente_vendas():
     except Exception as e:
         print("Erro presidente vendas:", e)
         return jsonify([])
-
 
 @app.route("/api/presidente/paginas")
 def presidente_paginas():
@@ -909,4 +899,3 @@ def presidente_excluir_pagina():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
-
