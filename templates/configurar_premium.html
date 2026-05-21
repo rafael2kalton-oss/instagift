@@ -209,6 +209,28 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
+  <!-- 1.5 FOTO DE CAPA -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">🖼️</div>
+      <div>
+        <div class="secao-config-titulo">Foto de Capa</div>
+        <div class="secao-config-sub">Aparece no topo da sua página de celebração</div>
+      </div>
+    </div>
+    <div id="capaCurrent" style="display:none; margin-bottom:16px; position:relative;">
+      <img id="capaPreview" src="" alt="Foto de capa" style="width:100%; height:160px; object-fit:cover; border-radius:12px; display:block;">
+      <button onclick="removerFotoCapa()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;">✕</button>
+      <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;padding:3px 8px;border-radius:10px;font-family:Inter,sans-serif;">✦ Foto de capa atual</div>
+    </div>
+    <div class="upload-area" id="capaUploadArea" onclick="document.getElementById('inputFotoCapa').click()">
+      <input type="file" id="inputFotoCapa" accept="image/*" style="display:none" onchange="processarFotoCapa(event)">
+      <div class="upload-icon">🖼️</div>
+      <p class="upload-texto"><strong>Clique aqui</strong> para escolher a foto de capa</p>
+      <p style="font-size:11px;color:#bbb;margin-top:6px;font-style:italic;">Recomendado: foto horizontal ou paisagem</p>
+    </div>
+  </div>
+
   <!-- 2. PALETA DE CORES -->
   <div class="secao-config">
     <div class="secao-config-header">
@@ -512,6 +534,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 <script>
 var listaId = "{{ lista_id }}";
+var fotoCapaBase64 = '';
 var estiloConviteSelecionado = 'classico';
 var imagemFundoConviteBase64 = '';
 var cofrinhoFoiPago = false;
@@ -573,7 +596,8 @@ async function irParaStoryComSave() {
                 estilo_mural: estiloMural, local_evento: localEvento,
                 estilo_convite: estiloConviteSelecionado,
                 imagem_fundo_convite: imagemFundoConviteBase64,
-                chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo
+                chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo,
+                foto_capa: fotoCapaBase64
             })
         });
     } catch(e) { console.log('Auto-save erro:', e); }
@@ -714,27 +738,9 @@ async function carregarConfig() {
     var rl = await fetch('/api/limite-fotos/' + listaId);
     var dl = await rl.json();
     limiteFotos = dl.limite || 10;
-
-    // ✦ Pré-preenche com dados já salvos no criar_lista
-    try {
-      var rLista = await fetch('/api/lista-info/' + listaId);
-      var dataLista = await rLista.json();
-      if (dataLista) {
-        if (dataLista.nome && dataLista.nome !== 'Minha Lista') {
-          document.getElementById('nomeCelebrante').value = dataLista.nome;
-        }
-        if (dataLista.data_evento) {
-          document.getElementById('dataEvento').value = dataLista.data_evento;
-          validarData();
-        }
-        if (dataLista.evento) eventoAtual = dataLista.evento;
-      }
-    } catch(e) {}
-
     var r = await fetch('/api/config-premium/' + listaId);
     var data = await r.json();
     if (data.config) {
-      // config_premium tem prioridade — sobrescreve se já foi salvo
       if (data.config.nome_celebrante) document.getElementById('nomeCelebrante').value = data.config.nome_celebrante;
       if (data.config.mensagem_celebrante) document.getElementById('mensagemCelebrante').value = data.config.mensagem_celebrante;
       if (data.config.texto_convite) document.getElementById('textoConvite').value = data.config.texto_convite;
@@ -749,6 +755,16 @@ async function carregarConfig() {
         if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
       }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
+      // ✦ Carregar foto de capa
+      if (data.config.foto_capa) {
+        fotoCapaBase64 = data.config.foto_capa;
+        var prev = document.getElementById('capaPreview');
+        var curr = document.getElementById('capaCurrent');
+        var upArea = document.getElementById('capaUploadArea');
+        if (prev) prev.src = fotoCapaBase64;
+        if (curr) curr.style.display = 'block';
+        if (upArea) upArea.style.display = 'none';
+      }
       if (data.config.cofrinho_ativo) {
         cofrinhoFoiPago = true;
         document.getElementById('cofrinhoAtivo').checked = true;
@@ -1031,7 +1047,8 @@ async function salvarConfig() {
         estilo_convite: estiloConviteSelecionado,
         imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
-        cofrinho_ativo: cofrinhoAtivo
+        cofrinho_ativo: cofrinhoAtivo,
+        foto_capa: fotoCapaBase64
       })
     });
     var result = await r.json();
@@ -1043,6 +1060,34 @@ async function salvarConfig() {
       setTimeout(function() { document.getElementById('salvoSucesso').style.display = 'none'; }, 3000);
     }
   } catch(e) { alert('Erro ao salvar. Tente novamente.'); }
+}
+
+function processarFotoCapa(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    fotoCapaBase64 = ev.target.result;
+    var preview = document.getElementById('capaPreview');
+    var current = document.getElementById('capaCurrent');
+    var uploadArea = document.getElementById('capaUploadArea');
+    if (preview) { preview.src = fotoCapaBase64; }
+    if (current) current.style.display = 'block';
+    if (uploadArea) uploadArea.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removerFotoCapa() {
+  fotoCapaBase64 = '';
+  var preview = document.getElementById('capaPreview');
+  var current = document.getElementById('capaCurrent');
+  var uploadArea = document.getElementById('capaUploadArea');
+  var input = document.getElementById('inputFotoCapa');
+  if (preview) preview.src = '';
+  if (current) current.style.display = 'none';
+  if (uploadArea) uploadArea.style.display = 'block';
+  if (input) input.value = '';
 }
 
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
