@@ -767,28 +767,61 @@ def enviar_magic_link():
     data = request.json or {}
     email = data.get("email", "").strip().lower()
     if not email: return jsonify({"erro": "E-mail obrigatorio"}), 400
+
+    # ✦ Busca lista existente pelo e-mail
     listas = sb_get("listas", f"email_aniversariante=eq.{email}")
-    if not listas or not isinstance(listas, list) or len(listas) == 0:
-        return jsonify({"erro": "Nenhuma lista encontrada com este e-mail"}), 404
-    lista = listas[0]
-    lista_id = lista["id"]
+    lista_id = None
+
+    if listas and isinstance(listas, list) and len(listas) > 0:
+        # ✦ Lista já existe — usa ela
+        lista_id = listas[0]["id"]
+    else:
+        # ✦ Primeira vez — cria lista nova automaticamente com esse e-mail
+        lista_id = str(uuid.uuid4())[:8]
+        sb_post("listas", {
+            "id": lista_id,
+            "nome": "Minha Lista",
+            "email_aniversariante": email
+        })
+
+    # ✦ Reutiliza magic link existente ou cria um novo
+    # O link dura 6 meses + 7 dias (187 dias) — acompanha a vida da página
     links_existentes = sb_get("magic_links", f"email=eq.{email}&usado=eq.false")
     if links_existentes and isinstance(links_existentes, list) and len(links_existentes) > 0:
         token = links_existentes[0]["token"]
     else:
         token = str(uuid.uuid4())
-        expira_em = (datetime.utcnow() + timedelta(days=180)).isoformat()
-        sb_post("magic_links", {"lista_id": lista_id, "email": email, "token": token, "expira_em": expira_em})
+        expira_em = (datetime.utcnow() + timedelta(days=187)).isoformat()
+        sb_post("magic_links", {
+            "lista_id": lista_id,
+            "email": email,
+            "token": token,
+            "expira_em": expira_em
+        })
+
     link = request.host_url.rstrip("/") + f"/acesso-magico/{token}"
+
+    # ✦ E-mail enviado sem campo de e-mail — só o botão dourado
     try:
         resend.Emails.send({
             "from": "InstaGift <onboarding@resend.dev>",
             "to": email,
             "subject": "✦ Seu link de acesso — InstaGift",
-            "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);'><div style='text-align:center;margin-bottom:24px;'><div style='font-family:Georgia,serif;font-size:28px;color:#C9A84C;font-weight:700;'>InstaGift</div><p style='color:#aaa;font-size:12px;letter-spacing:0.1em;'>✦ &nbsp; ✦ &nbsp; ✦</p></div><h2 style='font-family:Georgia,serif;color:#2C2C2C;font-size:20px;margin-bottom:12px;text-align:center;'>Seu link de acesso chegou!</h2><p style='color:#666;font-size:14px;line-height:1.7;margin-bottom:24px;text-align:center;font-style:italic;'>Clique no botão abaixo para acessar e configurar sua Página do Evento.</p><a href='{link}' style='display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px;border-radius:50px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:20px;'>✦ Acessar minha página</a><p style='color:#bbb;font-size:11px;text-align:center;'>Se você não solicitou este link, ignore este e-mail.</p></div>"
+            "html": f"""
+<div style='font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#FFF8EC;padding:40px 32px;border-radius:20px;border:1px solid rgba(201,168,76,0.3);'>
+  <div style='text-align:center;margin-bottom:28px;'>
+    <div style='font-family:Georgia,serif;font-size:32px;color:#C9A84C;font-weight:700;'>InstaGift</div>
+    <p style='color:#C9A84C;font-size:14px;letter-spacing:0.2em;margin-top:4px;'>✦ &nbsp; ✦ &nbsp; ✦</p>
+  </div>
+  <h2 style='font-family:Georgia,serif;color:#2C2C2C;font-size:22px;font-weight:700;margin-bottom:10px;text-align:center;'>Seu link chegou!</h2>
+  <p style='color:#888;font-size:14px;line-height:1.7;margin-bottom:28px;text-align:center;font-style:italic;'>Clique no botão abaixo para acessar sua Página do Evento e criar sua lista de presentes.</p>
+  <a href='{link}' style='display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px 24px;border-radius:50px;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:20px;letter-spacing:0.03em;box-shadow:0 4px 20px rgba(201,168,76,0.4);'>✦ ACESSAR MINHA PÁGINA</a>
+  <p style='color:#bbb;font-size:11px;text-align:center;line-height:1.6;'>Este link é exclusivo para você e fica salvo por 6 meses.<br>Se não solicitou, ignore este e-mail.</p>
+</div>"""
         })
     except Exception as e:
         print("Erro magic link email:", e)
+
     return jsonify({"ok": True})
 
 @app.route("/acesso-magico/<token>")
@@ -801,7 +834,9 @@ def acesso_magico(token):
     if datetime.utcnow() > expira_em:
         return render_template("login.html")
     lista_id = link["lista_id"]
-    return render_template("criar_story.html", lista_id=lista_id)
+    # ✦ Redireciona para criar_lista — o usuário cai na etapa 4
+    # com tudo que já preencheu salvo automaticamente (localStorage + servidor)
+    return redirect(f"/lista/{lista_id}")
 
 # ── PRESIDENTE ──
 
