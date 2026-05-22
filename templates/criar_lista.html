@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FestStory - Criar Lista</title>
+    <title>InstaGift - Criar Lista</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -269,23 +269,6 @@
             transition: opacity 0.15s, transform 0.15s;
         }
         .pacote-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-
-        /* ✦ CARD CONFIGURAR PÁGINA — ETAPA 4 */
-        .card-config-pagina { border-radius: 20px; overflow: hidden; border: 2px solid rgba(201,168,76,0.3); background: #fff; }
-        .card-config-pagina.bloqueado { opacity: 0.7; }
-        .card-config-pagina-topo { background: linear-gradient(135deg, #2C1A00, #1a0f00); padding: 20px; }
-        .card-config-pagina-topo-titulo { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: #C9A84C; margin-bottom: 4px; }
-        .card-config-pagina-topo-sub { font-size: 12px; color: rgba(245,237,216,0.6); font-style: italic; }
-        .card-config-pagina-body { padding: 16px 18px; }
-        .card-config-pagina-itens { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-        .card-config-pagina-item { font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; }
-        .card-config-pagina-item span { font-size: 14px; }
-        .card-config-pagina-lock { background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; text-align: center; }
-        .card-config-pagina-lock p { font-size: 12px; color: #aaa; font-style: italic; line-height: 1.6; }
-        .card-config-pagina-lock strong { color: #C9A84C; font-style: normal; }
-        .btn-config-pagina { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
-        .btn-config-pagina:hover { transform: translateY(-2px); }
-        .btn-config-pagina:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
     </style>
 </head>
 <body>
@@ -293,7 +276,7 @@
 
     <header class="header">
         <div>
-            <div class="logo-box" onclick="recomecar()">FestStory</div>
+            <div class="logo-box" onclick="recomecar()">InstaGift</div>
             <p class="tagline">presentes que chegam com amor</p>
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
@@ -459,28 +442,25 @@
             <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
         </div>
         <div class="acoes" id="acoesVitrine" style="display:none">
-            <!-- ✦ CARD CONFIGURAR PÁGINA DO EVENTO -->
-            <div class="card-config-pagina" id="cardConfigurarPagina">
-                <div class="card-config-pagina-topo">
-                    <div class="card-config-pagina-topo-titulo">🎉 Página do Evento</div>
-                    <div class="card-config-pagina-topo-sub">Surpreenda seus convidados com uma página personalizada</div>
-                </div>
-                <div class="card-config-pagina-body">
-                    <div class="card-config-pagina-itens">
-                        <div class="card-config-pagina-item"><span>📸</span> Mural de memórias e fotos</div>
-                        <div class="card-config-pagina-item"><span>💌</span> Livro de recados dos convidados</div>
-                        <div class="card-config-pagina-item"><span>✅</span> Lista de presença</div>
-                        <div class="card-config-pagina-item"><span>✉️</span> Convite digital para WhatsApp</div>
+            <div class="card-premium-cta">
+                <div class="card-premium-brilho"></div>
+                <div class="card-premium-conteudo">
+                    <div class="card-premium-badge">✦ NOVO</div>
+                    <h3 class="card-premium-titulo">Página do Evento 🎉</h3>
+                    <p class="card-premium-texto">Surpreenda seus convidados com uma página personalizada — mural de fotos, livro de recados, lista de presença e convite digital.</p>
+                    <div class="card-premium-itens">
+                        <div class="card-premium-item">📸 Mural de memórias</div>
+                        <div class="card-premium-item">💌 Livro de recados</div>
+                        <div class="card-premium-item">✅ Lista de presença</div>
+                        <div class="card-premium-item">✉️ Convite para WhatsApp</div>
                     </div>
-                    <div class="card-config-pagina-lock" id="cardConfigLock" style="display:none;">
-                        <p>🔒 Adicione <strong>3 ou mais presentes</strong> à lista<br>ou adquira o <strong>Cofrinho Pix</strong> para desbloquear</p>
-                    </div>
-                    <button class="btn-config-pagina" id="btnConfigurarPagina" onclick="abrirConfigurarPagina()" disabled>🔒 Configurar minha Página do Evento</button>
+                    <button class="btn-premium-cta" onclick="abrirPopupAcesso()">🎉 Criar minha Página do Evento</button>
                 </div>
             </div>
             <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
             <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
-
+            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
+            <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
         </div>
     </div>
 </div>
@@ -698,11 +678,11 @@
     }
 
     try {
-        var savedListaId = localStorage.getItem('feststory_lista_id');
+        var savedListaId = localStorage.getItem('instagift_lista_id');
         if (savedListaId && savedListaId !== LISTA_ID && window.location.pathname === '/criar-lista') {
             window.location.href = '/lista/' + savedListaId;
         } else {
-            localStorage.setItem('feststory_lista_id', LISTA_ID);
+            localStorage.setItem('instagift_lista_id', LISTA_ID);
         }
     } catch(e) {}
 
@@ -785,7 +765,7 @@
             var dataEvento=document.getElementById('inputDataEvento').value;
             document.getElementById('nomeListaHeader').textContent=nomeEvento||'Minha Lista';
             if(dataEvento){var d=new Date(dataEvento+'T00:00:00');document.getElementById('dataEventoHeader').textContent='✦ '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}
-            carregarProdutos();atualizarCardConfigurarPagina();
+            carregarProdutos();verificarWhatsapp();
         }
         salvarEstado();window.scrollTo(0,0);
     }
@@ -819,7 +799,7 @@
             el.innerHTML = `<div class="empty-state"><div class="ornamento">✦ ✦ ✦</div><p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p></div>`;
             linkPerm.style.display = "none"; acoes.style.display = "none"; return;
         }
-        linkPerm.style.display = "block"; acoes.style.display = "flex"; atualizarCardConfigurarPagina();
+        linkPerm.style.display = "block"; acoes.style.display = "flex"; verificarWhatsapp();
         document.getElementById("textoLink").textContent = `${window.location.origin}/premium/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon:"badge-amazon", mercadolivre:"badge-mercadolivre", shopee:"badge-shopee", magalu:"badge-magalu", shein:"badge-shein" }[p.plataforma] || "badge-outro";
@@ -959,13 +939,47 @@
         finally{btn.disabled=false;loading.style.display="none";}
     }
 
+    // ✦ Lojas parceiras — adicione novos domínios aqui quando firmar novas parcerias
+    var LOJAS_PARCEIRAS = [
+        // Amazon
+        'amazon.com.br', 'amzn.to', 'a.co',
+        // Mercado Livre
+        'mercadolivre.com.br', 'mercadolibre.com', 'meli.la', 'produto.mercadolivre', 'share.google',
+        // Shopee
+        'shopee.com.br', 'br.shp.ee', 's.shopee',
+        // Magalu
+        'magazineluiza.com.br', 'magalu.com.br', 'magazinevoce.com.br', 'mglu.me',
+        // Shein
+        'shein.com', 'onelink.shein.com', 'api-shein.shein.com'
+    ];
+
+    function verificarLojaParceira(link) {
+        var l = link.toLowerCase();
+        return LOJAS_PARCEIRAS.some(function(loja) { return l.indexOf(loja) > -1; });
+    }
+
     async function adicionarProduto() {
         const input=document.getElementById("inputLink");
         const link=input.value.trim();
         if(!link) return;
+
+        // ✦ Valida se é loja parceira
+        if (!verificarLojaParceira(link)) {
+            mostrarPopupLojaInvalida();
+            return;
+        }
+
         if(link.indexOf('produto.mercadolivre')>-1||link.indexOf('share.google')>-1){abrirPopupML(link);return;}
         if(link.toLowerCase().indexOf('shopee.com.br')>-1||link.toLowerCase().indexOf('s.shopee')>-1||link.toLowerCase().indexOf('br.shp.ee')>-1){abrirPopupShopee(link);return;}
         await adicionarProdutoNormal(link);
+    }
+
+    function mostrarPopupLojaInvalida() {
+        document.getElementById('popupLojaInvalida').style.display = 'flex';
+    }
+    function fecharPopupLojaInvalida() {
+        document.getElementById('popupLojaInvalida').style.display = 'none';
+        document.getElementById('inputLink').value = '';
     }
 
     async function remover(id) { await fetch(`${BASE}/api/remover-produto/${id}`,{method:"DELETE"}); await carregarProdutos(); }
@@ -1009,10 +1023,10 @@
 
     async function verificarAcessoConfigurar() {
         try {
-            // 1) Tem 3+ produtos na lista? → libera
+            // 1) Tem produtos na lista? → libera
             var r1 = await fetch('/api/produtos/' + LISTA_ID);
             var produtos = await r1.json();
-            if (Array.isArray(produtos) && produtos.length >= 3) return true;
+            if (Array.isArray(produtos) && produtos.length > 0) return true;
 
             // 2) Já pagou cofrinho? → libera
             var r2 = await fetch('/api/config-premium/' + LISTA_ID);
@@ -1023,29 +1037,10 @@
         } catch(e) { return false; }
     }
 
-    // ✦ Atualiza estado do card Configurar Página na etapa 4
-    async function atualizarCardConfigurarPagina() {
-        var liberado = await verificarAcessoConfigurar();
-        var btn = document.getElementById('btnConfigurarPagina');
-        var lock = document.getElementById('cardConfigLock');
-        var card = document.getElementById('cardConfigurarPagina');
-        if (liberado) {
-            btn.disabled = false;
-            btn.textContent = '🎉 Configurar minha Página do Evento';
-            if (lock) lock.style.display = 'none';
-            if (card) card.classList.remove('bloqueado');
-        } else {
-            btn.disabled = true;
-            btn.textContent = '🔒 Configurar minha Página do Evento';
-            if (lock) lock.style.display = 'block';
-            if (card) card.classList.add('bloqueado');
-        }
-    }
-
     async function abrirConfigurarPagina() {
         var liberado = await verificarAcessoConfigurar();
         if (!liberado) {
-            alert('✦ Adicione pelo menos 3 presentes na lista (ou adquira o Cofrinho Pix) para acessar a Página do Evento!');
+            alert('✦ Adicione pelo menos 1 presente na lista para acessar a Página do Evento!');
             return;
         }
         window.open('/configurar-premium/' + LISTA_ID, '_blank');
@@ -1122,5 +1117,23 @@
         await restaurarEstado();
     });
 </script>
+
+<!-- Popup Loja Inválida -->
+<div id="popupLojaInvalida" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.7); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+        <div style="font-size:40px; margin-bottom:12px;">🛍️</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Loja não disponível</h3>
+        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:20px; font-style:italic; font-family:'Playfair Display',serif;">Por enquanto aceitamos produtos apenas das nossas lojas parceiras:</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:24px;">
+            <span style="background:#FF9900; color:#000; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Amazon</span>
+            <span style="background:#FFE600; color:#000; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Mercado Livre</span>
+            <span style="background:#EE4D2D; color:#fff; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Shopee</span>
+            <span style="background:#0086FF; color:#fff; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Magalu</span>
+            <span style="background:#2C2C2C; color:#C9A84C; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Shein</span>
+        </div>
+        <button onclick="fecharPopupLojaInvalida()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Entendi, vou usar uma loja parceira</button>
+    </div>
+</div>
+
 </body>
 </html>
