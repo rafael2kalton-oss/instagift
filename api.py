@@ -974,5 +974,40 @@ def presidente_excluir_pagina():
 
     return jsonify({"ok": True})
 
+
+@app.route("/api/presidente/liberar-cortesia", methods=["POST"])
+def presidente_liberar_cortesia():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    if not lista_id:
+        return jsonify({"erro": "Lista ID obrigatorio"}), 400
+
+    config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    config_existe = config and isinstance(config, list) and len(config) > 0
+    atualizacao = {}
+
+    # ✦ Cofrinho
+    if data.get("cofrinho_ativo"):
+        atualizacao["cofrinho_ativo"] = True
+
+    # ✦ Carrossel
+    if data.get("estilo_mural"):
+        atualizacao["estilo_mural"] = data["estilo_mural"]
+
+    # ✦ Fotos extras — soma ao limite atual
+    fotos_extras = int(data.get("fotos_extras", 0))
+    if fotos_extras > 0:
+        limite_atual = config[0].get("limite_fotos", 10) if config_existe else 10
+        atualizacao["limite_fotos"] = limite_atual + fotos_extras
+
+    if atualizacao:
+        if config_existe:
+            sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
+        else:
+            atualizacao["lista_id"] = lista_id
+            sb_post("config_premium", atualizacao)
+
+    return jsonify({"ok": True})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
