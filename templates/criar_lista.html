@@ -269,6 +269,23 @@
             transition: opacity 0.15s, transform 0.15s;
         }
         .pacote-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        /* ✦ CARD CONFIGURAR PÁGINA — ETAPA 4 */
+        .card-config-pagina { border-radius: 20px; overflow: hidden; border: 2px solid rgba(201,168,76,0.3); background: #fff; }
+        .card-config-pagina.bloqueado { opacity: 0.7; }
+        .card-config-pagina-topo { background: linear-gradient(135deg, #2C1A00, #1a0f00); padding: 20px; }
+        .card-config-pagina-topo-titulo { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: #C9A84C; margin-bottom: 4px; }
+        .card-config-pagina-topo-sub { font-size: 12px; color: rgba(245,237,216,0.6); font-style: italic; }
+        .card-config-pagina-body { padding: 16px 18px; }
+        .card-config-pagina-itens { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .card-config-pagina-item { font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; }
+        .card-config-pagina-item span { font-size: 14px; }
+        .card-config-pagina-lock { background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; text-align: center; }
+        .card-config-pagina-lock p { font-size: 12px; color: #aaa; font-style: italic; line-height: 1.6; }
+        .card-config-pagina-lock strong { color: #C9A84C; font-style: normal; }
+        .btn-config-pagina { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+        .btn-config-pagina:hover { transform: translateY(-2px); }
+        .btn-config-pagina:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
     </style>
 </head>
 <body>
@@ -442,25 +459,28 @@
             <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
         </div>
         <div class="acoes" id="acoesVitrine" style="display:none">
-            <div class="card-premium-cta">
-                <div class="card-premium-brilho"></div>
-                <div class="card-premium-conteudo">
-                    <div class="card-premium-badge">✦ NOVO</div>
-                    <h3 class="card-premium-titulo">Página do Evento 🎉</h3>
-                    <p class="card-premium-texto">Surpreenda seus convidados com uma página personalizada — mural de fotos, livro de recados, lista de presença e convite digital.</p>
-                    <div class="card-premium-itens">
-                        <div class="card-premium-item">📸 Mural de memórias</div>
-                        <div class="card-premium-item">💌 Livro de recados</div>
-                        <div class="card-premium-item">✅ Lista de presença</div>
-                        <div class="card-premium-item">✉️ Convite para WhatsApp</div>
+            <!-- ✦ CARD CONFIGURAR PÁGINA DO EVENTO -->
+            <div class="card-config-pagina" id="cardConfigurarPagina">
+                <div class="card-config-pagina-topo">
+                    <div class="card-config-pagina-topo-titulo">🎉 Página do Evento</div>
+                    <div class="card-config-pagina-topo-sub">Surpreenda seus convidados com uma página personalizada</div>
+                </div>
+                <div class="card-config-pagina-body">
+                    <div class="card-config-pagina-itens">
+                        <div class="card-config-pagina-item"><span>📸</span> Mural de memórias e fotos</div>
+                        <div class="card-config-pagina-item"><span>💌</span> Livro de recados dos convidados</div>
+                        <div class="card-config-pagina-item"><span>✅</span> Lista de presença</div>
+                        <div class="card-config-pagina-item"><span>✉️</span> Convite digital para WhatsApp</div>
                     </div>
-                    <button class="btn-premium-cta" onclick="abrirPopupAcesso()">🎉 Criar minha Página do Evento</button>
+                    <div class="card-config-pagina-lock" id="cardConfigLock" style="display:none;">
+                        <p>🔒 Adicione <strong>3 ou mais presentes</strong> à lista<br>ou adquira o <strong>Cofrinho Pix</strong> para desbloquear</p>
+                    </div>
+                    <button class="btn-config-pagina" id="btnConfigurarPagina" onclick="abrirConfigurarPagina()" disabled>🔒 Configurar minha Página do Evento</button>
                 </div>
             </div>
             <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
             <button class="btn-ver-vitrine" onclick="verVitrine()">Ver minha vitrine</button>
-            <button class="btn-whatsapp" id="btnWhatsapp" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
-            <p class="whatsapp-hint" id="whatsappHint">📸 Compartilhe nos Stories primeiro para liberar o WhatsApp</p>
+
         </div>
     </div>
 </div>
@@ -765,7 +785,7 @@
             var dataEvento=document.getElementById('inputDataEvento').value;
             document.getElementById('nomeListaHeader').textContent=nomeEvento||'Minha Lista';
             if(dataEvento){var d=new Date(dataEvento+'T00:00:00');document.getElementById('dataEventoHeader').textContent='✦ '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}
-            carregarProdutos();verificarWhatsapp();
+            carregarProdutos();atualizarCardConfigurarPagina();
         }
         salvarEstado();window.scrollTo(0,0);
     }
@@ -799,7 +819,7 @@
             el.innerHTML = `<div class="empty-state"><div class="ornamento">✦ ✦ ✦</div><p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p></div>`;
             linkPerm.style.display = "none"; acoes.style.display = "none"; return;
         }
-        linkPerm.style.display = "block"; acoes.style.display = "flex"; verificarWhatsapp();
+        linkPerm.style.display = "block"; acoes.style.display = "flex"; atualizarCardConfigurarPagina();
         document.getElementById("textoLink").textContent = `${window.location.origin}/premium/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon:"badge-amazon", mercadolivre:"badge-mercadolivre", shopee:"badge-shopee", magalu:"badge-magalu", shein:"badge-shein" }[p.plataforma] || "badge-outro";
@@ -948,20 +968,7 @@
         await adicionarProdutoNormal(link);
     }
 
-    async function remover(id) {
-        // Verifica se é o último produto
-        var r = await fetch(`${BASE}/api/remover-produto/${id}`, {method: "DELETE"});
-        var data = await r.json();
-        if (data.ultimo) {
-            // Mostra popup de confirmação
-            if (confirm('⚠️ Atenção!\n\nEste é o último presente da sua lista. Ao removê-lo, sua lista ficará vazia e você perderá o acesso à Página do Evento — e seus convidados também não conseguirão mais acessar a Página de Celebração.\n\nTem certeza que deseja remover mesmo assim?')) {
-                await fetch(`${BASE}/api/remover-produto/${id}?confirmar=sim`, {method: "DELETE"});
-                await carregarProdutos();
-            }
-        } else {
-            await carregarProdutos();
-        }
-    }
+    async function remover(id) { await fetch(`${BASE}/api/remover-produto/${id}`,{method:"DELETE"}); await carregarProdutos(); }
 
     function abrirPopupStory() {
         var ev=eventos[eventoAtual]||eventos['aniversario'];
@@ -1002,10 +1009,10 @@
 
     async function verificarAcessoConfigurar() {
         try {
-            // 1) Tem produtos na lista? → libera
+            // 1) Tem 3+ produtos na lista? → libera
             var r1 = await fetch('/api/produtos/' + LISTA_ID);
             var produtos = await r1.json();
-            if (Array.isArray(produtos) && produtos.length > 0) return true;
+            if (Array.isArray(produtos) && produtos.length >= 3) return true;
 
             // 2) Já pagou cofrinho? → libera
             var r2 = await fetch('/api/config-premium/' + LISTA_ID);
@@ -1016,10 +1023,29 @@
         } catch(e) { return false; }
     }
 
+    // ✦ Atualiza estado do card Configurar Página na etapa 4
+    async function atualizarCardConfigurarPagina() {
+        var liberado = await verificarAcessoConfigurar();
+        var btn = document.getElementById('btnConfigurarPagina');
+        var lock = document.getElementById('cardConfigLock');
+        var card = document.getElementById('cardConfigurarPagina');
+        if (liberado) {
+            btn.disabled = false;
+            btn.textContent = '🎉 Configurar minha Página do Evento';
+            if (lock) lock.style.display = 'none';
+            if (card) card.classList.remove('bloqueado');
+        } else {
+            btn.disabled = true;
+            btn.textContent = '🔒 Configurar minha Página do Evento';
+            if (lock) lock.style.display = 'block';
+            if (card) card.classList.add('bloqueado');
+        }
+    }
+
     async function abrirConfigurarPagina() {
         var liberado = await verificarAcessoConfigurar();
         if (!liberado) {
-            alert('✦ Adicione pelo menos 1 presente na lista para acessar a Página do Evento!');
+            alert('✦ Adicione pelo menos 3 presentes na lista (ou adquira o Cofrinho Pix) para acessar a Página do Evento!');
             return;
         }
         window.open('/configurar-premium/' + LISTA_ID, '_blank');
