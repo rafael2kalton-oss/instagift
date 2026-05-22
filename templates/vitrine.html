@@ -22,9 +22,15 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 .product-ornamento { font-size: 10px; color: #C9A84C; letter-spacing: 4px; margin-bottom: 6px; text-align: center; }
 .card-nome { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; color: #2C2C2C; text-align: center; }
 .card-preco { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: #C9A84C; margin-bottom: 14px; text-align: center; }
-.btn-presentear { width: 100%; padding: 13px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
-.btn-presentear:hover { transform: translateY(-2px); }
-.btn-presentear:disabled { background: rgba(0,0,0,0.06); color: #bbb; cursor: not-allowed; box-shadow: none; border: 1px solid rgba(0,0,0,0.06); transform: none; }
+.btn-grupo { display: flex; gap: 10px; }
+.btn-ver { flex: 1; padding: 12px; background: transparent; color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+.btn-ver:hover { background: rgba(201,168,76,0.06); border-color: #C9A84C; }
+.btn-reservar { flex: 1; padding: 12px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+.btn-reservar:hover { transform: translateY(-2px); }
+.btn-reservar:disabled { background: rgba(0,0,0,0.06); color: #bbb; cursor: not-allowed; box-shadow: none; transform: none; }
+.btn-reservar-unico { width: 100%; padding: 13px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+.btn-reservar-unico:hover { transform: translateY(-2px); }
+.btn-reservar-unico:disabled { background: rgba(0,0,0,0.06); color: #bbb; cursor: not-allowed; box-shadow: none; transform: none; }
 .reservado-badge { text-align: center; font-size: 12px; color: #aaa; margin-top: 8px; font-style: italic; font-family: 'Playfair Display', serif; }
 .loading { text-align: center; padding: 60px; color: #aaa; font-family: 'Playfair Display', serif; font-style: italic; }
 .erro { text-align: center; padding: 60px; color: #ef4444; font-family: 'Playfair Display', serif; font-style: italic; }
@@ -60,11 +66,12 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
   <div class="loading">Buscando presentes...</div>
 </div>
 
+<!-- Modal de reserva -->
 <div class="modal-bg" id="modal">
   <div class="modal">
     <div class="modal-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
     <h3>Que presente incrível!</h3>
-    <p>Você está prestes a presentear com:</p>
+    <p>Você está prestes a reservar:</p>
     <div class="modal-produto" id="modal-produto"></div>
     <div class="form-grupo">
       <label>Seu nome</label>
@@ -74,7 +81,7 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
       <label>Seu e-mail</label>
       <input class="form-input" type="email" id="email-presenteador" placeholder="para confirmar a compra">
     </div>
-    <button class="btn-confirmar" onclick="confirmarReserva()">✦ Confirmar presente</button>
+    <button class="btn-confirmar" onclick="confirmarReserva()">✦ Reservar presente</button>
     <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
   </div>
 </div>
@@ -82,6 +89,7 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 <script>
 const listaId = "{{ lista_id }}";
 let produtoSelecionado = null;
+let linkProdutoSelecionado = null;
 
 async function carregarLista() {
   try {
@@ -91,11 +99,7 @@ async function carregarLista() {
     ]);
     const produtos = await resProdutos.json();
     const info = await resInfo.json();
-    if (info && info.nome) {
-      document.getElementById('subtitulo').textContent = `Lista de ${info.nome}`;
-    } else {
-      document.getElementById('subtitulo').textContent = 'Escolha um presente especial';
-    }
+    document.getElementById('subtitulo').textContent = (info && info.nome) ? `Lista de ${info.nome}` : 'Escolha um presente especial';
     renderProdutos(Array.isArray(produtos) ? produtos : []);
   } catch(e) {
     document.getElementById('grid').innerHTML = '<div class="erro">Lista não encontrada.</div>';
@@ -108,26 +112,58 @@ function renderProdutos(produtos) {
     grid.innerHTML = '<div class="loading">Nenhum presente na lista ainda.</div>';
     return;
   }
-  grid.innerHTML = produtos.map(p => `
-    <div class="card">
-      ${p.imagem_url
-        ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.style.display='none'">`
-        : `<div class="card-sem-img">🎁</div>`}
-      <div class="card-body">
-        <div class="product-ornamento">✦ ✦ ✦</div>
-        <div class="card-nome">${p.nome || 'Presente'}</div>
-        ${p.preco ? `<div class="card-preco">R$ ${p.preco}</div>` : ''}
-        <button class="btn-presentear" ${p.reservado ? 'disabled' : ''} onclick="abrirModal(${p.id}, '${(p.nome||'').replace(/'/g,"\\'")}')">
-          ${p.reservado === 2 ? '✓ Presente confirmado' : p.reservado ? 'Já reservado' : '✦ Quero presentear'}
-        </button>
-        ${p.reservado ? '<div class="reservado-badge">Alguém já escolheu este presente ✦</div>' : ''}
-      </div>
-    </div>
-  `).join('');
+  grid.innerHTML = produtos.map(p => {
+    const linkAfiliado = p.link_afiliado || p.link_original || '';
+    const temLink = linkAfiliado && linkAfiliado.startsWith('http');
+
+    // ✦ Produto já reservado ou confirmado
+    if (p.reservado) {
+      return `
+        <div class="card">
+          ${p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.style.display='none'">` : `<div class="card-sem-img">🎁</div>`}
+          <div class="card-body">
+            <div class="product-ornamento">✦ ✦ ✦</div>
+            <div class="card-nome">${p.nome || 'Presente'}</div>
+            ${p.preco ? `<div class="card-preco">R$ ${p.preco}</div>` : ''}
+            ${temLink ? `<div class="btn-grupo"><a href="${linkAfiliado}" target="_blank" class="btn-ver">🔗 Ver produto</a><button class="btn-reservar" disabled>${p.reservado === 2 ? '✓ Confirmado' : 'Já reservado'}</button></div>` : `<button class="btn-reservar-unico" disabled>${p.reservado === 2 ? '✓ Confirmado' : 'Já reservado'}</button>`}
+            <div class="reservado-badge">Alguém já escolheu este presente ✦</div>
+          </div>
+        </div>`;
+    }
+
+    // ✦ Produto disponível — dois botões se tem link, um se não tem
+    if (temLink) {
+      return `
+        <div class="card">
+          ${p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.style.display='none'">` : `<div class="card-sem-img">🎁</div>`}
+          <div class="card-body">
+            <div class="product-ornamento">✦ ✦ ✦</div>
+            <div class="card-nome">${p.nome || 'Presente'}</div>
+            ${p.preco ? `<div class="card-preco">R$ ${p.preco}</div>` : ''}
+            <div class="btn-grupo">
+              <a href="${linkAfiliado}" target="_blank" class="btn-ver">🔗 Ver produto</a>
+              <button class="btn-reservar" onclick="abrirModal(${p.id}, '${(p.nome||'').replace(/'/g,"\\'")}', '${linkAfiliado}')">🎁 Reservar</button>
+            </div>
+          </div>
+        </div>`;
+    } else {
+      return `
+        <div class="card">
+          ${p.imagem_url ? `<img src="${p.imagem_url}" alt="${p.nome}" onerror="this.style.display='none'">` : `<div class="card-sem-img">🎁</div>`}
+          <div class="card-body">
+            <div class="product-ornamento">✦ ✦ ✦</div>
+            <div class="card-nome">${p.nome || 'Presente'}</div>
+            ${p.preco ? `<div class="card-preco">R$ ${p.preco}</div>` : ''}
+            <button class="btn-reservar-unico" onclick="abrirModal(${p.id}, '${(p.nome||'').replace(/'/g,"\\'")}', '')">🎁 Reservar presente</button>
+          </div>
+        </div>`;
+    }
+  }).join('');
 }
 
-function abrirModal(id, nome) {
+function abrirModal(id, nome, link) {
   produtoSelecionado = id;
+  linkProdutoSelecionado = link;
   document.getElementById('modal-produto').textContent = nome;
   document.getElementById('nome-presenteador').value = '';
   document.getElementById('email-presenteador').value = '';
@@ -137,13 +173,14 @@ function abrirModal(id, nome) {
 function fecharModal() {
   document.getElementById('modal').classList.remove('show');
   produtoSelecionado = null;
+  linkProdutoSelecionado = null;
 }
 
 async function confirmarReserva() {
   if (!produtoSelecionado) return;
   const nome = document.getElementById('nome-presenteador').value.trim();
   const email = document.getElementById('email-presenteador').value.trim();
-  if (!nome || !email) { alert('Preencha seu nome e e-mail para confirmar!'); return; }
+  if (!nome || !email) { alert('Preencha seu nome e e-mail para reservar!'); return; }
   try {
     const res = await fetch(`/api/reservar/${produtoSelecionado}`, {
       method: 'POST',
@@ -154,6 +191,12 @@ async function confirmarReserva() {
     if (data.ok) {
       fecharModal();
       carregarLista();
+      // ✦ Se tem link do produto, abre para o comprador já ir comprar
+      if (linkProdutoSelecionado) {
+        setTimeout(function() {
+          window.open(linkProdutoSelecionado, '_blank');
+        }, 500);
+      }
       alert('🎉 Presente reservado! Verifique seu e-mail para confirmar a compra.');
     } else {
       alert(data.erro || 'Erro ao reservar.');
