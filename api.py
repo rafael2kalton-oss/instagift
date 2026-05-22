@@ -16,7 +16,7 @@ ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
 STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
-STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GHWbXZ1GJiBIGziNMrdT30091vAVts7"
+STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GiBIGziNMrdT30091vAVts7"
 
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
@@ -430,7 +430,6 @@ def listar_produtos(lista_id):
 
 @app.route("/api/remover-produto/<int:produto_id>", methods=["DELETE"])
 def remover_produto(produto_id):
-    # ✦ Verifica se é o último produto — avisa o frontend antes de remover
     produto = sb_get("produtos", f"id=eq.{produto_id}")
     if produto and isinstance(produto, list) and len(produto) > 0:
         lista_id = produto[0].get("lista_id", "")
@@ -818,36 +817,51 @@ def presidente(token):
 def presidente_metricas():
     try:
         listas = sb_get("listas", "order=criado_em.desc&limit=100") or []
+        if not isinstance(listas, list): listas = []
+
         paginas = sb_get("config_premium", "limit=100") or []
+        if not isinstance(paginas, list): paginas = []
+
         recados = sb_get("recados", "limit=100") or []
-        vendas = sb_get("vendas", "order=criado_em.desc&limit=100") or []
+        if not isinstance(recados, list): recados = []
+
+        # ✦ Protege contra tabela vendas inexistente
+        try:
+            vendas = sb_get("vendas", "order=criado_em.desc&limit=100") or []
+            if not isinstance(vendas, list): vendas = []
+        except Exception:
+            vendas = []
+
         faturamento = 0
         vendas_por_pacote = {}
         vendas_hoje = 0
         hoje = datetime.utcnow().date()
-        if isinstance(vendas, list):
-            for v in vendas:
+
+        for v in vendas:
+            try:
                 faturamento += float(v.get("valor", 0))
-                pacote = v.get("pacote", "")
-                vendas_por_pacote[pacote] = vendas_por_pacote.get(pacote, 0) + 1
-                criado = v.get("criado_em", "")
-                if criado and criado[:10] == str(hoje):
-                    vendas_hoje += 1
-        usuarios_recentes = []
-        if isinstance(listas, list):
-            usuarios_recentes = sorted(listas, key=lambda x: x.get("criado_em",""), reverse=True)[:10]
+            except Exception:
+                pass
+            pacote = v.get("pacote", "")
+            vendas_por_pacote[pacote] = vendas_por_pacote.get(pacote, 0) + 1
+            criado = v.get("criado_em", "")
+            if criado and criado[:10] == str(hoje):
+                vendas_hoje += 1
+
         return jsonify({
-            "total_listas": len(listas) if isinstance(listas, list) else 0,
-            "paginas_ativas": len(paginas) if isinstance(paginas, list) else 0,
-            "total_recados": len(recados) if isinstance(recados, list) else 0,
+            "total_listas": len(listas),
+            "paginas_ativas": len(paginas),
+            "total_recados": len(recados),
             "vendas_hoje": vendas_hoje,
             "faturamento_total": round(faturamento, 2),
             "vendas_por_pacote": vendas_por_pacote,
-            "usuarios_recentes": usuarios_recentes
         })
     except Exception as e:
         print("Presidente metricas erro:", e)
-        return jsonify({"erro": str(e)}), 500
+        return jsonify({
+            "total_listas": 0, "paginas_ativas": 0, "total_recados": 0,
+            "vendas_hoje": 0, "faturamento_total": 0, "vendas_por_pacote": {}
+        })
 
 @app.route("/api/presidente/vendas")
 def presidente_vendas():
@@ -875,26 +889,54 @@ def presidente_liberar_premium():
     lista_id = data.get("lista_id", "").strip()
     limite_fotos = data.get("limite_fotos", 20)
     cofrinho_ativo = data.get("cofrinho_ativo", False)
-    if not lista_id: return jsonify({"erro": "Lista ID obrigatorio"}), 400
+    if not lista_id:
+        return jsonify({"erro": "Lista ID obrigatorio"}), 400
+
     config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
-    atualizacao = {"limite_fotos": limite_fotos, "cofrinho_ativo": cofrinho_ativo}
+
+    atualizacao = {
+        "limite_fotos": limite_fotos,
+        "cofrinho_ativo": cofrinho_ativo,
+    }
+    # ✦ Se liberar cofrinho, ativa carrossel também
+    if cofrinho_ativo:
+        atualizacao["estilo_mural"] = "carrossel"
+
     if config and isinstance(config, list) and len(config) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
     else:
+        # ✦ Cria config_premium se não existir
         atualizacao["lista_id"] = lista_id
         sb_post("config_premium", atualizacao)
+
+    # ✦ Registra a liberação como venda manual no histórico
+    try:
+        sb_post("vendas", {
+            "lista_id": lista_id,
+            "pacote": "cofrinho" if cofrinho_ativo else "manual",
+            "valor": 0
+        })
+    except Exception:
+        pass
+
     return jsonify({"ok": True})
 
 @app.route("/api/presidente/excluir-pagina", methods=["POST"])
 def presidente_excluir_pagina():
     data = request.json or {}
     lista_id = data.get("lista_id", "").strip()
-    if not lista_id: return jsonify({"erro": "Lista ID obrigatorio"}), 400
+    if not lista_id:
+        return jsonify({"erro": "Lista ID obrigatorio"}), 400
+
+    # ✦ Deleta TUDO relacionado à lista — ordem importa por foreign keys
     sb_delete("config_premium", f"lista_id=eq.{lista_id}")
-    sb_delete("fotos_mural", f"lista_id=eq.{lista_id}")
-    sb_delete("recados", f"lista_id=eq.{lista_id}")
-    sb_delete("presencas", f"lista_id=eq.{lista_id}")
-    sb_delete("magic_links", f"lista_id=eq.{lista_id}")
+    sb_delete("fotos_mural",    f"lista_id=eq.{lista_id}")
+    sb_delete("recados",        f"lista_id=eq.{lista_id}")
+    sb_delete("presencas",      f"lista_id=eq.{lista_id}")
+    sb_delete("magic_links",    f"lista_id=eq.{lista_id}")
+    sb_delete("produtos",       f"lista_id=eq.{lista_id}")   # ✦ CORRIGIDO
+    sb_delete("listas",         f"id=eq.{lista_id}")          # ✦ CORRIGIDO
+
     return jsonify({"ok": True})
 
 if __name__ == "__main__":
