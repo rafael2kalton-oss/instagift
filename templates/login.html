@@ -21,8 +21,7 @@ body { background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); min-heigh
 .btn:hover { transform: translateY(-2px); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .link-criar { margin-top: 14px; font-size: 13px; color: #bbb; font-family: 'Playfair Display', serif; font-style: italic; }
-.link-criar a { color: #C9A84C; font-weight: 600; text-decoration: none; font-style: normal; font-family: 'Inter', sans-serif; }
-.link-criar a:hover { text-decoration: underline; }
+
 .sucesso { display: none; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 14px; padding: 24px 20px; margin-top: 16px; }
 .sucesso-icon { font-size: 36px; margin-bottom: 10px; }
 .sucesso-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #16a34a; margin-bottom: 8px; }
@@ -42,7 +41,7 @@ body { background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); min-heigh
       <input type="email" id="email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') enviar()">
     </div>
     <button class="btn" id="btnEnviar" onclick="enviar()">✦ Enviar link de acesso</button>
-    <p class="link-criar">ou <a href="/criar-lista">crie seu link grátis →</a></p>
+    <p class="link-criar">ou crie seu link grátis ao enviar seu e-mail acima ✦</p>
   </div>
 
   <div class="sucesso" id="sucesso">
