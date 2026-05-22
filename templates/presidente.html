@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaGift — Painel do Presidente</title>
+<title>FestStory — Painel do Presidente</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,7 +66,7 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
 <body>
 
 <div class="header">
-  <div class="logo">InstaGift ✦</div>
+  <div class="logo">FestStory ✦</div>
   <div style="display:flex;align-items:center;gap:12px;">
     <button class="btn-atualizar" onclick="carregarTudo()">↻ Atualizar</button>
     <div class="badge-presidente">👑 PRESIDENTE</div>
@@ -94,7 +94,6 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
     </div>
   </div>
 
-  <!-- FATURAMENTO -->
   <div class="secao">
     <div class="secao-titulo">💰 Faturamento</div>
     <div class="faturamento-destaque">
@@ -121,13 +120,11 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
     </div>
   </div>
 
-  <!-- VENDAS RECENTES -->
   <div class="secao">
     <div class="secao-titulo">💳 Vendas Recentes</div>
     <div id="vendasLista"><div class="loading">Carregando...</div></div>
   </div>
 
-  <!-- PÁGINAS ATIVAS com status de expiração -->
   <div class="secao">
     <div class="secao-titulo">🎉 Páginas Ativas
       <span style="font-size:11px;font-weight:400;color:#555;margin-left:12px;">
@@ -141,7 +138,6 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
 
 </div>
 
-<!-- POPUP LIBERAR PREMIUM -->
 <div class="popup-overlay" id="popupPremium">
   <div class="popup-box">
     <div class="popup-titulo">✦ Liberar Acesso Premium</div>
