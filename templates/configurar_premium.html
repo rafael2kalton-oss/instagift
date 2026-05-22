@@ -609,12 +609,7 @@ async function irParaStoryComSave() {
 function compartilharWhatsApp() {
     var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
     var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
-
-✦ ACESSAR AQUI:
-' + linkCelebracao + '
-
-Valeu pelo carinho! 🙏✦';
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
