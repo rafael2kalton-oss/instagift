@@ -10,7 +10,7 @@
 body { background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); min-height: 100vh; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .card { background: #FFF8EC; border-radius: 24px; padding: 40px 32px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
 .logo { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #C9A84C; margin-bottom: 8px; }
-.logo-sub { font-size: 12px; color: #aaa; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 32px; }
+.logo-sub { font-size: 12px; color: #aaa; letter-spacing: 0.1em; margin-bottom: 32px; }
 .titulo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
 .subtitulo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-bottom: 28px; line-height: 1.6; }
 .campo label { font-size: 11px; color: #aaa; display: block; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; text-align: left; }
@@ -20,17 +20,13 @@ body { background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); min-heigh
 .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3); }
 .btn:hover { transform: translateY(-2px); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.sucesso { display: none; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 14px; padding: 20px; margin-top: 16px; }
-.sucesso-icon { font-size: 32px; margin-bottom: 10px; }
-.sucesso-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #16a34a; margin-bottom: 6px; }
-.sucesso-texto { font-size: 13px; color: #666; line-height: 1.6; font-style: italic; }
-.erro { display: none; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 14px; margin-top: 12px; color: #dc2626; font-size: 13px; }
-.divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
-.divider-linha { flex: 1; height: 1px; background: rgba(201,168,76,0.2); }
-.divider-icon { color: #C9A84C; font-size: 10px; }
-.criar-lista { font-size: 13px; color: #aaa; }
-.criar-lista a { color: #C9A84C; font-weight: 600; text-decoration: none; }
-.criar-lista a:hover { text-decoration: underline; }
+.link-criar { margin-top: 14px; font-size: 13px; color: #bbb; font-family: 'Playfair Display', serif; font-style: italic; }
+.link-criar a { color: #C9A84C; font-weight: 600; text-decoration: none; font-style: normal; font-family: 'Inter', sans-serif; }
+.link-criar a:hover { text-decoration: underline; }
+.sucesso { display: none; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 14px; padding: 24px 20px; margin-top: 16px; }
+.sucesso-icon { font-size: 36px; margin-bottom: 10px; }
+.sucesso-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #16a34a; margin-bottom: 8px; }
+.sucesso-texto { font-size: 13px; color: #666; line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; }
 </style>
 </head>
 <body>
@@ -38,40 +34,37 @@ body { background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); min-heigh
   <div class="logo">InstaGift</div>
   <div class="logo-sub">✦ &nbsp; ✦ &nbsp; ✦</div>
   <h2 class="titulo">Acessar minha página</h2>
-  <p class="subtitulo">Digite seu e-mail e enviaremos um link mágico para você acessar sua página do evento</p>
+  <p class="subtitulo">Digite seu e-mail e enviaremos um link para você acessar sua página do evento</p>
 
-  <div class="campo">
-    <label>Seu e-mail</label>
-    <input type="email" id="email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') enviarMagicLink()">
+  <div id="formArea">
+    <div class="campo">
+      <label>Seu e-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter') enviar()">
+    </div>
+    <button class="btn" id="btnEnviar" onclick="enviar()">✦ Enviar link de acesso</button>
+    <p class="link-criar">ou <a href="/criar-lista">crie seu link grátis →</a></p>
   </div>
-  <button class="btn" id="btnEnviar" onclick="enviarMagicLink()">✦ Enviar link de acesso</button>
 
   <div class="sucesso" id="sucesso">
     <div class="sucesso-icon">📬</div>
     <div class="sucesso-titulo">Link enviado!</div>
-    <p class="sucesso-texto">Verifique seu e-mail e clique no link para acessar sua página. O link expira em 24 horas.</p>
+    <p class="sucesso-texto">Verifique seu e-mail e clique no link para acessar sua página do evento. O link fica salvo por 6 meses.</p>
   </div>
-  <div class="erro" id="erro"></div>
-
-  <div class="divider">
-    <div class="divider-linha"></div>
-    <div class="divider-icon">✦</div>
-    <div class="divider-linha"></div>
-  </div>
-  <p class="criar-lista">Ainda não tem uma lista? <a href="/criar-lista">Criar agora grátis →</a></p>
 </div>
 
 <script>
-async function enviarMagicLink() {
+async function enviar() {
   var email = document.getElementById('email').value.trim();
   if (!email || !email.includes('@')) {
-    mostrarErro('Digite um e-mail válido.');
+    document.getElementById('email').style.borderColor = '#ef4444';
+    document.getElementById('email').focus();
     return;
   }
   var btn = document.getElementById('btnEnviar');
   btn.disabled = true;
   btn.textContent = 'Enviando...';
-  document.getElementById('erro').style.display = 'none';
+  document.getElementById('email').style.borderColor = '';
+
   try {
     var r = await fetch('/api/enviar-magic-link', {
       method: 'POST',
@@ -79,25 +72,20 @@ async function enviarMagicLink() {
       body: JSON.stringify({ email: email })
     });
     var data = await r.json();
+
+    // ✦ Sucesso: lista existente OU nova lista criada
     if (data.ok) {
+      document.getElementById('formArea').style.display = 'none';
       document.getElementById('sucesso').style.display = 'block';
-      btn.style.display = 'none';
-      document.getElementById('email').disabled = true;
     } else {
-      mostrarErro(data.erro || 'Nenhuma lista encontrada com este e-mail.');
+      // ✦ Qualquer erro: só reabilita o botão, sem mostrar msg vermelha confusa
       btn.disabled = false;
       btn.textContent = '✦ Enviar link de acesso';
     }
   } catch(e) {
-    mostrarErro('Erro de conexão. Tente novamente.');
     btn.disabled = false;
     btn.textContent = '✦ Enviar link de acesso';
   }
-}
-function mostrarErro(msg) {
-  var el = document.getElementById('erro');
-  el.textContent = '⚠️ ' + msg;
-  el.style.display = 'block';
 }
 </script>
 </body>
