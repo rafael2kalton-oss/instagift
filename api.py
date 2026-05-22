@@ -316,7 +316,7 @@ def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token,
     link_btn = f'<a href="{link_produto}" style="display:block;background:#1a1a2e;color:#8A63D2;text-align:center;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px;border:1px solid rgba(138,99,210,0.3);">Acessar o presente novamente</a>' if link_produto else ""
     try:
         resend.Emails.send({
-            "from": "FestStory <noreply@feststory.art.br>",
+            "from": "FestStory <onboarding@resend.dev>",
             "to": email_comprador,
             "subject": "Confirme que voce comprou o presente!",
             "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;'><h2 style='color:#8A63D2;'>Ola, {nome_comprador}!</h2><p style='color:#fff;font-weight:700;'>{nome_produto}</p>{link_btn}<a href='{link_confirmacao}' style='display:block;background:#22c55e;color:#fff;text-align:center;padding:18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;margin-bottom:24px;'>Sim, eu comprei o presente!</a><p style='color:#444;font-size:12px;text-align:center;'>Com carinho, FestStory</p></div>"
@@ -327,7 +327,7 @@ def enviar_email_comprador(email_comprador, nome_comprador, nome_produto, token,
 def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produto):
     try:
         resend.Emails.send({
-            "from": "FestStory <noreply@feststory.art.br>",
+            "from": "FestStory <onboarding@resend.dev>",
             "to": email_aniversariante,
             "subject": "Voce ganhou um presente!",
             "html": f"<div style='font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#0D0D0D;color:#fff;padding:32px;border-radius:16px;'><h2 style='color:#8A63D2;'>Que surpresa incrivel!</h2><p style='color:#fff;font-weight:700;'>{nome_produto}</p><p style='color:#888;'>presenteado por {nome_comprador}</p></div>"
@@ -708,7 +708,7 @@ def salvar_presenca():
             status_label = "Confirmou presenca" if status == "confirmado" else "Talvez" if status == "talvez" else "Nao vai comparecer"
             acomp_texto = f" com {acompanhantes} acompanhante(s)" if acompanhantes > 0 else ""
             resend.Emails.send({
-                "from": "FestStory <noreply@feststory.art.br>",
+                "from": "FestStory <onboarding@resend.dev>",
                 "to": email_dest,
                 "subject": f"Nova confirmacao de presenca - {nome_evento}",
                 "html": f"<div style='font-family:Arial;max-width:500px;margin:0 auto;background:#FFF8EC;padding:32px;border-radius:16px;'><h2 style='color:#C9A84C;'>Nova confirmacao!</h2><p><strong>{nome}{acomp_texto}</strong> - {status_label}</p></div>"
@@ -804,7 +804,7 @@ def enviar_magic_link():
     # ✦ E-mail enviado sem campo de e-mail — só o botão dourado
     try:
         resend.Emails.send({
-            "from": "FestStory <noreply@feststory.art.br>",
+            "from": "FestStory <onboarding@resend.dev>",
             "to": email,
             "subject": "✦ Seu link de acesso — FestStory",
             "html": f"""
