@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InstaGift - Criar Lista</title>
+    <title>FestStory - Criar Lista</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -283,7 +283,7 @@
 
     <header class="header">
         <div>
-            <div class="logo-box" onclick="recomecar()">InstaGift</div>
+            <div class="logo-box" onclick="recomecar()">FestStory</div>
             <p class="tagline">presentes que chegam com amor</p>
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
@@ -635,8 +635,8 @@
 <script>
     const LISTA_ID = "{{ lista_id }}";
     const BASE = "";
-    const STORAGE_KEY = "instagift_estado_" + LISTA_ID;
-    const WHATSAPP_KEY = "instagift_story_" + LISTA_ID;
+    const STORAGE_KEY = "feststory_estado_" + LISTA_ID;
+    const WHATSAPP_KEY = "feststory_story_" + LISTA_ID;
     var eventoAtual = "aniversario";
     var stepAtual = 1;
     var linkShopeeAtual = "";
@@ -698,11 +698,11 @@
     }
 
     try {
-        var savedListaId = localStorage.getItem('instagift_lista_id');
+        var savedListaId = localStorage.getItem('feststory_lista_id');
         if (savedListaId && savedListaId !== LISTA_ID && window.location.pathname === '/criar-lista') {
             window.location.href = '/lista/' + savedListaId;
         } else {
-            localStorage.setItem('instagift_lista_id', LISTA_ID);
+            localStorage.setItem('feststory_lista_id', LISTA_ID);
         }
     } catch(e) {}
 
