@@ -436,7 +436,7 @@ function renderConviteMural(config) {
   var link = window.location.origin + '/premium/' + listaId;
   var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
 
-  conviteTextoFinal = (config.texto_convite && !config.usa_convite_padrao)
+  conviteTextoFinal = (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false'))
     ? config.texto_convite + mapsLink
     : '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
 
@@ -515,7 +515,7 @@ function renderConviteVisual(config) {
   if (tituloEl) tituloEl.textContent = nome;
   if (dataEl) dataEl.textContent = '📅 ' + dataStr;
   if (textoEl) {
-    if (config.texto_convite && !config.usa_convite_padrao) {
+    if (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false')) {
       textoEl.textContent = config.texto_convite;
     } else {
       textoEl.textContent = (config.nome_celebrante || 'Celebração Especial') + ' convida você para uma celebração especial ✦';
@@ -538,7 +538,7 @@ function compartilharWhatsApp() {
     var localEvento = config.local_evento || '';
     var link = window.location.origin + '/premium/' + listaId;
     var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
-    conviteTextoFinal = (config.texto_convite && !config.usa_convite_padrao)
+    conviteTextoFinal = (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false'))
       ? config.texto_convite + mapsLink
       : '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + dataStr + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
   }
