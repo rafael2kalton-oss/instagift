@@ -173,9 +173,26 @@ input:checked + .slider:before { transform: translateX(22px); }
         .btn-ja-postei { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: none; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
         .btn-ja-postei.show { display: block; }
         .btn-ja-postei:hover { transform: translateY(-2px); }
+        /* ✦ LOADING OVERLAY */
+        .loading-overlay { position: fixed; inset: 0; background: #FFF8EC; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+        .loading-overlay.saindo { opacity: 0; pointer-events: none; }
+        .loading-logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; }
+        .loading-ornamento { font-size: 11px; color: #C9A84C; letter-spacing: 6px; opacity: 0.6; }
+        .loading-texto { font-family: 'Playfair Display', serif; font-size: 14px; color: #aaa; font-style: italic; }
+        .loading-barra { width: 160px; height: 3px; background: rgba(201,168,76,0.15); border-radius: 10px; overflow: hidden; }
+        .loading-barra-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 10px; animation: loadingFill 1.8s ease-in-out infinite; }
+        @keyframes loadingFill { 0% { width: 0%; opacity: 1; } 70% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
 </style>
 </head>
 <body>
+<!-- ✦ LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">FestStory</div>
+  <div class="loading-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+  <div class="loading-barra"><div class="loading-barra-fill"></div></div>
+  <div class="loading-texto">Carregando suas configurações...</div>
+</div>
+
 <div class="container">
 
   <div class="header">
@@ -779,6 +796,13 @@ async function carregarConfig() {
     // ✦ Atualiza estado do botão salvar e whatsapp
     atualizarEstadoSalvar();
 
+    // ✦ Esconde overlay de loading
+    var overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+      overlay.classList.add('saindo');
+      setTimeout(function() { overlay.style.display = 'none'; }, 400);
+    }
+
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
       usuarioPago = true;
@@ -793,7 +817,11 @@ async function carregarConfig() {
       atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-  } catch(e) { console.error(e); }
+  } catch(e) {
+    console.error(e);
+    var overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.style.display = 'none';
+  }
 }
 
 
