@@ -188,6 +188,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .btn-copiar-pix { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-bottom: 10px; }
 .btn-copiar-pix:hover { transform: translateY(-2px); }
 .btn-fechar-cofrinho { width: 100%; padding: 12px; background: transparent; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.tipo-pix-label { font-size: 11px; color: rgba(201,168,76,0.5); margin-top: 8px; font-style: italic; font-family: 'Inter', sans-serif; letter-spacing: 0.03em; }
 .pix-copiado { display: none; text-align: center; padding: 10px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; color: #4ade80; font-size: 13px; margin-bottom: 10px; }
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
@@ -348,6 +349,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <p class="popup-cofrinho-texto">Quer tornar esse momento ainda mais especial? Qualquer contribuição é recebida com muito amor e gratidão ✦</p>
     <div class="popup-cofrinho-chave-label">Chave Pix</div>
     <div class="popup-cofrinho-chave" id="popupChavePix"></div>
+    <p class="tipo-pix-label" id="tipoPix"></p>
     <div class="pix-copiado" id="pixCopiado">✦ Chave Pix copiada com sucesso!</div>
     <button class="btn-copiar-pix" onclick="copiarPix()">✦ Copiar chave Pix</button>
     <button class="btn-fechar-cofrinho" onclick="fecharCofrinho()">Fechar</button>
@@ -388,6 +390,12 @@ async function carregarPremium() {
     if (data.config && data.config.cofrinho_ativo && data.config.chave_pix) {
       chavePix = data.config.chave_pix;
       document.getElementById('popupChavePix').textContent = chavePix;
+      // ✦ Tipo do pix discreto
+      var tiposLabel = { cpf: 'Pix por CPF', telefone: 'Pix por telefone', email: 'Pix por e-mail', aleatoria: 'Pix copia e cola' };
+      var tipoEl = document.getElementById('tipoPix');
+      if (tipoEl && data.config.tipo_chave_pix) {
+        tipoEl.textContent = tiposLabel[data.config.tipo_chave_pix] || '';
+      }
       document.getElementById('btnFlutuanteUnico').style.display = 'none';
       document.getElementById('btnsFlutuantesDuplos').style.display = 'flex';
     }
@@ -487,20 +495,41 @@ function renderConviteVisual(config) {
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
+  var link = window.location.origin + '/premium/' + listaId;
   var estilo = config.estilo_convite || 'classico';
   var imagemFundo = config.imagem_fundo_convite || '';
   var visual = document.getElementById('conviteVisual');
   if (visual) {
     visual.className = 'convite-visual ' + estilo;
-    if (estilo === 'livre' && imagemFundo) { visual.style.backgroundImage = 'url(' + imagemFundo + ')'; visual.style.backgroundSize = 'cover'; visual.style.backgroundPosition = 'center'; }
-    else { visual.style.backgroundImage = ''; }
+    if (imagemFundo) {
+      visual.style.backgroundImage = 'url(' + imagemFundo + ')';
+      visual.style.backgroundSize = 'cover';
+      visual.style.backgroundPosition = 'center';
+    } else {
+      visual.style.backgroundImage = '';
+    }
   }
   var tituloEl = document.getElementById('conviteTituloVisual');
   var dataEl = document.getElementById('conviteDataVisual');
   var textoEl = document.getElementById('conviteTextoVisual');
   if (tituloEl) tituloEl.textContent = nome;
   if (dataEl) dataEl.textContent = '📅 ' + dataStr;
-  if (textoEl) textoEl.textContent = config.texto_convite && !config.usa_convite_padrao ? config.texto_convite : 'Venha celebrar esse momento especial conosco ✦';
+  // ✦ Texto personalizado tem prioridade sobre o padrão
+  if (textoEl) {
+    if (config.texto_convite && !config.usa_convite_padrao) {
+      textoEl.textContent = config.texto_convite;
+    } else {
+      // ✦ Gera texto padrão completo com nome e data
+      var convites = {
+        aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
+        casamento: nome + ' têm a alegria de convidar você para celebrar o seu casamento ✦',
+        'casa-nova': nome + ' convida você para celebrar essa nova fase ✦',
+        'cha-bebe': nome + ' convida você para o chá de bebê ✦',
+        outros: nome + ' convida você para uma celebração especial ✦'
+      };
+      textoEl.textContent = convites[eventoAtual] || convites['outros'];
+    }
+  }
   var localEvento = config.local_evento || '';
   var localVisual = document.getElementById('conviteLocalVisual');
   var localTexto = document.getElementById('conviteLocalTexto');
