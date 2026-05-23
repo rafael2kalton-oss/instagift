@@ -164,7 +164,6 @@ input:checked + .slider:before { transform: translateX(22px); }
         .btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
         .btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
         .btn-salvar-hint.visivel { display: block; }
-        /* ✦ TIMER STORY */
         .story-timer-box { display: none; background: #fff; border: 2px solid rgba(201,168,76,0.4); border-radius: 20px; padding: 24px; margin-top: 16px; text-align: center; }
         .story-timer-box.show { display: block; }
         .story-timer-titulo { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
@@ -216,26 +215,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="campo">
       <label>📍 Local do evento <span style="color:#C9A84C;font-size:10px;">— opcional</span></label>
       <input type="text" id="localEvento" placeholder="Ex: Rua das Flores, 123 — São Paulo, SP">
-    </div>
-  </div>
-
-  <!-- 1.5 FOTO DE CAPA -->
-  <div class="secao-config">
-    <div class="secao-config-header">
-      <div class="secao-config-icon">🖼️</div>
-      <div>
-        <div class="secao-config-titulo">Foto de Capa</div>
-        <div class="secao-config-sub">Aparece no topo da sua página de celebração</div>
-      </div>
-    </div>
-    <div id="capaCurrent" style="display:none; margin-bottom:16px; position:relative;">
-      <img id="capaPreview" src="" alt="Foto de capa" style="width:100%; height:160px; object-fit:cover; border-radius:12px; display:block;">
-      <button onclick="removerFotoCapa()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;">✕</button>
-    </div>
-    <div class="upload-area" id="capaUploadArea" onclick="document.getElementById('inputFotoCapa').click()">
-      <input type="file" id="inputFotoCapa" accept="image/*" style="display:none" onchange="processarFotoCapa(event)">
-      <div class="upload-icon">🖼️</div>
-      <p class="upload-texto"><strong>Clique aqui</strong> para escolher a foto de capa</p>
     </div>
   </div>
 
@@ -499,7 +478,6 @@ input:checked + .slider:before { transform: translateX(22px); }
   <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
 
-  <!-- ✦ TIMER STORY -->
   <div class="story-timer-box" id="storyTimerBox">
     <div style="font-size:32px;margin-bottom:10px;">📸</div>
     <div class="story-timer-titulo">Agora poste nos Stories!</div>
@@ -552,7 +530,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 <script>
 var listaId = "{{ lista_id }}";
-var fotoCapaBase64 = '';
 var estiloConviteSelecionado = 'classico';
 var imagemFundoConviteBase64 = '';
 var cofrinhoFoiPago = false;
@@ -626,12 +603,7 @@ async function irParaStoryComSave() {
 function compartilharWhatsApp() {
     var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
     var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
-
-✦ ACESSAR AQUI:
-' + linkCelebracao + '
-
-Valeu pelo carinho! 🙏✦';
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
@@ -772,15 +744,6 @@ async function carregarConfig() {
         if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
       }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
-      if (data.config.foto_capa) {
-        fotoCapaBase64 = data.config.foto_capa;
-        var prev = document.getElementById('capaPreview');
-        var curr = document.getElementById('capaCurrent');
-        var upArea = document.getElementById('capaUploadArea');
-        if (prev) prev.src = fotoCapaBase64;
-        if (curr) curr.style.display = 'block';
-        if (upArea) upArea.style.display = 'none';
-      }
       if (data.config.cofrinho_ativo) {
         cofrinhoFoiPago = true;
         document.getElementById('cofrinhoAtivo').checked = true;
@@ -1063,9 +1026,7 @@ async function salvarConfig() {
         estilo_convite: estiloConviteSelecionado,
         imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
-        tipo_chave_pix: document.getElementById('tipoChavePix') ? document.getElementById('tipoChavePix').value : 'cpf',
-        cofrinho_ativo: cofrinhoAtivo,
-        foto_capa: fotoCapaBase64
+        cofrinho_ativo: cofrinhoAtivo
       })
     });
     var result = await r.json();
@@ -1120,33 +1081,6 @@ function confirmarStoryPostado() {
   storyPostado = true;
   atualizarEstadoSalvar();
   alert('🎉 Obrigado por postar! O WhatsApp foi liberado ✦');
-}
-
-function processarFotoCapa(e) {
-  var file = e.target.files[0]; if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    fotoCapaBase64 = ev.target.result;
-    var prev = document.getElementById('capaPreview');
-    var curr = document.getElementById('capaCurrent');
-    var upArea = document.getElementById('capaUploadArea');
-    if (prev) prev.src = fotoCapaBase64;
-    if (curr) curr.style.display = 'block';
-    if (upArea) upArea.style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-}
-
-function removerFotoCapa() {
-  fotoCapaBase64 = '';
-  var prev = document.getElementById('capaPreview');
-  var curr = document.getElementById('capaCurrent');
-  var upArea = document.getElementById('capaUploadArea');
-  var input = document.getElementById('inputFotoCapa');
-  if (prev) prev.src = '';
-  if (curr) curr.style.display = 'none';
-  if (upArea) upArea.style.display = 'block';
-  if (input) input.value = '';
 }
 
 async function init() { await detectarEvento(); await carregarConfig(); }
