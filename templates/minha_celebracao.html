@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FestStory — Página do Evento</title>
+<title>FestStory — Minha Celebração</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -205,6 +205,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 </head>
 <body>
 
+<div class="dono-banner" style="background:linear-gradient(135deg,#2C1A00,#1a0f00);border-bottom:1px solid rgba(201,168,76,0.3);padding:10px 16px;text-align:center;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;">
+  <span style="font-size:11px;color:rgba(201,168,76,0.8);font-family:'Inter',sans-serif;letter-spacing:0.05em;">👑 Você está vendo sua página como dono</span>
+  <a href="/configurar-premium/{{ lista_id }}" style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;">⚙️ Configurar</a>
+</div>
+
 <div class="hero" id="hero">
   <div class="hero-bg-default"></div>
   <div class="hero-bg" id="heroBg" style="opacity:0;"></div>
@@ -330,7 +335,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
       </div>
     </div>
   </div>
-  <p class="convite-aviso">Para compartilhar o convite, use o botão na aba Mural ✦</p>
+  <button style="width:100%;padding:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;" onclick="compartilharWhatsApp()">💚 Compartilhar no WhatsApp</button>
+  <button style="width:100%;padding:12px;background:rgba(201,168,76,0.08);color:var(--cor-primaria);border:1px solid rgba(201,168,76,0.25);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;" onclick="copiarConvite()">📋 Copiar texto do convite</button>
 </div>
 
 <!-- ✦ BOTÕES FLUTUANTES -->
@@ -533,6 +539,7 @@ async function compartilharWhatsApp() {
   } else { _capturar(); }
 }
 
+function copiarConvite() { navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); }); }
 function _fallbackWhatsApp() { window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank'); }
 
 function copiarLinkPagina() {
