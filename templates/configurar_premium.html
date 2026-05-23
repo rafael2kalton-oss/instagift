@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaGift — Página do Evento</title>
+<title>FestStory — Página do Evento</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -180,7 +180,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 <div class="container">
 
   <div class="header">
-    <div class="logo">InstaGift</div>
+    <div class="logo">FestStory</div>
     <button class="btn-voltar" onclick="window.location.href='/lista/'+listaId">← Voltar</button>
   </div>
 
@@ -216,6 +216,26 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="campo">
       <label>📍 Local do evento <span style="color:#C9A84C;font-size:10px;">— opcional</span></label>
       <input type="text" id="localEvento" placeholder="Ex: Rua das Flores, 123 — São Paulo, SP">
+    </div>
+  </div>
+
+  <!-- 1.5 FOTO DE CAPA -->
+  <div class="secao-config">
+    <div class="secao-config-header">
+      <div class="secao-config-icon">🖼️</div>
+      <div>
+        <div class="secao-config-titulo">Foto de Capa</div>
+        <div class="secao-config-sub">Aparece no topo da sua página de celebração</div>
+      </div>
+    </div>
+    <div id="capaCurrent" style="display:none; margin-bottom:16px; position:relative;">
+      <img id="capaPreview" src="" alt="Foto de capa" style="width:100%; height:160px; object-fit:cover; border-radius:12px; display:block;">
+      <button onclick="removerFotoCapa()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;">✕</button>
+    </div>
+    <div class="upload-area" id="capaUploadArea" onclick="document.getElementById('inputFotoCapa').click()">
+      <input type="file" id="inputFotoCapa" accept="image/*" style="display:none" onchange="processarFotoCapa(event)">
+      <div class="upload-icon">🖼️</div>
+      <p class="upload-texto"><strong>Clique aqui</strong> para escolher a foto de capa</p>
     </div>
   </div>
 
@@ -347,17 +367,8 @@ input:checked + .slider:before { transform: translateX(22px); }
 
     <div class="cofrinho-area" id="cofrinhoArea">
       <div class="campo">
-        <label>Tipo da chave Pix</label>
-        <select id="tipoChavePix" onchange="atualizarPlaceholderPix()">
-          <option value="cpf">CPF</option>
-          <option value="telefone">Telefone</option>
-          <option value="email">E-mail</option>
-          <option value="aleatoria">Chave aleatória (copia e cola)</option>
-        </select>
-      </div>
-      <div class="campo">
         <label>Sua chave Pix</label>
-        <input type="text" id="chavePix" placeholder="Digite seu CPF">
+        <input type="text" id="chavePix" placeholder="CPF, e-mail, celular ou chave aleatória">
       </div>
       <div class="cofrinho-preview">
         <div class="cofrinho-preview-titulo">💛 Contribuir com nosso Cofrinho</div>
@@ -541,6 +552,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 <script>
 var listaId = "{{ lista_id }}";
+var fotoCapaBase64 = '';
 var estiloConviteSelecionado = 'classico';
 var imagemFundoConviteBase64 = '';
 var cofrinhoFoiPago = false;
@@ -554,7 +566,7 @@ var limiteFotos = 10;
 var estiloMural = 'normal';
 var usuarioPago = false;
 var storyPostado = false;
-var STORY_KEY = 'instagift_story_' + listaId;
+var STORY_KEY = 'feststory_story_' + listaId;
 
 // ✦ Controle do estado do salvar e whatsapp
 function atualizarEstadoSalvar() {
@@ -602,8 +614,7 @@ async function irParaStoryComSave() {
                 estilo_mural: estiloMural, local_evento: localEvento,
                 estilo_convite: estiloConviteSelecionado,
                 imagem_fundo_convite: imagemFundoConviteBase64,
-                chave_pix: chavePix,
-        tipo_chave_pix: document.getElementById('tipoChavePix').value, cofrinho_ativo: cofrinhoAtivo
+                chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo
             })
         });
     } catch(e) { console.log('Auto-save erro:', e); }
@@ -761,9 +772,14 @@ async function carregarConfig() {
         if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
       }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
-      if (data.config.tipo_chave_pix) {
-        document.getElementById('tipoChavePix').value = data.config.tipo_chave_pix;
-        atualizarPlaceholderPix();
+      if (data.config.foto_capa) {
+        fotoCapaBase64 = data.config.foto_capa;
+        var prev = document.getElementById('capaPreview');
+        var curr = document.getElementById('capaCurrent');
+        var upArea = document.getElementById('capaUploadArea');
+        if (prev) prev.src = fotoCapaBase64;
+        if (curr) curr.style.display = 'block';
+        if (upArea) upArea.style.display = 'none';
       }
       if (data.config.cofrinho_ativo) {
         cofrinhoFoiPago = true;
@@ -1047,7 +1063,9 @@ async function salvarConfig() {
         estilo_convite: estiloConviteSelecionado,
         imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
-        cofrinho_ativo: cofrinhoAtivo
+        tipo_chave_pix: document.getElementById('tipoChavePix') ? document.getElementById('tipoChavePix').value : 'cpf',
+        cofrinho_ativo: cofrinhoAtivo,
+        foto_capa: fotoCapaBase64
       })
     });
     var result = await r.json();
@@ -1055,12 +1073,10 @@ async function salvarConfig() {
       document.getElementById('salvoSucesso').style.display = 'block';
       setTimeout(function() { document.getElementById('salvoSucesso').style.display = 'none'; }, 3000);
       if (usuarioPago) {
-        // ✦ Pago — libera WhatsApp imediatamente
         try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
         storyPostado = true;
         atualizarEstadoSalvar();
       } else {
-        // ✦ Gratuito — abre criar story e inicia timer de 30s
         iniciarTimerStory();
       }
     }
@@ -1075,17 +1091,6 @@ async function detectarEvento() {
   renderFrases();
 }
 
-function atualizarPlaceholderPix() {
-  var tipo = document.getElementById('tipoChavePix').value;
-  var placeholders = {
-    cpf: 'Digite seu CPF (000.000.000-00)',
-    telefone: 'Digite seu telefone (+55 11 99999-9999)',
-    email: 'Digite seu e-mail',
-    aleatoria: 'Cole sua chave aleatória aqui'
-  };
-  document.getElementById('chavePix').placeholder = placeholders[tipo] || '';
-}
-
 var storyTimerInterval = null;
 
 function iniciarTimerStory() {
@@ -1095,7 +1100,6 @@ function iniciarTimerStory() {
   if (box) box.classList.add('show');
   var segundos = 30;
   if (count) count.textContent = segundos;
-  // ✦ Abre o criar_story automaticamente
   window.open('/?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar', '_blank');
   storyTimerInterval = setInterval(function() {
     segundos--;
@@ -1103,7 +1107,6 @@ function iniciarTimerStory() {
     if (segundos <= 0) {
       clearInterval(storyTimerInterval);
       if (count) count.textContent = '0';
-      // ✦ Aparece o botão "Já postei"
       if (btnJa) btnJa.classList.add('show');
     }
   }, 1000);
@@ -1117,6 +1120,33 @@ function confirmarStoryPostado() {
   storyPostado = true;
   atualizarEstadoSalvar();
   alert('🎉 Obrigado por postar! O WhatsApp foi liberado ✦');
+}
+
+function processarFotoCapa(e) {
+  var file = e.target.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    fotoCapaBase64 = ev.target.result;
+    var prev = document.getElementById('capaPreview');
+    var curr = document.getElementById('capaCurrent');
+    var upArea = document.getElementById('capaUploadArea');
+    if (prev) prev.src = fotoCapaBase64;
+    if (curr) curr.style.display = 'block';
+    if (upArea) upArea.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removerFotoCapa() {
+  fotoCapaBase64 = '';
+  var prev = document.getElementById('capaPreview');
+  var curr = document.getElementById('capaCurrent');
+  var upArea = document.getElementById('capaUploadArea');
+  var input = document.getElementById('inputFotoCapa');
+  if (prev) prev.src = '';
+  if (curr) curr.style.display = 'none';
+  if (upArea) upArea.style.display = 'block';
+  if (input) input.value = '';
 }
 
 async function init() { await detectarEvento(); await carregarConfig(); }
