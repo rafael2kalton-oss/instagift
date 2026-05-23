@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FestStory - Criar Lista</title>
+    <title>InstaGift - Criar Lista</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -57,6 +57,13 @@
         .btn-add { background: linear-gradient(135deg, #C9A84C, #A8722A); border: none; padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.2s; font-family: 'Inter', sans-serif; white-space: nowrap; }
         .btn-add:hover { transform: scale(1.03); }
         .btn-add:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .aviso-loja { display: none; margin-top: 8px; background: #fff3cd; border: 1px solid rgba(201,168,76,0.4); border-radius: 12px; padding: 10px 14px; }
+        .aviso-loja-topo { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .aviso-loja-texto { font-size: 12px; color: #85600A; font-weight: 600; }
+        .aviso-loja-seta { font-size: 11px; color: #C9A84C; transition: transform 0.2s; }
+        .aviso-loja-seta.aberto { transform: rotate(180deg); }
+        .aviso-loja-parceiras { display: none; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .aviso-loja-parceiras.show { display: flex; }
         .loading { text-align: center; color: #C9A84C; padding: 10px 0; font-size: 13px; display: none; font-style: italic; font-family: 'Playfair Display', serif; }
         .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .section-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; }
@@ -276,7 +283,7 @@
 
     <header class="header">
         <div>
-            <div class="logo-box" onclick="recomecar()">FestStory</div>
+            <div class="logo-box" onclick="recomecar()">InstaGift</div>
             <p class="tagline">presentes que chegam com amor</p>
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
@@ -421,8 +428,21 @@
             <span class="chip">Shopee</span><span class="chip">Magalu</span><span class="chip">Shein</span>
         </div>
         <div class="input-group">
-            <input type="text" id="inputLink" placeholder="Cole o link do produto aqui...">
+            <input type="text" id="inputLink" placeholder="Cole o link do produto aqui..." oninput="validarLinkTempoReal(this.value)" onpaste="setTimeout(function(){validarLinkTempoReal(document.getElementById('inputLink').value)},50)">
             <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
+        </div>
+        <div class="aviso-loja" id="avisoLoja">
+            <div class="aviso-loja-topo" onclick="toggleParceirasDrop()">
+                <span class="aviso-loja-texto">⚠️ Loja não disponível — escolha uma parceira</span>
+                <span class="aviso-loja-seta" id="avisoSeta">▼</span>
+            </div>
+            <div class="aviso-loja-parceiras" id="avisoParceirasDrop">
+                <span style="background:#FF9900;color:#000;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;">Amazon</span>
+                <span style="background:#FFE600;color:#000;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;">Mercado Livre</span>
+                <span style="background:#EE4D2D;color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;">Shopee</span>
+                <span style="background:#0086FF;color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;">Magalu</span>
+                <span style="background:#2C2C2C;color:#C9A84C;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;">Shein</span>
+            </div>
         </div>
         <div class="loading" id="loading">✦ Buscando produto...</div>
         <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
@@ -615,8 +635,8 @@
 <script>
     const LISTA_ID = "{{ lista_id }}";
     const BASE = "";
-    const STORAGE_KEY = "feststory_estado_" + LISTA_ID;
-    const WHATSAPP_KEY = "feststory_story_" + LISTA_ID;
+    const STORAGE_KEY = "instagift_estado_" + LISTA_ID;
+    const WHATSAPP_KEY = "instagift_story_" + LISTA_ID;
     var eventoAtual = "aniversario";
     var stepAtual = 1;
     var linkShopeeAtual = "";
@@ -678,11 +698,11 @@
     }
 
     try {
-        var savedListaId = localStorage.getItem('feststory_lista_id');
+        var savedListaId = localStorage.getItem('instagift_lista_id');
         if (savedListaId && savedListaId !== LISTA_ID && window.location.pathname === '/criar-lista') {
             window.location.href = '/lista/' + savedListaId;
         } else {
-            localStorage.setItem('feststory_lista_id', LISTA_ID);
+            localStorage.setItem('instagift_lista_id', LISTA_ID);
         }
     } catch(e) {}
 
@@ -941,15 +961,10 @@
 
     // ✦ Lojas parceiras — adicione novos domínios aqui quando firmar novas parcerias
     var LOJAS_PARCEIRAS = [
-        // Amazon
         'amazon.com.br', 'amzn.to', 'a.co',
-        // Mercado Livre
         'mercadolivre.com.br', 'mercadolibre.com', 'meli.la', 'produto.mercadolivre', 'share.google',
-        // Shopee
         'shopee.com.br', 'br.shp.ee', 's.shopee',
-        // Magalu
         'magazineluiza.com.br', 'magalu.com.br', 'magazinevoce.com.br', 'mglu.me',
-        // Shein
         'shein.com', 'onelink.shein.com', 'api-shein.shein.com'
     ];
 
@@ -958,28 +973,42 @@
         return LOJAS_PARCEIRAS.some(function(loja) { return l.indexOf(loja) > -1; });
     }
 
+    function validarLinkTempoReal(link) {
+        var aviso = document.getElementById('avisoLoja');
+        var btn = document.getElementById('btnAdicionar');
+        if (!link || link.trim().length < 5) {
+            aviso.style.display = 'none';
+            btn.disabled = false;
+            return;
+        }
+        if (!verificarLojaParceira(link.trim())) {
+            aviso.style.display = 'block';
+            btn.disabled = true;
+        } else {
+            aviso.style.display = 'none';
+            btn.disabled = false;
+        }
+    }
+
+    function toggleParceirasDrop() {
+        var drop = document.getElementById('avisoParceirasDrop');
+        var seta = document.getElementById('avisoSeta');
+        drop.classList.toggle('show');
+        seta.classList.toggle('aberto');
+    }
+
     async function adicionarProduto() {
         const input=document.getElementById("inputLink");
         const link=input.value.trim();
         if(!link) return;
-
-        // ✦ Valida se é loja parceira
+        // ✦ Dupla proteção — valida antes de enviar
         if (!verificarLojaParceira(link)) {
-            mostrarPopupLojaInvalida();
+            document.getElementById('avisoLoja').style.display = 'block';
             return;
         }
-
         if(link.indexOf('produto.mercadolivre')>-1||link.indexOf('share.google')>-1){abrirPopupML(link);return;}
         if(link.toLowerCase().indexOf('shopee.com.br')>-1||link.toLowerCase().indexOf('s.shopee')>-1||link.toLowerCase().indexOf('br.shp.ee')>-1){abrirPopupShopee(link);return;}
         await adicionarProdutoNormal(link);
-    }
-
-    function mostrarPopupLojaInvalida() {
-        document.getElementById('popupLojaInvalida').style.display = 'flex';
-    }
-    function fecharPopupLojaInvalida() {
-        document.getElementById('popupLojaInvalida').style.display = 'none';
-        document.getElementById('inputLink').value = '';
     }
 
     async function remover(id) { await fetch(`${BASE}/api/remover-produto/${id}`,{method:"DELETE"}); await carregarProdutos(); }
@@ -1117,23 +1146,5 @@
         await restaurarEstado();
     });
 </script>
-
-<!-- Popup Loja Inválida -->
-<div id="popupLojaInvalida" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.7); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
-        <div style="font-size:40px; margin-bottom:12px;">🛍️</div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Loja não disponível</h3>
-        <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:20px; font-style:italic; font-family:'Playfair Display',serif;">Por enquanto aceitamos produtos apenas das nossas lojas parceiras:</p>
-        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:24px;">
-            <span style="background:#FF9900; color:#000; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Amazon</span>
-            <span style="background:#FFE600; color:#000; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Mercado Livre</span>
-            <span style="background:#EE4D2D; color:#fff; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Shopee</span>
-            <span style="background:#0086FF; color:#fff; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Magalu</span>
-            <span style="background:#2C2C2C; color:#C9A84C; font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700;">Shein</span>
-        </div>
-        <button onclick="fecharPopupLojaInvalida()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Entendi, vou usar uma loja parceira</button>
-    </div>
-</div>
-
 </body>
 </html>
