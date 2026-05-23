@@ -391,7 +391,7 @@
             <p id="dataEventoErro" style="display:none;font-size:12px;color:#ef4444;margin-top:8px;font-style:italic;">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
             <p id="dataEventoAviso" style="display:none;font-size:12px;color:#C9A84C;margin-top:8px;font-style:italic;"></p>
         </div>
-        <button class="btn-proximo" onclick="irParaEtapa(3)">Continuar →</button>
+        <button class="btn-proximo" onclick="salvarEtapa2eAvancar()">Salvar e continuar →</button>
         <button class="btn-pular" onclick="irParaEtapa(3)">Pular por agora</button>
     </div>
 
@@ -406,7 +406,7 @@
             <p class="email-hint">Só enviamos quando uma compra for confirmada. Nada de spam!</p>
             <p class="email-salvo" id="emailSalvo">✦ E-mail salvo com sucesso</p>
         </div>
-        <button class="btn-proximo" onclick="salvarEmailEAvancar()">Continuar →</button>
+        <button class="btn-proximo" onclick="salvarEmailEAvancar()">Salvar e continuar →</button>
         <button class="btn-pular" onclick="irParaEtapa(4)">Pular por agora</button>
     </div>
 
@@ -726,13 +726,30 @@
 
     async function restaurarEstado() {
         try {
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (!saved) return;
-            var estado = JSON.parse(saved);
+            // ✦ Sempre busca do servidor — fonte da verdade
+            try {
+                var rLista = await fetch('/api/lista-info/' + LISTA_ID);
+                var dataLista = await rLista.json();
+                if (dataLista) {
+                    if (dataLista.evento) {
+                        eventoAtual = dataLista.evento;
+                        document.querySelectorAll('.evento-card').forEach(function(c) {
+                            c.classList.remove('selected');
+                            if (c.dataset.evento === eventoAtual) c.classList.add('selected');
+                        });
+                    }
+                    if (dataLista.nome && dataLista.nome !== 'Minha Lista')
+                        document.getElementById('inputNomeEvento').value = dataLista.nome;
+                    if (dataLista.data_evento) {
+                        document.getElementById('inputDataEvento').value = dataLista.data_evento;
+                        validarDataEvento();
+                    }
+                    if (dataLista.email_aniversariante)
+                        document.getElementById('inputEmail').value = dataLista.email_aniversariante;
+                }
+            } catch(e) {}
 
-            aplicarEstadoSalvo(estado);
-
-            // Verifica se já tem produtos salvos no servidor
+            // ✦ Verifica produtos no servidor
             var temProdutos = false;
             try {
                 var r = await fetch('/api/produtos/' + LISTA_ID);
@@ -740,15 +757,14 @@
                 temProdutos = Array.isArray(produtos) && produtos.length > 0;
             } catch(e) {}
 
-            // Se tinha produtos OU estava na etapa 4, volta direto pra etapa 4
-            if (temProdutos || (estado.step && estado.step >= 4)) {
-                irParaEtapa(4);
-                return;
-            }
+            if (temProdutos) { irParaEtapa(4); return; }
 
-            // Se estava em etapa intermediária, volta pra ela
-            if (estado.step && estado.step >= 2) {
-                irParaEtapa(estado.step);
+            // ✦ Fallback: localStorage
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                var estado = JSON.parse(saved);
+                if (estado.step && estado.step >= 4) { irParaEtapa(4); return; }
+                if (estado.step && estado.step >= 2) { irParaEtapa(estado.step); }
             }
         } catch(e) {}
     }
@@ -790,14 +806,35 @@
         salvarEstado();window.scrollTo(0,0);
     }
 
+    async function salvarEtapa2eAvancar() {
+        var nome = document.getElementById('inputNomeEvento').value.trim();
+        var dataEvento = document.getElementById('inputDataEvento').value;
+        try {
+            await fetch(`${BASE}/api/salvar-info-lista`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ lista_id: LISTA_ID, nome: nome || 'Minha Lista', data_evento: dataEvento, evento: eventoAtual })
+            });
+        } catch(e) {}
+        irParaEtapa(3);
+    }
+
     async function salvarEmailEAvancar() {
         const email = document.getElementById('inputEmail').value.trim();
-        if (email && email.includes('@')) {
-            try {
+        const nome = document.getElementById('inputNomeEvento').value.trim();
+        const dataEvento = document.getElementById('inputDataEvento').value;
+        try {
+            // ✦ Salva tudo junto — email + nome + data + evento
+            await fetch(`${BASE}/api/salvar-info-lista`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ lista_id: LISTA_ID, nome: nome || 'Minha Lista', data_evento: dataEvento, evento: eventoAtual, email: email })
+            });
+            if (email && email.includes('@')) {
                 await fetch(`${BASE}/api/salvar-email-lista`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({lista_id: LISTA_ID, email: email}) });
                 document.getElementById('emailSalvo').style.display = 'block';
-            } catch(e) {}
-        }
+            }
+        } catch(e) {}
         irParaEtapa(4);
     }
 
@@ -962,15 +999,24 @@
     // ✦ Lojas parceiras — adicione novos domínios aqui quando firmar novas parcerias
     var LOJAS_PARCEIRAS = [
         'amazon.com.br', 'amzn.to', 'a.co',
-        'mercadolivre.com.br', 'mercadolibre.com', 'meli.la', 'produto.mercadolivre', 'share.google',
-        'shopee.com.br', 'br.shp.ee', 's.shopee',
+        'mercadolivre.com.br', 'mercadolibre.com', 'meli.la', 'produto.mercadolivre',
+        'shopee.com.br', 'br.shp.ee',
         'magazineluiza.com.br', 'magalu.com.br', 'magazinevoce.com.br', 'mglu.me',
-        'shein.com', 'onelink.shein.com', 'api-shein.shein.com'
+        'shein.com'
     ];
 
     function verificarLojaParceira(link) {
-        var l = link.toLowerCase();
-        return LOJAS_PARCEIRAS.some(function(loja) { return l.indexOf(loja) > -1; });
+        try {
+            // ✦ Extrai o hostname real da URL para evitar falsos positivos
+            var url = new URL(link.trim().startsWith('http') ? link.trim() : 'https://' + link.trim());
+            var host = url.hostname.toLowerCase().replace(/^www\./, '');
+            return LOJAS_PARCEIRAS.some(function(loja) {
+                return host === loja || host.endsWith('.' + loja);
+            });
+        } catch(e) {
+            // Se não conseguir parsear, bloqueia
+            return false;
+        }
     }
 
     function validarLinkTempoReal(link) {
