@@ -164,15 +164,6 @@ input:checked + .slider:before { transform: translateX(22px); }
         .btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
         .btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
         .btn-salvar-hint.visivel { display: block; }
-        .story-timer-box { display: none; background: #fff; border: 2px solid rgba(201,168,76,0.4); border-radius: 20px; padding: 24px; margin-top: 16px; text-align: center; }
-        .story-timer-box.show { display: block; }
-        .story-timer-titulo { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
-        .story-timer-sub { font-size: 13px; color: #888; line-height: 1.6; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 16px; }
-        .story-timer-count { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #C9A84C; margin-bottom: 8px; }
-        .story-timer-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 20px; }
-        .btn-ja-postei { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: none; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
-        .btn-ja-postei.show { display: block; }
-        .btn-ja-postei:hover { transform: translateY(-2px); }
         /* ✦ LOADING OVERLAY */
         .loading-overlay { position: fixed; inset: 0; background: #FFF8EC; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
         .loading-overlay.saindo { opacity: 0; pointer-events: none; }
@@ -487,14 +478,11 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- ✦ WHATSAPP — liberado após story -->
-  <button class="btn-whatsapp-config" id="btnWhatsappConfig" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
-  <p class="whatsapp-hint-config" id="whatsappHintConfig">📸 Poste nos Stories primeiro para liberar o WhatsApp</p>
-
   <button class="btn-salvar" id="btnSalvar" onclick="iniciarSalvar()" disabled>✦ Salvar e publicar página</button>
   <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
 
+  <!-- ✦ TIMER STORY -->
   <div class="story-timer-box" id="storyTimerBox">
     <div style="font-size:32px;margin-bottom:10px;">📸</div>
     <div class="story-timer-titulo">Agora poste nos Stories!</div>
@@ -567,23 +555,17 @@ function atualizarEstadoSalvar() {
     var btn = document.getElementById('btnSalvar');
     var hint = document.getElementById('btnSalvarHint');
     var gate = document.getElementById('storyGate');
-    var btnWpp = document.getElementById('btnWhatsappConfig');
-    var hintWpp = document.getElementById('whatsappHintConfig');
     var pacotaoCard = document.getElementById('pacotaoCard');
 
     if (usuarioPago || storyPostado) {
         btn.disabled = false;
         if (hint) hint.className = 'btn-salvar-hint';
         if (gate) gate.style.display = 'none';
-        if (btnWpp) { btnWpp.disabled = false; }
-        if (hintWpp) { hintWpp.textContent = '✦ WhatsApp liberado! Avise seus convidados.'; hintWpp.className = 'whatsapp-hint-config liberado'; }
         if (usuarioPago && pacotaoCard) pacotaoCard.style.display = 'none';
     } else {
         btn.disabled = true;
         if (hint) hint.className = 'btn-salvar-hint visivel';
         if (gate) gate.style.display = 'block';
-        if (btnWpp) btnWpp.disabled = true;
-        if (hintWpp) { hintWpp.textContent = '📸 Poste nos Stories primeiro para liberar o WhatsApp'; hintWpp.className = 'whatsapp-hint-config'; }
     }
 }
 
@@ -620,7 +602,12 @@ async function irParaStoryComSave() {
 function compartilharWhatsApp() {
     var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
     var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
+
+✦ ACESSAR AQUI:
+' + linkCelebracao + '
+
+Valeu pelo carinho! 🙏✦';
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
@@ -798,10 +785,7 @@ async function carregarConfig() {
 
     // ✦ Esconde overlay de loading
     var overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-      overlay.classList.add('saindo');
-      setTimeout(function() { overlay.style.display = 'none'; }, 400);
-    }
+    if (overlay) { overlay.classList.add('saindo'); setTimeout(function() { overlay.style.display = 'none'; }, 400); }
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
@@ -817,11 +801,7 @@ async function carregarConfig() {
       atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-  } catch(e) {
-    console.error(e);
-    var overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.style.display = 'none';
-  }
+  } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
 }
 
 
