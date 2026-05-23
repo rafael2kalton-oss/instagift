@@ -310,8 +310,14 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <button class="btn-confirmar-presenca" onclick="confirmarPresenca()">✦ Confirmar presença</button>
     <div class="presenca-sucesso" id="presencaSucesso">🎉 Presença confirmada com sucesso!</div>
   </div>
-  <div class="secao-divider"><div class="secao-divider-linha"></div><div class="secao-divider-icon">✦</div><div class="secao-divider-linha"></div></div>
-  <div id="presencasLista"><div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div></div>
+  <div id="presencasContadores" style="margin-top:16px;">
+    <div class="presenca-contadores">
+      <div class="presenca-contador"><div class="presenca-contador-num" id="totalConfirmados">0</div><div class="presenca-contador-label">✅ Confirmados</div></div>
+      <div class="presenca-contador"><div class="presenca-contador-num" id="totalTalvez">0</div><div class="presenca-contador-label">🤔 Talvez</div></div>
+      <div class="presenca-contador"><div class="presenca-contador-num" id="totalNaoVai">0</div><div class="presenca-contador-label">❌ Não vai</div></div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#bbb;font-style:italic;font-family:'Playfair Display',serif;margin-top:8px;">Apenas o organizador pode ver os nomes ✦</p>
+  </div>
 </div>
 
 <!-- ✦ ABA CONVITE — só visualização -->
@@ -590,14 +596,16 @@ async function carregarPresencas() {
 }
 
 function renderPresencas(presencas) {
-  if (!presencas || presencas.length === 0) { document.getElementById('presencasLista').innerHTML = '<div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div>'; ['totalConfirmados','totalTalvez','totalNaoVai'].forEach(function(id){document.getElementById(id).textContent='0';}); return; }
-  document.getElementById('totalConfirmados').textContent = presencas.filter(function(p){return p.status==='confirmado';}).length;
-  document.getElementById('totalTalvez').textContent = presencas.filter(function(p){return p.status==='talvez';}).length;
-  document.getElementById('totalNaoVai').textContent = presencas.filter(function(p){return p.status==='nao-vai';}).length;
-  document.getElementById('presencasLista').innerHTML = '<div class="presencas-lista">' + presencas.map(function(p) {
-    var inicial=p.nome?p.nome[0].toUpperCase():'?', statusLabel=p.status==='confirmado'?'✅ Confirmado':p.status==='talvez'?'🤔 Talvez':'❌ Não vai', statusClass=p.status==='confirmado'?'status-confirmado':p.status==='talvez'?'status-talvez':'status-nao-vai', acomp=p.acompanhantes>0?' +'+p.acompanhantes:'';
-    return '<div class="presenca-item"><div class="presenca-item-avatar">'+inicial+'</div><div><div class="presenca-item-nome">'+p.nome+acomp+'</div></div><span class="presenca-item-status '+statusClass+'">'+statusLabel+'</span></div>';
-  }).join('') + '</div>';
+  // ✦ Convidado só vê contadores, não os nomes
+  var confirmados = presencas ? presencas.filter(function(p){return p.status==='confirmado';}).length : 0;
+  var talvez = presencas ? presencas.filter(function(p){return p.status==='talvez';}).length : 0;
+  var naoVai = presencas ? presencas.filter(function(p){return p.status==='nao-vai';}).length : 0;
+  var el1 = document.getElementById('totalConfirmados');
+  var el2 = document.getElementById('totalTalvez');
+  var el3 = document.getElementById('totalNaoVai');
+  if (el1) el1.textContent = confirmados;
+  if (el2) el2.textContent = talvez;
+  if (el3) el3.textContent = naoVai;
 }
 
 async function enviarRecado() {
