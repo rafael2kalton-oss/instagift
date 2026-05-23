@@ -32,7 +32,18 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 .btn-reservar-unico:hover { transform: translateY(-2px); }
 .btn-reservar-unico:disabled { background: rgba(0,0,0,0.06); color: #bbb; cursor: not-allowed; box-shadow: none; transform: none; }
 .reservado-badge { text-align: center; font-size: 12px; color: #aaa; margin-top: 8px; font-style: italic; font-family: 'Playfair Display', serif; }
+.btn-liberar { width: 100%; padding: 10px; background: transparent; color: #ef4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 50px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-top: 8px; }
+.btn-liberar:hover { background: rgba(239,68,68,0.06); border-color: #ef4444; }
+.admin-banner { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-bottom: 1px solid rgba(201,168,76,0.3); padding: 10px 16px; text-align: center; font-size: 11px; color: rgba(201,168,76,0.8); font-family: 'Inter', sans-serif; letter-spacing: 0.05em; }
 .loading { text-align: center; padding: 60px; color: #aaa; font-family: 'Playfair Display', serif; font-style: italic; }
+.popup-so-cofrinho { display: none; position: fixed; inset: 0; background: rgba(44,44,44,0.7); backdrop-filter: blur(4px); z-index: 200; align-items: flex-end; justify-content: center; padding: 20px; }
+.popup-so-cofrinho.show { display: flex; }
+.popup-so-cofrinho-box { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.4); border-radius: 24px 24px 20px 20px; padding: 32px 28px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 -8px 40px rgba(0,0,0,0.3); animation: slideUpCofrinho 0.3s ease; }
+@keyframes slideUpCofrinho { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.popup-cofrinho-chave-box { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 14px 18px; font-size: 15px; color: #C9A84C; font-weight: 600; word-break: break-all; margin-bottom: 16px; font-family: 'Inter', sans-serif; }
+.btn-copiar-chave { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 10px; }
+.btn-fechar-popup { width: 100%; padding: 12px; background: transparent; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.chave-copiada-ok { display: none; text-align: center; padding: 8px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; color: #4ade80; font-size: 13px; margin-bottom: 10px; }
 .erro { text-align: center; padding: 60px; color: #ef4444; font-family: 'Playfair Display', serif; font-style: italic; }
 
 /* Modal */
@@ -54,6 +65,8 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 </style>
 </head>
 <body>
+
+<div class="admin-banner" id="adminBanner" style="display:none;">👑 Modo administrador — você pode liberar reservas</div>
 
 <div class="topo">
   <div class="logo">FestStory</div>
@@ -100,7 +113,29 @@ async function carregarLista() {
     const produtos = await resProdutos.json();
     const info = await resInfo.json();
     document.getElementById('subtitulo').textContent = (info && info.nome) ? `Lista de ${info.nome}` : 'Escolha um presente especial';
-    renderProdutos(Array.isArray(produtos) ? produtos : []);
+    const lista = Array.isArray(produtos) ? produtos : [];
+
+    // ✦ Se não tem produtos, verifica se tem cofrinho ativo
+    if (lista.length === 0) {
+      try {
+        const resConfig = await fetch(`/api/config-premium/${listaId}`);
+        const dataConfig = await resConfig.json();
+        if (dataConfig.config && dataConfig.config.cofrinho_ativo && dataConfig.config.chave_pix) {
+          // ✦ Só cofrinho — mostra popup e esconde grid
+          document.getElementById('grid').innerHTML = '';
+          document.getElementById('popupChavePixSolo').textContent = dataConfig.config.chave_pix;
+          // Personaliza texto com nome se tiver
+          var nome = (dataConfig.config.nome_celebrante || (info && info.nome) || '');
+          if (nome) {
+            document.getElementById('popupCofrinhoTexto').textContent = nome + ' optou por receber presentes via Pix. Faça sua contribuição com carinho usando a chave abaixo!';
+          }
+          document.getElementById('popupSoCofrinho').classList.add('show');
+          return;
+        }
+      } catch(e) {}
+    }
+
+    renderProdutos(lista);
   } catch(e) {
     document.getElementById('grid').innerHTML = '<div class="erro">Lista não encontrada.</div>';
   }
@@ -127,6 +162,7 @@ function renderProdutos(produtos) {
             ${p.preco ? `<div class="card-preco">R$ ${p.preco}</div>` : ''}
             ${temLink ? `<div class="btn-grupo"><a href="${linkAfiliado}" target="_blank" class="btn-ver">🔗 Ver produto</a><button class="btn-reservar" disabled>${p.reservado === 2 ? '✓ Confirmado' : 'Já reservado'}</button></div>` : `<button class="btn-reservar-unico" disabled>${p.reservado === 2 ? '✓ Confirmado' : 'Já reservado'}</button>`}
             <div class="reservado-badge">Alguém já escolheu este presente ✦</div>
+            ${isAdmin ? `<button class="btn-liberar" onclick="liberarReserva(${p.id})">🔓 Liberar reserva</button>` : ''}
           </div>
         </div>`;
     }
@@ -190,7 +226,37 @@ async function confirmarReserva() {
     const data = await res.json();
     if (data.ok) {
       fecharModal();
+      function copiarChaveSolo() {
+  var chave = document.getElementById('popupChavePixSolo').textContent;
+  navigator.clipboard.writeText(chave).then(function() {
+    document.getElementById('chaveCopiadaOk').style.display = 'block';
+    setTimeout(function() { document.getElementById('chaveCopiadaOk').style.display = 'none'; }, 3000);
+  });
+}
+
+// ✦ Detecta modo admin pela URL
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
+if (isAdmin) {
+  var banner = document.getElementById('adminBanner');
+  if (banner) banner.style.display = 'block';
+}
+
+async function liberarReserva(id) {
+  if (!confirm('Liberar este presente para que outros possam reservar?')) return;
+  try {
+    const res = await fetch(`/api/liberar-produto/${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
       carregarLista();
+    } else {
+      alert('Erro ao liberar. Tente novamente.');
+    }
+  } catch(e) {
+    alert('Erro de conexão.');
+  }
+}
+
+carregarLista();
       // ✦ Se tem link do produto, abre para o comprador já ir comprar
       if (linkProdutoSelecionado) {
         setTimeout(function() {
@@ -206,7 +272,51 @@ async function confirmarReserva() {
   }
 }
 
+function copiarChaveSolo() {
+  var chave = document.getElementById('popupChavePixSolo').textContent;
+  navigator.clipboard.writeText(chave).then(function() {
+    document.getElementById('chaveCopiadaOk').style.display = 'block';
+    setTimeout(function() { document.getElementById('chaveCopiadaOk').style.display = 'none'; }, 3000);
+  });
+}
+
+// ✦ Detecta modo admin pela URL
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
+if (isAdmin) {
+  var banner = document.getElementById('adminBanner');
+  if (banner) banner.style.display = 'block';
+}
+
+async function liberarReserva(id) {
+  if (!confirm('Liberar este presente para que outros possam reservar?')) return;
+  try {
+    const res = await fetch(`/api/liberar-produto/${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      carregarLista();
+    } else {
+      alert('Erro ao liberar. Tente novamente.');
+    }
+  } catch(e) {
+    alert('Erro de conexão.');
+  }
+}
+
 carregarLista();
 </script>
+<!-- ✦ POPUP APENAS COFRINHO -->
+<div class="popup-so-cofrinho" id="popupSoCofrinho">
+  <div class="popup-so-cofrinho-box">
+    <div style="font-size:44px;margin-bottom:12px;">💛</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#C9A84C;margin-bottom:10px;">Presente via Pix</div>
+    <p style="font-family:'Playfair Display',serif;font-style:italic;color:#F5EDD8;font-size:14px;line-height:1.8;margin-bottom:20px;" id="popupCofrinhoTexto">Esta pessoa optou por receber contribuições via Pix. Faça seu presente direto pela chave abaixo!</p>
+    <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Chave Pix</div>
+    <div class="popup-cofrinho-chave-box" id="popupChavePixSolo"></div>
+    <div class="chave-copiada-ok" id="chaveCopiadaOk">✦ Chave Pix copiada!</div>
+    <button class="btn-copiar-chave" onclick="copiarChaveSolo()">✦ Copiar chave Pix</button>
+    <button class="btn-fechar-popup" onclick="document.getElementById('popupSoCofrinho').classList.remove('show')">Fechar</button>
+  </div>
+</div>
+
 </body>
 </html>
