@@ -520,6 +520,8 @@ function renderConviteVisual(config) {
       textoEl.textContent = config.texto_convite;
     } else {
       // ✦ Gera texto padrão completo com nome e data
+      // ✦ Texto padrão — usa tipo do evento se disponível, senão genérico
+      var tipoEvento = (dadosPremium.config && dadosPremium.config.tipo_evento) || 'outros';
       var convites = {
         aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
         casamento: nome + ' têm a alegria de convidar você para celebrar o seu casamento ✦',
@@ -527,7 +529,7 @@ function renderConviteVisual(config) {
         'cha-bebe': nome + ' convida você para o chá de bebê ✦',
         outros: nome + ' convida você para uma celebração especial ✦'
       };
-      textoEl.textContent = convites[eventoAtual] || convites['outros'];
+      textoEl.textContent = convites[tipoEvento] || convites['outros'];
     }
   }
   var localEvento = config.local_evento || '';
@@ -539,30 +541,21 @@ function renderConviteVisual(config) {
   }
 }
 
-async function compartilharWhatsApp() {
-  var el = document.getElementById('conviteVisual');
-  if (!el) { _fallbackWhatsApp(); return; }
-  var config = dadosPremium.config || {};
-  var estilo = config.estilo_convite || 'classico';
-  var imagemFundo = config.imagem_fundo_convite || '';
-  if (estilo === 'livre' && imagemFundo) { el.style.backgroundImage = 'url(' + imagemFundo + ')'; el.style.backgroundSize = 'cover'; el.style.backgroundPosition = 'center'; }
-  var bgColor = estilo === 'classico' ? '#1a0f00' : estilo === 'floral' ? '#FFF8EC' : null;
-  function _capturar() {
-    html2canvas(el, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: bgColor, logging: false }).then(function(canvas) {
-      canvas.toBlob(function(blob) {
-        var arquivo = new File([blob], 'convite-feststory.png', { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
-          navigator.share({ files: [arquivo], text: conviteTextoFinal }).catch(function(e) { if (e.name !== 'AbortError') _fallbackWhatsApp(); });
-        } else { _fallbackWhatsApp(); }
-      }, 'image/png');
-    });
+function compartilharWhatsApp() {
+  // ✦ Garante que conviteTextoFinal está preenchido antes de abrir o WhatsApp
+  if (!conviteTextoFinal) {
+    var config = dadosPremium.config || {};
+    var nome = config.nome_celebrante || 'Celebração Especial';
+    var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
+    var localEvento = config.local_evento || '';
+    var link = window.location.origin + '/premium/' + listaId;
+    var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
+    conviteTextoFinal = (config.texto_convite && !config.usa_convite_padrao)
+      ? config.texto_convite + mapsLink
+      : '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + dataStr + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
   }
-  if (typeof html2canvas === 'undefined') {
-    var script = document.createElement('script'); script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'; script.onload = _capturar; document.head.appendChild(script);
-  } else { _capturar(); }
+  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank');
 }
-
-function _fallbackWhatsApp() { window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank'); }
 
 function copiarLinkPagina() {
   var link = window.location.origin + '/premium/' + listaId;
