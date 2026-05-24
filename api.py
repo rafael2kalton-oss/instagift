@@ -728,7 +728,7 @@ def premium(lista_id):
 
 @app.route("/minha-celebracao/<lista_id>")
 def minha_celebracao(lista_id):
-    return render_template("minha_celebracao.html", lista_id=lista_id)
+    return redirect(f"/premium/{lista_id}?dono=true")
 
 @app.route("/api/verificar-expiracao/<lista_id>")
 def verificar_expiracao(lista_id):
@@ -1011,3 +1011,4 @@ def presidente_liberar_cortesia():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
+
