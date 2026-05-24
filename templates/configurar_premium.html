@@ -47,10 +47,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .toggle-group { display: flex; gap: 10px; margin-bottom: 16px; }
 .toggle-btn { flex: 1; padding: 12px; border: 1.5px solid rgba(201,168,76,0.25); border-radius: 12px; background: #fff; color: #aaa; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-align: center; }
 .toggle-btn.active { border-color: #C9A84C; background: rgba(201,168,76,0.06); color: #C9A84C; }
-.convite-preview { border-radius: 14px; padding: 24px 20px; margin-top: 12px; position: relative; overflow: hidden; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #2C1A00, #1a0f00); }
-.convite-preview-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.55); }
-.convite-preview-inner { position: relative; z-index: 1; width: 100%; }
-.convite-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.9; white-space: pre-line; transition: color 0.2s; }
+.convite-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; }
+.convite-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.9; white-space: pre-line; }
 .convite-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 4px; margin-bottom: 10px; text-align: center; }
 .recado-admin-card { background: #FFF8EC; border: 1px solid rgba(201,168,76,0.15); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
 .recado-admin-info { flex: 1; }
@@ -112,13 +110,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 .cofrinho-preview-titulo { font-family: 'Playfair Display', serif; color: #C9A84C; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .cofrinho-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.7; font-style: italic; }
 
-/* ✦ PALETA COR TEXTO CONVITE */
-.paleta-texto-opcoes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 4px; }
-.paleta-texto-cor { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-.paleta-texto-cor:hover { transform: scale(1.1); }
-.paleta-texto-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
-.paleta-texto-nome { font-size: 12px; color: #aaa; margin-top: 8px; font-style: italic; font-family: 'Playfair Display', serif; text-align: center; }
-
 /* ✦ ESTILOS DE CONVITE */
 .convite-estilos { display: flex; gap: 10px; margin-bottom: 20px; }
 .convite-estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: #fff; }
@@ -163,45 +154,19 @@ input:checked + .slider:before { transform: translateX(22px); }
         .btn-criar-story-gate:hover { transform: translateY(-2px); }
         .story-gate-pago { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; padding: 12px 14px; margin-top: 4px; }
         .story-gate-pago p { font-size: 12px; color: #C9A84C; font-style: italic; font-family: 'Playfair Display', serif; }
-
+        /* ✦ WHATSAPP */
+        .btn-whatsapp-config { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 50px; padding: 15px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
+        .btn-whatsapp-config:hover:not(:disabled) { transform: translateY(-2px); }
+        .btn-whatsapp-config:disabled { background: rgba(0,0,0,0.06); color: #ccc; cursor: not-allowed; border: 1px solid rgba(0,0,0,0.06); }
+        .whatsapp-hint-config { font-size: 11px; color: #bbb; text-align: center; margin-top: 6px; font-style: italic; }
+        .whatsapp-hint-config.liberado { color: #C9A84C; }
         /* ✦ SALVAR */
         .btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
         .btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
         .btn-salvar-hint.visivel { display: block; }
-        /* ✦ LOADING OVERLAY */
-        .loading-overlay { position: fixed; inset: 0; background: #FFF8EC; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
-        .loading-overlay.saindo { opacity: 0; pointer-events: none; }
-        .loading-logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; }
-        .loading-ornamento { font-size: 11px; color: #C9A84C; letter-spacing: 6px; opacity: 0.6; }
-        .loading-texto { font-family: 'Playfair Display', serif; font-size: 14px; color: #aaa; font-style: italic; }
-        .loading-barra { width: 160px; height: 3px; background: rgba(201,168,76,0.15); border-radius: 10px; overflow: hidden; }
-        .loading-barra-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 10px; animation: loadingFill 1.8s ease-in-out infinite; }
-        @keyframes loadingFill { 0% { width: 0%; opacity: 1; } 70% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
-        /* ✦ TIMER STORY */
-        .story-timer-box { display: none; background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.35); border-radius: 24px; padding: 36px 28px; margin-top: 20px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
-        .story-timer-box.show { display: block; animation: timerEntrar 0.5s ease; }
-        @keyframes timerEntrar { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .story-timer-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 6px; margin-bottom: 18px; opacity: 0.7; }
-        .story-timer-titulo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #F5EDD8; margin-bottom: 10px; }
-        .story-timer-sub { font-size: 13px; color: rgba(245,237,216,0.55); line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 28px; }
-        .story-timer-circulo { position: relative; width: 100px; height: 100px; margin: 0 auto 24px; }
-        .story-timer-circulo svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
-        .story-timer-count { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; color: #C9A84C; line-height: 1; }
-        .story-timer-label { font-size: 10px; color: rgba(201,168,76,0.5); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 2px; }
-        .btn-ja-postei { width: 100%; padding: 16px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; display: none; box-shadow: 0 6px 24px rgba(37,211,102,0.35); }
-        .btn-ja-postei.show { display: block; animation: timerEntrar 0.4s ease; }
-        .story-timer-aguarde { font-size: 12px; color: rgba(245,237,216,0.3); font-style: italic; font-family: 'Playfair Display', serif; margin-top: 14px; }
 </style>
 </head>
 <body>
-<!-- ✦ LOADING OVERLAY -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-logo">FestStory</div>
-  <div class="loading-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
-  <div class="loading-barra"><div class="loading-barra-fill"></div></div>
-  <div class="loading-texto">Carregando suas configurações...</div>
-</div>
-
 <div class="container">
 
   <div class="header">
@@ -410,19 +375,6 @@ input:checked + .slider:before { transform: translateX(22px); }
       </div>
     </div>
 
-    <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-bottom:10px;margin-top:4px;">Cor do texto do convite</p>
-    <div class="paleta-texto-opcoes">
-      <div class="paleta-texto-cor ativa" data-cor-texto="claro" style="background:#F5EDD8;" onclick="selecionarCorTexto('claro')" title="Creme"></div>
-      <div class="paleta-texto-cor" data-cor-texto="branco" style="background:#ffffff;border:1px solid #ddd;" onclick="selecionarCorTexto('branco')" title="Branco"></div>
-      <div class="paleta-texto-cor" data-cor-texto="dourado" style="background:linear-gradient(135deg,#C9A84C,#A8722A);" onclick="selecionarCorTexto('dourado')" title="Dourado"></div>
-      <div class="paleta-texto-cor" data-cor-texto="escuro" style="background:#2C2C2C;" onclick="selecionarCorTexto('escuro')" title="Escuro"></div>
-      <div class="paleta-texto-cor" data-cor-texto="rosa" style="background:linear-gradient(135deg,#F48FB1,#E91E8C);" onclick="selecionarCorTexto('rosa')" title="Rosa"></div>
-      <div class="paleta-texto-cor" data-cor-texto="azul" style="background:linear-gradient(135deg,#90CAF9,#1E88E5);" onclick="selecionarCorTexto('azul')" title="Azul"></div>
-      <div class="paleta-texto-cor" data-cor-texto="verde" style="background:linear-gradient(135deg,#A5D6A7,#43A047);" onclick="selecionarCorTexto('verde')" title="Verde"></div>
-      <div class="paleta-texto-cor" data-cor-texto="roxo" style="background:linear-gradient(135deg,#CE93D8,#8E24AA);" onclick="selecionarCorTexto('roxo')" title="Roxo"></div>
-    </div>
-    <p class="paleta-texto-nome" id="paletaTextoNome">✦ Creme — elegante e suave</p>
-
     <div class="upload-fundo-area" id="uploadFundoArea" onclick="document.getElementById('inputFundoConvite').click()">
       <input type="file" id="inputFundoConvite" accept="image/*" style="display:none" onchange="processarFundoConvite(event)">
       <div style="font-size:24px;margin-bottom:6px;">🖼️</div>
@@ -442,11 +394,8 @@ input:checked + .slider:before { transform: translateX(22px); }
       </div>
     </div>
     <div class="convite-preview" id="convitePreview">
-      <div class="convite-preview-bg" id="convitePreviewBg"></div>
-      <div class="convite-preview-inner">
-        <div class="convite-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
-        <p class="convite-preview-texto" id="convitePreviewTexto">Preencha o nome e a data para ver o convite...</p>
-      </div>
+      <div class="convite-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <p class="convite-preview-texto" id="convitePreviewTexto">Preencha o nome e a data para ver o convite...</p>
     </div>
   </div>
 
@@ -513,29 +462,12 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
 
   <!-- ✦ WHATSAPP — liberado após story -->
-    <button class="btn-salvar" id="btnSalvar" onclick="iniciarSalvar()" disabled>✦ Salvar e publicar página</button>
+  <button class="btn-whatsapp-config" id="btnWhatsappConfig" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
+  <p class="whatsapp-hint-config" id="whatsappHintConfig">📸 Poste nos Stories primeiro para liberar o WhatsApp</p>
+
+  <button class="btn-salvar" id="btnSalvar" onclick="iniciarSalvar()" disabled>✦ Salvar e publicar página</button>
   <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
-
-  <!-- ✦ TIMER STORY -->
-  <div class="story-timer-box" id="storyTimerBox">
-    <div class="story-timer-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
-    <div class="story-timer-titulo">Agora poste nos Stories!</div>
-    <div class="story-timer-sub">Sua página foi salva. Abra o Instagram e poste seu Story!</div>
-    <div class="story-timer-circulo">
-      <svg width="100" height="100" viewBox="0 0 100 100">
-        <defs><linearGradient id="gradTimer" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#C9A84C"/><stop offset="100%" style="stop-color:#A8722A"/></linearGradient></defs>
-        <circle fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="4" cx="50" cy="50" r="45"/>
-        <circle fill="none" stroke="url(#gradTimer)" stroke-width="4" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0" cx="50" cy="50" r="45" id="timerCirculo" style="transition:stroke-dashoffset 1s linear;"/>
-      </svg>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div class="story-timer-count" id="storyTimerCount">30</div>
-        <div class="story-timer-label">seg</div>
-      </div>
-    </div>
-    <button class="btn-ja-postei" id="btnJaPostei" onclick="confirmarStoryPostado()">✅ Já postei meu Story!</button>
-    <p class="story-timer-aguarde" id="timerAguarde">O botão aparecerá em instantes...</p>
-  </div>
 
 </div>
 
@@ -581,7 +513,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 <script>
 var listaId = "{{ lista_id }}";
 var estiloConviteSelecionado = 'classico';
-var corTextoConvite = 'claro';
 var imagemFundoConviteBase64 = '';
 var cofrinhoFoiPago = false;
 var carrosselFoiPago = false;
@@ -594,26 +525,27 @@ var limiteFotos = 10;
 var estiloMural = 'normal';
 var usuarioPago = false;
 var storyPostado = false;
-var STORY_KEY = 'instagift_story_' + listaId;
+var STORY_KEY = 'feststory_story_' + listaId;
 
 // ✦ Controle do estado do salvar e whatsapp
 function atualizarEstadoSalvar() {
     var btn = document.getElementById('btnSalvar');
     var hint = document.getElementById('btnSalvarHint');
     var gate = document.getElementById('storyGate');
+    var hintWpp = document.getElementById('whatsappHintConfig');
     var pacotaoCard = document.getElementById('pacotaoCard');
 
     if (usuarioPago || storyPostado) {
         btn.disabled = false;
         if (hint) hint.className = 'btn-salvar-hint';
         if (gate) gate.style.display = 'none';
-        if (btnWpp) { btnWpp.disabled = false; }
+        if (hintWpp) { hintWpp.textContent = '✦ WhatsApp liberado! Avise seus convidados.'; hintWpp.className = 'whatsapp-hint-config liberado'; }
         if (usuarioPago && pacotaoCard) pacotaoCard.style.display = 'none';
     } else {
         btn.disabled = true;
         if (hint) hint.className = 'btn-salvar-hint visivel';
         if (gate) gate.style.display = 'block';
-        if (btnWpp) btnWpp.disabled = true;
+        if (hintWpp) { hintWpp.textContent = '📸 Poste nos Stories primeiro para liberar o WhatsApp'; hintWpp.className = 'whatsapp-hint-config'; }
     }
 }
 
@@ -785,14 +717,10 @@ async function carregarConfig() {
       if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
       if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
       if (data.config.estilo_convite) selecionarEstiloConvite(data.config.estilo_convite);
-      if (data.config.cor_texto_convite) selecionarCorTexto(data.config.cor_texto_convite);
       if (data.config.imagem_fundo_convite) {
         imagemFundoConviteBase64 = data.config.imagem_fundo_convite;
         var prev = document.getElementById('fundoConvitePreview');
         if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
-        // ✦ Aplica imagem no preview ao carregar
-        var previewBg = document.getElementById('convitePreviewBg');
-        if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
       }
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
       if (data.config.cofrinho_ativo) {
@@ -827,11 +755,8 @@ async function carregarConfig() {
     // ✦ Verifica story no localStorage
     verificarStoryPostado();
 
-    // ✦ Atualiza estado do botão salvar
+    // ✦ Atualiza estado do botão salvar e whatsapp
     atualizarEstadoSalvar();
-    // ✦ Esconde overlay de loading
-    var overlay = document.getElementById('loadingOverlay');
-    if (overlay) { overlay.classList.add('saindo'); setTimeout(function() { overlay.style.display = 'none'; }, 400); }
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
@@ -847,34 +772,9 @@ async function carregarConfig() {
       atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-  } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
+  } catch(e) { console.error(e); }
 }
 
-
-var coresTexto = {
-  claro:   { nome: '✦ Creme — elegante e suave',     hex: '#F5EDD8' },
-  branco:  { nome: '✦ Branco — clean e moderno',     hex: '#ffffff' },
-  dourado: { nome: '✦ Dourado — luxuoso e especial', hex: '#C9A84C' },
-  escuro:  { nome: '✦ Escuro — sóbrio e elegante',   hex: '#2C2C2C' },
-  rosa:    { nome: '✦ Rosa — delicado e romântico',  hex: '#E91E8C' },
-  azul:    { nome: '✦ Azul — sereno e especial',     hex: '#1E88E5' },
-  verde:   { nome: '✦ Verde — fresco e vibrante',    hex: '#43A047' },
-  roxo:    { nome: '✦ Roxo — sofisticado e mágico',  hex: '#8E24AA' }
-};
-
-function selecionarCorTexto(cor) {
-  corTextoConvite = cor;
-  document.querySelectorAll('.paleta-texto-cor').forEach(function(el) {
-    el.classList.toggle('ativa', el.dataset.corTexto === cor);
-  });
-  var nomeEl = document.getElementById('paletaTextoNome');
-  if (nomeEl) nomeEl.textContent = coresTexto[cor] ? coresTexto[cor].nome : '';
-  // ✦ Aplica cor no preview em tempo real
-  var preview = document.getElementById('convitePreviewTexto');
-  if (preview && coresTexto[cor]) preview.style.color = coresTexto[cor].hex;
-  var ornamento = document.querySelector('#convitePreview .convite-ornamento');
-  if (ornamento && coresTexto[cor]) ornamento.style.color = coresTexto[cor].hex;
-}
 
 function selecionarEstiloConvite(estilo) {
   estiloConviteSelecionado = estilo;
@@ -895,9 +795,6 @@ function processarFundoConvite(e) {
     imagemFundoConviteBase64 = ev.target.result;
     var preview = document.getElementById('fundoConvitePreview');
     if (preview) { preview.src = imagemFundoConviteBase64; preview.style.display = 'block'; }
-    // ✦ Aplica imagem no preview do convite em tempo real
-    var previewBg = document.getElementById('convitePreviewBg');
-    if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
     atualizarPreviewConvite();
   };
   reader.readAsDataURL(file);
@@ -1108,7 +1005,8 @@ async function salvarConfig() {
         estilo_convite: estiloConviteSelecionado,
         imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
-        cofrinho_ativo: cofrinhoAtivo
+        cofrinho_ativo: cofrinhoAtivo,
+        cor_texto_convite: corTextoConvite
       })
     });
     var result = await r.json();
@@ -1123,50 +1021,14 @@ async function salvarConfig() {
 }
 
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
-function verPagina() { window.open('/minha-celebracao/' + listaId, '_blank'); }
+function verPagina() { window.open('/premium/' + listaId + '?dono=true', '_blank'); }
 
 async function detectarEvento() {
   try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
   renderFrases();
 }
 
-var storyTimerInterval = null;
-
-function iniciarTimerStory() {
-  var box = document.getElementById('storyTimerBox');
-  var count = document.getElementById('storyTimerCount');
-  var circulo = document.getElementById('timerCirculo');
-  var btnJa = document.getElementById('btnJaPostei');
-  var aguarde = document.getElementById('timerAguarde');
-  if (box) { box.classList.add('show'); setTimeout(function(){ box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
-  var total = 30, segundos = 30, circumference = 283;
-  if (count) count.textContent = segundos;
-  if (circulo) circulo.style.strokeDashoffset = 0;
-  window.open('/?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar', '_blank');
-  storyTimerInterval = setInterval(function() {
-    segundos--;
-    if (count) count.textContent = segundos;
-    if (circulo) circulo.style.strokeDashoffset = circumference * (1 - segundos / total);
-    if (segundos <= 0) {
-      clearInterval(storyTimerInterval);
-      if (aguarde) aguarde.style.display = 'none';
-      if (btnJa) btnJa.classList.add('show');
-    }
-  }, 1000);
-}
-
-function confirmarStoryPostado() {
-  if (storyTimerInterval) clearInterval(storyTimerInterval);
-  var box = document.getElementById('storyTimerBox');
-  if (box) box.classList.remove('show');
-  try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
-  storyPostado = true;
-  atualizarEstadoSalvar();
-}
-
 async function init() { await detectarEvento(); await carregarConfig(); }
-// ✦ Timeout de segurança — esconde overlay após 8s mesmo se der erro
-setTimeout(function() { var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }, 8000);
 init();
 </script>
 </body>
