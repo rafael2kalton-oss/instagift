@@ -155,18 +155,30 @@ input:checked + .slider:before { transform: translateX(22px); }
         .story-gate-pago { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; padding: 12px 14px; margin-top: 4px; }
         .story-gate-pago p { font-size: 12px; color: #C9A84C; font-style: italic; font-family: 'Playfair Display', serif; }
         /* ✦ WHATSAPP */
-        .btn-whatsapp-config { width: 100%; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 50px; padding: 15px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
-        .btn-whatsapp-config:hover:not(:disabled) { transform: translateY(-2px); }
-        .btn-whatsapp-config:disabled { background: rgba(0,0,0,0.06); color: #ccc; cursor: not-allowed; border: 1px solid rgba(0,0,0,0.06); }
-        .whatsapp-hint-config { font-size: 11px; color: #bbb; text-align: center; margin-top: 6px; font-style: italic; }
-        .whatsapp-hint-config.liberado { color: #C9A84C; }
         /* ✦ SALVAR */
         .btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
         .btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
         .btn-salvar-hint.visivel { display: block; }
+        /* ✦ LOADING OVERLAY */
+        .loading-overlay { position: fixed; inset: 0; background: #FFF8EC; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+        .loading-overlay.saindo { opacity: 0; pointer-events: none; }
+        .loading-logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; }
+        .loading-ornamento { font-size: 11px; color: #C9A84C; letter-spacing: 6px; opacity: 0.6; }
+        .loading-texto { font-family: 'Playfair Display', serif; font-size: 14px; color: #aaa; font-style: italic; }
+        .loading-barra { width: 160px; height: 3px; background: rgba(201,168,76,0.15); border-radius: 10px; overflow: hidden; }
+        .loading-barra-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 10px; animation: loadingFill 1.8s ease-in-out infinite; }
+        @keyframes loadingFill { 0% { width: 0%; opacity: 1; } 70% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
 </style>
 </head>
 <body>
+<!-- ✦ LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">FestStory</div>
+  <div class="loading-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+  <div class="loading-barra"><div class="loading-barra-fill"></div></div>
+  <div class="loading-texto">Carregando suas configurações...</div>
+</div>
+
 <div class="container">
 
   <div class="header">
@@ -461,9 +473,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- ✦ WHATSAPP — liberado após story -->
-  <button class="btn-whatsapp-config" id="btnWhatsappConfig" onclick="compartilharWhatsApp()" disabled>💚 Avisar Convidados no WhatsApp</button>
-  <p class="whatsapp-hint-config" id="whatsappHintConfig">📸 Poste nos Stories primeiro para liberar o WhatsApp</p>
 
   <button class="btn-salvar" id="btnSalvar" onclick="iniciarSalvar()" disabled>✦ Salvar e publicar página</button>
   <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
@@ -513,6 +522,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 <script>
 var listaId = "{{ lista_id }}";
 var estiloConviteSelecionado = 'classico';
+var corTextoConvite = 'claro';
 var imagemFundoConviteBase64 = '';
 var cofrinhoFoiPago = false;
 var carrosselFoiPago = false;
@@ -525,27 +535,24 @@ var limiteFotos = 10;
 var estiloMural = 'normal';
 var usuarioPago = false;
 var storyPostado = false;
-var STORY_KEY = 'feststory_story_' + listaId;
+var STORY_KEY = 'instagift_story_' + listaId;
 
 // ✦ Controle do estado do salvar e whatsapp
 function atualizarEstadoSalvar() {
     var btn = document.getElementById('btnSalvar');
     var hint = document.getElementById('btnSalvarHint');
     var gate = document.getElementById('storyGate');
-    var hintWpp = document.getElementById('whatsappHintConfig');
     var pacotaoCard = document.getElementById('pacotaoCard');
 
     if (usuarioPago || storyPostado) {
         btn.disabled = false;
         if (hint) hint.className = 'btn-salvar-hint';
         if (gate) gate.style.display = 'none';
-        if (hintWpp) { hintWpp.textContent = '✦ WhatsApp liberado! Avise seus convidados.'; hintWpp.className = 'whatsapp-hint-config liberado'; }
         if (usuarioPago && pacotaoCard) pacotaoCard.style.display = 'none';
     } else {
         btn.disabled = true;
         if (hint) hint.className = 'btn-salvar-hint visivel';
         if (gate) gate.style.display = 'block';
-        if (hintWpp) { hintWpp.textContent = '📸 Poste nos Stories primeiro para liberar o WhatsApp'; hintWpp.className = 'whatsapp-hint-config'; }
     }
 }
 
@@ -755,8 +762,11 @@ async function carregarConfig() {
     // ✦ Verifica story no localStorage
     verificarStoryPostado();
 
-    // ✦ Atualiza estado do botão salvar e whatsapp
+    // ✦ Atualiza estado do botão salvar
     atualizarEstadoSalvar();
+    // ✦ Esconde overlay de loading
+    var overlay = document.getElementById('loadingOverlay');
+    if (overlay) { overlay.classList.add('saindo'); setTimeout(function() { overlay.style.display = 'none'; }, 400); }
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
@@ -772,7 +782,7 @@ async function carregarConfig() {
       atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
 }
 
 
@@ -1005,8 +1015,7 @@ async function salvarConfig() {
         estilo_convite: estiloConviteSelecionado,
         imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
-        cofrinho_ativo: cofrinhoAtivo,
-        cor_texto_convite: corTextoConvite
+        cofrinho_ativo: cofrinhoAtivo
       })
     });
     var result = await r.json();
@@ -1021,7 +1030,7 @@ async function salvarConfig() {
 }
 
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
-function verPagina() { window.open('/premium/' + listaId + '?dono=true', '_blank'); }
+function verPagina() { window.open('/minha-celebracao/' + listaId, '_blank'); }
 
 async function detectarEvento() {
   try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
