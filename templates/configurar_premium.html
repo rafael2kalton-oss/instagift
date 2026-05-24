@@ -847,7 +847,7 @@ async function carregarConfig() {
       atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
 }
 
 
@@ -1165,6 +1165,8 @@ function confirmarStoryPostado() {
 }
 
 async function init() { await detectarEvento(); await carregarConfig(); }
+// ✦ Timeout de segurança — esconde overlay após 8s mesmo se der erro
+setTimeout(function() { var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }, 8000);
 init();
 </script>
 </body>
