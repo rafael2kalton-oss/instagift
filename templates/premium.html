@@ -260,8 +260,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
         </div>
       </div>
     </div>
-    <!-- ✦ Botões abaixo do convite -->
-    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+    <!-- ✦ Botões abaixo do convite — só para o dono -->
+    <div id="conviteMuralBotoes" style="display:none;margin-top:12px;flex-direction:column;gap:8px;">
       <button id="btnCompartilharImagemMural" style="width:100%;padding:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;" onclick="compartilharConviteImagemMural()">📲 Compartilhar convite com imagem</button>
       <button style="width:100%;padding:12px;background:rgba(201,168,76,0.08);color:var(--cor-primaria);border:1px solid rgba(201,168,76,0.25);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;" onclick="compartilharWhatsApp()">💚 Compartilhar texto no WhatsApp</button>
     </div>
@@ -524,6 +524,9 @@ function renderHero(config) {
     var conviteDono = document.getElementById('conviteAcoesDono');
     if (conviteConvidado) conviteConvidado.style.display = 'none';
     if (conviteDono) conviteDono.style.display = 'block';
+    // ✦ Botões de compartilhar só para o dono
+    var botoesMural = document.getElementById('conviteMuralBotoes');
+    if (botoesMural) botoesMural.style.display = 'flex';
   }
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
