@@ -190,6 +190,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .btn-fechar-cofrinho { width: 100%; padding: 12px; background: transparent; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
 .tipo-pix-label { font-size: 11px; color: rgba(201,168,76,0.5); margin-top: 8px; font-style: italic; font-family: 'Inter', sans-serif; letter-spacing: 0.03em; }
 .pix-copiado { display: none; text-align: center; padding: 10px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; color: #4ade80; font-size: 13px; margin-bottom: 10px; }
+.dono-banner { background: linear-gradient(135deg,#2C1A00,#1a0f00); border-bottom: 1px solid rgba(201,168,76,0.3); padding: 10px 16px; text-align: center; position: sticky; top: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; }
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
 
@@ -205,6 +206,12 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 </style>
 </head>
 <body>
+
+<!-- ✦ BANNER DONO — aparece só quando ?dono=true -->
+<div class="dono-banner" id="donoBanner" style="display:none;">
+  <span style="font-size:11px;color:rgba(201,168,76,0.8);font-family:'Inter',sans-serif;letter-spacing:0.05em;">👑 Você está vendo sua página como dono</span>
+  <a id="donoConfigBtn" href="#" style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;">⚙️ Configurar</a>
+</div>
 
 <div class="hero" id="hero">
   <div class="hero-bg-default"></div>
@@ -310,14 +317,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <button class="btn-confirmar-presenca" onclick="confirmarPresenca()">✦ Confirmar presença</button>
     <div class="presenca-sucesso" id="presencaSucesso">🎉 Presença confirmada com sucesso!</div>
   </div>
-  <div id="presencasContadores" style="margin-top:16px;">
-    <div class="presenca-contadores">
-      <div class="presenca-contador"><div class="presenca-contador-num" id="totalConfirmados">0</div><div class="presenca-contador-label">✅ Confirmados</div></div>
-      <div class="presenca-contador"><div class="presenca-contador-num" id="totalTalvez">0</div><div class="presenca-contador-label">🤔 Talvez</div></div>
-      <div class="presenca-contador"><div class="presenca-contador-num" id="totalNaoVai">0</div><div class="presenca-contador-label">❌ Não vai</div></div>
-    </div>
-    <p style="text-align:center;font-size:12px;color:#bbb;font-style:italic;font-family:'Playfair Display',serif;margin-top:8px;">Apenas o organizador pode ver os nomes ✦</p>
-  </div>
+  <div class="secao-divider"><div class="secao-divider-linha"></div><div class="secao-divider-icon">✦</div><div class="secao-divider-linha"></div></div>
+  <div id="presencasLista"><div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div></div>
 </div>
 
 <!-- ✦ ABA CONVITE — só visualização -->
@@ -337,7 +338,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
       </div>
     </div>
   </div>
-  <p class="convite-aviso">Para compartilhar o convite, use o botão na aba Mural ✦</p>
+  <div id="conviteAcoesConvidado">
+    <p class="convite-aviso">Para compartilhar o convite, use o botão na aba Mural ✦</p>
+  </div>
+  <div id="conviteAcoesDono" style="display:none;">
+    <button style="width:100%;padding:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;" onclick="compartilharWhatsApp()">💚 Compartilhar no WhatsApp</button>
+    <button style="width:100%;padding:12px;background:rgba(201,168,76,0.08);color:var(--cor-primaria);border:1px solid rgba(201,168,76,0.25);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;" onclick="copiarConvite()">📋 Copiar texto do convite</button>
+  </div>
 </div>
 
 <!-- ✦ BOTÕES FLUTUANTES -->
@@ -369,6 +376,14 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 
 <script>
 var listaId = "{{ lista_id }}";
+var isDono = new URLSearchParams(window.location.search).get('dono') === 'true';
+// ✦ Ativa banner e recursos do dono
+if (isDono) {
+  var banner = document.getElementById('donoBanner');
+  if (banner) banner.style.display = 'flex';
+  var configBtn = document.getElementById('donoConfigBtn');
+  if (configBtn) configBtn.href = '/configurar-premium/' + listaId;
+}
 var dadosPremium = {};
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
@@ -416,6 +431,13 @@ async function carregarPremium() {
 }
 
 function renderHero(config) {
+  // ✦ Ativa recursos do dono
+  if (isDono) {
+    var conviteConvidado = document.getElementById('conviteAcoesConvidado');
+    var conviteDono = document.getElementById('conviteAcoesDono');
+    if (conviteConvidado) conviteConvidado.style.display = 'none';
+    if (conviteDono) conviteDono.style.display = 'block';
+  }
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var data = config.data_evento ? formatarData(config.data_evento) : '';
@@ -547,6 +569,10 @@ function renderConviteVisual(config) {
   }
 }
 
+function copiarConvite() {
+  navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); });
+}
+
 function compartilharWhatsApp() {
   // ✦ Garante que conviteTextoFinal está preenchido antes de abrir o WhatsApp
   if (!conviteTextoFinal) {
@@ -596,16 +622,29 @@ async function carregarPresencas() {
 }
 
 function renderPresencas(presencas) {
-  // ✦ Convidado só vê contadores, não os nomes
-  var confirmados = presencas ? presencas.filter(function(p){return p.status==='confirmado';}).length : 0;
-  var talvez = presencas ? presencas.filter(function(p){return p.status==='talvez';}).length : 0;
-  var naoVai = presencas ? presencas.filter(function(p){return p.status==='nao-vai';}).length : 0;
-  var el1 = document.getElementById('totalConfirmados');
-  var el2 = document.getElementById('totalTalvez');
-  var el3 = document.getElementById('totalNaoVai');
-  if (el1) el1.textContent = confirmados;
-  if (el2) el2.textContent = talvez;
-  if (el3) el3.textContent = naoVai;
+  if (!presencas || presencas.length === 0) {
+    document.getElementById('presencasLista').innerHTML = '<div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div>';
+    return;
+  }
+  var confirmados = presencas.filter(function(p){return p.status==='confirmado';}).length;
+  var talvez = presencas.filter(function(p){return p.status==='talvez';}).length;
+  var naoVai = presencas.filter(function(p){return p.status==='nao-vai';}).length;
+  // ✦ Contadores sempre visíveis
+  var contadores = '<div class="presenca-contadores" style="margin-bottom:16px;">'
+    + '<div class="presenca-contador"><div class="presenca-contador-num">' + confirmados + '</div><div class="presenca-contador-label">✅ Confirmados</div></div>'
+    + '<div class="presenca-contador"><div class="presenca-contador-num">' + talvez + '</div><div class="presenca-contador-label">🤔 Talvez</div></div>'
+    + '<div class="presenca-contador"><div class="presenca-contador-num">' + naoVai + '</div><div class="presenca-contador-label">❌ Não vai</div></div>'
+    + '</div>';
+  // ✦ Nomes só para o dono
+  if (isDono) {
+    var lista = presencas.map(function(p) {
+      var inicial=p.nome?p.nome[0].toUpperCase():'?', statusLabel=p.status==='confirmado'?'✅ Confirmado':p.status==='talvez'?'🤔 Talvez':'❌ Não vai', statusClass=p.status==='confirmado'?'status-confirmado':p.status==='talvez'?'status-talvez':'status-nao-vai', acomp=p.acompanhantes>0?' +'+p.acompanhantes:'';
+      return '<div class="presenca-item"><div class="presenca-item-avatar">'+inicial+'</div><div><div class="presenca-item-nome">'+p.nome+acomp+'</div></div><span class="presenca-item-status '+statusClass+'">'+statusLabel+'</span></div>';
+    }).join('');
+    document.getElementById('presencasLista').innerHTML = contadores + '<div class="presencas-lista">' + lista + '</div>';
+  } else {
+    document.getElementById('presencasLista').innerHTML = contadores + '<p style="text-align:center;font-size:12px;color:#bbb;font-style:italic;font-family:'Playfair Display',serif;">Apenas o organizador pode ver os nomes ✦</p>';
+  }
 }
 
 async function enviarRecado() {
