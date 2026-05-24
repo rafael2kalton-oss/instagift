@@ -173,6 +173,24 @@ input:checked + .slider:before { transform: translateX(22px); }
         .loading-barra { width: 160px; height: 3px; background: rgba(201,168,76,0.15); border-radius: 10px; overflow: hidden; }
         .loading-barra-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 10px; animation: loadingFill 1.8s ease-in-out infinite; }
         @keyframes loadingFill { 0% { width: 0%; opacity: 1; } 70% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
+        /* ✦ TIMER STORY */
+        .story-timer-box { display: none; background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.35); border-radius: 24px; padding: 36px 28px; margin-top: 20px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
+        .story-timer-box.show { display: block; animation: timerEntrar 0.5s ease; }
+        @keyframes timerEntrar { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .story-timer-ornamento { color: #C9A84C; font-size: 10px; letter-spacing: 6px; margin-bottom: 18px; opacity: 0.7; }
+        .story-timer-titulo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #F5EDD8; margin-bottom: 10px; }
+        .story-timer-sub { font-size: 13px; color: rgba(245,237,216,0.55); line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 28px; }
+        .story-timer-circulo { position: relative; width: 100px; height: 100px; margin: 0 auto 24px; }
+        .story-timer-circulo svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+        .story-timer-circulo-track { fill: none; stroke: rgba(201,168,76,0.15); stroke-width: 4; }
+        .story-timer-circulo-prog { fill: none; stroke: url(#gradTimer); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 283; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+        .story-timer-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .story-timer-count { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; color: #C9A84C; line-height: 1; }
+        .story-timer-label { font-size: 10px; color: rgba(201,168,76,0.5); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 2px; }
+        .btn-ja-postei { width: 100%; padding: 16px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; display: none; box-shadow: 0 6px 24px rgba(37,211,102,0.35); letter-spacing: 0.02em; }
+        .btn-ja-postei.show { display: block; animation: timerEntrar 0.4s ease; }
+        .btn-ja-postei:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.45); }
+        .story-timer-aguarde { font-size: 12px; color: rgba(245,237,216,0.3); font-style: italic; font-family: 'Playfair Display', serif; margin-top: 14px; }
 </style>
 </head>
 <body>
@@ -482,15 +500,7 @@ input:checked + .slider:before { transform: translateX(22px); }
   <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
 
-  <!-- ✦ TIMER STORY -->
-  <div class="story-timer-box" id="storyTimerBox">
-    <div style="font-size:32px;margin-bottom:10px;">📸</div>
-    <div class="story-timer-titulo">Agora poste nos Stories!</div>
-    <div class="story-timer-sub">Sua página foi salva! Poste nos Stories do Instagram agora para liberar o WhatsApp.</div>
-    <div class="story-timer-count" id="storyTimerCount">30</div>
-    <div class="story-timer-label">segundos</div>
-    <button class="btn-ja-postei" id="btnJaPostei" onclick="confirmarStoryPostado()">✦ Já postei meu Story!</button>
-  </div>
+
 
 </div>
 
@@ -602,12 +612,7 @@ async function irParaStoryComSave() {
 function compartilharWhatsApp() {
     var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
     var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁
-
-✦ ACESSAR AQUI:
-' + linkCelebracao + '
-
-Valeu pelo carinho! 🙏✦';
+    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração e veja a lista de presentes! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
@@ -1053,7 +1058,7 @@ async function salvarConfig() {
 }
 
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
-function verPagina() { window.open('/minha-celebracao/' + listaId, '_blank'); }
+function verPagina() { window.open('/premium/' + listaId + '?dono=true', '_blank'); }
 
 async function detectarEvento() {
   try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
@@ -1065,17 +1070,24 @@ var storyTimerInterval = null;
 function iniciarTimerStory() {
   var box = document.getElementById('storyTimerBox');
   var count = document.getElementById('storyTimerCount');
+  var circulo = document.getElementById('timerCirculo');
   var btnJa = document.getElementById('btnJaPostei');
-  if (box) box.classList.add('show');
-  var segundos = 30;
+  var aguarde = document.getElementById('timerAguarde');
+  if (box) { box.classList.add('show'); setTimeout(function(){ box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
+  var total = 30, segundos = 30;
+  var circumference = 283;
   if (count) count.textContent = segundos;
+  if (circulo) circulo.style.strokeDashoffset = 0;
+  // ✦ Abre o criar_story em nova aba
   window.open('/?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar', '_blank');
   storyTimerInterval = setInterval(function() {
     segundos--;
     if (count) count.textContent = segundos;
+    if (circulo) circulo.style.strokeDashoffset = circumference * (1 - segundos / total);
     if (segundos <= 0) {
       clearInterval(storyTimerInterval);
       if (count) count.textContent = '0';
+      if (aguarde) aguarde.style.display = 'none';
       if (btnJa) btnJa.classList.add('show');
     }
   }, 1000);
@@ -1088,7 +1100,6 @@ function confirmarStoryPostado() {
   try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
   storyPostado = true;
   atualizarEstadoSalvar();
-  alert('🎉 Obrigado por postar! O WhatsApp foi liberado ✦');
 }
 
 async function init() { await detectarEvento(); await carregarConfig(); }
