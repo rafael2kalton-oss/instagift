@@ -580,8 +580,10 @@ function renderConviteMural(config) {
   var textoEl = document.getElementById('conviteMuralTexto');
   var localEl = document.getElementById('conviteMuralLocal');
   var localTextoEl = document.getElementById('conviteMuralLocalTexto');
-  if (nomeEl) nomeEl.textContent = nome;
-  if (dataEl) dataEl.textContent = dataStr ? '📅 ' + dataStr : '';
+  var coresTextoMap2 = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
+  var corTextoMural = coresTextoMap2[config.cor_texto_convite] || '#F5EDD8';
+  if (nomeEl) { nomeEl.textContent = nome; nomeEl.style.color = corTextoMural; }
+  if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTextoMural; }
   if (textoEl) {
     if (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false')) {
       textoEl.textContent = config.texto_convite;
@@ -595,6 +597,7 @@ function renderConviteMural(config) {
       };
       textoEl.textContent = convites[tipoEvento] || convites['outros'];
     }
+    textoEl.style.color = corTextoMural;
   }
   if (localEl && localTextoEl) {
     if (localEvento) { localTextoEl.textContent = localEvento; localEl.style.display = 'flex'; }
@@ -673,18 +676,19 @@ function renderConviteVisual(config) {
       visual.style.backgroundImage = '';
     }
   }
+  // ✦ Aplica cor do texto
+  var coresTextoMap = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
+  var corTexto = coresTextoMap[config.cor_texto_convite] || '#F5EDD8';
   var tituloEl = document.getElementById('conviteTituloVisual');
   var dataEl = document.getElementById('conviteDataVisual');
   var textoEl = document.getElementById('conviteTextoVisual');
-  if (tituloEl) tituloEl.textContent = nome;
-  if (dataEl) dataEl.textContent = '📅 ' + dataStr;
+  if (tituloEl) { tituloEl.textContent = nome; tituloEl.style.color = corTexto; }
+  if (dataEl) { dataEl.textContent = '📅 ' + dataStr; dataEl.style.color = corTexto; }
   // ✦ Texto personalizado tem prioridade sobre o padrão
   if (textoEl) {
     if (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false')) {
       textoEl.textContent = config.texto_convite;
     } else {
-      // ✦ Gera texto padrão completo com nome e data
-      // ✦ Texto padrão — usa tipo do evento se disponível, senão genérico
       var tipoEvento = (dadosPremium.config && dadosPremium.config.tipo_evento) || 'outros';
       var convites = {
         aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
@@ -695,6 +699,7 @@ function renderConviteVisual(config) {
       };
       textoEl.textContent = convites[tipoEvento] || convites['outros'];
     }
+    textoEl.style.color = corTexto;
   }
   var localEvento = config.local_evento || '';
   var localVisual = document.getElementById('conviteLocalVisual');
