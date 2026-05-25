@@ -630,7 +630,7 @@ def salvar_config_premium():
         "lista_id": lista_id,
         "mensagem_celebrante": data.get("mensagem_celebrante", ""),
         "texto_convite": data.get("texto_convite", ""),
-        "usa_convite_padrao": data.get("usa_convite_padrao", True),
+        "usa_convite_padrao": bool(data.get("usa_convite_padrao", True)),
         "nome_celebrante": data.get("nome_celebrante", ""),
         "data_evento": data.get("data_evento", ""),
         "paleta": data.get("paleta", "dourado"),
