@@ -850,9 +850,11 @@ function selecionarEstiloConvite(estilo) {
     if (estilo === 'classico') {
       preview.style.background = 'linear-gradient(135deg, #2C1A00, #1a0f00)';
       if (previewBg) previewBg.style.backgroundImage = '';
+      imagemFundoConviteBase64 = '';
     } else if (estilo === 'floral') {
       preview.style.background = 'linear-gradient(135deg, #FFF8EC, #F5EDD8)';
       if (previewBg) previewBg.style.backgroundImage = '';
+      imagemFundoConviteBase64 = '';
     } else if (estilo === 'livre') {
       preview.style.background = 'linear-gradient(135deg, #2C1A00, #1a0f00)';
       if (previewBg && imagemFundoConviteBase64) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
