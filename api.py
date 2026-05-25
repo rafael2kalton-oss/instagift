@@ -20,7 +20,7 @@ STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw
 # ✦ Substitua pela sua chave real: console.anthropic.com
 ANTHROPIC_KEY = "sk-ant-api03-SUBSTITUA-PELA-SUA-CHAVE-REAL"
 # ✦ Crie price R$ 9,90 no Stripe para Convite IA:
-STRIPE_CONVITE_IA_PRICE = "price_1TXS6H41uxxrCBOGqrRYbBhv"
+STRIPE_CONVITE_IA_PRICE = "price_1Tb4Tk41uxxrCBOG2iuUoC2J"
 
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
@@ -1110,4 +1110,5 @@ def gerar_convite_ia():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
+
 
