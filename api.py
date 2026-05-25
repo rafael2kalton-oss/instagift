@@ -640,7 +640,8 @@ def salvar_config_premium():
         "cofrinho_ativo": data.get("cofrinho_ativo", False),
         "estilo_convite": data.get("estilo_convite", "classico"),
         "imagem_fundo_convite": data.get("imagem_fundo_convite", ""),
-        "foto_capa": data.get("foto_capa", ""),
+"cor_texto_convite": data.get("cor_texto_convite", "claro"),
+"foto_capa": data.get("foto_capa", ""),
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
