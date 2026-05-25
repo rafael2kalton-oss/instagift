@@ -856,8 +856,17 @@ function selecionarEstiloConvite(estilo) {
       if (previewBg) previewBg.style.backgroundImage = '';
       imagemFundoConviteBase64 = '';
     } else if (estilo === 'livre') {
-      preview.style.background = 'linear-gradient(135deg, #2C1A00, #1a0f00)';
-      if (previewBg && imagemFundoConviteBase64) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+      if (imagemFundoConviteBase64) {
+        preview.style.background = '';
+        preview.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+        preview.style.backgroundSize = 'cover';
+        preview.style.backgroundPosition = 'center';
+        if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+      } else {
+        preview.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+        preview.style.backgroundImage = '';
+        if (previewBg) previewBg.style.backgroundImage = '';
+      }
     }
   }
   atualizarPreviewConvite();
@@ -873,6 +882,13 @@ function processarFundoConvite(e) {
     if (preview) { preview.src = imagemFundoConviteBase64; preview.style.display = 'block'; }
     var previewBg = document.getElementById('convitePreviewBg');
     if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+    var convPrev = document.getElementById('convitePreview');
+    if (convPrev) {
+      convPrev.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+      convPrev.style.backgroundSize = 'cover';
+      convPrev.style.backgroundPosition = 'center';
+      convPrev.style.background = '';
+    }
     atualizarPreviewConvite();
   };
   reader.readAsDataURL(file);
