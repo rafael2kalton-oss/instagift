@@ -398,6 +398,13 @@ if (isDono) {
   if (configBtn) configBtn.href = '/configurar-premium/' + listaId;
 }
 var dadosPremium = {};
+
+// ✦ Resolve usa_convite_padrao como bool ou string do Supabase
+function usaPersonalizado(config) {
+  if (!config || !config.texto_convite) return false;
+  var v = config.usa_convite_padrao;
+  return (v === false || v === 'false' || v === 0 || v === '0');
+}
 var conviteTextoFinal = "";
 var presencaSelecionada = 'confirmado';
 var chavePix = '';
@@ -557,7 +564,7 @@ function renderConviteMural(config) {
     'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Venha fazer parte desse momento! ✦',
     outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
   };
-  conviteTextoFinal = (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false'))
+  conviteTextoFinal = (usaPersonalizado(config))
     ? config.texto_convite + mapsLink
     : (textosPadrao[tipoEvento] || textosPadrao['outros']);
 
@@ -585,7 +592,7 @@ function renderConviteMural(config) {
   if (nomeEl) { nomeEl.textContent = nome; nomeEl.style.color = corTextoMural; }
   if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTextoMural; }
   if (textoEl) {
-    if (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false')) {
+    if (usaPersonalizado(config)) {
       textoEl.textContent = config.texto_convite;
     } else {
       var convites = {
@@ -686,7 +693,7 @@ function renderConviteVisual(config) {
   if (dataEl) { dataEl.textContent = '📅 ' + dataStr; dataEl.style.color = corTexto; }
   // ✦ Texto personalizado tem prioridade sobre o padrão
   if (textoEl) {
-    if (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false')) {
+    if (usaPersonalizado(config)) {
       textoEl.textContent = config.texto_convite;
     } else {
       var tipoEvento = (dadosPremium.config && dadosPremium.config.tipo_evento) || 'outros';
@@ -723,7 +730,7 @@ function compartilharWhatsApp() {
     var localEvento = config.local_evento || '';
     var link = window.location.origin + '/premium/' + listaId;
     var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
-    conviteTextoFinal = (config.texto_convite && (config.usa_convite_padrao === false || config.usa_convite_padrao === 'false'))
+    conviteTextoFinal = (usaPersonalizado(config))
       ? config.texto_convite + mapsLink
       : '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + dataStr + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
   }
