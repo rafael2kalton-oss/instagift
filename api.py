@@ -18,7 +18,7 @@ RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
 STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
 STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GiBIGziNMrdT30091vAVts7"
 # ✦ Substitua pela sua chave real: console.anthropic.com
-ANTHROPIC_KEY = "sk-ant-api03-SUBSTITUA-PELA-SUA-CHAVE-REAL"
+ANTHROPIC_KEY = "sk-ant-api03-i17P2mK8zMxfdXcg5ea_h0TjBFsmZt1IxcwYlStwkwsVtGYkBnBvogfML-ylutr50UQXCn8Srlgi6RjOA-dSm9YQAA"
 # ✦ Crie price R$ 9,90 no Stripe para Convite IA:
 STRIPE_CONVITE_IA_PRICE = "price_1Tb4Tk41uxxrCBOG2iuUoC2J"
 
@@ -1110,5 +1110,6 @@ def gerar_convite_ia():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
+
 
 
