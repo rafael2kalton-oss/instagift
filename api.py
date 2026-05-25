@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect
-import uuid, re, requests, resend, stripe
+import uuid, re, requests, resend, stripe, anthropic, base64
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
@@ -17,6 +17,10 @@ ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
 STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
 STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GiBIGziNMrdT30091vAVts7"
+# ✦ Substitua pela sua chave real: console.anthropic.com
+ANTHROPIC_KEY = "sk-ant-api03-SUBSTITUA-PELA-SUA-CHAVE-REAL"
+# ✦ Crie price R$ 9,90 no Stripe para Convite IA:
+STRIPE_CONVITE_IA_PRICE = "price_1TXS6H41uxxrCBOGqrRYbBhv"
 
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
@@ -24,6 +28,7 @@ STRIPE_PACOTES = {
     "25": {"price_id": "price_1TXSCB41uxxrCBOGaliEnmy3", "fotos": 25, "valor": "R$ 49,90"},
     "cofrinho": {"price_id": "price_1TYuZj41uxxrCBOGVDjlG7Pf", "fotos": 0, "valor": "R$ 15,90"},
     "celebracao": {"price_id": "price_1TYudb41uxxrCBOGuOcE4aeo", "fotos": 5, "valor": "R$ 25,90"},
+    "convite_ia": {"price_id": STRIPE_CONVITE_IA_PRICE, "fotos": 0, "valor": "R$ 9,90"},
 }
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -596,6 +601,17 @@ def stripe_sucesso():
         sb_post("vendas", {"lista_id": lista_id, "pacote": pacote, "valor": valor})
     except Exception as e:
         print("Erro registrar venda:", e)
+    # ✦ Convite IA — marca ia_pago
+    if pacote == "convite_ia":
+        try:
+            cfg_ia = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+            if cfg_ia and isinstance(cfg_ia, list) and len(cfg_ia) > 0:
+                sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"ia_pago": True})
+            else:
+                sb_post("config_premium", {"lista_id": lista_id, "ia_pago": True})
+        except Exception as e:
+            print("IA pago erro:", e)
+        return redirect(f"/configurar-premium/{lista_id}?ia_pago=true")
     return redirect(f"/configurar-premium/{lista_id}?compra=ok&fotos={STRIPE_PACOTES.get(pacote, {}).get('fotos', 0)}")
 
 @app.route("/api/limite-fotos/<lista_id>")
@@ -630,7 +646,7 @@ def salvar_config_premium():
         "lista_id": lista_id,
         "mensagem_celebrante": data.get("mensagem_celebrante", ""),
         "texto_convite": data.get("texto_convite", ""),
-        "usa_convite_padrao": bool(data.get("usa_convite_padrao", True)),
+        "usa_convite_padrao": data.get("usa_convite_padrao", True),
         "nome_celebrante": data.get("nome_celebrante", ""),
         "data_evento": data.get("data_evento", ""),
         "paleta": data.get("paleta", "dourado"),
@@ -640,8 +656,8 @@ def salvar_config_premium():
         "cofrinho_ativo": data.get("cofrinho_ativo", False),
         "estilo_convite": data.get("estilo_convite", "classico"),
         "imagem_fundo_convite": data.get("imagem_fundo_convite", ""),
-"cor_texto_convite": data.get("cor_texto_convite", "claro"),
-"foto_capa": data.get("foto_capa", ""),
+        "foto_capa": data.get("foto_capa", ""),
+        "convite_ia_imagem": data.get("convite_ia_imagem", ""),
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
@@ -729,7 +745,7 @@ def premium(lista_id):
 
 @app.route("/minha-celebracao/<lista_id>")
 def minha_celebracao(lista_id):
-    return redirect(f"/premium/{lista_id}?dono=true")
+    return render_template("minha_celebracao.html", lista_id=lista_id)
 
 @app.route("/api/verificar-expiracao/<lista_id>")
 def verificar_expiracao(lista_id):
@@ -1001,6 +1017,10 @@ def presidente_liberar_cortesia():
         limite_atual = config[0].get("limite_fotos", 10) if config_existe else 10
         atualizacao["limite_fotos"] = limite_atual + fotos_extras
 
+    # ✦ Convite IA cortesia
+    if data.get("convite_ia"):
+        atualizacao["ia_pago"] = True
+
     if atualizacao:
         if config_existe:
             sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
@@ -1010,6 +1030,83 @@ def presidente_liberar_cortesia():
 
     return jsonify({"ok": True})
 
+@app.route("/api/gerar-convite-ia", methods=["POST"])
+def gerar_convite_ia():
+    data = request.json or {}
+    lista_id = data.get("lista_id", "").strip()
+    descricao = data.get("descricao", "").strip()
+    nome_evento = data.get("nome_evento", "").strip()
+    data_evento_str = data.get("data_evento", "").strip()
+    imagem_ref_b64 = data.get("imagem_referencia", "")
+    if not lista_id or not descricao:
+        return jsonify({"erro": "Dados incompletos"}), 400
+    config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
+    config_existe = config and isinstance(config, list) and len(config) > 0
+    cfg = config[0] if config_existe else {}
+    ia_pago = cfg.get("ia_pago", False)
+    convite_ja_gerado = bool(cfg.get("convite_ia_imagem", ""))
+    if not ia_pago and not convite_ja_gerado:
+        try:
+            base_url = request.host_url.rstrip("/")
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[{"price": STRIPE_CONVITE_IA_PRICE, "quantity": 1}],
+                mode="payment",
+                success_url=f"{base_url}/configurar-premium/{lista_id}?ia_pago=true",
+                cancel_url=f"{base_url}/configurar-premium/{lista_id}",
+                metadata={"lista_id": lista_id, "pacote": "convite_ia"}
+            )
+            return jsonify({"pagamento_url": session.url})
+        except Exception as e:
+            print("Stripe IA erro:", e)
+            return jsonify({"erro": "Erro ao criar pagamento"}), 500
+    try:
+        data_fmt = ""
+        if data_evento_str:
+            try:
+                d = datetime.fromisoformat(data_evento_str)
+                meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"]
+                data_fmt = f"{d.day} de {meses[d.month-1]} de {d.year}"
+            except: data_fmt = data_evento_str
+        prompt_texto = f"""Crie um convite digital elegante como SVG 800x600px.\nEvento: {nome_evento or "Celebração Especial"}\nData: {data_fmt or "Em breve"}\nEstilo: {descricao}\nRequisitos: fundo gradiente rico, título em destaque, data artística, elementos decorativos temáticos, layout profissional.\nRetorne APENAS o SVG completo começando com <svg."""
+        content = [{"type": "text", "text": prompt_texto}]
+        if imagem_ref_b64 and len(imagem_ref_b64) > 100:
+            if "," in imagem_ref_b64:
+                header, b64data = imagem_ref_b64.split(",", 1)
+                media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
+            else:
+                b64data, media_type = imagem_ref_b64, "image/jpeg"
+            content = [
+                {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
+                {"type": "text", "text": prompt_texto + "\n\nUse a imagem de referência como inspiração visual."}
+            ]
+        client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+        resp = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4000,
+            system="Você é um designer de convites de luxo. Retorne APENAS o SVG começando com <svg, sem markdown.",
+            messages=[{"role": "user", "content": content}]
+        )
+        svg_text = resp.content[0].text.strip()
+        if not svg_text.startswith("<svg"):
+            m = re.search(r'<svg.*?</svg>', svg_text, re.DOTALL)
+            svg_text = m.group(0) if m else svg_text
+        svg_b64 = base64.b64encode(svg_text.encode('utf-8')).decode('utf-8')
+        imagem_data = f"data:image/svg+xml;base64,{svg_b64}"
+        upd = {"convite_ia_imagem": imagem_data, "ia_pago": True, "estilo_convite": "ia"}
+        if config_existe:
+            sb_patch("config_premium", f"lista_id=eq.{lista_id}", upd)
+        else:
+            upd["lista_id"] = lista_id
+            sb_post("config_premium", upd)
+        try:
+            sb_post("vendas", {"lista_id": lista_id, "pacote": "convite_ia", "valor": 9.90})
+        except: pass
+        return jsonify({"ok": True, "imagem": imagem_data})
+    except Exception as e:
+        print("Gerar convite IA erro:", e)
+        return jsonify({"erro": f"Erro ao gerar: {str(e)}"}), 500
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=False)
-
