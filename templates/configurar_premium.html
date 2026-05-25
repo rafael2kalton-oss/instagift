@@ -858,6 +858,15 @@ async function carregarConfig() {
       alert('🎉 Parabéns! Você adicionou +' + urlParams.get('fotos') + ' fotos ao seu mural!');
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
+    // ✦ Voltou do pagamento do Convite IA
+    if (urlParams.get('ia_pago') === 'true') {
+      var btn = document.getElementById('btnGerarIa');
+      if (btn) {
+        btn.textContent = '✨ Gerar Convite com IA — Pago! Clique para gerar';
+        btn.disabled = false;
+      }
+      window.history.replaceState({}, '', '/configurar-premium/' + listaId);
+    }
     // ✦ Voltou do story
     if (urlParams.get('origem') === 'story') {
       try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
@@ -891,6 +900,16 @@ function selecionarCorTexto(cor) {
   if (preview && coresTexto[cor]) preview.style.color = coresTexto[cor].hex;
   var ornamento = document.querySelector('#convitePreview .convite-ornamento');
   if (ornamento && coresTexto[cor]) ornamento.style.color = coresTexto[cor].hex;
+  // ✦ Garante que o fundo do Livre permanece visível ao mudar cor
+  if (estiloConviteSelecionado === 'livre' && imagemFundoConviteBase64) {
+    var convPrev = document.getElementById('convitePreview');
+    if (convPrev) {
+      convPrev.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+      convPrev.style.backgroundSize = 'cover';
+      convPrev.style.backgroundPosition = 'center';
+      convPrev.style.background = '';
+    }
+  }
 }
 
 function selecionarEstiloConvite(estilo) {
