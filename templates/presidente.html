@@ -215,6 +215,14 @@ body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-h
           </div>
         </label>
 
+        <label class="cortesia-opcao" onclick="selecionarCortesia(this)">
+          <input type="radio" name="cortesia" value="convite_ia">
+          <div class="cortesia-opcao-info">
+            <div class="cortesia-opcao-titulo">✨ Convite IA</div>
+            <div class="cortesia-opcao-sub">Libera geração de convite com IA</div>
+          </div>
+        </label>
+
       </div>
     </div>
     <div class="popup-btns">
@@ -378,6 +386,8 @@ async function confirmarCortesia() {
     payload.cofrinho_ativo = true;
     payload.estilo_mural = 'carrossel';
     payload.fotos_extras = 5;
+  } else if (cortesiaSelecionada === 'convite_ia') {
+    payload.convite_ia = true;
   }
 
   try {
