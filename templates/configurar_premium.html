@@ -119,6 +119,29 @@ input:checked + .slider:before { transform: translateX(22px); }
 .paleta-texto-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
 .paleta-texto-nome { font-size: 12px; color: #aaa; margin-top: 8px; font-style: italic; font-family: 'Playfair Display', serif; text-align: center; }
 
+
+/* ✦ CONVITE IA */
+.convite-estilo-thumb.ia { background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); color: #fff; font-family: 'Inter', sans-serif; font-size: 9px; position: relative; overflow: hidden; }
+.convite-estilo-thumb.ia::after { content: '✨'; position: absolute; font-size: 24px; opacity: 0.3; right: 4px; bottom: 4px; }
+.ia-badge { display: inline-block; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-bottom: 4px; letter-spacing: 0.05em; }
+.ia-area { display: none; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 14px; padding: 20px; margin-bottom: 12px; border: 1px solid rgba(201,168,76,0.3); }
+.ia-area.visivel { display: block; }
+.ia-area .campo label { color: rgba(245,237,216,0.7); }
+.ia-area .campo textarea { background: rgba(255,255,255,0.06); border-color: rgba(201,168,76,0.3); color: #F5EDD8; }
+.ia-area .campo textarea::placeholder { color: rgba(245,237,216,0.3); }
+.ia-area .campo textarea:focus { border-color: #C9A84C; background: rgba(255,255,255,0.1); }
+.btn-gerar-ia { width: 100%; padding: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 12px; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+.btn-gerar-ia:hover { transform: translateY(-2px); }
+.btn-gerar-ia:disabled { background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.4); cursor: not-allowed; transform: none; box-shadow: none; }
+.ia-preview-wrapper { margin-top: 12px; border-radius: 12px; overflow: hidden; display: none; }
+.ia-preview-wrapper.visivel { display: block; }
+.ia-preview-wrapper img { width: 100%; display: block; border-radius: 12px; }
+.ia-upload-ref { border: 1px dashed rgba(201,168,76,0.3); border-radius: 10px; padding: 10px 14px; cursor: pointer; margin-top: 10px; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
+.ia-upload-ref:hover { border-color: #C9A84C; }
+.ia-upload-ref-texto { font-size: 12px; color: rgba(245,237,216,0.6); font-style: italic; font-family: 'Playfair Display', serif; }
+.ia-upload-ref-nome { font-size: 11px; color: #C9A84C; margin-top: 2px; }
+.ia-preco-badge { text-align: center; font-size: 11px; color: #C9A84C; font-style: italic; margin-top: 8px; font-family: 'Playfair Display', serif; }
+
 /* ✦ ESTILOS DE CONVITE */
 .convite-estilos { display: flex; gap: 10px; margin-bottom: 20px; }
 .convite-estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: #fff; }
@@ -394,6 +417,32 @@ input:checked + .slider:before { transform: translateX(22px); }
         <div class="convite-estilo-thumb livre">🖼️<br>Sua foto<br>de fundo</div>
         <div class="convite-estilo-nome">Livre</div>
       </div>
+      <div class="convite-estilo-card" id="estiloConviteIa" onclick="selecionarEstiloConvite('ia')">
+        <div class="convite-estilo-thumb ia"><span class="ia-badge">✨ IA</span><br>Único<br>& Exclusivo</div>
+        <div class="convite-estilo-nome" style="color:#C9A84C;">✨ Gerar com IA</div>
+      </div>
+    </div>
+
+    <!-- ✦ ÁREA GERAÇÃO IA -->
+    <div class="ia-area" id="iaArea">
+      <div class="campo">
+        <label style="color:rgba(201,168,76,0.8);">Descreva seu convite</label>
+        <textarea id="iaDescricao" rows="3" placeholder="Ex: Convite de aniversário temático jardim encantado, tons de verde e dourado, com flores e borboletas..."></textarea>
+      </div>
+      <div class="ia-upload-ref" onclick="document.getElementById('inputRefIa').click()">
+        <input type="file" id="inputRefIa" accept="image/*" style="display:none" onchange="processarRefIa(event)">
+        <span style="font-size:20px;">🖼️</span>
+        <div>
+          <div class="ia-upload-ref-texto">Anexar foto de referência <span style="color:rgba(245,237,216,0.4);">— opcional</span></div>
+          <div class="ia-upload-ref-nome" id="iaRefNome">Nenhuma imagem selecionada</div>
+        </div>
+      </div>
+      <button class="btn-gerar-ia" id="btnGerarIa" onclick="gerarConviteIa()">✨ Gerar Convite com IA — R$ 9,90</button>
+      <p class="ia-preco-badge">✦ Pagamento único · Gerado exclusivamente para você</p>
+      <div class="ia-preview-wrapper" id="iaPreviewWrapper">
+        <img id="iaPreviewImg" src="" alt="Convite gerado por IA">
+        <p style="text-align:center;font-size:12px;color:rgba(201,168,76,0.7);margin-top:8px;font-style:italic;font-family:'Playfair Display',serif;">✦ Seu convite gerado por IA — aparecerá assim na página</p>
+      </div>
     </div>
 
     <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-bottom:10px;margin-top:16px;">Cor do texto do convite</p>
@@ -547,6 +596,8 @@ input:checked + .slider:before { transform: translateX(22px); }
 <script>
 var listaId = "{{ lista_id }}";
 var estiloConviteSelecionado = 'classico';
+var conviteIaBase64 = '';
+var iaRefBase64 = '';
 var corTextoConvite = 'claro';
 var imagemFundoConviteBase64 = '';
 var cofrinhoFoiPago = false;
@@ -750,6 +801,12 @@ async function carregarConfig() {
       if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
       if (data.config.estilo_convite) selecionarEstiloConvite(data.config.estilo_convite);
       if (data.config.cor_texto_convite) selecionarCorTexto(data.config.cor_texto_convite);
+      if (data.config.convite_ia_imagem) {
+        conviteIaBase64 = data.config.convite_ia_imagem;
+        var iaWrapper = document.getElementById('iaPreviewWrapper');
+        var iaImg = document.getElementById('iaPreviewImg');
+        if (iaWrapper && iaImg) { iaImg.src = conviteIaBase64; iaWrapper.className = 'ia-preview-wrapper visivel'; }
+      }
       if (data.config.imagem_fundo_convite) {
         imagemFundoConviteBase64 = data.config.imagem_fundo_convite;
         var prev = document.getElementById('fundoConvitePreview');
@@ -838,12 +895,14 @@ function selecionarCorTexto(cor) {
 
 function selecionarEstiloConvite(estilo) {
   estiloConviteSelecionado = estilo;
-  ['classico','floral','livre'].forEach(function(e) {
+  ['classico','floral','livre','ia'].forEach(function(e) {
     var el = document.getElementById('estiloConvite' + e.charAt(0).toUpperCase() + e.slice(1));
     if (el) el.className = 'convite-estilo-card' + (e === estilo ? ' ativo' : '');
   });
   var uploadArea = document.getElementById('uploadFundoArea');
   if (uploadArea) uploadArea.className = 'upload-fundo-area' + (estilo === 'livre' ? ' visivel' : '');
+  var iaArea = document.getElementById('iaArea');
+  if (iaArea) iaArea.className = 'ia-area' + (estilo === 'ia' ? ' visivel' : '');
   var preview = document.getElementById('convitePreview');
   var previewBg = document.getElementById('convitePreviewBg');
   if (preview) {
@@ -851,10 +910,12 @@ function selecionarEstiloConvite(estilo) {
       preview.style.background = 'linear-gradient(135deg, #2C1A00, #1a0f00)';
       if (previewBg) previewBg.style.backgroundImage = '';
       imagemFundoConviteBase64 = '';
+      conviteIaBase64 = '';
     } else if (estilo === 'floral') {
       preview.style.background = 'linear-gradient(135deg, #FFF8EC, #F5EDD8)';
       if (previewBg) previewBg.style.backgroundImage = '';
       imagemFundoConviteBase64 = '';
+      conviteIaBase64 = '';
     } else if (estilo === 'livre') {
       if (imagemFundoConviteBase64) {
         preview.style.background = '';
@@ -867,9 +928,83 @@ function selecionarEstiloConvite(estilo) {
         preview.style.backgroundImage = '';
         if (previewBg) previewBg.style.backgroundImage = '';
       }
+    } else if (estilo === 'ia') {
+      imagemFundoConviteBase64 = '';
+      if (conviteIaBase64) {
+        preview.style.background = '';
+        preview.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+        preview.style.backgroundSize = 'cover';
+        preview.style.backgroundPosition = 'center';
+        if (previewBg) previewBg.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+      } else {
+        preview.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
+        preview.style.backgroundImage = '';
+        if (previewBg) previewBg.style.backgroundImage = '';
+      }
     }
   }
   atualizarPreviewConvite();
+}
+
+
+function processarRefIa(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var nomeEl = document.getElementById('iaRefNome');
+  if (nomeEl) nomeEl.textContent = file.name;
+  var reader = new FileReader();
+  reader.onload = function(ev) { iaRefBase64 = ev.target.result; };
+  reader.readAsDataURL(file);
+}
+
+async function gerarConviteIa() {
+  var descricao = document.getElementById('iaDescricao').value.trim();
+  if (!descricao) { alert('Descreva o convite que você quer gerar!'); return; }
+  var btn = document.getElementById('btnGerarIa');
+  btn.disabled = true;
+  btn.textContent = '✨ Gerando seu convite...';
+  try {
+    var payload = {
+      lista_id: listaId,
+      descricao: descricao,
+      nome_evento: document.getElementById('nomeCelebrante').value.trim(),
+      data_evento: document.getElementById('dataEvento').value,
+      imagem_referencia: iaRefBase64 || ''
+    };
+    var r = await fetch('/api/gerar-convite-ia', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    var data = await r.json();
+    if (data.pagamento_url) {
+      window.location.href = data.pagamento_url;
+      return;
+    }
+    if (data.ok && data.imagem) {
+      conviteIaBase64 = data.imagem;
+      var wrapper = document.getElementById('iaPreviewWrapper');
+      var img = document.getElementById('iaPreviewImg');
+      if (wrapper && img) { img.src = conviteIaBase64; wrapper.className = 'ia-preview-wrapper visivel'; }
+      var preview = document.getElementById('convitePreview');
+      var previewBg = document.getElementById('convitePreviewBg');
+      if (preview) {
+        preview.style.background = '';
+        preview.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+        preview.style.backgroundSize = 'cover';
+        preview.style.backgroundPosition = 'center';
+      }
+      if (previewBg) previewBg.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+      btn.textContent = '✨ Gerar Novo Convite com IA';
+    } else {
+      alert(data.erro || 'Erro ao gerar convite. Tente novamente.');
+      btn.textContent = '✨ Gerar Convite com IA — R$ 9,90';
+    }
+  } catch(e) {
+    alert('Erro de conexão. Tente novamente.');
+    btn.textContent = '✨ Gerar Convite com IA — R$ 9,90';
+  }
+  btn.disabled = false;
 }
 
 function processarFundoConvite(e) {
@@ -1100,7 +1235,8 @@ async function salvarConfig() {
         imagem_fundo_convite: imagemFundoConviteBase64,
         chave_pix: chavePix,
         cofrinho_ativo: cofrinhoAtivo,
-        cor_texto_convite: corTextoConvite
+        cor_texto_convite: corTextoConvite,
+        convite_ia_imagem: conviteIaBase64
       })
     });
     var result = await r.json();
