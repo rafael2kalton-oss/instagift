@@ -19,6 +19,7 @@ RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
 STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
 STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GiBIGziNMrdT30091vAVts7"
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_KEY", "")
+REPLICATE_KEY = os.environ.get("REPLICATE_KEY", "")
 STRIPE_CONVITE_IA_PRICE = "price_1Tb4Tk41uxxrCBOG2iuUoC2J"
 
 STRIPE_PACOTES = {
@@ -1033,24 +1034,70 @@ INSTRUÇÕES DETALHADAS:
 
 Retorne APENAS o código SVG completo começando com <svg, sem markdown, sem explicações."""
 
-        content = [{"type": "text", "text": prompt_texto}]
-        if imagem_ref_b64 and len(imagem_ref_b64) > 100:
-            if "," in imagem_ref_b64:
-                header, b64data = imagem_ref_b64.split(",", 1)
-                media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
-            else:
-                b64data, media_type = imagem_ref_b64, "image/jpeg"
-            content = [
-                {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                {"type": "text", "text": prompt_texto + "\n\nUse a imagem de referência acima como inspiração para o estilo visual."}
-            ]
+        # PASSO 1: Replicate gera imagem de fundo
+        imagem_fundo_b64 = ""
+        try:
+            prompt_img = f"beautiful invitation card background, {descricao}, elegant, luxurious, artistic, vibrant colors, no text, no words, decorative elements only"
+            rep_resp = requests.post(
+                "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
+                headers={"Authorization": f"Bearer {REPLICATE_KEY}", "Content-Type": "application/json", "Prefer": "wait"},
+                json={"input": {"prompt": prompt_img, "width": 800, "height": 600, "num_outputs": 1, "num_inference_steps": 4}},
+                timeout=60
+            )
+            rep_data = rep_resp.json()
+            print("Replicate response:", rep_data)
+            output = rep_data.get("output")
+            img_url = (output[0] if isinstance(output, list) else output) if output else None
+            if img_url:
+                img_r = requests.get(img_url, timeout=30)
+                if img_r.status_code == 200:
+                    imagem_fundo_b64 = base64.b64encode(img_r.content).decode("utf-8")
+                    print("Imagem fundo OK, tamanho:", len(imagem_fundo_b64))
+        except Exception as e:
+            print("Replicate erro:", e)
+
+        # PASSO 2: Claude gera SVG com texto por cima
+        if imagem_fundo_b64:
+            fundo_tag = f'<image href="data:image/webp;base64,{imagem_fundo_b64}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>'
+            prompt_texto = f"""Crie um SVG 800x600px de convite digital.
+Evento: {nome_evento or "Celebracao Especial"}
+Data: {data_fmt or "Em breve"}
+Estilo: {descricao}
+INSTRUCOES:
+- Logo apos a tag <svg, inclua exatamente esta tag de imagem de fundo: {fundo_tag}
+- Adicione <rect width="800" height="600" fill="rgba(0,0,0,0.45)"/> para overlay escuro
+- Titulo grande e elegante centralizado em branco ou dourado
+- Data em destaque artistico
+- Ornamentos decorativos dourados
+- Moldura elegante nas bordas
+Retorne APENAS o SVG comecando com <svg, sem markdown."""
+            content_var = [{"type": "text", "text": prompt_texto}]
+        else:
+            prompt_texto = f"""Crie um convite digital DESLUMBRANTE como SVG 800x600px.
+Evento: {nome_evento or "Celebracao Especial"}
+Data: {data_fmt or "Em breve"}
+Estilo: {descricao}
+- Fundo gradiente rico no tema, titulo em destaque, data artistica
+- Minimo 50 elementos SVG, bordas elegantes, cores sofisticadas
+Retorne APENAS o SVG comecando com <svg, sem markdown."""
+            content_var = [{"type": "text", "text": prompt_texto}]
+            if imagem_ref_b64 and len(imagem_ref_b64) > 100:
+                if "," in imagem_ref_b64:
+                    header, b64data = imagem_ref_b64.split(",", 1)
+                    media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
+                else:
+                    b64data, media_type = imagem_ref_b64, "image/jpeg"
+                content_var = [
+                    {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
+                    {"type": "text", "text": prompt_texto}
+                ]
 
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         resp = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=4000,
-            system="Você é um designer gráfico de elite especializado em convites digitais de luxo. Cria SVGs extremamente detalhados, ricos e visualmente impressionantes. Sempre retorna APENAS o código SVG começando com <svg, sem markdown, sem explicações. Seus convites têm no mínimo 50 elementos visuais e são verdadeiras obras de arte digitais.",
-            messages=[{"role": "user", "content": content}]
+            system="Voce e um designer grafico especializado em convites digitais. Retorne APENAS o SVG comecando com <svg, sem markdown.",
+            messages=[{"role": "user", "content": content_var}]
         )
         svg_text = resp.content[0].text.strip()
         if not svg_text.startswith("<svg"):
