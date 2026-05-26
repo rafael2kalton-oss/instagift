@@ -571,14 +571,37 @@ function renderConviteMural(config) {
   // ✦ Aplica estilo e imagem de fundo no convite do mural
   var estilo = config.estilo_convite || 'classico';
   var imagemFundo = config.imagem_fundo_convite || '';
+  var imagemIa = config.convite_ia_imagem || '';
   var visual = document.getElementById('conviteMuralVisual');
+
+  // ✦ Estilo IA: mostra só a imagem gerada como <img>, sem texto sobreposto
+  if (estilo === 'ia' && imagemIa) {
+    if (visual) {
+      visual.className = 'convite-visual';
+      visual.style.background = 'transparent';
+      visual.style.backgroundImage = 'none';
+      visual.style.minHeight = '0';
+      visual.style.padding = '0';
+      visual.style.display = 'block';
+      // Substitui conteúdo por <img>
+      visual.innerHTML = '<img src="' + imagemIa + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
+    }
+    card.style.display = 'block';
+    return;
+  }
+
   if (visual) {
     visual.className = 'convite-visual ' + estilo;
-    if (imagemFundo) {
+    if (estilo === 'livre' && imagemFundo) {
       visual.style.backgroundImage = 'url(' + imagemFundo + ')';
       visual.style.backgroundSize = 'cover';
       visual.style.backgroundPosition = 'center';
+    } else {
+      visual.style.backgroundImage = '';
     }
+    // Garante que o inner está visível
+    var inner = visual.querySelector('.convite-visual-inner');
+    if (inner) inner.style.display = 'block';
   }
 
   // ✦ Preenche textos
@@ -593,8 +616,14 @@ function renderConviteMural(config) {
   if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTextoMural; }
   if (textoEl) {
     if (usaPersonalizado(config)) {
-      textoEl.textContent = config.texto_convite;
+      // ✦ Personalizado: mostra só o que a pessoa escreveu (vazio = sem texto)
+      textoEl.textContent = config.texto_convite || '';
+      textoEl.style.display = config.texto_convite ? 'block' : 'none';
+    } else if (estilo === 'livre') {
+      // ✦ Livre com texto padrão: esconde texto (imagem fala por si)
+      textoEl.style.display = 'none';
     } else {
+      textoEl.style.display = 'block';
       var convites = {
         aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
         casamento: nome + ' têm a alegria de convidar você para celebrar o seu casamento ✦',
@@ -672,17 +701,36 @@ function renderConviteVisual(config) {
   var link = window.location.origin + '/premium/' + listaId;
   var estilo = config.estilo_convite || 'classico';
   var imagemFundo = config.imagem_fundo_convite || '';
+  var imagemIa = config.convite_ia_imagem || '';
   var visual = document.getElementById('conviteVisual');
+
+  // ✦ Estilo IA: mostra só a imagem gerada como <img>, sem texto
+  if (estilo === 'ia' && imagemIa) {
+    if (visual) {
+      visual.className = 'convite-visual';
+      visual.style.background = 'transparent';
+      visual.style.backgroundImage = 'none';
+      visual.style.minHeight = '0';
+      visual.style.padding = '0';
+      visual.style.display = 'block';
+      visual.innerHTML = '<img src="' + imagemIa + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
+    }
+    return;
+  }
+
   if (visual) {
     visual.className = 'convite-visual ' + estilo;
-    if (imagemFundo) {
+    if (estilo === 'livre' && imagemFundo) {
       visual.style.backgroundImage = 'url(' + imagemFundo + ')';
       visual.style.backgroundSize = 'cover';
       visual.style.backgroundPosition = 'center';
     } else {
       visual.style.backgroundImage = '';
     }
+    var inner = visual.querySelector('.convite-visual-inner');
+    if (inner) inner.style.display = 'block';
   }
+
   // ✦ Aplica cor do texto
   var coresTextoMap = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
   var corTexto = coresTextoMap[config.cor_texto_convite] || '#F5EDD8';
@@ -691,11 +739,14 @@ function renderConviteVisual(config) {
   var textoEl = document.getElementById('conviteTextoVisual');
   if (tituloEl) { tituloEl.textContent = nome; tituloEl.style.color = corTexto; }
   if (dataEl) { dataEl.textContent = '📅 ' + dataStr; dataEl.style.color = corTexto; }
-  // ✦ Texto personalizado tem prioridade sobre o padrão
   if (textoEl) {
     if (usaPersonalizado(config)) {
-      textoEl.textContent = config.texto_convite;
+      textoEl.textContent = config.texto_convite || '';
+      textoEl.style.display = config.texto_convite ? 'block' : 'none';
+    } else if (estilo === 'livre') {
+      textoEl.style.display = 'none';
     } else {
+      textoEl.style.display = 'block';
       var tipoEvento = (dadosPremium.config && dadosPremium.config.tipo_evento) || 'outros';
       var convites = {
         aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
