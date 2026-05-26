@@ -137,6 +137,8 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .convite-visual.floral { background: linear-gradient(135deg, #FFF8EC, #F5EDD8, #FFF8EC); border: 1px solid rgba(201,168,76,0.3); }
 .convite-visual.livre { background-size: cover; background-position: center; }
 .convite-visual.livre::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+.convite-visual.livre-img { padding: 0; min-height: 0; background: transparent; }
+.convite-visual.livre-img img { width: 100%; display: block; border-radius: 14px; }
 .convite-visual-inner { position: relative; z-index: 1; width: 100%; }
 .convite-ornamento-visual { font-size: 11px; letter-spacing: 6px; margin-bottom: 14px; }
 .classico .convite-ornamento-visual { color: #C9A84C; }
@@ -590,16 +592,23 @@ function renderConviteMural(config) {
     return;
   }
 
+  // ✦ Estilo Livre: mostra a imagem completa sem corte e sem texto por cima
+  if (estilo === 'livre' && imagemFundo) {
+    if (visual) {
+      visual.className = 'convite-visual livre-img';
+      visual.style.backgroundImage = 'none';
+      visual.style.background = 'transparent';
+      visual.style.padding = '0';
+      visual.style.minHeight = '0';
+      visual.innerHTML = '<img src="' + imagemFundo + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
+    }
+    card.style.display = 'block';
+    return;
+  }
+
   if (visual) {
     visual.className = 'convite-visual ' + estilo;
-    if (estilo === 'livre' && imagemFundo) {
-      visual.style.backgroundImage = 'url(' + imagemFundo + ')';
-      visual.style.backgroundSize = 'cover';
-      visual.style.backgroundPosition = 'center';
-    } else {
-      visual.style.backgroundImage = '';
-    }
-    // Garante que o inner está visível
+    visual.style.backgroundImage = '';
     var inner = visual.querySelector('.convite-visual-inner');
     if (inner) inner.style.display = 'block';
   }
@@ -616,12 +625,8 @@ function renderConviteMural(config) {
   if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTextoMural; }
   if (textoEl) {
     if (usaPersonalizado(config)) {
-      // ✦ Personalizado: mostra só o que a pessoa escreveu (vazio = sem texto)
       textoEl.textContent = config.texto_convite || '';
       textoEl.style.display = config.texto_convite ? 'block' : 'none';
-    } else if (estilo === 'livre') {
-      // ✦ Livre com texto padrão: esconde texto (imagem fala por si)
-      textoEl.style.display = 'none';
     } else {
       textoEl.style.display = 'block';
       var convites = {
@@ -718,15 +723,21 @@ function renderConviteVisual(config) {
     return;
   }
 
+  // ✦ Estilo Livre: imagem completa sem corte
+  if (estilo === 'livre' && imagemFundo) {
+    if (visual) {
+      visual.className = 'convite-visual livre-img';
+      visual.style.background = 'transparent';
+      visual.style.padding = '0';
+      visual.style.minHeight = '0';
+      visual.innerHTML = '<img src="' + imagemFundo + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
+    }
+    return;
+  }
+
   if (visual) {
     visual.className = 'convite-visual ' + estilo;
-    if (estilo === 'livre' && imagemFundo) {
-      visual.style.backgroundImage = 'url(' + imagemFundo + ')';
-      visual.style.backgroundSize = 'cover';
-      visual.style.backgroundPosition = 'center';
-    } else {
-      visual.style.backgroundImage = '';
-    }
+    visual.style.backgroundImage = '';
     var inner = visual.querySelector('.convite-visual-inner');
     if (inner) inner.style.display = 'block';
   }
