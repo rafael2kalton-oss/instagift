@@ -951,11 +951,33 @@ async function gerarConviteIa() {
       return;
     }
     if (data.ok && data.imagem) {
-      conviteIaBase64 = data.imagem;
-      var wrapper = document.getElementById('iaPreviewWrapper');
-      var img = document.getElementById('iaPreviewImg');
-      if (wrapper && img) { img.src = conviteIaBase64; wrapper.className = 'ia-preview-wrapper visivel'; }
-      aplicarFundoPreview();
+      // ✦ Se tem imagem de fundo + overlay SVG, combina num canvas
+      if (data.imagem_fundo) {
+        var canvas = document.createElement('canvas');
+        canvas.width = 800; canvas.height = 600;
+        var ctx = canvas.getContext('2d');
+        var imgFundo = new Image();
+        imgFundo.onload = function() {
+          ctx.drawImage(imgFundo, 0, 0, 800, 600);
+          var imgOverlay = new Image();
+          imgOverlay.onload = function() {
+            ctx.drawImage(imgOverlay, 0, 0, 800, 600);
+            conviteIaBase64 = canvas.toDataURL('image/jpeg', 0.92);
+            var wrapper = document.getElementById('iaPreviewWrapper');
+            var img = document.getElementById('iaPreviewImg');
+            if (wrapper && img) { img.src = conviteIaBase64; wrapper.className = 'ia-preview-wrapper visivel'; }
+            aplicarFundoPreview();
+          };
+          imgOverlay.src = data.imagem;
+        };
+        imgFundo.src = data.imagem_fundo;
+      } else {
+        conviteIaBase64 = data.imagem;
+        var wrapper = document.getElementById('iaPreviewWrapper');
+        var img = document.getElementById('iaPreviewImg');
+        if (wrapper && img) { img.src = conviteIaBase64; wrapper.className = 'ia-preview-wrapper visivel'; }
+        aplicarFundoPreview();
+      }
       // ✦ Mostra aviso de gerações restantes
       var avisoEl = document.getElementById('iaAvisoGeracoes');
       if (data.aviso && avisoEl) {
