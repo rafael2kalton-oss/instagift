@@ -1019,33 +1019,14 @@ def gerar_convite_ia():
         tem_ref = imagem_ref_b64 and len(imagem_ref_b64) > 100
 
         if tem_ref:
-            # ✦ COM IMAGEM: sobe imagem para Supabase Storage e usa URL no SVG
+            # ✦ COM IMAGEM: Claude gera apenas overlay SVG (texto + ornamentos transparente)
+            # O frontend combina a imagem de fundo + overlay SVG
             if "," in imagem_ref_b64:
                 header_part, b64data = imagem_ref_b64.split(",", 1)
                 media_type = header_part.split(":")[1].split(";")[0] if ":" in header_part else "image/jpeg"
             else:
                 b64data, media_type = imagem_ref_b64, "image/jpeg"
 
-            # ✦ Sobe imagem para Supabase Storage
-            img_bytes = base64.b64decode(b64data)
-            ext = "jpg" if "jpeg" in media_type else media_type.split("/")[-1]
-            filename = f"convite_ref_{lista_id}.{ext}"
-            storage_url = f"{SUPABASE_URL}/storage/v1/object/convites/{filename}"
-            upload_r = requests.post(
-                storage_url,
-                headers={
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": f"Bearer {SUPABASE_KEY}",
-                    "Content-Type": media_type,
-                    "x-upsert": "true"
-                },
-                data=img_bytes,
-                timeout=30
-            )
-            print("Upload storage:", upload_r.status_code)
-            img_url_publica = f"{SUPABASE_URL}/storage/v1/object/public/convites/{filename}"
-
-            # ✦ Claude só analisa a imagem e gera SVG leve com URL externa
             client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
             resp = client.messages.create(
                 model="claude-haiku-4-5-20251001",
@@ -1053,28 +1034,36 @@ def gerar_convite_ia():
                 system="Designer de convites. Retorne APENAS SVG comecando com <svg, sem markdown.",
                 messages=[{"role": "user", "content": [
                     {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                    {"type": "text", "text": f"""Analise as cores e estilo da imagem.
-Crie um SVG 800x600px de convite elegante.
+                    {"type": "text", "text": f"""Analise as cores dominantes da imagem e crie um overlay SVG transparente 800x600px.
 Evento: {evento_txt}
 Data: {data_txt}
 Estilo: {descricao}
-INSTRUCOES:
-- Fundo: <image href="{img_url_publica}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>
-- Overlay escuro: <rect width="800" height="600" fill="rgba(0,0,0,0.45)"/>
-- Titulo grande centralizado nas cores da imagem
-- Data em destaque com ornamentos dourados
-- Moldura elegante nas bordas
-Retorne APENAS o SVG comecando com <svg."""}
+
+INSTRUCOES CRITICAS:
+- O SVG deve ter fundo TRANSPARENTE (sem rect de fundo, sem background)
+- Primeiro elemento: <rect width="800" height="600" fill="rgba(0,0,0,0.42)"/> para legibilidade
+- Titulo principal grande e elegante centralizado, em branco ou dourado (#FFD700)
+- Data formatada com destaque artistico
+- Moldura decorativa dourada nas bordas
+- Ornamentos elegantes (estrelas, linhas douradas)
+- Use as cores da imagem como inspiracao para detalhes decorativos
+- NAO inclua nenhuma imagem de fundo no SVG — apenas texto e ornamentos
+Retorne APENAS o SVG comecando com <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"."""}
                 ]}]
             )
-            svg_text = resp.content[0].text.strip()
-            if not svg_text.startswith("<svg"):
-                m = re.search(r'<svg.*?</svg>', svg_text, re.DOTALL)
-                svg_text = m.group(0) if m else svg_text
-            svg_b64 = base64.b64encode(svg_text.encode('utf-8')).decode('utf-8')
+            svg_overlay = resp.content[0].text.strip()
+            if not svg_overlay.startswith("<svg"):
+                m = re.search(r'<svg.*?</svg>', svg_overlay, re.DOTALL)
+                svg_overlay = m.group(0) if m else svg_overlay
+
+            # ✦ Retorna SVG overlay + imagem de fundo separados para o frontend combinar
+            svg_b64 = base64.b64encode(svg_overlay.encode('utf-8')).decode('utf-8')
             imagem_data = f"data:image/svg+xml;base64,{svg_b64}"
+            # ✦ Também retorna a imagem de fundo para o frontend usar
+            imagem_fundo_data = imagem_ref_b64
 
         else:
+            imagem_fundo_data = ""
             # ✦ SEM IMAGEM: Replicate gera fundo artístico
             prompt_replicate = (
                 f"elegant luxury invitation card background art, {descricao}, "
@@ -1148,7 +1137,11 @@ Retorne APENAS o SVG comecando com <svg, sem markdown."""
         else:
             aviso = f"✨ Convite gerado! Você ainda tem {restantes} geração(ões) disponível(eis)."
 
-        return jsonify({"ok": True, "imagem": imagem_data, "geracoes_restantes": restantes, "aviso": aviso})
+        # ✦ Se tem imagem de fundo separada, inclui na resposta
+        resp_data = {"ok": True, "imagem": imagem_data, "geracoes_restantes": restantes, "aviso": aviso}
+        if tem_ref and imagem_fundo_data:
+            resp_data["imagem_fundo"] = imagem_fundo_data
+        return jsonify(resp_data)
     except Exception as e:
         print("Gerar convite IA erro:", e)
         return jsonify({"erro": f"Erro ao gerar: {str(e)}"}), 500
