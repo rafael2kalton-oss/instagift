@@ -985,9 +985,15 @@ function toggleConvite(padrao) {
   document.getElementById('btnPersonalizado').className = 'toggle-btn' + (!padrao ? ' active' : '');
   document.getElementById('convitePadraoInfo').style.display = padrao ? 'block' : 'none';
   document.getElementById('convitePersonalizadoArea').style.display = padrao ? 'none' : 'block';
-  // ✦ Esconde preview no modo personalizado (usuario edita na textarea, preview é desnecessário)
+  // ✦ Esconde preview no modo personalizado — exceto estilo Livre (precisa ver a foto)
   var blocoPreview = document.getElementById('convitePreview');
-  if (blocoPreview) blocoPreview.style.display = padrao ? 'flex' : 'none';
+  if (blocoPreview) {
+    if (padrao || estiloConviteSelecionado === 'livre') {
+      blocoPreview.style.display = 'flex';
+    } else {
+      blocoPreview.style.display = 'none';
+    }
+  }
   atualizarPreviewConvite();
 }
 
