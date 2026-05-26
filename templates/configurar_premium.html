@@ -95,7 +95,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; mi
 .estilo-card.ativo .estilo-label { color: #C9A84C; }
 .estilo-preview { width: 100%; height: 60px; margin-bottom: 6px; border-radius: 6px; overflow: hidden; position: relative; background: #f5f5f5; }
 .estilo-label { font-size: 11px; font-weight: 600; color: #aaa; }
-/* ✦ COFRINHO PIX */
 .cofrinho-toggle { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #FFF8EC; border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; margin-bottom: 16px; cursor: pointer; transition: all 0.2s; }
 .cofrinho-toggle:hover { border-color: #C9A84C; }
 .cofrinho-toggle-label { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #2C2C2C; }
@@ -111,16 +110,11 @@ input:checked + .slider:before { transform: translateX(22px); }
 .cofrinho-preview { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 14px; padding: 20px; margin-top: 12px; text-align: center; }
 .cofrinho-preview-titulo { font-family: 'Playfair Display', serif; color: #C9A84C; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .cofrinho-preview-texto { font-family: 'Playfair Display', serif; color: #F5EDD8; font-size: 13px; line-height: 1.7; font-style: italic; }
-
-/* ✦ PALETA COR TEXTO CONVITE */
 .paleta-texto-opcoes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 4px; }
 .paleta-texto-cor { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 .paleta-texto-cor:hover { transform: scale(1.1); }
 .paleta-texto-cor.ativa { border-color: #2C2C2C; transform: scale(1.15); }
 .paleta-texto-nome { font-size: 12px; color: #aaa; margin-top: 8px; font-style: italic; font-family: 'Playfair Display', serif; text-align: center; }
-
-
-/* ✦ CONVITE IA */
 .convite-estilo-thumb.ia { background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); color: #fff; font-family: 'Inter', sans-serif; font-size: 9px; position: relative; overflow: hidden; }
 .convite-estilo-thumb.ia::after { content: '✨'; position: absolute; font-size: 24px; opacity: 0.3; right: 4px; bottom: 4px; }
 .ia-badge { display: inline-block; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-bottom: 4px; letter-spacing: 0.05em; }
@@ -141,8 +135,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 .ia-upload-ref-texto { font-size: 12px; color: rgba(245,237,216,0.6); font-style: italic; font-family: 'Playfair Display', serif; }
 .ia-upload-ref-nome { font-size: 11px; color: #C9A84C; margin-top: 2px; }
 .ia-preco-badge { text-align: center; font-size: 11px; color: #C9A84C; font-style: italic; margin-top: 8px; font-family: 'Playfair Display', serif; }
-
-/* ✦ ESTILOS DE CONVITE */
 .convite-estilos { display: flex; gap: 10px; margin-bottom: 20px; }
 .convite-estilo-card { flex: 1; border: 2px solid rgba(201,168,76,0.25); border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: #fff; }
 .convite-estilo-card.ativo { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
@@ -156,9 +148,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 .upload-fundo-area.visivel { display: block; }
 .upload-fundo-area:hover { border-color: #C9A84C; }
 .upload-fundo-preview { width: 100%; height: 80px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
-
-
-/* ✦ PACOTE CELEBRAÇÃO */
 .pacotao-card { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 2px solid rgba(201,168,76,0.5); border-radius: 20px; padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden; }
 .pacotao-badge { position: absolute; top: 14px; right: 14px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Inter', sans-serif; }
 .pacotao-titulo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #C9A84C; margin-bottom: 6px; }
@@ -171,39 +160,32 @@ input:checked + .slider:before { transform: translateX(22px); }
 .pacotao-preco-label { font-size: 12px; color: rgba(245,237,216,0.5); font-family: 'Inter', sans-serif; }
 .btn-pacotao { width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; border: none; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.4); letter-spacing: 0.03em; }
 .btn-pacotao:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,168,76,0.5); }
-
-
-        /* ✦ STORY GATE */
-        .story-gate { background: #fff; border: 2px solid rgba(201,168,76,0.4); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; text-align: center; }
-        .story-gate-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
-        .story-gate-sub { font-size: 13px; color: #888; line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 20px; }
-        .story-gate-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; text-align: left; }
-        .story-gate-step { display: flex; align-items: flex-start; gap: 12px; }
-        .story-gate-step-num { width: 26px; height: 26px; min-width: 26px; background: linear-gradient(135deg,#C9A84C,#A8722A); border-radius: 50%; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-        .story-gate-step-texto { font-size: 13px; color: #555; line-height: 1.6; }
-        .story-gate-step-texto strong { color: #2C2C2C; }
-        .btn-criar-story-gate { width: 100%; padding: 16px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 50px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; letter-spacing: 0.02em; margin-bottom: 12px; }
-        .btn-criar-story-gate:hover { transform: translateY(-2px); }
-        .story-gate-pago { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; padding: 12px 14px; margin-top: 4px; }
-        .story-gate-pago p { font-size: 12px; color: #C9A84C; font-style: italic; font-family: 'Playfair Display', serif; }
-        /* ✦ WHATSAPP */
-        /* ✦ SALVAR */
-        .btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
-        .btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
-        .btn-salvar-hint.visivel { display: block; }
-        /* ✦ LOADING OVERLAY */
-        .loading-overlay { position: fixed; inset: 0; background: #FFF8EC; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
-        .loading-overlay.saindo { opacity: 0; pointer-events: none; }
-        .loading-logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; }
-        .loading-ornamento { font-size: 11px; color: #C9A84C; letter-spacing: 6px; opacity: 0.6; }
-        .loading-texto { font-family: 'Playfair Display', serif; font-size: 14px; color: #aaa; font-style: italic; }
-        .loading-barra { width: 160px; height: 3px; background: rgba(201,168,76,0.15); border-radius: 10px; overflow: hidden; }
-        .loading-barra-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 10px; animation: loadingFill 1.8s ease-in-out infinite; }
-        @keyframes loadingFill { 0% { width: 0%; opacity: 1; } 70% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
+.story-gate { background: #fff; border: 2px solid rgba(201,168,76,0.4); border-radius: 20px; padding: 28px 24px; margin-bottom: 20px; text-align: center; }
+.story-gate-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
+.story-gate-sub { font-size: 13px; color: #888; line-height: 1.7; font-style: italic; font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+.story-gate-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; text-align: left; }
+.story-gate-step { display: flex; align-items: flex-start; gap: 12px; }
+.story-gate-step-num { width: 26px; height: 26px; min-width: 26px; background: linear-gradient(135deg,#C9A84C,#A8722A); border-radius: 50%; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.story-gate-step-texto { font-size: 13px; color: #555; line-height: 1.6; }
+.story-gate-step-texto strong { color: #2C2C2C; }
+.btn-criar-story-gate { width: 100%; padding: 16px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border: none; border-radius: 50px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform 0.2s; letter-spacing: 0.02em; margin-bottom: 12px; }
+.btn-criar-story-gate:hover { transform: translateY(-2px); }
+.story-gate-pago { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; padding: 12px 14px; margin-top: 4px; }
+.story-gate-pago p { font-size: 12px; color: #C9A84C; font-style: italic; font-family: 'Playfair Display', serif; }
+.btn-salvar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
+.btn-salvar-hint { text-align: center; font-size: 12px; color: #bbb; margin-top: 10px; font-style: italic; font-family: 'Playfair Display', serif; display: none; }
+.btn-salvar-hint.visivel { display: block; }
+.loading-overlay { position: fixed; inset: 0; background: #FFF8EC; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+.loading-overlay.saindo { opacity: 0; pointer-events: none; }
+.loading-logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; }
+.loading-ornamento { font-size: 11px; color: #C9A84C; letter-spacing: 6px; opacity: 0.6; }
+.loading-texto { font-family: 'Playfair Display', serif; font-size: 14px; color: #aaa; font-style: italic; }
+.loading-barra { width: 160px; height: 3px; background: rgba(201,168,76,0.15); border-radius: 10px; overflow: hidden; }
+.loading-barra-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #C9A84C, #A8722A); border-radius: 10px; animation: loadingFill 1.8s ease-in-out infinite; }
+@keyframes loadingFill { 0% { width: 0%; opacity: 1; } 70% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
 </style>
 </head>
 <body>
-<!-- ✦ LOADING OVERLAY -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-logo">FestStory</div>
   <div class="loading-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
@@ -212,15 +194,12 @@ input:checked + .slider:before { transform: translateX(22px); }
 </div>
 
 <div class="container">
-
   <div class="header">
     <div class="logo">FestStory</div>
     <button class="btn-voltar" onclick="window.location.href='/lista/'+listaId">← Voltar</button>
   </div>
-
   <p class="page-titulo">Página do Evento 🎉</p>
   <p class="page-sub">Configure sua página especial para os convidados</p>
-
   <div class="link-box">
     <p>✦ Link da sua Página do Evento</p>
     <code id="linkPremium"></code>
@@ -228,7 +207,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     <button class="btn-ver-pagina" onclick="verPagina()">Ver página →</button>
   </div>
 
-  <!-- 1. INFORMAÇÕES DO EVENTO -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">🎉</div>
@@ -253,7 +231,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- 2. PALETA DE CORES -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">🎨</div>
@@ -273,7 +250,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     <p class="paleta-nome" id="paletaNome">✦ Dourado — clássico e elegante</p>
   </div>
 
-  <!-- 3. MENSAGEM DO CELEBRANTE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💬</div>
@@ -289,7 +265,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="frases-sugeridas" id="frasesContainer"></div>
   </div>
 
-  <!-- 4. MURAL DE FOTOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">📸</div>
@@ -322,8 +297,8 @@ input:checked + .slider:before { transform: translateX(22px); }
         <div class="estilo-preview">
           <svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
             <rect width="80" height="60" fill="#f5f0e8"/>
-            <g transform="rotate(-5,20,30)"><rect x="5" y="8" width="28" height="34" rx="1" fill="white" filter="url(#s)"/><rect x="7" y="10" width="24" height="20" fill="#C9A84C" opacity="0.8"/><circle cx="19" cy="8" r="3" fill="#e74c3c"/></g>
-            <g transform="rotate(4,55,28)"><rect x="42" y="6" width="28" height="34" rx="1" fill="white" filter="url(#s)"/><rect x="44" y="8" width="24" height="20" fill="#A8722A" opacity="0.8"/><circle cx="56" cy="6" r="3" fill="#3498db"/></g>
+            <g transform="rotate(-5,20,30)"><rect x="5" y="8" width="28" height="34" rx="1" fill="white" filter="url(#s)"/><rect x="7" y="10" width="24" height="20" fill="#C9A84C" opacity="0.8"/></g>
+            <g transform="rotate(4,55,28)"><rect x="42" y="6" width="28" height="34" rx="1" fill="white" filter="url(#s)"/><rect x="44" y="8" width="24" height="20" fill="#A8722A" opacity="0.8"/></g>
             <defs><filter id="s"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter></defs>
           </svg>
         </div>
@@ -335,7 +310,6 @@ input:checked + .slider:before { transform: translateX(22px); }
             <rect width="80" height="60" fill="#f5f0e8"/>
             <g transform="rotate(-8,18,25)"><rect x="4" y="8" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/><rect x="6" y="10" width="22" height="22" fill="#C9A84C" opacity="0.8"/></g>
             <g transform="rotate(5,45,22)"><rect x="30" y="4" width="26" height="30" rx="1" fill="white" filter="url(#s2)"/><rect x="32" y="6" width="22" height="22" fill="#A8722A" opacity="0.8"/></g>
-            <g transform="rotate(-3,38,44)"><rect x="20" y="28" width="26" height="28" rx="1" fill="white" filter="url(#s2)"/><rect x="22" y="30" width="22" height="20" fill="#C9A84C" opacity="0.6"/></g>
             <defs><filter id="s2"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter></defs>
           </svg>
         </div>
@@ -348,9 +322,6 @@ input:checked + .slider:before { transform: translateX(22px); }
             <rect x="8" y="8" width="64" height="44" rx="4" fill="#C9A84C" opacity="0.85"/>
             <polygon points="14,30 22,22 22,38" fill="white" opacity="0.9"/>
             <polygon points="66,30 58,22 58,38" fill="white" opacity="0.9"/>
-            <circle cx="32" cy="54" r="3" fill="#C9A84C"/>
-            <circle cx="40" cy="54" r="3" fill="white" opacity="0.5"/>
-            <circle cx="48" cy="54" r="3" fill="white" opacity="0.5"/>
           </svg>
         </div>
         <div class="estilo-label" style="color:#C9A84C;">✦ Carrossel</div>
@@ -358,7 +329,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- 5. COFRINHO PIX ✦ NOVO -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💛</div>
@@ -367,7 +337,6 @@ input:checked + .slider:before { transform: translateX(22px); }
         <div class="secao-config-sub">Receba contribuições dos seus convidados</div>
       </div>
     </div>
-
     <label class="cofrinho-toggle" onclick="toggleCofrinho()">
       <div>
         <div class="cofrinho-toggle-label">✦ Ativar Cofrinho Pix</div>
@@ -378,7 +347,6 @@ input:checked + .slider:before { transform: translateX(22px); }
         <span class="slider"></span>
       </label>
     </label>
-
     <div class="cofrinho-area" id="cofrinhoArea">
       <div class="campo">
         <label>Sua chave Pix</label>
@@ -393,7 +361,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- 6. CONVITE -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">✉️</div>
@@ -402,7 +369,6 @@ input:checked + .slider:before { transform: translateX(22px); }
         <div class="secao-config-sub">Escolha o estilo e personalize</div>
       </div>
     </div>
-
     <p style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:0.07em;font-weight:500;margin-bottom:12px;">Estilo do convite</p>
     <div class="convite-estilos">
       <div class="convite-estilo-card ativo" id="estiloConviteClassico" onclick="selecionarEstiloConvite('classico')">
@@ -423,7 +389,6 @@ input:checked + .slider:before { transform: translateX(22px); }
       </div>
     </div>
 
-    <!-- ✦ ÁREA GERAÇÃO IA -->
     <div class="ia-area" id="iaArea">
       <div class="campo">
         <label style="color:rgba(201,168,76,0.8);">Descreva seu convite</label>
@@ -485,7 +450,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- 7. RECADOS DOS CONVIDADOS -->
   <div class="secao-config">
     <div class="secao-config-header">
       <div class="secao-config-icon">💌</div>
@@ -499,7 +463,6 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
   </div>
 
-  <!-- ✦ PACOTE CELEBRAÇÃO -->
   <div class="pacotao-card" id="pacotaoCard">
     <div class="pacotao-badge">⭐ Mais popular</div>
     <div class="pacotao-titulo">✦ Pacote Celebração</div>
@@ -522,39 +485,24 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="divider-linha"></div>
   </div>
 
-  <!-- ✦ STORY GATE — gratuitos -->
   <div class="story-gate" id="storyGate" style="display:none;">
     <div style="font-size:36px;margin-bottom:12px;">📸</div>
     <div class="story-gate-titulo">Um último passo antes de salvar!</div>
     <div class="story-gate-sub">Para ativar sua Página do Evento gratuitamente, poste nos Stories do Instagram e mostre para seus convidados onde encontrar a lista de presentes.</div>
     <div class="story-gate-steps">
-      <div class="story-gate-step">
-        <div class="story-gate-step-num">1</div>
-        <div class="story-gate-step-texto"><strong>Clique no botão abaixo</strong> para criar seu Story personalizado</div>
-      </div>
-      <div class="story-gate-step">
-        <div class="story-gate-step-num">2</div>
-        <div class="story-gate-step-texto"><strong>Poste nos Stories do Instagram</strong> — pode ser para Melhores Amigos!</div>
-      </div>
-      <div class="story-gate-step">
-        <div class="story-gate-step-num">3</div>
-        <div class="story-gate-step-texto"><strong>Volte aqui e salve</strong> — sua página já estará ativa para os convidados</div>
-      </div>
+      <div class="story-gate-step"><div class="story-gate-step-num">1</div><div class="story-gate-step-texto"><strong>Clique no botão abaixo</strong> para criar seu Story personalizado</div></div>
+      <div class="story-gate-step"><div class="story-gate-step-num">2</div><div class="story-gate-step-texto"><strong>Poste nos Stories do Instagram</strong> — pode ser para Melhores Amigos!</div></div>
+      <div class="story-gate-step"><div class="story-gate-step-num">3</div><div class="story-gate-step-texto"><strong>Volte aqui e salve</strong> — sua página já estará ativa para os convidados</div></div>
     </div>
     <button class="btn-criar-story-gate" onclick="irParaStoryComSave()">📸 Criar meu Story no Instagram</button>
-    <div class="story-gate-pago">
-      <p>Ou adquira o <strong>Pacote Celebração por R$ 25,90</strong> e salve sem precisar postar ✦</p>
-    </div>
+    <div class="story-gate-pago"><p>Ou adquira o <strong>Pacote Celebração por R$ 25,90</strong> e salve sem precisar postar ✦</p></div>
   </div>
-
 
   <button class="btn-salvar" id="btnSalvar" onclick="iniciarSalvar()" disabled>✦ Salvar e publicar página</button>
   <p class="btn-salvar-hint visivel" id="btnSalvarHint">📸 Crie seu story no Instagram acima para liberar o salvar</p>
   <div class="salvo-sucesso" id="salvoSucesso">✦ Página do Evento salva com sucesso!</div>
-
 </div>
 
-<!-- POPUP DE CONFIRMAÇÃO DE DATA -->
 <div class="popup-overlay" id="popupConfirmacao">
   <div class="popup-box">
     <div class="popup-icon">🎉</div>
@@ -567,7 +515,6 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
 </div>
 
-<!-- POPUP PAGAMENTO BLOQUEADO -->
 <div class="popup-overlay" id="popupPagamento">
   <div class="popup-box">
     <div class="popup-icon" style="font-size:36px;margin-bottom:12px;">🔒</div>
@@ -578,12 +525,11 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
 </div>
 
-<!-- POPUP COMPRAR MAIS FOTOS -->
 <div id="popupComprarFotos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.6); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
   <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
     <div style="font-size:40px; margin-bottom:12px;">📸</div>
-    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:8px;">Limite de 10 fotos atingido!</h3>
-    <p style="font-size:13px; color:#aaa; margin-bottom:24px; line-height:1.7; font-style:italic;">Seu plano gratuito inclui até 10 fotos. Para adicionar mais memórias ao seu mural, escolha um pacote:</p>
+    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:8px;">Limite de fotos atingido!</h3>
+    <p style="font-size:13px; color:#aaa; margin-bottom:24px; line-height:1.7; font-style:italic;">Para adicionar mais memórias ao seu mural, escolha um pacote:</p>
     <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
       <button onclick="comprarFotos('5')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">📸 +5 fotos — R$ 9,90</button>
       <button onclick="comprarFotos('10')" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">📸 +10 fotos — R$ 19,90</button>
@@ -613,13 +559,11 @@ var usuarioPago = false;
 var storyPostado = false;
 var STORY_KEY = 'feststory_story_' + listaId;
 
-// ✦ Controle do estado do salvar e whatsapp
 function atualizarEstadoSalvar() {
     var btn = document.getElementById('btnSalvar');
     var hint = document.getElementById('btnSalvarHint');
     var gate = document.getElementById('storyGate');
     var pacotaoCard = document.getElementById('pacotaoCard');
-
     if (usuarioPago || storyPostado) {
         btn.disabled = false;
         if (hint) hint.className = 'btn-salvar-hint';
@@ -632,9 +576,7 @@ function atualizarEstadoSalvar() {
     }
 }
 
-// ✦ Auto-save silencioso + redireciona pro story
 async function irParaStoryComSave() {
-    // Salva config em background sem o usuário ver
     try {
         var nome = document.getElementById('nomeCelebrante').value.trim();
         var data = document.getElementById('dataEvento').value;
@@ -657,16 +599,8 @@ async function irParaStoryComSave() {
             })
         });
     } catch(e) { console.log('Auto-save erro:', e); }
-    // Marca como pendente e redireciona
     try { localStorage.setItem(STORY_KEY, 'pendente'); } catch(e) {}
     window.location.href = '/?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar';
-}
-
-function compartilharWhatsApp() {
-    var nome = document.getElementById('nomeCelebrante').value.trim() || 'meu evento';
-    var linkCelebracao = window.location.origin + '/premium/' + listaId;
-    var mensagem = 'Oi! 🎉 Preparei tudo para ' + nome + '! Acesse minha Página de Celebração! 🎁\n\n✦ ACESSAR AQUI:\n' + linkCelebracao + '\n\nValeu pelo carinho! 🙏✦';
-    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem), '_blank');
 }
 
 function verificarStoryPostado() {
@@ -690,7 +624,6 @@ function toggleCofrinho() {
   var ativo = checkbox.checked;
   if (ativo && !cofrinhoFoiPago) {
     checkbox.checked = false;
-    // Mostrar popup de pagamento
     document.getElementById('cofrinhoArea').className = 'cofrinho-area';
     mostrarAvisoPagamento('cofrinho');
     return;
@@ -784,6 +717,46 @@ var frasesPorEvento = {
 
 document.getElementById('linkPremium').textContent = window.location.origin + '/premium/' + listaId;
 
+// ✦ NOVA função separada para aplicar fundo — resolve o bug do preview
+function aplicarFundoPreview() {
+  var preview = document.getElementById('convitePreview');
+  var previewBg = document.getElementById('convitePreviewBg');
+  if (!preview) return;
+  if (estiloConviteSelecionado === 'livre') {
+    if (imagemFundoConviteBase64) {
+      preview.style.background = '';
+      preview.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+      preview.style.backgroundSize = 'cover';
+      preview.style.backgroundPosition = 'center';
+      if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
+    } else {
+      preview.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+      preview.style.backgroundImage = '';
+      if (previewBg) previewBg.style.backgroundImage = '';
+    }
+  } else if (estiloConviteSelecionado === 'ia') {
+    if (conviteIaBase64) {
+      preview.style.background = '';
+      preview.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+      preview.style.backgroundSize = 'cover';
+      preview.style.backgroundPosition = 'center';
+      if (previewBg) previewBg.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+    } else {
+      preview.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
+      preview.style.backgroundImage = '';
+      if (previewBg) previewBg.style.backgroundImage = '';
+    }
+  } else if (estiloConviteSelecionado === 'floral') {
+    preview.style.background = 'linear-gradient(135deg, #FFF8EC, #F5EDD8)';
+    preview.style.backgroundImage = '';
+    if (previewBg) previewBg.style.backgroundImage = '';
+  } else {
+    preview.style.background = 'linear-gradient(135deg, #2C1A00, #1a0f00)';
+    preview.style.backgroundImage = '';
+    if (previewBg) previewBg.style.backgroundImage = '';
+  }
+}
+
 async function carregarConfig() {
   try {
     var rl = await fetch('/api/limite-fotos/' + listaId);
@@ -799,8 +772,6 @@ async function carregarConfig() {
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
       if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
       if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
-      if (data.config.estilo_convite) selecionarEstiloConvite(data.config.estilo_convite);
-      if (data.config.cor_texto_convite) selecionarCorTexto(data.config.cor_texto_convite);
       if (data.config.convite_ia_imagem) {
         conviteIaBase64 = data.config.convite_ia_imagem;
         var iaWrapper = document.getElementById('iaPreviewWrapper');
@@ -812,15 +783,15 @@ async function carregarConfig() {
         var prev = document.getElementById('fundoConvitePreview');
         if (prev) { prev.src = imagemFundoConviteBase64; prev.style.display = 'block'; }
       }
+      if (data.config.estilo_convite) selecionarEstiloConvite(data.config.estilo_convite);
+      if (data.config.cor_texto_convite) selecionarCorTexto(data.config.cor_texto_convite);
       if (data.config.chave_pix) document.getElementById('chavePix').value = data.config.chave_pix;
       if (data.config.cofrinho_ativo) {
         cofrinhoFoiPago = true;
         document.getElementById('cofrinhoAtivo').checked = true;
         toggleCofrinho();
       }
-      if (data.config.estilo_mural === 'carrossel') {
-        carrosselFoiPago = true;
-      }
+      if (data.config.estilo_mural === 'carrossel') { carrosselFoiPago = true; }
       if (data.config.data_evento && data.config.data_evento.trim() !== '') {
         document.getElementById('dataEvento').value = data.config.data_evento;
         document.getElementById('dataEvento').disabled = true;
@@ -832,25 +803,12 @@ async function carregarConfig() {
     if (data.recados && data.recados.length > 0) { renderRecadosAdmin(data.recados); }
     atualizarPreviewConvite();
     atualizarContadorFotos();
-
-    // ✦ Verifica se é usuário pago (cofrinho, pacote ou fotos extras)
-    if (data.config && (data.config.cofrinho_ativo || data.config.estilo_mural === 'carrossel' || limiteFotos > 10)) {
-      usuarioPago = true;
-    }
-    // ✦ Se já salvou antes → já postou o story ou pagou → libera
-    if (data.config && (data.config.nome_celebrante || data.config.mensagem_celebrante)) {
-      storyPostado = true;
-    }
-
-    // ✦ Verifica story no localStorage
+    if (data.config && (data.config.cofrinho_ativo || data.config.estilo_mural === 'carrossel' || limiteFotos > 10)) { usuarioPago = true; }
+    if (data.config && (data.config.nome_celebrante || data.config.mensagem_celebrante)) { storyPostado = true; }
     verificarStoryPostado();
-
-    // ✦ Atualiza estado do botão salvar
     atualizarEstadoSalvar();
-    // ✦ Esconde overlay de loading
     var overlay = document.getElementById('loadingOverlay');
     if (overlay) { overlay.classList.add('saindo'); setTimeout(function() { overlay.style.display = 'none'; }, 400); }
-
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('compra') === 'ok') {
       usuarioPago = true;
@@ -858,16 +816,11 @@ async function carregarConfig() {
       alert('🎉 Parabéns! Você adicionou +' + urlParams.get('fotos') + ' fotos ao seu mural!');
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-    // ✦ Voltou do pagamento do Convite IA
     if (urlParams.get('ia_pago') === 'true') {
       var btn = document.getElementById('btnGerarIa');
-      if (btn) {
-        btn.textContent = '✨ Gerar Convite com IA — Pago! Clique para gerar';
-        btn.disabled = false;
-      }
+      if (btn) { btn.textContent = '✨ Gerar Convite com IA — Pago! Clique para gerar'; btn.disabled = false; }
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
-    // ✦ Voltou do story
     if (urlParams.get('origem') === 'story') {
       try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
       storyPostado = true;
@@ -876,7 +829,6 @@ async function carregarConfig() {
     }
   } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
 }
-
 
 var coresTexto = {
   claro:   { nome: '✦ Creme — elegante e suave',     hex: '#F5EDD8' },
@@ -900,16 +852,8 @@ function selecionarCorTexto(cor) {
   if (preview && coresTexto[cor]) preview.style.color = coresTexto[cor].hex;
   var ornamento = document.querySelector('#convitePreview .convite-ornamento');
   if (ornamento && coresTexto[cor]) ornamento.style.color = coresTexto[cor].hex;
-  // ✦ Garante que o fundo do Livre permanece visível ao mudar cor
-  if (estiloConviteSelecionado === 'livre' && imagemFundoConviteBase64) {
-    var convPrev = document.getElementById('convitePreview');
-    if (convPrev) {
-      convPrev.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
-      convPrev.style.backgroundSize = 'cover';
-      convPrev.style.backgroundPosition = 'center';
-      convPrev.style.background = '';
-    }
-  }
+  // ✦ FIX: reaplica fundo ao mudar cor — não perde a imagem
+  aplicarFundoPreview();
 }
 
 function selecionarEstiloConvite(estilo) {
@@ -922,49 +866,15 @@ function selecionarEstiloConvite(estilo) {
   if (uploadArea) uploadArea.className = 'upload-fundo-area' + (estilo === 'livre' ? ' visivel' : '');
   var iaArea = document.getElementById('iaArea');
   if (iaArea) iaArea.className = 'ia-area' + (estilo === 'ia' ? ' visivel' : '');
-  var preview = document.getElementById('convitePreview');
-  var previewBg = document.getElementById('convitePreviewBg');
-  if (preview) {
-    if (estilo === 'classico') {
-      preview.style.background = 'linear-gradient(135deg, #2C1A00, #1a0f00)';
-      if (previewBg) previewBg.style.backgroundImage = '';
-      imagemFundoConviteBase64 = '';
-      conviteIaBase64 = '';
-    } else if (estilo === 'floral') {
-      preview.style.background = 'linear-gradient(135deg, #FFF8EC, #F5EDD8)';
-      if (previewBg) previewBg.style.backgroundImage = '';
-      imagemFundoConviteBase64 = '';
-      conviteIaBase64 = '';
-    } else if (estilo === 'livre') {
-      if (imagemFundoConviteBase64) {
-        preview.style.background = '';
-        preview.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
-        preview.style.backgroundSize = 'cover';
-        preview.style.backgroundPosition = 'center';
-        if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
-      } else {
-        preview.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-        preview.style.backgroundImage = '';
-        if (previewBg) previewBg.style.backgroundImage = '';
-      }
-    } else if (estilo === 'ia') {
-      imagemFundoConviteBase64 = '';
-      if (conviteIaBase64) {
-        preview.style.background = '';
-        preview.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
-        preview.style.backgroundSize = 'cover';
-        preview.style.backgroundPosition = 'center';
-        if (previewBg) previewBg.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
-      } else {
-        preview.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
-        preview.style.backgroundImage = '';
-        if (previewBg) previewBg.style.backgroundImage = '';
-      }
-    }
+  // ✦ Limpa imagens ao trocar para estilos sem imagem
+  if (estilo === 'classico' || estilo === 'floral') {
+    imagemFundoConviteBase64 = '';
+    conviteIaBase64 = '';
   }
+  // ✦ FIX: usa função centralizada para aplicar fundo
+  aplicarFundoPreview();
   atualizarPreviewConvite();
 }
-
 
 function processarRefIa(e) {
   var file = e.target.files[0];
@@ -996,24 +906,13 @@ async function gerarConviteIa() {
       body: JSON.stringify(payload)
     });
     var data = await r.json();
-    if (data.pagamento_url) {
-      window.location.href = data.pagamento_url;
-      return;
-    }
+    if (data.pagamento_url) { window.location.href = data.pagamento_url; return; }
     if (data.ok && data.imagem) {
       conviteIaBase64 = data.imagem;
       var wrapper = document.getElementById('iaPreviewWrapper');
       var img = document.getElementById('iaPreviewImg');
       if (wrapper && img) { img.src = conviteIaBase64; wrapper.className = 'ia-preview-wrapper visivel'; }
-      var preview = document.getElementById('convitePreview');
-      var previewBg = document.getElementById('convitePreviewBg');
-      if (preview) {
-        preview.style.background = '';
-        preview.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
-        preview.style.backgroundSize = 'cover';
-        preview.style.backgroundPosition = 'center';
-      }
-      if (previewBg) previewBg.style.backgroundImage = 'url(' + conviteIaBase64 + ')';
+      aplicarFundoPreview();
       btn.textContent = '✨ Gerar Novo Convite com IA';
     } else {
       alert(data.erro || 'Erro ao gerar convite. Tente novamente.');
@@ -1034,15 +933,7 @@ function processarFundoConvite(e) {
     imagemFundoConviteBase64 = ev.target.result;
     var preview = document.getElementById('fundoConvitePreview');
     if (preview) { preview.src = imagemFundoConviteBase64; preview.style.display = 'block'; }
-    var previewBg = document.getElementById('convitePreviewBg');
-    if (previewBg) previewBg.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
-    var convPrev = document.getElementById('convitePreview');
-    if (convPrev) {
-      convPrev.style.backgroundImage = 'url(' + imagemFundoConviteBase64 + ')';
-      convPrev.style.backgroundSize = 'cover';
-      convPrev.style.backgroundPosition = 'center';
-      convPrev.style.background = '';
-    }
+    aplicarFundoPreview();
     atualizarPreviewConvite();
   };
   reader.readAsDataURL(file);
@@ -1066,6 +957,7 @@ function toggleConvite(padrao) {
   atualizarPreviewConvite();
 }
 
+// ✦ FIX: só atualiza o TEXTO, nunca mexe no fundo
 function atualizarPreviewConvite() {
   var nome = document.getElementById('nomeCelebrante').value || 'o evento';
   var dataStr = document.getElementById('dataEvento').value;
@@ -1085,6 +977,8 @@ function atualizarPreviewConvite() {
     texto = document.getElementById('textoConvite').value || 'Seu convite aparecerá aqui...';
   }
   document.getElementById('convitePreviewTexto').textContent = texto;
+  // ✦ Reaplica fundo sem resetar
+  aplicarFundoPreview();
 }
 
 document.getElementById('nomeCelebrante').addEventListener('input', atualizarPreviewConvite);
@@ -1146,30 +1040,19 @@ async function uploadFoto(file) {
   reader.readAsDataURL(file);
 }
 
-
 async function comprarPacotao() {
   try {
-    var r = await fetch('/api/stripe/checkout', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ lista_id: listaId, pacote: 'celebracao' })
-    });
+    var r = await fetch('/api/stripe/checkout', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, pacote: 'celebracao' }) });
     var data = await r.json();
-    if (data.url) { window.location.href = data.url; }
-    else { alert('Erro ao processar pagamento. Tente novamente.'); }
+    if (data.url) { window.location.href = data.url; } else { alert('Erro ao processar pagamento. Tente novamente.'); }
   } catch(e) { alert('Erro de conexão. Tente novamente.'); }
 }
 
 async function comprarCofrinho() {
   try {
-    var r = await fetch('/api/stripe/checkout', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ lista_id: listaId, pacote: 'cofrinho' })
-    });
+    var r = await fetch('/api/stripe/checkout', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, pacote: 'cofrinho' }) });
     var data = await r.json();
-    if (data.url) { window.location.href = data.url; }
-    else { alert('Erro ao processar pagamento. Tente novamente.'); }
+    if (data.url) { window.location.href = data.url; } else { alert('Erro ao processar pagamento. Tente novamente.'); }
   } catch(e) { alert('Erro de conexão. Tente novamente.'); }
 }
 
@@ -1241,19 +1124,13 @@ async function salvarConfig() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        lista_id: listaId,
-        nome_celebrante: nome,
-        data_evento: data,
-        mensagem_celebrante: mensagem,
-        texto_convite: textoConvite,
-        usa_convite_padrao: usaConvitePadrao,
-        paleta: paletaSelecionada,
-        estilo_mural: estiloMural,
-        local_evento: localEvento,
+        lista_id: listaId, nome_celebrante: nome, data_evento: data,
+        mensagem_celebrante: mensagem, texto_convite: textoConvite,
+        usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada,
+        estilo_mural: estiloMural, local_evento: localEvento,
         estilo_convite: estiloConviteSelecionado,
         imagem_fundo_convite: imagemFundoConviteBase64,
-        chave_pix: chavePix,
-        cofrinho_ativo: cofrinhoAtivo,
+        chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo,
         cor_texto_convite: corTextoConvite,
         convite_ia_imagem: conviteIaBase64
       })
