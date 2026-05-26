@@ -392,7 +392,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div class="ia-area" id="iaArea">
       <div class="campo">
         <label style="color:rgba(201,168,76,0.8);">Descreva seu convite</label>
-        <textarea id="iaDescricao" rows="3" placeholder="Ex: Convite de aniversário temático jardim encantado, tons de verde e dourado, com flores e borboletas..."></textarea>
+        <textarea id="iaDescricao" rows="3" placeholder="Ex: Aniversário elegante com tema Paris, fundo azul marinho e dourado, flores de lavanda, título em caligrafia cursiva dourada, decoração sofisticada e moderna..."></textarea>
       </div>
       <div class="ia-upload-ref" onclick="document.getElementById('inputRefIa').click()">
         <input type="file" id="inputRefIa" accept="image/*" style="display:none" onchange="processarRefIa(event)">
@@ -430,6 +430,7 @@ input:checked + .slider:before { transform: translateX(22px); }
       <img id="fundoConvitePreview" class="upload-fundo-preview" src="" alt="preview">
     </div>
 
+    <div id="blocoToggleConvite">
     <div class="toggle-group" style="margin-top:4px;">
       <div class="toggle-btn active" id="btnPadrao" onclick="toggleConvite(true)">✦ Texto padrão</div>
       <div class="toggle-btn" id="btnPersonalizado" onclick="toggleConvite(false)">✏️ Personalizar</div>
@@ -440,6 +441,7 @@ input:checked + .slider:before { transform: translateX(22px); }
         <label>Seu texto personalizado</label>
         <textarea id="textoConvite" rows="5" placeholder="Escreva o texto do seu convite aqui..."></textarea>
       </div>
+    </div>
     </div>
     <div class="convite-preview" id="convitePreview">
       <div class="convite-preview-bg" id="convitePreviewBg"></div>
@@ -873,6 +875,16 @@ function selecionarEstiloConvite(estilo) {
   }
   // ✦ FIX: usa função centralizada para aplicar fundo
   aplicarFundoPreview();
+  // ✦ Esconde toggle e preview quando estilo IA (a IA já gera o convite completo)
+  var blocoToggle = document.getElementById('blocoToggleConvite');
+  var blocoPreview = document.getElementById('convitePreview');
+  if (estilo === 'ia') {
+    if (blocoToggle) blocoToggle.style.display = 'none';
+    if (blocoPreview) blocoPreview.style.display = 'none';
+  } else {
+    if (blocoToggle) blocoToggle.style.display = 'block';
+    if (blocoPreview) blocoPreview.style.display = 'flex';
+  }
   atualizarPreviewConvite();
 }
 
@@ -954,6 +966,9 @@ function toggleConvite(padrao) {
   document.getElementById('btnPersonalizado').className = 'toggle-btn' + (!padrao ? ' active' : '');
   document.getElementById('convitePadraoInfo').style.display = padrao ? 'block' : 'none';
   document.getElementById('convitePersonalizadoArea').style.display = padrao ? 'none' : 'block';
+  // ✦ Esconde preview no modo personalizado (usuario edita na textarea, preview é desnecessário)
+  var blocoPreview = document.getElementById('convitePreview');
+  if (blocoPreview) blocoPreview.style.display = padrao ? 'flex' : 'none';
   atualizarPreviewConvite();
 }
 
