@@ -403,7 +403,8 @@ input:checked + .slider:before { transform: translateX(22px); }
         </div>
       </div>
       <button class="btn-gerar-ia" id="btnGerarIa" onclick="gerarConviteIa()">✨ Gerar Convite com IA — R$ 9,90</button>
-      <p class="ia-preco-badge">✦ Pagamento único · Gerado exclusivamente para você</p>
+      <p class="ia-preco-badge">✦ Pagamento único · 3 gerações incluídas</p>
+      <p id="iaAvisoGeracoes" style="display:none;text-align:center;font-size:12px;font-weight:600;margin-top:8px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:8px;font-family:'Inter',sans-serif;"></p>
       <div class="ia-preview-wrapper" id="iaPreviewWrapper">
         <img id="iaPreviewImg" src="" alt="Convite gerado por IA">
         <p style="text-align:center;font-size:12px;color:rgba(201,168,76,0.7);margin-top:8px;font-style:italic;font-family:'Playfair Display',serif;">✦ Seu convite gerado por IA — aparecerá assim na página</p>
@@ -919,13 +920,30 @@ async function gerarConviteIa() {
     });
     var data = await r.json();
     if (data.pagamento_url) { window.location.href = data.pagamento_url; return; }
+    if (data.limite_atingido && data.pagamento_url) {
+      alert('🎨 Você usou todas as suas 3 gerações!\n\nPara criar um novo convite exclusivo, adquira novamente por R$ 9,90.');
+      window.location.href = data.pagamento_url;
+      return;
+    }
     if (data.ok && data.imagem) {
       conviteIaBase64 = data.imagem;
       var wrapper = document.getElementById('iaPreviewWrapper');
       var img = document.getElementById('iaPreviewImg');
       if (wrapper && img) { img.src = conviteIaBase64; wrapper.className = 'ia-preview-wrapper visivel'; }
       aplicarFundoPreview();
-      btn.textContent = '✨ Gerar Novo Convite com IA';
+      // ✦ Mostra aviso de gerações restantes
+      var avisoEl = document.getElementById('iaAvisoGeracoes');
+      if (data.aviso && avisoEl) {
+        avisoEl.textContent = data.aviso;
+        avisoEl.style.display = 'block';
+        avisoEl.style.color = data.geracoes_restantes === 0 ? '#ef4444' : data.geracoes_restantes === 1 ? '#f97316' : '#C9A84C';
+      }
+      var restantes = data.geracoes_restantes;
+      if (restantes > 0) {
+        btn.textContent = '✨ Gerar Novo Convite (' + restantes + ' restante' + (restantes > 1 ? 's' : '') + ')';
+      } else {
+        btn.textContent = '🎨 Limite atingido — Adquirir novamente R$ 9,90';
+      }
     } else {
       alert(data.erro || 'Erro ao gerar convite. Tente novamente.');
       btn.textContent = '✨ Gerar Convite com IA — R$ 9,90';
