@@ -1047,8 +1047,8 @@ Retorne APENAS o código SVG completo começando com <svg, sem markdown, sem exp
 
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         resp = client.messages.create(
-            model="claude-opus-4-5-20251101",
-            max_tokens=8000,
+            model="claude-haiku-4-5-20251001",
+            max_tokens=4000,
             system="Você é um designer gráfico de elite especializado em convites digitais de luxo. Cria SVGs extremamente detalhados, ricos e visualmente impressionantes. Sempre retorna APENAS o código SVG começando com <svg, sem markdown, sem explicações. Seus convites têm no mínimo 50 elementos visuais e são verdadeiras obras de arte digitais.",
             messages=[{"role": "user", "content": content}]
         )
