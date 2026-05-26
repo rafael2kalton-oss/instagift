@@ -394,16 +394,8 @@ input:checked + .slider:before { transform: translateX(22px); }
         <label style="color:rgba(201,168,76,0.8);">Descreva seu convite</label>
         <textarea id="iaDescricao" rows="3" placeholder="Ex: Aniversário elegante com tema Paris, fundo azul marinho e dourado, flores de lavanda, título em caligrafia cursiva dourada, decoração sofisticada e moderna..."></textarea>
       </div>
-      <p style="font-size:12px;color:rgba(245,237,216,0.6);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 12px;margin-bottom:4px;line-height:1.6;">💡 <strong style="color:#C9A84C;">Dica:</strong> Descreva o tema do seu convite com detalhes: cores, estilo, decorações e atmosfera. Quanto mais detalhada a descrição, mais bonito o resultado!</p>
-      <p style="font-size:11px;color:rgba(245,237,216,0.45);background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.15);border-radius:8px;padding:9px 12px;margin-bottom:4px;line-height:1.6;">⚠️ <strong style="color:rgba(255,120,120,0.9);">Limitação importante:</strong> Por questões de direitos autorais, a IA não consegue reproduzir escudos de times, logos de marcas, personagens Disney/Marvel ou rostos de pessoas reais. Para melhores resultados, descreva cores e elementos temáticos sem mencionar marcas registradas.</p>
-      <div class="ia-upload-ref" onclick="document.getElementById('inputRefIa').click()">
-        <input type="file" id="inputRefIa" accept="image/*" style="display:none" onchange="processarRefIa(event)">
-        <span style="font-size:20px;">🖼️</span>
-        <div>
-          <div class="ia-upload-ref-texto">Anexar foto de referência <span style="color:rgba(245,237,216,0.4);">— opcional</span></div>
-          <div class="ia-upload-ref-nome" id="iaRefNome">Nenhuma imagem selecionada</div>
-        </div>
-      </div>
+      <p style="font-size:12px;color:rgba(245,237,216,0.6);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 12px;margin-bottom:4px;line-height:1.6;">💡 <strong style="color:#C9A84C;">Dica:</strong> Descreva cores, estilo e atmosfera do seu convite com detalhes. Ex: "fundo azul escuro com estrelas douradas, estilo elegante e sofisticado".</p>
+      <p style="font-size:11px;color:rgba(245,237,216,0.45);background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.15);border-radius:8px;padding:9px 12px;margin-bottom:8px;line-height:1.6;">⚠️ <strong style="color:rgba(255,120,120,0.9);">Limitações da IA:</strong> Esta IA é limitada e gera apenas arte em SVG com cores, formas e texto. Não reproduz escudos de times, logos de marcas, personagens Disney/Marvel, fotos ou rostos de pessoas reais. Para esses casos, use o estilo <strong style="color:#C9A84C;">Livre</strong> e suba sua própria imagem de fundo.</p>
       <button class="btn-gerar-ia" id="btnGerarIa" onclick="gerarConviteIa()">✨ Gerar Convite com IA — R$ 9,90</button>
       <p class="ia-preco-badge">✦ Pagamento único · 3 gerações incluídas</p>
       <p id="iaAvisoGeracoes" style="display:none;text-align:center;font-size:12px;font-weight:600;margin-top:8px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:8px;font-family:'Inter',sans-serif;"></p>
