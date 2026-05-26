@@ -394,7 +394,8 @@ input:checked + .slider:before { transform: translateX(22px); }
         <label style="color:rgba(201,168,76,0.8);">Descreva seu convite</label>
         <textarea id="iaDescricao" rows="3" placeholder="Ex: Aniversário elegante com tema Paris, fundo azul marinho e dourado, flores de lavanda, título em caligrafia cursiva dourada, decoração sofisticada e moderna..."></textarea>
       </div>
-      <p style="font-size:12px;color:rgba(245,237,216,0.6);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 12px;margin-bottom:4px;line-height:1.6;">💡 <strong style="color:#C9A84C;">Dica:</strong> Para incluir escudos de times, personagens ou rostos, anexe uma foto de referência abaixo. A IA usará como inspiração visual para criar seu convite!</p>
+      <p style="font-size:12px;color:rgba(245,237,216,0.6);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 12px;margin-bottom:4px;line-height:1.6;">💡 <strong style="color:#C9A84C;">Dica:</strong> Descreva o tema do seu convite com detalhes: cores, estilo, decorações e atmosfera. Quanto mais detalhada a descrição, mais bonito o resultado!</p>
+      <p style="font-size:11px;color:rgba(245,237,216,0.45);background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.15);border-radius:8px;padding:9px 12px;margin-bottom:4px;line-height:1.6;">⚠️ <strong style="color:rgba(255,120,120,0.9);">Limitação importante:</strong> Por questões de direitos autorais, a IA não consegue reproduzir escudos de times, logos de marcas, personagens Disney/Marvel ou rostos de pessoas reais. Para melhores resultados, descreva cores e elementos temáticos sem mencionar marcas registradas.</p>
       <div class="ia-upload-ref" onclick="document.getElementById('inputRefIa').click()">
         <input type="file" id="inputRefIa" accept="image/*" style="display:none" onchange="processarRefIa(event)">
         <span style="font-size:20px;">🖼️</span>
@@ -894,10 +895,33 @@ function processarRefIa(e) {
   var file = e.target.files[0];
   if (!file) return;
   var nomeEl = document.getElementById('iaRefNome');
-  if (nomeEl) nomeEl.textContent = file.name;
-  var reader = new FileReader();
-  reader.onload = function(ev) { iaRefBase64 = ev.target.result; };
-  reader.readAsDataURL(file);
+  if (nomeEl) nomeEl.textContent = file.name + ' (processando...)';
+  // ✦ Redimensiona a imagem para max 800px antes de enviar
+  var img = new Image();
+  var url = URL.createObjectURL(file);
+  img.onload = function() {
+    var maxSize = 800;
+    var w = img.width, h = img.height;
+    if (w > maxSize || h > maxSize) {
+      var ratio = Math.min(maxSize/w, maxSize/h);
+      w = Math.round(w * ratio);
+      h = Math.round(h * ratio);
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    iaRefBase64 = canvas.toDataURL('image/jpeg', 0.85);
+    URL.revokeObjectURL(url);
+    if (nomeEl) nomeEl.textContent = file.name + ' ✓';
+  };
+  img.onerror = function() {
+    // Fallback: lê direto sem redimensionar
+    var reader = new FileReader();
+    reader.onload = function(ev) { iaRefBase64 = ev.target.result; if (nomeEl) nomeEl.textContent = file.name + ' ✓'; };
+    reader.readAsDataURL(file);
+  };
+  img.src = url;
 }
 
 async function gerarConviteIa() {
