@@ -1019,42 +1019,52 @@ def gerar_convite_ia():
         tem_ref = imagem_ref_b64 and len(imagem_ref_b64) > 100
 
         if tem_ref:
-            # ✦ COM IMAGEM: usa ela como fundo real + Claude coloca texto bonito por cima via SVG
+            # ✦ COM IMAGEM: sobe imagem para Supabase Storage e usa URL no SVG
             if "," in imagem_ref_b64:
                 header_part, b64data = imagem_ref_b64.split(",", 1)
                 media_type = header_part.split(":")[1].split(";")[0] if ":" in header_part else "image/jpeg"
             else:
                 b64data, media_type = imagem_ref_b64, "image/jpeg"
 
-            prompt_svg = f"""Voce recebeu uma imagem de fundo (foto, escudo, arte, etc).
-Crie um SVG 800x600px de convite digital elegante usando essa imagem como fundo real.
+            # ✦ Sobe imagem para Supabase Storage
+            img_bytes = base64.b64decode(b64data)
+            ext = "jpg" if "jpeg" in media_type else media_type.split("/")[-1]
+            filename = f"convite_ref_{lista_id}.{ext}"
+            storage_url = f"{SUPABASE_URL}/storage/v1/object/convites/{filename}"
+            upload_r = requests.post(
+                storage_url,
+                headers={
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": f"Bearer {SUPABASE_KEY}",
+                    "Content-Type": media_type,
+                    "x-upsert": "true"
+                },
+                data=img_bytes,
+                timeout=30
+            )
+            print("Upload storage:", upload_r.status_code)
+            img_url_publica = f"{SUPABASE_URL}/storage/v1/object/public/convites/{filename}"
 
-Evento: {evento_txt}
-Data: {data_txt}
-Estilo solicitado: {descricao}
-
-INSTRUCOES OBRIGATORIAS:
-1. Logo apos <svg...>, inclua a imagem como fundo completo:
-   <image href="data:{media_type};base64,{b64data}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>
-2. Adicione overlay semitransparente escuro para legibilidade:
-   <rect width="800" height="600" fill="rgba(0,0,0,0.45)"/>
-3. Titulo principal grande, fonte elegante, centralizado, cor dourada (#FFD700) ou branca
-4. Data em destaque com ornamentos
-5. Moldura decorativa dourada nas bordas
-6. Elementos decorativos sutis (estrelas, linhas, ornamentos)
-7. Texto adicional que o usuario pediu: {descricao}
-
-O resultado deve ser um convite elegante com a imagem visivel ao fundo e texto bonito por cima.
-Retorne APENAS o SVG completo comecando com <svg, sem markdown."""
-
+            # ✦ Claude só analisa a imagem e gera SVG leve com URL externa
             client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
             resp = client.messages.create(
                 model="claude-haiku-4-5-20251001",
-                max_tokens=4000,
-                system="Voce e um designer grafico especializado em convites digitais. Sempre inclua a imagem de fundo no SVG usando a tag <image> com o base64 fornecido. Retorne APENAS o SVG comecando com <svg, sem markdown.",
+                max_tokens=2000,
+                system="Designer de convites. Retorne APENAS SVG comecando com <svg, sem markdown.",
                 messages=[{"role": "user", "content": [
                     {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                    {"type": "text", "text": prompt_svg}
+                    {"type": "text", "text": f"""Analise as cores e estilo da imagem.
+Crie um SVG 800x600px de convite elegante.
+Evento: {evento_txt}
+Data: {data_txt}
+Estilo: {descricao}
+INSTRUCOES:
+- Fundo: <image href="{img_url_publica}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>
+- Overlay escuro: <rect width="800" height="600" fill="rgba(0,0,0,0.45)"/>
+- Titulo grande centralizado nas cores da imagem
+- Data em destaque com ornamentos dourados
+- Moldura elegante nas bordas
+Retorne APENAS o SVG comecando com <svg."""}
                 ]}]
             )
             svg_text = resp.content[0].text.strip()
