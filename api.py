@@ -1013,90 +1013,93 @@ def gerar_convite_ia():
                 data_fmt = f"{d.day} de {meses[d.month-1]} de {d.year}"
             except: data_fmt = data_evento_str
 
-        # ✦ Se tem imagem de referência: Claude usa direto (sem Replicate)
+        # ✦ Monta prompt rico para o Replicate gerar imagem completa com texto
+        evento_txt = nome_evento or "Celebracao Especial"
+        data_txt = data_fmt or "Em breve"
+
+        # ✦ Com imagem de referência: usa como fundo + Replicate adiciona elementos
         tem_ref = imagem_ref_b64 and len(imagem_ref_b64) > 100
         if tem_ref:
+            # Salva a imagem de referência em arquivo temporário
             if "," in imagem_ref_b64:
-                header, b64data = imagem_ref_b64.split(",", 1)
-                media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
+                _, b64data = imagem_ref_b64.split(",", 1)
             else:
-                b64data, media_type = imagem_ref_b64, "image/jpeg"
-            prompt_texto = f"""Voce recebeu uma imagem de referencia (escudo, personagem, logo, etc).
-Crie um convite digital como SVG 800x600px usando as cores e elementos visuais da imagem como inspiracao.
-Evento: {nome_evento or "Celebracao Especial"}
-Data: {data_fmt or "Em breve"}
-Estilo: {descricao}
-INSTRUCOES:
-- Extraia as cores principais da imagem de referencia e use no fundo gradiente
-- Recrie os elementos visuais da imagem como formas SVG (escudo, simbolos, ornamentos)
-- Titulo grande e elegante centralizado
-- Data em destaque artistico
-- Moldura elegante nas bordas com as cores do tema
-- Minimo 40 elementos SVG ricos e detalhados
-Retorne APENAS o SVG comecando com <svg, sem markdown."""
-            content_var = [
-                {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                {"type": "text", "text": prompt_texto}
-            ]
+                b64data = imagem_ref_b64
+            ref_bytes = base64.b64decode(b64data)
+            ref_path = f"/tmp/ref_{lista_id}.jpg"
+            with open(ref_path, "wb") as f_ref:
+                f_ref.write(ref_bytes)
+
+            # Upload da imagem para o Replicate
+            upload_resp = requests.post(
+                "https://api.replicate.com/v1/files",
+                headers={"Authorization": f"Bearer {REPLICATE_KEY}"},
+                files={"content": ("reference.jpg", open(ref_path, "rb"), "image/jpeg")},
+                timeout=30
+            )
+            upload_data = upload_resp.json()
+            print("Upload ref:", upload_data)
+            ref_url = upload_data.get("urls", {}).get("get") or upload_data.get("url", "")
+
+            prompt_replicate = (
+                f"elegant birthday invitation card, {descricao}, "
+                f"event: {evento_txt}, date: {data_txt}, "
+                f"use the reference image logo/emblem prominently centered, "
+                f"rich decorative background with team colors, "
+                f"large bold title text '{evento_txt}', date '{data_txt}', "
+                f"professional party invitation design, high quality, vibrant"
+            )
+            payload_input = {
+                "prompt": prompt_replicate,
+                "width": 800,
+                "height": 600,
+                "num_outputs": 1,
+                "num_inference_steps": 4
+            }
+            if ref_url:
+                payload_input["image"] = ref_url
+                payload_input["prompt_strength"] = 0.75
+                model_url = "https://api.replicate.com/v1/models/black-forest-labs/flux-dev/predictions"
+            else:
+                model_url = "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions"
         else:
-            # ✦ Sem referência: Replicate gera fundo artístico
-            imagem_fundo_url = None
-            try:
-                prompt_img = f"beautiful artistic invitation card background, {descricao}, elegant, luxurious, vibrant colors, no text, no letters, decorative only, high quality"
-                rep_resp = requests.post(
-                    "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
-                    headers={"Authorization": f"Bearer {REPLICATE_KEY}", "Content-Type": "application/json", "Prefer": "wait"},
-                    json={"input": {"prompt": prompt_img, "width": 800, "height": 600, "num_outputs": 1, "num_inference_steps": 4}},
-                    timeout=60
-                )
-                rep_data = rep_resp.json()
-                print("Replicate response:", rep_data)
-                output = rep_data.get("output")
-                imagem_fundo_url = (output[0] if isinstance(output, list) else output) if output else None
-            except Exception as e:
-                print("Replicate erro:", e)
+            prompt_replicate = (
+                f"elegant invitation card design, {descricao}, "
+                f"event name '{evento_txt}' in large decorative text, "
+                f"date '{data_txt}' prominently displayed, "
+                f"luxurious artistic background, gold ornaments, decorative borders, "
+                f"professional party invitation, high quality, vibrant colors"
+            )
+            payload_input = {
+                "prompt": prompt_replicate,
+                "width": 800,
+                "height": 600,
+                "num_outputs": 1,
+                "num_inference_steps": 4
+            }
+            model_url = "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions"
 
-            if imagem_fundo_url:
-                # ✦ Retorna a URL do Replicate diretamente como imagem final
-                # Claude só gera um SVG leve com overlay de texto
-                prompt_texto = f"""Crie um SVG 800x600px de convite digital com fundo externo.
-Evento: {nome_evento or "Celebracao Especial"}
-Data: {data_fmt or "Em breve"}
-Estilo: {descricao}
-INSTRUCOES:
-- Primeira linha apos <svg: <image href="{imagem_fundo_url}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>
-- Segunda linha: <rect width="800" height="600" fill="rgba(0,0,0,0.5)"/>
-- Titulo grande centralizado em branco ou dourado (#FFD700)
-- Data formatada com destaque
-- Ornamentos dourados decorativos (estrelas, linhas, moldura)
-- Texto do local se houver
-Retorne APENAS o SVG comecando com <svg, sem markdown."""
-                content_var = [{"type": "text", "text": prompt_texto}]
-            else:
-                # ✦ Fallback: SVG puro
-                prompt_texto = f"""Crie um convite digital DESLUMBRANTE como SVG 800x600px.
-Evento: {nome_evento or "Celebracao Especial"}
-Data: {data_fmt or "Em breve"}
-Estilo: {descricao}
-- Fundo gradiente rico e profundo no tema
-- Titulo em destaque, data artistica, ornamentos elaborados
-- Minimo 50 elementos SVG, bordas elegantes, cores sofisticadas
-Retorne APENAS o SVG comecando com <svg, sem markdown."""
-                content_var = [{"type": "text", "text": prompt_texto}]
-
-        client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
-        resp = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=4000,
-            system="Voce e um designer grafico especializado em convites digitais. Retorne APENAS o SVG comecando com <svg, sem markdown.",
-            messages=[{"role": "user", "content": content_var}]
+        # ✦ Chama o Replicate
+        rep_resp = requests.post(
+            model_url,
+            headers={"Authorization": f"Bearer {REPLICATE_KEY}", "Content-Type": "application/json", "Prefer": "wait"},
+            json={"input": payload_input},
+            timeout=90
         )
-        svg_text = resp.content[0].text.strip()
-        if not svg_text.startswith("<svg"):
-            m = re.search(r'<svg.*?</svg>', svg_text, re.DOTALL)
-            svg_text = m.group(0) if m else svg_text
-        svg_b64 = base64.b64encode(svg_text.encode('utf-8')).decode('utf-8')
-        imagem_data = f"data:image/svg+xml;base64,{svg_b64}"
+        rep_data = rep_resp.json()
+        print("Replicate response:", rep_data)
+        output = rep_data.get("output")
+        img_url = (output[0] if isinstance(output, list) else output) if output else None
+
+        if not img_url:
+            raise Exception(f"Replicate nao retornou imagem: {rep_data}")
+
+        # ✦ Baixa a imagem e converte para base64
+        img_r = requests.get(img_url, timeout=30)
+        if img_r.status_code != 200:
+            raise Exception(f"Erro ao baixar imagem: {img_r.status_code}")
+        img_b64 = base64.b64encode(img_r.content).decode("utf-8")
+        imagem_data = f"data:image/webp;base64,{img_b64}"
 
         # ✦ Incrementa contador de gerações
         nova_geracao = ia_geracoes + 1
