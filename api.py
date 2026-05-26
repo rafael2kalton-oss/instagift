@@ -1013,84 +1013,76 @@ def gerar_convite_ia():
                 data_fmt = f"{d.day} de {meses[d.month-1]} de {d.year}"
             except: data_fmt = data_evento_str
 
-        prompt_texto = f"""Crie um convite digital DESLUMBRANTE e SOFISTICADO como SVG 800x600px.
-
-Evento: {nome_evento or "Celebração Especial"}
-Data: {data_fmt or "Em breve"}
-Estilo solicitado: {descricao}
-
-INSTRUÇÕES DETALHADAS:
-- Fundo com gradiente rico e profundo no tema solicitado
-- Título principal do evento em fonte grande, elegante e bem legível
-- Data formatada com destaque especial e artístico
-- Elementos decorativos elaborados: flores, estrelas, ornamentos, molduras, padrões geométricos conforme o tema
-- Subtítulos e textos de apoio bem posicionados
-- Layout equilibrado com espaçamento generoso
-- Cores harmoniosas, saturadas e sofisticadas
-- Bordas decorativas ou molduras elegantes
-- Pelo menos 3 camadas de elementos visuais (fundo, decoração, texto)
-- SVG completamente auto-contido, sem imagens externas
-- Mínimo de 50 elementos SVG para máxima riqueza visual
-
-Retorne APENAS o código SVG completo começando com <svg, sem markdown, sem explicações."""
-
-        # PASSO 1: Replicate gera imagem de fundo
-        imagem_fundo_b64 = ""
-        try:
-            prompt_img = f"beautiful invitation card background, {descricao}, elegant, luxurious, artistic, vibrant colors, no text, no words, decorative elements only"
-            rep_resp = requests.post(
-                "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
-                headers={"Authorization": f"Bearer {REPLICATE_KEY}", "Content-Type": "application/json", "Prefer": "wait"},
-                json={"input": {"prompt": prompt_img, "width": 800, "height": 600, "num_outputs": 1, "num_inference_steps": 4}},
-                timeout=60
-            )
-            rep_data = rep_resp.json()
-            print("Replicate response:", rep_data)
-            output = rep_data.get("output")
-            img_url = (output[0] if isinstance(output, list) else output) if output else None
-            if img_url:
-                img_r = requests.get(img_url, timeout=30)
-                if img_r.status_code == 200:
-                    imagem_fundo_b64 = base64.b64encode(img_r.content).decode("utf-8")
-                    print("Imagem fundo OK, tamanho:", len(imagem_fundo_b64))
-        except Exception as e:
-            print("Replicate erro:", e)
-
-        # PASSO 2: Claude gera SVG com texto por cima
-        if imagem_fundo_b64:
-            fundo_tag = f'<image href="data:image/webp;base64,{imagem_fundo_b64}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>'
-            prompt_texto = f"""Crie um SVG 800x600px de convite digital.
+        # ✦ Se tem imagem de referência: Claude usa direto (sem Replicate)
+        tem_ref = imagem_ref_b64 and len(imagem_ref_b64) > 100
+        if tem_ref:
+            if "," in imagem_ref_b64:
+                header, b64data = imagem_ref_b64.split(",", 1)
+                media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
+            else:
+                b64data, media_type = imagem_ref_b64, "image/jpeg"
+            prompt_texto = f"""Voce recebeu uma imagem de referencia (escudo, personagem, logo, etc).
+Crie um convite digital como SVG 800x600px usando as cores e elementos visuais da imagem como inspiracao.
 Evento: {nome_evento or "Celebracao Especial"}
 Data: {data_fmt or "Em breve"}
 Estilo: {descricao}
 INSTRUCOES:
-- Logo apos a tag <svg, inclua exatamente esta tag de imagem de fundo: {fundo_tag}
-- Adicione <rect width="800" height="600" fill="rgba(0,0,0,0.45)"/> para overlay escuro
-- Titulo grande e elegante centralizado em branco ou dourado
+- Extraia as cores principais da imagem de referencia e use no fundo gradiente
+- Recrie os elementos visuais da imagem como formas SVG (escudo, simbolos, ornamentos)
+- Titulo grande e elegante centralizado
 - Data em destaque artistico
-- Ornamentos decorativos dourados
-- Moldura elegante nas bordas
+- Moldura elegante nas bordas com as cores do tema
+- Minimo 40 elementos SVG ricos e detalhados
 Retorne APENAS o SVG comecando com <svg, sem markdown."""
-            content_var = [{"type": "text", "text": prompt_texto}]
+            content_var = [
+                {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
+                {"type": "text", "text": prompt_texto}
+            ]
         else:
-            prompt_texto = f"""Crie um convite digital DESLUMBRANTE como SVG 800x600px.
+            # ✦ Sem referência: Replicate gera fundo artístico
+            imagem_fundo_url = None
+            try:
+                prompt_img = f"beautiful artistic invitation card background, {descricao}, elegant, luxurious, vibrant colors, no text, no letters, decorative only, high quality"
+                rep_resp = requests.post(
+                    "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
+                    headers={"Authorization": f"Bearer {REPLICATE_KEY}", "Content-Type": "application/json", "Prefer": "wait"},
+                    json={"input": {"prompt": prompt_img, "width": 800, "height": 600, "num_outputs": 1, "num_inference_steps": 4}},
+                    timeout=60
+                )
+                rep_data = rep_resp.json()
+                print("Replicate response:", rep_data)
+                output = rep_data.get("output")
+                imagem_fundo_url = (output[0] if isinstance(output, list) else output) if output else None
+            except Exception as e:
+                print("Replicate erro:", e)
+
+            if imagem_fundo_url:
+                # ✦ Retorna a URL do Replicate diretamente como imagem final
+                # Claude só gera um SVG leve com overlay de texto
+                prompt_texto = f"""Crie um SVG 800x600px de convite digital com fundo externo.
 Evento: {nome_evento or "Celebracao Especial"}
 Data: {data_fmt or "Em breve"}
 Estilo: {descricao}
-- Fundo gradiente rico no tema, titulo em destaque, data artistica
+INSTRUCOES:
+- Primeira linha apos <svg: <image href="{imagem_fundo_url}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid slice"/>
+- Segunda linha: <rect width="800" height="600" fill="rgba(0,0,0,0.5)"/>
+- Titulo grande centralizado em branco ou dourado (#FFD700)
+- Data formatada com destaque
+- Ornamentos dourados decorativos (estrelas, linhas, moldura)
+- Texto do local se houver
+Retorne APENAS o SVG comecando com <svg, sem markdown."""
+                content_var = [{"type": "text", "text": prompt_texto}]
+            else:
+                # ✦ Fallback: SVG puro
+                prompt_texto = f"""Crie um convite digital DESLUMBRANTE como SVG 800x600px.
+Evento: {nome_evento or "Celebracao Especial"}
+Data: {data_fmt or "Em breve"}
+Estilo: {descricao}
+- Fundo gradiente rico e profundo no tema
+- Titulo em destaque, data artistica, ornamentos elaborados
 - Minimo 50 elementos SVG, bordas elegantes, cores sofisticadas
 Retorne APENAS o SVG comecando com <svg, sem markdown."""
-            content_var = [{"type": "text", "text": prompt_texto}]
-            if imagem_ref_b64 and len(imagem_ref_b64) > 100:
-                if "," in imagem_ref_b64:
-                    header, b64data = imagem_ref_b64.split(",", 1)
-                    media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
-                else:
-                    b64data, media_type = imagem_ref_b64, "image/jpeg"
-                content_var = [
-                    {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                    {"type": "text", "text": prompt_texto}
-                ]
+                content_var = [{"type": "text", "text": prompt_texto}]
 
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         resp = client.messages.create(
