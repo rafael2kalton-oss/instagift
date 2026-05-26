@@ -1002,7 +1002,7 @@ def gerar_convite_ia():
             ]
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         resp = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-4-5-20251001",
             max_tokens=4000,
             system="Você é um designer de convites de luxo. Retorne APENAS o SVG começando com <svg, sem markdown.",
             messages=[{"role": "user", "content": content}]
