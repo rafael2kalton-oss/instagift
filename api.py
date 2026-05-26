@@ -964,8 +964,11 @@ def gerar_convite_ia():
     config_existe = config and isinstance(config, list) and len(config) > 0
     cfg = config[0] if config_existe else {}
     ia_pago = cfg.get("ia_pago", False)
-    convite_ja_gerado = bool(cfg.get("convite_ia_imagem", ""))
-    if not ia_pago and not convite_ja_gerado:
+    ia_geracoes = int(cfg.get("ia_geracoes", 0) or 0)
+    LIMITE_GERACOES = 3
+
+    # ✦ Sem pagamento — redireciona para Stripe
+    if not ia_pago:
         try:
             base_url = request.host_url.rstrip("/")
             session = stripe.checkout.Session.create(
@@ -980,6 +983,26 @@ def gerar_convite_ia():
         except Exception as e:
             print("Stripe IA erro:", e)
             return jsonify({"erro": "Erro ao criar pagamento"}), 500
+
+    # ✦ Limite de gerações atingido — força novo pagamento
+    if ia_geracoes >= LIMITE_GERACOES:
+        try:
+            # Reseta ia_pago para forçar novo pagamento
+            sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"ia_pago": False, "ia_geracoes": 0})
+            base_url = request.host_url.rstrip("/")
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[{"price": STRIPE_CONVITE_IA_PRICE, "quantity": 1}],
+                mode="payment",
+                success_url=f"{base_url}/configurar-premium/{lista_id}?ia_pago=true",
+                cancel_url=f"{base_url}/configurar-premium/{lista_id}",
+                metadata={"lista_id": lista_id, "pacote": "convite_ia"}
+            )
+            return jsonify({"limite_atingido": True, "pagamento_url": session.url})
+        except Exception as e:
+            print("Stripe IA limite erro:", e)
+            return jsonify({"erro": "Erro ao criar pagamento"}), 500
+
     try:
         data_fmt = ""
         if data_evento_str:
@@ -988,7 +1011,28 @@ def gerar_convite_ia():
                 meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"]
                 data_fmt = f"{d.day} de {meses[d.month-1]} de {d.year}"
             except: data_fmt = data_evento_str
-        prompt_texto = f"""Crie um convite digital elegante como SVG 800x600px.\nEvento: {nome_evento or "Celebração Especial"}\nData: {data_fmt or "Em breve"}\nEstilo: {descricao}\nRequisitos: fundo gradiente rico, título em destaque, data artística, elementos decorativos temáticos, layout profissional.\nRetorne APENAS o SVG completo começando com <svg."""
+
+        prompt_texto = f"""Crie um convite digital DESLUMBRANTE e SOFISTICADO como SVG 800x600px.
+
+Evento: {nome_evento or "Celebração Especial"}
+Data: {data_fmt or "Em breve"}
+Estilo solicitado: {descricao}
+
+INSTRUÇÕES DETALHADAS:
+- Fundo com gradiente rico e profundo no tema solicitado
+- Título principal do evento em fonte grande, elegante e bem legível
+- Data formatada com destaque especial e artístico
+- Elementos decorativos elaborados: flores, estrelas, ornamentos, molduras, padrões geométricos conforme o tema
+- Subtítulos e textos de apoio bem posicionados
+- Layout equilibrado com espaçamento generoso
+- Cores harmoniosas, saturadas e sofisticadas
+- Bordas decorativas ou molduras elegantes
+- Pelo menos 3 camadas de elementos visuais (fundo, decoração, texto)
+- SVG completamente auto-contido, sem imagens externas
+- Mínimo de 50 elementos SVG para máxima riqueza visual
+
+Retorne APENAS o código SVG completo começando com <svg, sem markdown, sem explicações."""
+
         content = [{"type": "text", "text": prompt_texto}]
         if imagem_ref_b64 and len(imagem_ref_b64) > 100:
             if "," in imagem_ref_b64:
@@ -998,13 +1042,14 @@ def gerar_convite_ia():
                 b64data, media_type = imagem_ref_b64, "image/jpeg"
             content = [
                 {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                {"type": "text", "text": prompt_texto + "\n\nUse a imagem de referência como inspiração visual."}
+                {"type": "text", "text": prompt_texto + "\n\nUse a imagem de referência acima como inspiração para o estilo visual."}
             ]
+
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         resp = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=4000,
-            system="Você é um designer de convites de luxo. Retorne APENAS o SVG começando com <svg, sem markdown.",
+            model="claude-opus-4-5-20251101",
+            max_tokens=8000,
+            system="Você é um designer gráfico de elite especializado em convites digitais de luxo. Cria SVGs extremamente detalhados, ricos e visualmente impressionantes. Sempre retorna APENAS o código SVG começando com <svg, sem markdown, sem explicações. Seus convites têm no mínimo 50 elementos visuais e são verdadeiras obras de arte digitais.",
             messages=[{"role": "user", "content": content}]
         )
         svg_text = resp.content[0].text.strip()
@@ -1013,16 +1058,32 @@ def gerar_convite_ia():
             svg_text = m.group(0) if m else svg_text
         svg_b64 = base64.b64encode(svg_text.encode('utf-8')).decode('utf-8')
         imagem_data = f"data:image/svg+xml;base64,{svg_b64}"
-        upd = {"convite_ia_imagem": imagem_data, "ia_pago": True, "estilo_convite": "ia"}
+
+        # ✦ Incrementa contador de gerações
+        nova_geracao = ia_geracoes + 1
+        restantes = LIMITE_GERACOES - nova_geracao
+        upd = {"convite_ia_imagem": imagem_data, "ia_pago": True, "estilo_convite": "ia", "ia_geracoes": nova_geracao}
         if config_existe:
             sb_patch("config_premium", f"lista_id=eq.{lista_id}", upd)
         else:
             upd["lista_id"] = lista_id
             sb_post("config_premium", upd)
+
         try:
             sb_post("vendas", {"lista_id": lista_id, "pacote": "convite_ia", "valor": 9.90})
         except: pass
-        return jsonify({"ok": True, "imagem": imagem_data})
+
+        # ✦ Mensagem de aviso conforme gerações restantes
+        if restantes == 2:
+            aviso = "✨ Convite gerado! Você ainda tem 2 gerações disponíveis."
+        elif restantes == 1:
+            aviso = "⚠️ Atenção! Esta foi sua penúltima geração. Aproveite bem a próxima — é a última!"
+        elif restantes == 0:
+            aviso = "🎨 Esta foi sua última geração incluída. Para criar um novo convite, será necessário adquirir novamente por R$ 9,90."
+        else:
+            aviso = f"✨ Convite gerado! Você ainda tem {restantes} geração(ões) disponível(eis)."
+
+        return jsonify({"ok": True, "imagem": imagem_data, "geracoes_restantes": restantes, "aviso": aviso})
     except Exception as e:
         print("Gerar convite IA erro:", e)
         return jsonify({"erro": f"Erro ao gerar: {str(e)}"}), 500
