@@ -589,6 +589,7 @@ def stripe_sucesso():
             if pacote == "celebracao":
                 atualizacao["cofrinho_ativo"] = True
                 atualizacao["estilo_mural"] = "carrossel"
+                atualizacao["ia_pago"] = True
             if atualizacao:
                 if config_existe:
                     sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
