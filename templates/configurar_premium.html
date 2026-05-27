@@ -801,7 +801,8 @@ async function carregarConfig() {
     if (data.recados && data.recados.length > 0) { renderRecadosAdmin(data.recados); }
     atualizarPreviewConvite();
     atualizarContadorFotos();
-    if (data.config && (data.config.cofrinho_ativo || data.config.estilo_mural === 'carrossel' || limiteFotos > 10)) { usuarioPago = true; }
+    // ✦ Pacote completo = carrossel + cofrinho + fotos extras
+    if (data.config && data.config.estilo_mural === 'carrossel' && data.config.cofrinho_ativo && limiteFotos > 10) { usuarioPago = true; }
     if (data.config && (data.config.nome_celebrante || data.config.mensagem_celebrante)) { storyPostado = true; }
     verificarStoryPostado();
     atualizarEstadoSalvar();
