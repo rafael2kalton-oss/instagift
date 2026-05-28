@@ -344,7 +344,7 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
 
 @app.route("/")
 def index():
-    return render_template("criar_story.html")
+    return render_template("login.html")
 
 @app.route("/criar-lista")
 def criar_lista_page():
@@ -777,6 +777,10 @@ def verificar_expiracao(lista_id):
 @app.route("/login")
 def login_page():
     return render_template("login.html")
+
+@app.route("/termos")
+def termos():
+    return render_template("termos.html")
 
 @app.route("/acesso/<lista_id>")
 def acesso_direto(lista_id):
