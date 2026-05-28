@@ -28,6 +28,7 @@ STRIPE_PACOTES = {
     "10": {"price_id": "price_1TXSBn41uxxrCBOGWfYbpFCt", "fotos": 10, "valor": "R$ 19,90"},
     "25": {"price_id": "price_1TXSCB41uxxrCBOGaliEnmy3", "fotos": 25, "valor": "R$ 49,90"},
     "cofrinho": {"price_id": "price_1TYuZj41uxxrCBOGVDjlG7Pf", "fotos": 0, "valor": "R$ 15,90"},
+    "carrossel": {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5, "valor": "R$ 9,90"},
     "celebracao": {"price_id": "price_1TYudb41uxxrCBOGuOcE4aeo", "fotos": 5, "valor": "R$ 25,90"},
     "convite_ia": {"price_id": STRIPE_CONVITE_IA_PRICE, "fotos": 0, "valor": "R$ 9,90"},
 }
@@ -586,6 +587,8 @@ def stripe_sucesso():
                 atualizacao["limite_fotos"] = limite_atual + fotos_extras
             if pacote == "cofrinho":
                 atualizacao["cofrinho_ativo"] = True
+            if pacote == "carrossel":
+                atualizacao["estilo_mural"] = "carrossel"
             if pacote == "celebracao":
                 atualizacao["cofrinho_ativo"] = True
                 atualizacao["estilo_mural"] = "carrossel"
