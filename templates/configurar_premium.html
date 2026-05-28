@@ -642,9 +642,9 @@ function mostrarAvisoPagamento(tipo) {
     btn.onclick = function() { fecharPopupPagamento(); comprarCofrinho(); };
   } else if (tipo === 'carrossel') {
     titulo.textContent = '🎠 Estilo Carrossel';
-    texto.textContent = 'O estilo Carrossel está disponível no Pacote Celebração por R$ 25,90 (inclui Cofrinho Pix + 5 fotos extras).';
-    btn.textContent = '✦ Adquirir Pacote Celebração — R$ 25,90';
-    btn.onclick = function() { fecharPopupPagamento(); comprarPacotao(); };
+    texto.textContent = 'O estilo Carrossel deixa suas fotos em slideshow automático. Adquira por R$ 9,90 ou inclua no Pacote Celebração completo por R$ 25,90.';
+    btn.textContent = '✦ Ativar Carrossel — R$ 9,90';
+    btn.onclick = function() { fecharPopupPagamento(); comprarCarrossel(); };
   }
   popup.classList.add('show');
 }
@@ -1134,6 +1134,14 @@ async function uploadFoto(file) {
 async function comprarPacotao() {
   try {
     var r = await fetch('/api/stripe/checkout', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, pacote: 'celebracao' }) });
+    var data = await r.json();
+    if (data.url) { window.location.href = data.url; } else { alert('Erro ao processar pagamento. Tente novamente.'); }
+  } catch(e) { alert('Erro de conexão. Tente novamente.'); }
+}
+
+async function comprarCarrossel() {
+  try {
+    var r = await fetch('/api/stripe/checkout', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, pacote: '5' }) });
     var data = await r.json();
     if (data.url) { window.location.href = data.url; } else { alert('Erro ao processar pagamento. Tente novamente.'); }
   } catch(e) { alert('Erro de conexão. Tente novamente.'); }
