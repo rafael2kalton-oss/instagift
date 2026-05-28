@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FestStory — Termos de Uso e Política de Privacidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
+.hero { background: linear-gradient(135deg, #2C1A00, #1a0f00, #3d2600); padding: 60px 24px 48px; text-align: center; }
+.logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #C9A84C; margin-bottom: 8px; cursor: pointer; }
+.hero-ornamento { color: rgba(201,168,76,0.6); font-size: 12px; letter-spacing: 8px; margin-bottom: 20px; }
+.hero-titulo { font-family: 'Playfair Display', serif; font-size: clamp(24px,6vw,40px); font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+.hero-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: rgba(255,255,255,0.6); }
+.container { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+.nav-tabs { display: flex; gap: 4px; background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 50px; padding: 4px; margin-bottom: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.nav-tab { flex: 1; padding: 12px; text-align: center; font-size: 13px; font-weight: 600; color: #aaa; cursor: pointer; border-radius: 50px; transition: all 0.2s; font-family: 'Inter', sans-serif; border: none; background: transparent; }
+.nav-tab.ativo { background: linear-gradient(135deg, #C9A84C, #A8722A); color: #fff; box-shadow: 0 4px 12px rgba(201,168,76,0.3); }
+.secao { display: none; }
+.secao.ativa { display: block; }
+.atualizado { font-size: 12px; color: #aaa; text-align: center; margin-bottom: 32px; font-style: italic; }
+.bloco { margin-bottom: 36px; }
+.bloco-titulo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; gap: 10px; }
+.bloco-titulo-icon { font-size: 20px; }
+.bloco p { font-size: 14px; color: #555; line-height: 1.85; margin-bottom: 12px; }
+.bloco ul { padding-left: 20px; margin-bottom: 12px; }
+.bloco ul li { font-size: 14px; color: #555; line-height: 1.85; margin-bottom: 6px; }
+.destaque { background: rgba(201,168,76,0.06); border-left: 3px solid #C9A84C; border-radius: 0 10px 10px 0; padding: 16px 18px; margin: 16px 0; }
+.destaque p { margin: 0; font-style: italic; color: #777; }
+.badge-gratuito { display: inline-block; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #16a34a; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-left: 8px; }
+.contato-box { background: linear-gradient(135deg, #2C1A00, #1a0f00); border-radius: 20px; padding: 28px 24px; text-align: center; margin-top: 40px; }
+.contato-box h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #C9A84C; margin-bottom: 10px; }
+.contato-box p { font-size: 13px; color: rgba(245,237,216,0.7); line-height: 1.7; margin-bottom: 16px; }
+.contato-box a { color: #C9A84C; text-decoration: none; font-weight: 600; }
+.btn-voltar { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: #C9A84C; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-decoration: none; margin-top: 32px; }
+.btn-voltar:hover { background: rgba(201,168,76,0.2); }
+.divider { display: flex; align-items: center; gap: 12px; margin: 28px 0; }
+.divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent); }
+.divider-icon { color: #C9A84C; font-size: 10px; opacity: 0.6; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="logo" onclick="window.location.href='/'">FestStory</div>
+  <div class="hero-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
+  <h1 class="hero-titulo">Termos & Privacidade</h1>
+  <p class="hero-sub">Transparência e respeito aos seus dados</p>
+</div>
+
+<div class="container">
+  <div class="nav-tabs">
+    <button class="nav-tab ativo" onclick="trocarAba('termos')">📋 Termos de Uso</button>
+    <button class="nav-tab" onclick="trocarAba('privacidade')">🔒 Política de Privacidade</button>
+  </div>
+
+  <!-- ✦ TERMOS DE USO -->
+  <div class="secao ativa" id="secao-termos">
+    <p class="atualizado">Última atualização: maio de 2026</p>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🎉</span> 1. Sobre o FestStory</div>
+      <p>O FestStory é uma plataforma digital brasileira que permite a criação de páginas personalizadas para eventos como aniversários, casamentos, chás de bebê e outros. Por meio do FestStory, usuários podem criar listas de presentes, murais de fotos, livros de recados, convites digitais e muito mais.</p>
+      <p>Ao utilizar o FestStory, você concorda com estes Termos de Uso. Caso não concorde, pedimos que não utilize o serviço.</p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">✅</span> 2. O que é gratuito</div>
+      <p>Os seguintes recursos são oferecidos gratuitamente <span class="badge-gratuito">GRÁTIS</span> para todos os usuários:</p>
+      <ul>
+        <li>Criação de página do evento com link permanente</li>
+        <li>Lista de presentes com até 10 fotos no mural</li>
+        <li>Livro de recados dos convidados</li>
+        <li>Convite digital para compartilhar no WhatsApp</li>
+        <li>Lista de presença do evento</li>
+        <li>Criação de Story para o Instagram</li>
+      </ul>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">💛</span> 3. Recursos pagos</div>
+      <p>Alguns recursos são oferecidos mediante pagamento único, sem assinatura:</p>
+      <ul>
+        <li><strong>Cofrinho Pix</strong> — R$ 15,90: receba contribuições dos convidados via Pix</li>
+        <li><strong>Fotos extras</strong> — a partir de R$ 9,90: amplie o mural de memórias</li>
+        <li><strong>Convite com IA</strong> — R$ 9,90: convite digital gerado por inteligência artificial (3 gerações)</li>
+        <li><strong>Pacote Celebração</strong> — R$ 25,90: inclui Cofrinho Pix, Mural Carrossel, +5 fotos e Convite IA</li>
+      </ul>
+      <div class="destaque"><p>Todos os pagamentos são processados com segurança pelo Stripe. O FestStory não armazena dados de cartão de crédito.</p></div>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">⏰</span> 4. Validade das páginas</div>
+      <p>As páginas do FestStory possuem validade automática:</p>
+      <ul>
+        <li>A página fica ativa por até <strong>7 dias após a data do evento</strong> informada</li>
+        <li>Sem data de evento, a página expira após <strong>6 meses</strong> da criação</li>
+        <li>Após o prazo, a página e seus dados são removidos automaticamente</li>
+      </ul>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🚫</span> 5. Uso responsável</div>
+      <p>O usuário compromete-se a não utilizar o FestStory para:</p>
+      <ul>
+        <li>Publicar conteúdo ofensivo, discriminatório ou ilegal</li>
+        <li>Violar direitos autorais de terceiros</li>
+        <li>Realizar fraudes ou enganar convidados</li>
+        <li>Coletar dados de terceiros sem consentimento</li>
+      </ul>
+      <p>O FestStory reserva-se o direito de remover páginas que violem estas diretrizes sem aviso prévio.</p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🔗</span> 6. Links de afiliados</div>
+      <p>O FestStory participa de programas de afiliados da Amazon, Mercado Livre, Shopee, Magazine Luiza e Shein. Os links de produtos adicionados à lista de presentes podem conter identificadores de afiliado, o que nos permite receber uma comissão sem custo adicional ao comprador.</p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">⚖️</span> 7. Limitação de responsabilidade</div>
+      <p>O FestStory não se responsabiliza por:</p>
+      <ul>
+        <li>Transações realizadas entre compradores e lojas parceiras</li>
+        <li>Qualidade, entrega ou disponibilidade dos produtos listados</li>
+        <li>Conteúdo publicado pelos usuários (recados, fotos, mensagens)</li>
+        <li>Indisponibilidade temporária do serviço por manutenção ou força maior</li>
+      </ul>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">📍</span> 8. Legislação aplicável</div>
+      <p>Estes Termos de Uso são regidos pelas leis brasileiras, especialmente o Código de Defesa do Consumidor (Lei 8.078/1990), o Marco Civil da Internet (Lei 12.965/2014) e a Lei Geral de Proteção de Dados — LGPD (Lei 13.709/2018).</p>
+    </div>
+  </div>
+
+  <!-- ✦ POLÍTICA DE PRIVACIDADE -->
+  <div class="secao" id="secao-privacidade">
+    <p class="atualizado">Última atualização: maio de 2026 — em conformidade com a LGPD</p>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🔒</span> 1. Controlador dos dados</div>
+      <p>O FestStory é o controlador dos dados pessoais coletados nesta plataforma, conforme definido pela Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018). Nos comprometemos a tratar seus dados com transparência, segurança e respeito.</p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">📊</span> 2. Dados que coletamos</div>
+      <p>Coletamos apenas os dados necessários para o funcionamento do serviço:</p>
+      <ul>
+        <li><strong>E-mail</strong> — para envio do link de acesso (magic link) e notificações do evento</li>
+        <li><strong>Nome do evento e data</strong> — para personalização da página</li>
+        <li><strong>Fotos do mural</strong> — enviadas voluntariamente pelo usuário</li>
+        <li><strong>Recados e confirmações</strong> — enviados pelos convidados</li>
+        <li><strong>Chave Pix</strong> — apenas quando o usuário opta pelo Cofrinho Pix</li>
+        <li><strong>Nome e e-mail de convidados</strong> — ao reservar um presente</li>
+      </ul>
+      <div class="destaque"><p>Não coletamos dados de cartão de crédito. Pagamentos são processados diretamente pelo Stripe, com sua própria política de privacidade.</p></div>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🎯</span> 3. Como usamos seus dados</div>
+      <p>Seus dados são usados exclusivamente para:</p>
+      <ul>
+        <li>Enviar o link de acesso à sua página (magic link)</li>
+        <li>Notificar sobre reservas e confirmações de presentes</li>
+        <li>Personalizar sua página do evento</li>
+        <li>Enviar confirmações de presença ao organizador</li>
+        <li>Processar pagamentos via Stripe</li>
+      </ul>
+      <p><strong>Não vendemos, alugamos ou compartilhamos seus dados com terceiros para fins comerciais.</strong></p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🛡️</span> 4. Base legal (LGPD)</div>
+      <p>O tratamento dos seus dados possui as seguintes bases legais conforme a LGPD:</p>
+      <ul>
+        <li><strong>Execução do contrato</strong> — para fornecer o serviço solicitado</li>
+        <li><strong>Consentimento</strong> — ao se cadastrar, você consente com o uso do e-mail para acesso</li>
+        <li><strong>Legítimo interesse</strong> — para notificações relacionadas ao seu evento</li>
+      </ul>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🗑️</span> 5. Retenção e exclusão</div>
+      <p>Seus dados são retidos apenas pelo tempo necessário:</p>
+      <ul>
+        <li>Páginas expiram automaticamente após 7 dias do evento ou 6 meses da criação</li>
+        <li>Ao expirar, todos os dados da página são excluídos permanentemente</li>
+        <li>Você pode solicitar a exclusão antecipada entrando em contato conosco</li>
+      </ul>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">✊</span> 6. Seus direitos (LGPD)</div>
+      <p>Como titular dos dados, você tem direito a:</p>
+      <ul>
+        <li><strong>Acesso</strong> — saber quais dados temos sobre você</li>
+        <li><strong>Correção</strong> — corrigir dados incompletos ou incorretos</li>
+        <li><strong>Exclusão</strong> — solicitar a remoção dos seus dados</li>
+        <li><strong>Portabilidade</strong> — receber seus dados em formato legível</li>
+        <li><strong>Revogação do consentimento</strong> — a qualquer momento</li>
+      </ul>
+      <p>Para exercer esses direitos, entre em contato pelo e-mail abaixo.</p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🍪</span> 7. Cookies e armazenamento local</div>
+      <p>O FestStory utiliza <strong>localStorage</strong> do navegador para salvar o progresso da sua lista de presentes localmente, sem enviar dados a servidores de terceiros. Não utilizamos cookies de rastreamento ou publicidade.</p>
+    </div>
+
+    <div class="divider"><div class="divider-linha"></div><div class="divider-icon">✦</div><div class="divider-linha"></div></div>
+
+    <div class="bloco">
+      <div class="bloco-titulo"><span class="bloco-titulo-icon">🌐</span> 8. Terceiros e integrações</div>
+      <p>O FestStory integra serviços de terceiros, cada um com sua própria política de privacidade:</p>
+      <ul>
+        <li><strong>Stripe</strong> — processamento de pagamentos</li>
+        <li><strong>Supabase</strong> — armazenamento seguro dos dados</li>
+        <li><strong>Resend</strong> — envio de e-mails transacionais</li>
+        <li><strong>Anthropic (Claude)</strong> — geração de convites com IA</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ✦ CONTATO -->
+  <div class="contato-box">
+    <h3>✦ Dúvidas ou solicitações?</h3>
+    <p>Para exercer seus direitos, reportar problemas ou entrar em contato com nosso encarregado de dados (DPO), escreva para:</p>
+    <a href="mailto:contato@feststory.art.br">contato@feststory.art.br</a>
+  </div>
+
+  <div style="text-align:center;">
+    <a class="btn-voltar" href="/">← Voltar para o FestStory</a>
+  </div>
+</div>
+
+<script>
+function trocarAba(aba) {
+  document.querySelectorAll('.secao').forEach(function(s){ s.classList.remove('ativa'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('ativo'); });
+  document.getElementById('secao-' + aba).classList.add('ativa');
+  event.target.classList.add('ativo');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
