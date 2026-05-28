@@ -269,6 +269,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     </div>
   </div>
 
+  <!-- ✦ BOTÃO CONFIRMAR PRESENÇA — visível para convidados abaixo do convite -->
+  <div id="btnConfirmarPresencaConvite" style="margin-bottom:20px;display:none;">
+    <button onclick="trocarAba('presenca')" style="width:100%;padding:15px;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 4px 20px rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;gap:8px;">
+      ✅ Confirmar minha presença
+    </button>
+  </div>
+
   <!-- ✦ MENSAGEM DO ANIVERSARIANTE -->
   <div class="mensagem-card" id="mensagemCard" style="display:none;">
     <div class="mensagem-avatar">✦</div>
@@ -537,6 +544,10 @@ function renderHero(config) {
     var botoesMural = document.getElementById('conviteMuralBotoes');
     if (botoesMural) botoesMural.style.display = 'flex';
   }
+  // ✦ Botão de presença — só para convidados
+  var btnPresenca = document.getElementById('btnConfirmarPresencaConvite');
+  if (btnPresenca) btnPresenca.style.display = isDono ? 'none' : 'block';
+
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var data = config.data_evento ? formatarData(config.data_evento) : '';
@@ -700,6 +711,10 @@ function renderRecados(recados) {
 
 // ✦ Convite visual na aba Convite — só visualização
 function renderConviteVisual(config) {
+  // ✦ Botão de presença — só para convidados
+  var btnPresenca = document.getElementById('btnConfirmarPresencaConvite');
+  if (btnPresenca) btnPresenca.style.display = isDono ? 'none' : 'block';
+
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
