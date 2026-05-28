@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, jsonify, redirect
 import uuid, re, requests, resend, stripe, anthropic, base64
 from bs4 import BeautifulSoup
+import os
 from datetime import datetime, timedelta
 
 app = Flask(__name__, template_folder="templates")
+app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024  # ✦ 32MB max upload
 
 SUPABASE_URL = "https://xmivfkpywjbrcrkniqbu.supabase.co"
 SUPABASE_KEY = "sb_secret_0M-YowSnhrciNuzmJMS7AQ_QwA9GUjz"
@@ -15,18 +17,18 @@ MAGALU_ID = "magazinevitrinedodanilo"
 ML_CLIENT_ID = "5415799706798482"
 ML_CLIENT_SECRET = "GIPTdLAoQf4CKVycmLCr9WhAeV4sA2Pq"
 RESEND_KEY = "re_BMvckQ8G_KZdPini3AxGzHUTirGtsiixC"
-# ✦ Substitua pela sua chave real: console.anthropic.com
-ANTHROPIC_KEY = "sk-ant-api03-SUBSTITUA-PELA-SUA-CHAVE-REAL"
 STRIPE_SECRET_KEY = "sk_test_51TXRmJ41uxxrCBOGBQ26wvpgxbg7fNQVZqHsf8fjvHkRYht1SgikEQnFtxUTXPMozTDOrRK5G9PDkxu7MSb9jWHM009jcBfsmv"
 STRIPE_PUBLIC_KEY = "pk_test_51TXRmJ41uxxrCBOGc4Rt0AKAErdUeGMKi7nXCBM1dlxsKs0HVw09tORnGfku1YNLif1GiBIGziNMrdT30091vAVts7"
-# ✦ Crie um price R$ 9,90 no Stripe para Convite IA e substitua:
-STRIPE_CONVITE_IA_PRICE = "price_1TXS6H41uxxrCBOGqrRYbBhv"
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_KEY", "")
+REPLICATE_KEY = os.environ.get("REPLICATE_KEY", "")
+STRIPE_CONVITE_IA_PRICE = "price_1Tb4Tk41uxxrCBOG2iuUoC2J"
 
 STRIPE_PACOTES = {
     "5":  {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5,  "valor": "R$ 9,90"},
     "10": {"price_id": "price_1TXSBn41uxxrCBOGWfYbpFCt", "fotos": 10, "valor": "R$ 19,90"},
     "25": {"price_id": "price_1TXSCB41uxxrCBOGaliEnmy3", "fotos": 25, "valor": "R$ 49,90"},
     "cofrinho": {"price_id": "price_1TYuZj41uxxrCBOGVDjlG7Pf", "fotos": 0, "valor": "R$ 15,90"},
+    "carrossel": {"price_id": "price_1TXS6H41uxxrCBOGqrRYbBhv", "fotos": 5, "valor": "R$ 9,90"},
     "celebracao": {"price_id": "price_1TYudb41uxxrCBOGuOcE4aeo", "fotos": 5, "valor": "R$ 25,90"},
     "convite_ia": {"price_id": STRIPE_CONVITE_IA_PRICE, "fotos": 0, "valor": "R$ 9,90"},
 }
@@ -342,6 +344,10 @@ def enviar_email_aniversariante(email_aniversariante, nome_comprador, nome_produ
 
 @app.route("/")
 def index():
+    return render_template("login.html")
+
+@app.route("/criar-story")
+def criar_story():
     return render_template("criar_story.html")
 
 @app.route("/criar-lista")
@@ -585,9 +591,12 @@ def stripe_sucesso():
                 atualizacao["limite_fotos"] = limite_atual + fotos_extras
             if pacote == "cofrinho":
                 atualizacao["cofrinho_ativo"] = True
+            if pacote == "carrossel":
+                atualizacao["estilo_mural"] = "carrossel"
             if pacote == "celebracao":
                 atualizacao["cofrinho_ativo"] = True
                 atualizacao["estilo_mural"] = "carrossel"
+                atualizacao["ia_pago"] = True
             if atualizacao:
                 if config_existe:
                     sb_patch("config_premium", f"lista_id=eq.{lista_id}", atualizacao)
@@ -601,7 +610,6 @@ def stripe_sucesso():
         sb_post("vendas", {"lista_id": lista_id, "pacote": pacote, "valor": valor})
     except Exception as e:
         print("Erro registrar venda:", e)
-    # ✦ Convite IA — marca ia_pago e redireciona de volta
     if pacote == "convite_ia":
         try:
             cfg_ia = sb_get("config_premium", f"lista_id=eq.{lista_id}")
@@ -646,7 +654,7 @@ def salvar_config_premium():
         "lista_id": lista_id,
         "mensagem_celebrante": data.get("mensagem_celebrante", ""),
         "texto_convite": data.get("texto_convite", ""),
-        "usa_convite_padrao": bool(data.get("usa_convite_padrao", True)),
+        "usa_convite_padrao": data.get("usa_convite_padrao", True),
         "nome_celebrante": data.get("nome_celebrante", ""),
         "data_evento": data.get("data_evento", ""),
         "paleta": data.get("paleta", "dourado"),
@@ -656,9 +664,9 @@ def salvar_config_premium():
         "cofrinho_ativo": data.get("cofrinho_ativo", False),
         "estilo_convite": data.get("estilo_convite", "classico"),
         "imagem_fundo_convite": data.get("imagem_fundo_convite", ""),
-        "cor_texto_convite": data.get("cor_texto_convite", "claro"),
         "foto_capa": data.get("foto_capa", ""),
         "convite_ia_imagem": data.get("convite_ia_imagem", ""),
+        "cor_texto_convite": data.get("cor_texto_convite", "claro"),
     }
     if config_existente and isinstance(config_existente, list) and len(config_existente) > 0:
         sb_patch("config_premium", f"lista_id=eq.{lista_id}", payload)
@@ -770,11 +778,13 @@ def verificar_expiracao(lista_id):
     except Exception as e:
         return jsonify({"expirada": False, "motivo": None})
 
-# ── MAGIC LINK ──
-
 @app.route("/login")
 def login_page():
     return render_template("login.html")
+
+@app.route("/termos")
+def termos():
+    return render_template("termos.html")
 
 @app.route("/acesso/<lista_id>")
 def acesso_direto(lista_id):
@@ -805,7 +815,7 @@ def enviar_magic_link():
             "from": "FestStory <onboarding@resend.dev>",
             "to": email,
             "subject": "✦ Seu link de acesso — FestStory",
-            "html": f"<div style='font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#FFF8EC;padding:40px 32px;border-radius:20px;border:1px solid rgba(201,168,76,0.3);'><div style='text-align:center;margin-bottom:28px;'><div style='font-family:Georgia,serif;font-size:32px;color:#C9A84C;font-weight:700;'>FestStory</div><p style='color:#C9A84C;font-size:14px;letter-spacing:0.2em;margin-top:4px;'>✦ &nbsp; ✦ &nbsp; ✦</p></div><h2 style='font-family:Georgia,serif;color:#2C2C2C;font-size:22px;font-weight:700;margin-bottom:10px;text-align:center;'>Seu link chegou!</h2><p style='color:#888;font-size:14px;line-height:1.7;margin-bottom:28px;text-align:center;font-style:italic;'>Clique no botão abaixo para acessar sua Página do Evento e criar sua lista de presentes.</p><a href='{link}' style='display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px 24px;border-radius:50px;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:20px;letter-spacing:0.03em;box-shadow:0 4px 20px rgba(201,168,76,0.4);'>✦ ACESSAR MINHA PÁGINA</a><p style='color:#bbb;font-size:11px;text-align:center;line-height:1.6;'>Este link é exclusivo para você e fica salvo por 6 meses.<br>Se não solicitou, ignore este e-mail.</p></div>"
+            "html": f"""<div style='font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#FFF8EC;padding:40px 32px;border-radius:20px;border:1px solid rgba(201,168,76,0.3);'><div style='text-align:center;margin-bottom:28px;'><div style='font-family:Georgia,serif;font-size:32px;color:#C9A84C;font-weight:700;'>FestStory</div><p style='color:#C9A84C;font-size:14px;letter-spacing:0.2em;margin-top:4px;'>✦ &nbsp; ✦ &nbsp; ✦</p></div><h2 style='font-family:Georgia,serif;color:#2C2C2C;font-size:22px;font-weight:700;margin-bottom:10px;text-align:center;'>Seu link chegou!</h2><p style='color:#888;font-size:14px;line-height:1.7;margin-bottom:28px;text-align:center;font-style:italic;'>Clique no botão abaixo para acessar sua Página do Evento e criar sua lista de presentes.</p><a href='{link}' style='display:block;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;text-align:center;padding:18px 24px;border-radius:50px;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:20px;letter-spacing:0.03em;box-shadow:0 4px 20px rgba(201,168,76,0.4);'>✦ ACESSAR MINHA PÁGINA</a><p style='color:#bbb;font-size:11px;text-align:center;line-height:1.6;'>Este link é exclusivo para você e fica salvo por 6 meses.<br>Se não solicitou, ignore este e-mail.</p></div>"""
         })
     except Exception as e:
         print("Erro magic link email:", e)
@@ -822,8 +832,6 @@ def acesso_magico(token):
         return render_template("login.html")
     lista_id = link["lista_id"]
     return redirect(f"/lista/{lista_id}")
-
-# ── PRESIDENTE ──
 
 PRESIDENTE_TOKEN = "instagift-presidente"
 
@@ -881,7 +889,6 @@ def presidente_vendas():
             return jsonify([])
         return jsonify(vendas)
     except Exception as e:
-        print("Erro presidente vendas:", e)
         return jsonify([])
 
 @app.route("/api/presidente/paginas")
@@ -890,7 +897,6 @@ def presidente_paginas():
         paginas = sb_get("config_premium", "order=criado_em.desc&limit=100")
         return jsonify(paginas if isinstance(paginas, list) else [])
     except Exception as e:
-        print("Erro presidente paginas:", e)
         return jsonify([])
 
 @app.route("/api/presidente/liberar-premium", methods=["POST"])
@@ -948,7 +954,6 @@ def presidente_liberar_cortesia():
     if fotos_extras > 0:
         limite_atual = config[0].get("limite_fotos", 10) if config_existe else 10
         atualizacao["limite_fotos"] = limite_atual + fotos_extras
-    # ✦ Convite IA cortesia
     if data.get("convite_ia"):
         atualizacao["ia_pago"] = True
     if atualizacao:
@@ -959,8 +964,6 @@ def presidente_liberar_cortesia():
             sb_post("config_premium", atualizacao)
     return jsonify({"ok": True})
 
-# ── CONVITE IA ──
-
 @app.route("/api/gerar-convite-ia", methods=["POST"])
 def gerar_convite_ia():
     data = request.json or {}
@@ -969,19 +972,17 @@ def gerar_convite_ia():
     nome_evento = data.get("nome_evento", "").strip()
     data_evento_str = data.get("data_evento", "").strip()
     imagem_ref_b64 = data.get("imagem_referencia", "")
-
     if not lista_id or not descricao:
         return jsonify({"erro": "Dados incompletos"}), 400
-
-    # ✦ Verifica se já pagou
     config = sb_get("config_premium", f"lista_id=eq.{lista_id}")
     config_existe = config and isinstance(config, list) and len(config) > 0
     cfg = config[0] if config_existe else {}
     ia_pago = cfg.get("ia_pago", False)
-    convite_ja_gerado = bool(cfg.get("convite_ia_imagem", ""))
+    ia_geracoes = int(cfg.get("ia_geracoes", 0) or 0)
+    LIMITE_GERACOES = 3
 
-    if not ia_pago and not convite_ja_gerado:
-        # ✦ Cria sessão Stripe para pagamento
+    # ✦ Sem pagamento — redireciona para Stripe
+    if not ia_pago:
         try:
             base_url = request.host_url.rstrip("/")
             session = stripe.checkout.Session.create(
@@ -997,7 +998,25 @@ def gerar_convite_ia():
             print("Stripe IA erro:", e)
             return jsonify({"erro": "Erro ao criar pagamento"}), 500
 
-    # ✦ Pago — gera convite com Claude
+    # ✦ Limite de gerações atingido — força novo pagamento
+    if ia_geracoes >= LIMITE_GERACOES:
+        try:
+            # Reseta ia_pago para forçar novo pagamento
+            sb_patch("config_premium", f"lista_id=eq.{lista_id}", {"ia_pago": False, "ia_geracoes": 0})
+            base_url = request.host_url.rstrip("/")
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[{"price": STRIPE_CONVITE_IA_PRICE, "quantity": 1}],
+                mode="payment",
+                success_url=f"{base_url}/configurar-premium/{lista_id}?ia_pago=true",
+                cancel_url=f"{base_url}/configurar-premium/{lista_id}",
+                metadata={"lista_id": lista_id, "pacote": "convite_ia"}
+            )
+            return jsonify({"limite_atingido": True, "pagamento_url": session.url})
+        except Exception as e:
+            print("Stripe IA limite erro:", e)
+            return jsonify({"erro": "Erro ao criar pagamento"}), 500
+
     try:
         data_fmt = ""
         if data_evento_str:
@@ -1007,53 +1026,47 @@ def gerar_convite_ia():
                 data_fmt = f"{d.day} de {meses[d.month-1]} de {d.year}"
             except: data_fmt = data_evento_str
 
-        prompt_texto = f"""Crie um convite digital sofisticado e elegante como SVG completo 800x600px.
+        evento_txt = nome_evento or "Celebracao Especial"
+        data_txt = data_fmt or "Em breve"
 
-Evento: {nome_evento or "Celebração Especial"}
-Data: {data_fmt or "Em breve"}
+        # ✦ Claude gera SVG elegante com texto e ornamentos
+        prompt_texto = f"""Crie um convite digital elegante como SVG 800x600px.
+
+Evento: {evento_txt}
+Data: {data_txt}
 Estilo solicitado: {descricao}
 
-O SVG deve:
-- Ter fundo com gradiente rico no tema solicitado
-- Título do evento em fonte elegante e em destaque
-- Data formatada de forma artística
-- Elementos decorativos (flores, estrelas, ornamentos, etc.) que combinem com o tema
-- Layout equilibrado e profissional
-- Cores harmoniosas e sofisticadas
-- Ser auto-contido (sem imagens externas)
+REQUISITOS:
+- Fundo com gradiente rico e profundo no tema solicitado
+- Titulo principal grande, elegante e centralizado
+- Data formatada com destaque artistico
+- Moldura decorativa elegante nas bordas
+- Elementos decorativos tematicos (estrelas, flores, ornamentos, linhas)
+- Minimo 3 camadas visuais: fundo, decoracao, texto
+- Cores harmonicas e sofisticadas
+- SVG auto-contido sem imagens externas
 
-Retorne APENAS o código SVG completo começando com <svg, sem markdown, sem explicações."""
-
-        content = [{"type": "text", "text": prompt_texto}]
-
-        if imagem_ref_b64 and len(imagem_ref_b64) > 100:
-            if "," in imagem_ref_b64:
-                header, b64data = imagem_ref_b64.split(",", 1)
-                media_type = header.split(":")[1].split(";")[0] if ":" in header else "image/jpeg"
-            else:
-                b64data, media_type = imagem_ref_b64, "image/jpeg"
-            content = [
-                {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64data}},
-                {"type": "text", "text": prompt_texto + "\n\nUse a imagem de referência acima como inspiração para o estilo visual do convite."}
-            ]
+Retorne APENAS o SVG completo comecando com <svg, sem markdown."""
 
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         resp = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-haiku-4-5-20251001",
             max_tokens=4000,
-            system="Você é um designer de convites digitais de luxo. Crie SVGs elegantes e profissionais. Retorne APENAS o código SVG começando com <svg, sem markdown, sem explicações adicionais.",
-            messages=[{"role": "user", "content": content}]
+            system="Voce e um designer de convites digitais. Crie SVGs elegantes com gradientes ricos, molduras decorativas e tipografia sofisticada. Retorne APENAS o SVG comecando com <svg, sem markdown.",
+            messages=[{"role": "user", "content": prompt_texto}]
         )
-
         svg_text = resp.content[0].text.strip()
         if not svg_text.startswith("<svg"):
             m = re.search(r'<svg.*?</svg>', svg_text, re.DOTALL)
             svg_text = m.group(0) if m else svg_text
-
         svg_b64 = base64.b64encode(svg_text.encode('utf-8')).decode('utf-8')
         imagem_data = f"data:image/svg+xml;base64,{svg_b64}"
+        imagem_fundo_data = ""
 
-        upd = {"convite_ia_imagem": imagem_data, "ia_pago": True, "estilo_convite": "ia"}
+        # ✦ Incrementa contador de gerações
+        nova_geracao = ia_geracoes + 1
+        restantes = LIMITE_GERACOES - nova_geracao
+        upd = {"convite_ia_imagem": imagem_data, "ia_pago": True, "estilo_convite": "ia", "ia_geracoes": nova_geracao}
         if config_existe:
             sb_patch("config_premium", f"lista_id=eq.{lista_id}", upd)
         else:
@@ -1064,11 +1077,20 @@ Retorne APENAS o código SVG completo começando com <svg, sem markdown, sem exp
             sb_post("vendas", {"lista_id": lista_id, "pacote": "convite_ia", "valor": 9.90})
         except: pass
 
-        return jsonify({"ok": True, "imagem": imagem_data})
+        # ✦ Mensagem de aviso conforme gerações restantes
+        if restantes == 2:
+            aviso = "✨ Convite gerado! Você ainda tem 2 gerações disponíveis."
+        elif restantes == 1:
+            aviso = "⚠️ Atenção! Esta foi sua penúltima geração. Aproveite bem a próxima — é a última!"
+        elif restantes == 0:
+            aviso = "🎨 Esta foi sua última geração incluída. Para criar um novo convite, será necessário adquirir novamente por R$ 9,90."
+        else:
+            aviso = f"✨ Convite gerado! Você ainda tem {restantes} geração(ões) disponível(eis)."
 
+        return jsonify({"ok": True, "imagem": imagem_data, "geracoes_restantes": restantes, "aviso": aviso})
     except Exception as e:
         print("Gerar convite IA erro:", e)
-        return jsonify({"erro": f"Erro ao gerar convite: {str(e)}"}), 500
+        return jsonify({"erro": f"Erro ao gerar: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
