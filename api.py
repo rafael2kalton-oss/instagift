@@ -63,13 +63,25 @@ def sb_delete(tabela, filtro):
 def resolver_redirect(link):
     try:
         dominios_encurtados = [
-            'amzn.to', 'a.co', 'br.shp.ee', 's.shopee', 'meli.la',
-            'mglu.me', 'onelink.shein.com', 'api-shein.shein.com',
-            'share.google', 'bit.ly', 'tinyurl.com'
+            # Amazon
+            'amzn.to', 'a.co', 'amzn.com',
+            # Shopee
+            'br.shp.ee', 's.shopee', 'shope.ee',
+            # Mercado Livre
+            'meli.la', 'mercadol.iv', 'mpago.la',
+            # Magalu
+            'mglu.me',
+            # Shein
+            'onelink.shein.com', 'api-shein.shein.com', 'shein.com/sharejump',
+            # Genéricos
+            'bit.ly', 'tinyurl.com', 'ow.ly', 'short.io', 'shorturl.at',
+            'linktr.ee', 'cutt.ly', 'rebrand.ly',
         ]
         precisa_resolver = any(d in link.lower() for d in dominios_encurtados)
         if precisa_resolver:
-            r = requests.get(link, headers={"User-Agent": "Mozilla/5.0"}, timeout=10, allow_redirects=True)
+            r = requests.get(link, headers={
+                "User-Agent": "Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+            }, timeout=12, allow_redirects=True)
             return r.url
     except Exception as e:
         print(f"Erro ao resolver redirect: {e}")
@@ -77,16 +89,43 @@ def resolver_redirect(link):
 
 def detectar_plataforma(link):
     l = link.lower()
-    if "amazon.com.br" in l or "amzn.to" in l or "a.co/" in l: return "amazon"
-    if "magazinevoce.com.br" in l or "magazineluiza.com.br" in l or "magalu.com.br" in l or "mglu.me" in l: return "magalu"
-    if "mercadolivre.com.br" in l or "mercadolibre.com" in l or "meli.com" in l or "meli.la" in l or "produto.mercadolivre" in l: return "mercadolivre"
-    if "shopee.com.br" in l or "br.shp.ee" in l or "s.shopee" in l: return "shopee"
-    if "shein.com" in l or "onelink.shein.com" in l or "api-shein.shein.com" in l: return "shein"
+    # Amazon — site, app, links curtos, smile, internacionais
+    if any(d in l for d in [
+        "amazon.com.br", "amzn.to", "a.co/", "amzn.com",
+        "amazon.com/dp", "amazon.com/gp", "smile.amazon"
+    ]): return "amazon"
+    # Magalu — site, app, magazinevoce, links curtos
+    if any(d in l for d in [
+        "magazinevoce.com.br", "magazineluiza.com.br", "magalu.com.br",
+        "mglu.me", "magazine.com.br", "magazineluiza.app.link"
+    ]): return "magalu"
+    # Mercado Livre — site, app, links curtos, produto.
+    if any(d in l for d in [
+        "mercadolivre.com.br", "mercadolibre.com", "meli.com",
+        "meli.la", "produto.mercadolivre", "mercadolivre.com",
+        "app.mercadolivre", "m.mercadolivre"
+    ]): return "mercadolivre"
+    # Shopee — site, app, links curtos, mobile
+    if any(d in l for d in [
+        "shopee.com.br", "br.shp.ee", "s.shopee",
+        "shope.ee", "shopee.com", "m.shopee.com.br"
+    ]): return "shopee"
+    # Shein — site, app, links afiliados, mobile
+    if any(d in l for d in [
+        "shein.com", "onelink.shein.com", "api-shein.shein.com",
+        "shein.com.br", "m.shein.com", "br.shein.com",
+        "sharejump.shein.com"
+    ]): return "shein"
     return "outro"
 
 def injetar_afiliado(link, plataforma):
     if plataforma == "amazon":
-        asin = re.search(r'/dp/([A-Z0-9]{10})', link)
+        # Tenta extrair ASIN de várias variações de URL
+        asin = (re.search(r'/dp/([A-Z0-9]{10})', link) or
+                re.search(r'/gp/product/([A-Z0-9]{10})', link) or
+                re.search(r'/gp/aw/d/([A-Z0-9]{10})', link) or
+                re.search(r'/exec/obidos/ASIN/([A-Z0-9]{10})', link) or
+                re.search(r'[?&]asin=([A-Z0-9]{10})', link, re.IGNORECASE))
         if asin:
             link = f"https://www.amazon.com.br/dp/{asin.group(1)}?tag={AMAZON_TAG}"
         else:
@@ -349,6 +388,25 @@ def index():
 @app.route("/criar-story")
 def criar_story():
     return render_template("criar_story.html")
+
+@app.route("/api/foto-evento/<evento>")
+def foto_evento(evento):
+    """Proxy para imagens de evento — resolve CORS do Unsplash no canvas"""
+    fotos = {
+        "aniversario": "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=720&q=80&fit=crop",
+        "casamento":   "https://images.unsplash.com/photo-1519741497674-611481863552?w=720&q=80&fit=crop",
+        "casa-nova":   "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=720&q=80&fit=crop",
+        "cha-bebe":    "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=720&q=80&fit=crop",
+        "outros":      "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=720&q=80&fit=crop",
+    }
+    url = fotos.get(evento, fotos["outros"])
+    try:
+        from flask import Response
+        r = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        return Response(r.content, content_type=r.headers.get("Content-Type", "image/jpeg"),
+                       headers={"Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=86400"})
+    except Exception as e:
+        return "", 404
 
 @app.route("/criar-lista")
 def criar_lista_page():
