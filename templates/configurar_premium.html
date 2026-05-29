@@ -1284,7 +1284,20 @@ function copiarLink() { navigator.clipboard.writeText(window.location.origin + '
 function verPagina() { window.open('/premium/' + listaId + '?dono=true', '_blank'); }
 
 async function detectarEvento() {
-  try { var r = await fetch('/api/lista-info/' + listaId); var data = await r.json(); if (data.evento) eventoAtual = data.evento; } catch(e) {}
+  try {
+    var r = await fetch('/api/lista-info/' + listaId);
+    var data = await r.json();
+    if (data.evento) eventoAtual = data.evento;
+    // ✦ Preenche data e nome do evento vindos do criar_lista se ainda não preenchidos
+    var campoData = document.getElementById('dataEvento');
+    var campoNome = document.getElementById('nomeCelebrante');
+    if (data.data_evento && campoData && !campoData.value) {
+      campoData.value = data.data_evento.split('T')[0];
+    }
+    if (data.nome && campoNome && !campoNome.value) {
+      campoNome.value = data.nome !== 'Minha Lista' ? data.nome : '';
+    }
+  } catch(e) {}
   renderFrases();
 }
 
