@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaGift — Criar Story</title>
+<title>FestStory — Criar Story</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -75,7 +75,7 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
 <div class="container">
   <div class="topo">
     <button class="btn-voltar" onclick="voltarLista()">← Voltar</button>
-    <div class="logo-topo">InstaGift</div>
+    <div class="logo-topo">FestStory</div>
   </div>
   <div class="evento-badge" id="eventoBadge">🎂 Aniversário</div>
   <p class="sub" id="subTitulo">Crie seu story em segundos</p>
@@ -156,7 +156,7 @@ body { background: #FFF8EC; color: #2C2C2C; font-family: 'Inter', sans-serif; mi
     </div>
     <div class="modal-step">
       <div class="modal-num">2</div>
-      <div><p class="modal-step-title">Escolha a imagem da galeria</p><p class="modal-step-sub">Selecione <strong style="color:#C9A84C;">story-instagift.png</strong> que foi baixada</p></div>
+      <div><p class="modal-step-title">Escolha a imagem da galeria</p><p class="modal-step-sub">Selecione <strong style="color:#C9A84C;">story-feststory.png</strong> que foi baixada</p></div>
     </div>
     <div class="modal-step">
       <div class="modal-num">3</div>
@@ -186,13 +186,13 @@ var params = new URLSearchParams(window.location.search);
 var vitrineId = params.get('vitrine');
 var eventoParam = params.get('evento') || 'aniversario';
 
-// ✅ CORREÇÃO PRINCIPAL — objeto fotosEventos declarado aqui!
+// ✦ Fotos via proxy local — resolve CORS do canvas
 var fotosEventos = {
-  aniversario: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=720&q=80&fit=crop',
-  casamento:   'https://images.unsplash.com/photo-1519741497674-611481863552?w=720&q=80&fit=crop',
-  'casa-nova': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=720&q=80&fit=crop',
-  'cha-bebe':  'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=720&q=80&fit=crop',
-  outros:      'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=720&q=80&fit=crop'
+  aniversario: '/api/foto-evento/aniversario',
+  casamento:   '/api/foto-evento/casamento',
+  'casa-nova': '/api/foto-evento/casa-nova',
+  'cha-bebe':  '/api/foto-evento/cha-bebe',
+  outros:      '/api/foto-evento/outros'
 };
 
 var configEventos = {
@@ -248,15 +248,14 @@ var previewAberto = false;
 function preCarregarFotoEvento(cb) {
   if (imgFotoEvento) { cb(); return; }
   var img = new Image();
-  img.crossOrigin = 'anonymous';
   img.onload = function() { imgFotoEvento = img; cb(); };
   img.onerror = function() {
     var img2 = new Image();
     img2.onload = function() { imgFotoEvento = img2; cb(); };
     img2.onerror = function() { imgFotoEvento = null; cb(); };
-    img2.src = fotoEvento + '&t=' + Date.now();
+    img2.src = fotoEvento + '?t=' + Date.now();
   };
-  img.src = fotoEvento;
+  img.src = fotoEvento + '?t=' + Date.now();
 }
 
 document.getElementById('eventoBadge').textContent = eventoConfig.badge;
@@ -296,7 +295,6 @@ function desenharFundo(ctx, w, h, tplIdx, foto) {
   var imgFundo = foto || imgFotoEvento;
 
   if (imgFundo) {
-    // Calcula crop para preencher o canvas mantendo proporção
     var escala = Math.max(w / imgFundo.width, h / imgFundo.height);
     var iw = imgFundo.width * escala, ih = imgFundo.height * escala;
     var ix = (w - iw) / 2, iy = (h - ih) / 2;
@@ -312,7 +310,6 @@ function desenharFundo(ctx, w, h, tplIdx, foto) {
       overlay.addColorStop(0.5, 'rgba(20,12,4,0.15)');
       overlay.addColorStop(1, 'rgba(20,12,4,0.6)');
       ctx.fillStyle = overlay; ctx.fillRect(0,0,w,h);
-      // Moldura dourada elegante
       ctx.strokeStyle = 'rgba(201,168,76,0.6)'; ctx.lineWidth = 2;
       ctx.strokeRect(w*0.04, h*0.025, w*0.92, h*0.62);
       ctx.strokeStyle = 'rgba(201,168,76,0.3)'; ctx.lineWidth = 1;
@@ -327,9 +324,17 @@ function desenharFundo(ctx, w, h, tplIdx, foto) {
     return;
   }
 
-  // Fallback gradiente creme
+  // Fallback por evento quando foto não carrega
+  var coresFallback = {
+    aniversario: ['#FFF0E6','#FFD6A5'],
+    casamento:   ['#F5F0FF','#E8D5FF'],
+    'casa-nova': ['#E8F5E9','#C8E6C9'],
+    'cha-bebe':  ['#E3F2FD','#BBDEFB'],
+    outros:      ['#FFF8EC','#F5EDD8']
+  };
+  var cores = coresFallback[eventoParam] || coresFallback['outros'];
   var g = ctx.createLinearGradient(0, 0, 0, h);
-  g.addColorStop(0, '#FFF8EC'); g.addColorStop(1, '#F5EDD8');
+  g.addColorStop(0, cores[0]); g.addColorStop(1, cores[1]);
   ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
   ctx.fillStyle = 'rgba(201,168,76,0.08)';
   ctx.beginPath(); ctx.arc(w*0.85, h*0.08, w*0.35, 0, Math.PI*2); ctx.fill();
@@ -405,7 +410,6 @@ function desenhar(canvas, tplIdx, nome, frase, foto) {
 
 function renderPreviews() {
   var nomePreview = eventoParam==='casamento' ? 'Ana & João' : eventoParam==='cha-bebe' ? 'Os Papais' : 'Seu Nome';
-  // Mostra gradiente creme imediatamente
   for (var i = 0; i < 3; i++) {
     var ctx = document.getElementById('prev'+i).getContext('2d');
     var g = ctx.createLinearGradient(0,0,0,320);
@@ -414,7 +418,6 @@ function renderPreviews() {
     ctx.fillStyle='rgba(201,168,76,0.3)'; ctx.font='14px Arial'; ctx.textAlign='center';
     ctx.fillText('✦', 90, 96);
   }
-  // Carrega foto real e redesenha
   preCarregarFotoEvento(function() {
     for (var i = 0; i < 3; i++) {
       desenhar(document.getElementById('prev'+i), i, nomePreview, eventoConfig.fraseDefault, null);
@@ -458,7 +461,7 @@ function gerarStory() {
 function baixar() {
   var canvas = document.getElementById('storyFinal');
   var a = document.createElement('a');
-  a.download = 'story-instagift.png';
+  a.download = 'story-feststory.png';
   a.href = canvas.toDataURL('image/png');
   a.click();
 }
@@ -467,7 +470,7 @@ function abrirInstagram() {
   var link = document.getElementById('link').value;
   var canvas = document.getElementById('storyFinal');
   var a = document.createElement('a');
-  a.download = 'story-instagift.png';
+  a.download = 'story-feststory.png';
   a.href = canvas.toDataURL('image/png');
   a.click();
   navigator.clipboard.writeText(link).catch(function(){});
