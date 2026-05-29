@@ -451,9 +451,27 @@
         <div style="color:#C9A84C; font-size:14px; letter-spacing:6px; margin-bottom:14px;">✦ ✦ ✦</div>
         <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Libere sua Página do Evento</h3>
         <p style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:24px; font-style:italic;">Escolha uma das opções para ter acesso completo à sua Página de Celebração</p>
-        <button onclick="acessoViaProdutos()" style="width:100%; padding:15px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">📋 Já tenho lista de presentes</button>
-        <button onclick="acessoViaCofrinho()" style="width:100%; padding:15px; background:linear-gradient(135deg,#2C1A00,#1a0f00); color:#C9A84C; border:1px solid rgba(201,168,76,0.4); border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">💛 Adquirir Cofrinho Pix — R$ 15,90</button>
+        <button onclick="acessoViaProdutos()" style="width:100%; padding:15px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">📋 Acessar com lista de presentes</button>
+        <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:14px; padding:14px 16px; margin-bottom:10px; text-align:left;">
+          <p style="font-size:12px; color:#C9A84C; font-weight:700; margin-bottom:6px;">💛 Não quer lista? Use o Cofrinho Pix!</p>
+          <p style="font-size:12px; color:#aaa; line-height:1.5; margin-bottom:10px;">Receba contribuições em dinheiro dos seus convidados diretamente no Pix — sem precisar de lista de presentes.</p>
+          <button onclick="acessoViaCofrinho()" style="width:100%; padding:13px; background:linear-gradient(135deg,#2C1A00,#1a0f00); color:#C9A84C; border:1px solid rgba(201,168,76,0.4); border-radius:50px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">💛 Adquirir Cofrinho Pix — R$ 15,90</button>
+        </div>
         <button onclick="fecharPopupAcesso()" style="width:100%; padding:12px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.2); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">Agora não</button>
+    </div>
+</div>
+
+<!-- Popup Mínimo Produtos -->
+<div id="popupMinimoProdutos" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.7); backdrop-filter:blur(4px); z-index:999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+        <div style="font-size:36px; margin-bottom:12px;">📋</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Lista incompleta</h3>
+        <p id="popupMinimoTexto" style="font-size:13px; color:#aaa; line-height:1.7; margin-bottom:20px; font-style:italic;"></p>
+        <div style="background:rgba(201,168,76,0.06); border:1px dashed rgba(201,168,76,0.3); border-radius:12px; padding:12px; margin-bottom:20px;">
+            <p style="font-size:12px; color:#888; line-height:1.6;">💡 Ou se preferir, acesse sem lista usando o <strong style="color:#C9A84C;">Cofrinho Pix</strong> por R$ 15,90</p>
+        </div>
+        <button onclick="document.getElementById('popupMinimoProdutos').style.display='none'" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">✦ Adicionar mais presentes</button>
+        <button onclick="document.getElementById('popupMinimoProdutos').style.display='none'; acessoViaCofrinho();" style="width:100%; padding:12px; background:transparent; color:#C9A84C; border:1px solid rgba(201,168,76,0.3); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;">💛 Usar Cofrinho Pix — R$ 15,90</button>
     </div>
 </div>
 
@@ -1099,14 +1117,24 @@
         try {
             var r = await fetch('/api/produtos/' + LISTA_ID);
             var produtos = await r.json();
-            if (Array.isArray(produtos) && produtos.length > 0) {
-                window.open('/configurar-premium/' + LISTA_ID, '_blank');
+            if (Array.isArray(produtos) && produtos.length >= 3) {
+                window.location.href = '/configurar-premium/' + LISTA_ID;
             } else {
-                alert('✦ Adicione pelo menos 1 presente na lista para liberar o acesso!');
+                var faltam = 3 - (Array.isArray(produtos) ? produtos.length : 0);
+                mostrarPopupMinimo(faltam);
             }
         } catch(e) {
             alert('✦ Erro ao verificar lista. Tente novamente.');
         }
+    }
+
+    function mostrarPopupMinimo(faltam) {
+        var popup = document.getElementById('popupMinimoProdutos');
+        document.getElementById('popupMinimoTexto').textContent = 
+            faltam === 3 ? 'Adicione pelo menos 3 presentes na sua lista para liberar o acesso à página do evento.' :
+            faltam === 2 ? 'Faltam apenas 2 presentes! Adicione mais 2 para liberar o acesso.' :
+            'Falta apenas 1 presente! Adicione mais 1 para liberar o acesso.';
+        popup.style.display = 'flex';
     }
     async function acessoViaCofrinho() {
         fecharPopupAcesso();
