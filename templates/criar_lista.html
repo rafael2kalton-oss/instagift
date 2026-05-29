@@ -616,6 +616,7 @@
             <label for="editarImagem" style="display:flex; align-items:center; gap:8px; background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.25); border-radius:10px; padding:12px; cursor:pointer; color:#C9A84C; font-size:13px; margin-bottom:8px;">📸 Trocar imagem</label>
             <input type="file" id="editarImagem" accept="image/*" style="display:none;" onchange="previewEditarImagem(event)">
             <img id="editarPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+            <button id="btnEditarRecorteEditar" onclick="editarRecorteEdicao()" style="display:none; width:100%; margin-top:6px; padding:8px; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.3); border-radius:8px; color:#C9A84C; font-size:12px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">✂️ Editar recorte</button>
         </div>
         <button onclick="salvarEdicaoProduto()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:15px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Salvar alterações ✦</button>
     </div>
@@ -925,7 +926,7 @@
     }
 
     function abrirEditarProduto(id, nome, preco, plataforma) {
-        editarProdutoId = id; editarPlataforma = plataforma; editarImagemBase64 = "";
+        editarProdutoId = id; editarPlataforma = plataforma; editarImagemBase64 = ""; var btnEd = document.getElementById('btnEditarRecorteEditar'); if(btnEd) btnEd.style.display='none';
         document.getElementById('editarNome').value = nome || '';
         document.getElementById('editarPreco').value = preco || '';
         document.getElementById('editarPreviewImg').style.display = 'none';
@@ -933,10 +934,27 @@
         document.getElementById('cardEditarProduto').style.display = 'flex';
     }
     function fecharEditarProduto() { document.getElementById('cardEditarProduto').style.display = 'none'; editarProdutoId = null; }
+    function editarRecorteEdicao() {
+        if (!editarImagemBase64) return;
+        abrirCrop(editarImagemBase64, function(croppedDataUrl) {
+            editarImagemBase64 = croppedDataUrl;
+            var img = document.getElementById('editarPreviewImg');
+            img.src = editarImagemBase64; img.style.display = 'block';
+        });
+    }
     function previewEditarImagem(e) {
         var file = e.target.files[0]; if (!file) return;
         var reader = new FileReader();
-        reader.onload = function(ev) { editarImagemBase64 = ev.target.result; var img = document.getElementById('editarPreviewImg'); img.src = editarImagemBase64; img.style.display = 'block'; };
+        reader.onload = function(ev) {
+            abrirCrop(ev.target.result, function(croppedDataUrl) {
+                editarImagemBase64 = croppedDataUrl;
+                var img = document.getElementById('editarPreviewImg');
+                img.src = editarImagemBase64; img.style.display = 'block';
+                // Mostrar botão de reeditar recorte
+                var btnEdit = document.getElementById('btnEditarRecorteEditar');
+                if (btnEdit) btnEdit.style.display = 'block';
+            });
+        };
         reader.readAsDataURL(file);
     }
     async function salvarEdicaoProduto() {
