@@ -766,6 +766,10 @@
     }
 
     function irParaEtapa(n) {
+        if (n === 4) {
+            // ✦ Mostra card premium imediatamente ao entrar na etapa 4
+            document.getElementById('acoesVitrine').style.display = 'flex';
+        }
         document.getElementById('secao' + stepAtual).classList.remove('ativa');
         stepAtual = n;
         document.getElementById('secao' + n).classList.add('ativa');
@@ -830,11 +834,13 @@
         const acoes = document.getElementById("acoesVitrine");
         const contador = document.getElementById("contador");
         contador.textContent = produtos.length + (produtos.length === 1 ? ' item' : ' itens');
+        // ✦ Card premium sempre visível na etapa 4
+        acoes.style.display = "flex";
         if (produtos.length === 0) {
             el.innerHTML = `<div class="empty-state"><div class="ornamento">✦ ✦ ✦</div><p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p></div>`;
-            linkPerm.style.display = "none"; acoes.style.display = "none"; return;
+            linkPerm.style.display = "none"; return;
         }
-        linkPerm.style.display = "block"; acoes.style.display = "flex"; verificarWhatsapp();
+        linkPerm.style.display = "block"; verificarWhatsapp();
         document.getElementById("textoLink").textContent = `${window.location.origin}/premium/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon:"badge-amazon", mercadolivre:"badge-mercadolivre", shopee:"badge-shopee", magalu:"badge-magalu", shein:"badge-shein" }[p.plataforma] || "badge-outro";
