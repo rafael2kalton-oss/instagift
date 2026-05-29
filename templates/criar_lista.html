@@ -277,6 +277,8 @@
         }
         .pacote-btn:hover { opacity: 0.88; transform: translateY(-1px); }
     </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body>
 <div class="app-container">
@@ -588,6 +590,7 @@
             <label for="manualImagemInput" style="display:flex; align-items:center; gap:8px; background:rgba(201,168,76,0.04); border:1px dashed rgba(201,168,76,0.25); border-radius:10px; padding:12px; cursor:pointer; color:#C9A84C; font-size:13px; margin-bottom:8px;">📸 Escolher imagem</label>
             <input type="file" id="manualImagemInput" accept="image/*" style="display:none;" onchange="previewImagemManualUniversal(event)">
             <img id="manualPreviewImg" src="" alt="" style="width:100%; max-height:140px; object-fit:contain; border-radius:10px; margin-top:10px; display:none;">
+<button id="btnEditarRecorte" onclick="editarRecorteAtual()" style="display:none; width:100%; margin-top:6px; padding:8px; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.3); border-radius:8px; color:#C9A84C; font-size:12px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">✂️ Editar recorte</button>
         </div>
         <button onclick="salvarManualUniversal()" style="width:100%; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:15px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Salvar produto ✦</button>
     </div>
@@ -873,7 +876,7 @@
     }
 
     function abrirPopupManualUniversal(plataforma, produtoId, linkOriginal, nomeJaEncontrado) {
-        manualProdutoId = produtoId; manualPlataformaAtual = plataforma; manualImagemBase64 = ""; manualLinkAtual = linkOriginal || "";
+        manualProdutoId = produtoId; manualPlataformaAtual = plataforma; manualImagemBase64 = ""; manualLinkAtual = linkOriginal || ""; document.getElementById('btnEditarRecorte').style.display='none';
         var cfg = textosPorPlataforma[plataforma] || textosPorPlataforma['outro'];
         document.getElementById('manualTitulo').textContent = cfg.titulo;
         document.getElementById('manualTexto').textContent = cfg.texto;
@@ -884,11 +887,29 @@
         document.getElementById('popupManualInner').style.borderColor = cfg.cor;
         document.getElementById('popupManualUniversal').style.display = 'flex';
     }
+    function editarRecorteAtual() {
+        if (!manualImagemBase64) return;
+        abrirCrop(manualImagemBase64, function(croppedDataUrl) {
+            manualImagemBase64 = croppedDataUrl;
+            var img = document.getElementById('manualPreviewImg');
+            img.src = manualImagemBase64;
+            img.style.display = 'block';
+        });
+    }
     function fecharPopupManualUniversal() { document.getElementById('popupManualUniversal').style.display = 'none'; }
     function previewImagemManualUniversal(e) {
         var file = e.target.files[0]; if (!file) return;
         var reader = new FileReader();
-        reader.onload = function(ev) { manualImagemBase64 = ev.target.result; var img = document.getElementById('manualPreviewImg'); img.src = manualImagemBase64; img.style.display = 'block'; };
+        reader.onload = function(ev) {
+            // ✦ Abre o crop antes de salvar
+            abrirCrop(ev.target.result, function(croppedDataUrl) {
+                manualImagemBase64 = croppedDataUrl;
+                var img = document.getElementById('manualPreviewImg');
+                img.src = manualImagemBase64;
+                img.style.display = 'block';
+                document.getElementById('btnEditarRecorte').style.display = 'block';
+            });
+        };
         reader.readAsDataURL(file);
     }
     async function salvarManualUniversal() {
@@ -936,7 +957,14 @@
     function previewImagemShopee(e) {
         var file=e.target.files[0]; if(!file) return;
         var reader=new FileReader();
-        reader.onload=function(ev){imagemShopeeBase64=ev.target.result;var img=document.getElementById('shopeePreviewImg');img.src=imagemShopeeBase64;img.style.display='block';};
+        reader.onload=function(ev){
+            abrirCrop(ev.target.result, function(croppedDataUrl) {
+                imagemShopeeBase64=croppedDataUrl;
+                var img=document.getElementById('shopeePreviewImg');
+                img.src=imagemShopeeBase64; img.style.display='block';
+                document.getElementById('btnEditarRecorte').style.display='block';
+            });
+        };
         reader.readAsDataURL(file);
     }
     async function salvarProdutoShopeeManual() {
@@ -953,7 +981,14 @@
     function previewImagemML(e) {
         var file=e.target.files[0]; if(!file) return;
         var reader=new FileReader();
-        reader.onload=function(ev){imagemMLBase64=ev.target.result;var img=document.getElementById('mlPreviewImg');img.src=imagemMLBase64;img.style.display='block';};
+        reader.onload=function(ev){
+            abrirCrop(ev.target.result, function(croppedDataUrl) {
+                imagemMLBase64=croppedDataUrl;
+                var img=document.getElementById('mlPreviewImg');
+                img.src=imagemMLBase64; img.style.display='block';
+                document.getElementById('btnEditarRecorte').style.display='block';
+            });
+        };
         reader.readAsDataURL(file);
     }
     async function salvarProdutoMLManual() {
@@ -1208,6 +1243,57 @@
         document.getElementById("inputLink").addEventListener("keypress", function(e) { if(e.key==="Enter") adicionarProduto(); });
         await restaurarEstado();
     });
+</script>
+<!-- Modal Crop Imagem -->
+<div id="modalCrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+    <p style="font-family:'Playfair Display',serif; font-size:16px; color:#C9A84C; margin-bottom:12px; text-align:center;">✦ Ajuste a imagem do produto</p>
+    <div style="width:100%; max-width:380px; max-height:60vh; overflow:hidden; border-radius:12px; background:#111;">
+        <img id="cropImgEl" style="max-width:100%; display:block;">
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px; width:100%; max-width:380px;">
+        <button onclick="confirmarCrop()" style="flex:1; padding:14px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">✓ Confirmar recorte</button>
+        <button onclick="fecharModalCrop()" style="flex:1; padding:14px; background:transparent; color:#aaa; border:1px solid rgba(201,168,76,0.3); border-radius:50px; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;">Cancelar</button>
+    </div>
+</div>
+
+<script>
+var cropperInstance = null;
+var cropCallback = null;
+
+function abrirCrop(imgSrc, callback) {
+    cropCallback = callback;
+    var modal = document.getElementById('modalCrop');
+    var img = document.getElementById('cropImgEl');
+    img.src = imgSrc;
+    modal.style.display = 'flex';
+    setTimeout(function() {
+        if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+        cropperInstance = new Cropper(img, {
+            aspectRatio: 1,
+            viewMode: 2,
+            autoCropArea: 0.9,
+            responsive: true,
+            movable: true,
+            zoomable: true,
+            scalable: true,
+            cropBoxResizable: true
+        });
+    }, 100);
+}
+
+function confirmarCrop() {
+    if (!cropperInstance) return;
+    var canvas = cropperInstance.getCroppedCanvas({ width: 400, height: 400 });
+    var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    if (cropCallback) cropCallback(dataUrl);
+    fecharModalCrop();
+}
+
+function fecharModalCrop() {
+    if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+    document.getElementById('modalCrop').style.display = 'none';
+    cropCallback = null;
+}
 </script>
 </body>
 </html>
