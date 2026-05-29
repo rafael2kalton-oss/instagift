@@ -384,9 +384,17 @@
                 <p style="font-size:11px; color:#bbb; margin-top:2px; font-style:italic;" id="dataEventoHeader"></p>
             </div>
         </div>
-        <div class="platform-chips">
-            <span class="chip">Amazon</span><span class="chip">Mercado Livre</span>
-            <span class="chip">Shopee</span><span class="chip">Magalu</span><span class="chip">Shein</span>
+        <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.15); border-radius:16px; padding:16px 18px; margin-bottom:20px;">
+            <p style="font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:#2C2C2C; margin-bottom:6px;">✦ Crie sua lista de presentes</p>
+            <p style="font-size:13px; color:#888; line-height:1.7; margin-bottom:12px;">Cole abaixo o link de qualquer produto das nossas lojas parceiras. Navegue pela loja, escolha o presente e copie o link!</p>
+            <p style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">Lojas parceiras — clique para abrir</p>
+            <div class="platform-chips">
+                <span class="chip" onclick="window.open('https://www.amazon.com.br','_blank')" style="cursor:pointer;">🟠 Amazon</span>
+                <span class="chip" onclick="window.open('https://www.mercadolivre.com.br','_blank')" style="cursor:pointer;">🟡 Mercado Livre</span>
+                <span class="chip" onclick="window.open('https://shopee.com.br','_blank')" style="cursor:pointer;">🔴 Shopee</span>
+                <span class="chip" onclick="window.open('https://www.magazineluiza.com.br','_blank')" style="cursor:pointer;">🔵 Magalu</span>
+                <span class="chip" onclick="window.open('https://www.shein.com.br','_blank')" style="cursor:pointer;">⚫ Shein</span>
+            </div>
         </div>
         <div class="input-group">
             <input type="text" id="inputLink" placeholder="Cole o link do produto aqui..." oninput="validarLinkTempoReal(this.value)" onpaste="setTimeout(function(){validarLinkTempoReal(document.getElementById('inputLink').value)},50)">
