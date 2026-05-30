@@ -329,6 +329,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="form-presenca">
     <h3>✦ Confirme sua presença</h3>
     <div class="form-field"><label>Seu nome</label><input type="text" id="presencaNome" placeholder="Como você se chama?"></div>
+    <div class="form-field"><label>Seu e-mail <span style="color:#aaa;font-size:11px;font-weight:400;">(para evitar duplicatas)</span></label><input type="email" id="presencaEmail" placeholder="seu@email.com"></div>
     <div class="form-field"><label>Número de acompanhantes</label><input type="number" id="presencaAcompanhantes" placeholder="0" min="0" max="10" value="0"></div>
     <div class="form-field">
       <label>Sua confirmação</label>
@@ -833,12 +834,32 @@ function selecionarPresenca(status) {
 
 async function confirmarPresenca() {
   var nome = document.getElementById('presencaNome').value.trim();
+  var email = document.getElementById('presencaEmail').value.trim().toLowerCase();
   var acompanhantes = parseInt(document.getElementById('presencaAcompanhantes').value) || 0;
   if (!nome) { alert('Preencha seu nome!'); return; }
+  if (!email || !email.includes('@')) { alert('Preencha seu e-mail!'); return; }
   try {
-    var r = await fetch('/api/salvar-presenca', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ lista_id: listaId, nome: nome, status: presencaSelecionada, acompanhantes: acompanhantes }) });
+    var r = await fetch('/api/salvar-presenca', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ lista_id: listaId, nome: nome, email: email, status: presencaSelecionada, acompanhantes: acompanhantes }) });
     var data = await r.json();
-    if (data.ok) { document.getElementById('presencaNome').value=''; document.getElementById('presencaAcompanhantes').value='0'; document.getElementById('presencaSucesso').style.display='block'; setTimeout(function(){document.getElementById('presencaSucesso').style.display='none';},3000); carregarPresencas(); }
+    if (data.ja_confirmou) {
+      // ✦ Já confirmou — mostra mensagem amigável
+      var sucesso = document.getElementById('presencaSucesso');
+      sucesso.innerHTML = '✦ Você já confirmou sua presença anteriormente!';
+      sucesso.style.background = 'rgba(245,158,11,0.08)';
+      sucesso.style.borderColor = 'rgba(245,158,11,0.3)';
+      sucesso.style.color = '#d97706';
+      sucesso.style.display = 'block';
+      setTimeout(function(){ sucesso.style.display='none'; sucesso.innerHTML='🎉 Presença confirmada com sucesso!'; sucesso.style.background=''; sucesso.style.borderColor=''; sucesso.style.color=''; }, 4000);
+      return;
+    }
+    if (data.ok) {
+      document.getElementById('presencaNome').value='';
+      document.getElementById('presencaEmail').value='';
+      document.getElementById('presencaAcompanhantes').value='0';
+      document.getElementById('presencaSucesso').style.display='block';
+      setTimeout(function(){ document.getElementById('presencaSucesso').style.display='none'; }, 3000);
+      carregarPresencas();
+    }
   } catch(e) { alert('Erro ao confirmar. Tente novamente.'); }
 }
 
