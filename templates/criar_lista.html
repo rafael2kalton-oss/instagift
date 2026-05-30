@@ -1103,11 +1103,12 @@
     }
 
     async function remover(id) {
+        if (!confirm('Deseja realmente excluir este presente da lista?')) return;
         try {
             var r = await fetch(`${BASE}/api/remover-produto/${id}`, {method:"DELETE"});
             var data = await r.json();
             if (data.ultimo) {
-                if (confirm('Este é o último produto da lista. Deseja remover mesmo assim?')) {
+                if (confirm('Este é o último presente da lista. Confirma a exclusão?')) {
                     await fetch(`${BASE}/api/remover-produto/${id}?confirmar=sim`, {method:"DELETE"});
                     await carregarProdutos();
                 }
