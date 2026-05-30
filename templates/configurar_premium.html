@@ -1245,6 +1245,16 @@ async function confirmarSalvar() {
 }
 
 async function salvarConfig() {
+  // ✦ Loading no botão
+  var btn = document.getElementById('btnSalvar');
+  var textoOriginal = btn.textContent;
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;">⏳ Salvando<span id="loadingDots">.</span></span>';
+  var dotsInterval = setInterval(function() {
+    var dots = document.getElementById('loadingDots');
+    if (dots) dots.textContent = dots.textContent.length >= 3 ? '.' : dots.textContent + '.';
+  }, 400);
+
   var nome = document.getElementById('nomeCelebrante').value.trim();
   var data = document.getElementById('dataEvento').value;
   var mensagem = document.getElementById('mensagemCelebrante').value.trim();
@@ -1271,13 +1281,26 @@ async function salvarConfig() {
     });
     var result = await r.json();
     if (result.ok) {
+      clearInterval(dotsInterval);
+      btn.innerHTML = '✅ Salvo com sucesso!';
+      btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+      setTimeout(function() {
+        btn.innerHTML = textoOriginal;
+        btn.style.background = '';
+        atualizarEstadoSalvar();
+      }, 2000);
       try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
       storyPostado = true;
-      atualizarEstadoSalvar();
       document.getElementById('salvoSucesso').style.display = 'block';
       setTimeout(function() { document.getElementById('salvoSucesso').style.display = 'none'; }, 3000);
     }
-  } catch(e) { alert('Erro ao salvar. Tente novamente.'); }
+  } catch(e) {
+    clearInterval(dotsInterval);
+    btn.innerHTML = textoOriginal;
+    btn.disabled = false;
+    atualizarEstadoSalvar();
+    alert('Erro ao salvar. Tente novamente.');
+  }
 }
 
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
