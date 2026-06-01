@@ -417,6 +417,16 @@
                 </button>
             </div>
         </div>
+        <!-- ✦ Card Cofrinho Pix — acima do campo de link -->
+        <div onclick="acessoViaCofrinho()" style="background:linear-gradient(135deg,#2C1A00,#3d2600); border:1.5px solid rgba(201,168,76,0.5); border-radius:16px; padding:14px 16px; margin-bottom:14px; cursor:pointer; display:flex; align-items:center; gap:14px; transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:28px; flex-shrink:0;">💛</div>
+            <div style="flex:1;">
+                <p style="font-size:13px; font-weight:700; color:#F5EDD8; margin-bottom:3px;">Não tem lista? Receba via Pix!</p>
+                <p style="font-size:12px; color:rgba(245,237,216,0.6); line-height:1.5;">Ative o <strong style="color:#C9A84C;">Cofrinho Pix</strong> e receba seus presentes em dinheiro direto no seu Pix.</p>
+            </div>
+            <div style="background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; font-size:11px; font-weight:700; padding:6px 12px; border-radius:20px; white-space:nowrap;">R$ 15,90</div>
+        </div>
+
         <div class="input-group">
             <input type="text" id="inputLink" placeholder="Cole o link do produto aqui..." oninput="validarLinkTempoReal(this.value)" onpaste="setTimeout(function(){validarLinkTempoReal(document.getElementById('inputLink').value)},50)">
             <button class="btn-add" id="btnAdicionar" onclick="adicionarProduto()">Adicionar</button>
@@ -871,7 +881,6 @@
             linkPerm.style.display = "none"; return;
         }
         linkPerm.style.display = "block"; verificarWhatsapp();
-        document.getElementById("textoLink").textContent = `${window.location.origin}/premium/${LISTA_ID}`;
         el.innerHTML = produtos.map(p => {
             const badge = { amazon:"badge-amazon", mercadolivre:"badge-mercadolivre", shopee:"badge-shopee", magalu:"badge-magalu", shein:"badge-shein" }[p.plataforma] || "badge-outro";
             const label = { amazon:"Amazon", mercadolivre:"Mercado Livre", shopee:"Shopee", magalu:"Magalu", shein:"Shein" }[p.plataforma] || p.plataforma;
