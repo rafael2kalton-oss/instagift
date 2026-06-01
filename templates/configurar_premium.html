@@ -607,7 +607,8 @@ async function irParaStoryComSave() {
 function verificarStoryPostado() {
     try {
         var val = localStorage.getItem(STORY_KEY);
-        if (val === 'true' || val === 'pendente' || val === 'confirmado') storyPostado = true;
+        var confirmado = localStorage.getItem('feststory_story_confirmado_' + listaId);
+        if (val === 'true' || val === 'pendente' || val === 'confirmado' || confirmado === 'sim') storyPostado = true;
     } catch(e) {}
 }
 
@@ -1257,10 +1258,10 @@ function iniciarSalvar() {
     mostrarPopupData();
     return;
   }
-  // ✦ Primeira vez salvando sem pacote — popup de confirmação
-  var jaSalvouAntes = false;
-  try { jaSalvouAntes = localStorage.getItem(STORY_KEY) === 'confirmado'; } catch(e) {}
-  if (!jaSalvouAntes) {
+  // ✦ Popup só aparece UMA vez — verifica se já confirmou antes
+  var jaConfirmouStory = false;
+  try { jaConfirmouStory = localStorage.getItem(STORY_KEY) === 'confirmado'; } catch(e) {}
+  if (!jaConfirmouStory) {
     document.getElementById('popupConfirmacaoStory').style.display = 'flex';
     return;
   }
@@ -1516,7 +1517,11 @@ function mostrarPopupData() {
 }
 
 function confirmarStoryPostado() {
-  try { localStorage.setItem(STORY_KEY, 'confirmado'); } catch(e) {}
+  // ✦ Salva 'confirmado' permanentemente — popup nunca mais aparece
+  try {
+    localStorage.setItem(STORY_KEY, 'confirmado');
+    localStorage.setItem('feststory_story_confirmado_' + listaId, 'sim');
+  } catch(e) {}
   storyPostado = true;
   document.getElementById('popupConfirmacaoStory').style.display = 'none';
   atualizarEstadoSalvar();
