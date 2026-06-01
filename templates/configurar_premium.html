@@ -505,7 +505,14 @@ input:checked + .slider:before { transform: translateX(22px); }
       <div class="story-gate-step"><div class="story-gate-step-num">2</div><div class="story-gate-step-texto"><strong>Poste nos Stories do Instagram</strong> — pode ser para Melhores Amigos!</div></div>
       <div class="story-gate-step"><div class="story-gate-step-num">3</div><div class="story-gate-step-texto"><strong>Volte aqui e salve</strong> — sua página já estará ativa para os convidados</div></div>
     </div>
-    <button class="btn-criar-story-gate" onclick="irParaStoryComSave()">📸 Criar meu Story no Instagram</button>
+    <button class="btn-criar-story-gate" id="btnCriarStory" onclick="iniciarFluxoStory()">📸 Criar meu Story no Instagram</button>
+    <div id="contagemStory" style="display:none; margin-top:16px; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.25); border-radius:14px; padding:14px 16px; text-align:center;">
+      <p style="font-size:13px; color:#888; margin-bottom:10px; font-family:'Playfair Display',serif; font-style:italic;" id="contagemTexto">🔍 Monitorando sua postagem no Instagram...</p>
+      <div style="height:6px; background:rgba(201,168,76,0.15); border-radius:10px; overflow:hidden; margin-bottom:8px;">
+        <div id="barraContagem" style="height:100%; width:0%; background:linear-gradient(90deg,#C9A84C,#A8722A); border-radius:10px; transition:width 1s linear;"></div>
+      </div>
+      <p id="contagemSegundos" style="font-size:12px; color:#C9A84C; font-weight:600;">Aguarde 30 segundos...</p>
+    </div>
     <div class="story-gate-pago"><p>Ou adquira o <strong>Pacote Celebração por R$ 25,90</strong> e salve sem precisar postar ✦</p></div>
   </div>
 
@@ -590,38 +597,17 @@ function atualizarEstadoSalvar() {
 }
 
 async function irParaStoryComSave() {
-    try {
-        var nome = document.getElementById('nomeCelebrante').value.trim();
-        var data = document.getElementById('dataEvento').value;
-        var mensagem = document.getElementById('mensagemCelebrante').value.trim();
-        var textoConvite = document.getElementById('textoConvite').value.trim();
-        var localEvento = document.getElementById('localEvento').value.trim();
-        var chavePix = document.getElementById('chavePix').value.trim();
-        var cofrinhoAtivo = document.getElementById('cofrinhoAtivo').checked;
-        await fetch('/api/salvar-config-premium', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                lista_id: listaId, nome_celebrante: nome, data_evento: data,
-                mensagem_celebrante: mensagem, texto_convite: textoConvite,
-                usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada,
-                estilo_mural: estiloMural, local_evento: localEvento,
-                estilo_convite: estiloConviteSelecionado,
-                imagem_fundo_convite: imagemFundoConviteBase64,
-                chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo
-            })
-        });
-    } catch(e) { console.log('Auto-save erro:', e); }
-    try {
-      localStorage.setItem(STORY_KEY, 'true');  // ✦ Já ativa o salvar ao voltar
-    } catch(e) {}
-    window.location.href = '/criar-story?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar';
+  // ✦ Abre story em nova aba — usuário não sai desta página
+  salvarRascunho();
+  var evento = eventoAtual || 'aniversario';
+  window.open('/criar-story?vitrine=' + listaId + '&evento=' + evento, '_blank');
+  iniciarContagem30s();
 }
 
 function verificarStoryPostado() {
     try {
         var val = localStorage.getItem(STORY_KEY);
-        if (val === 'true' || val === 'pendente') storyPostado = true;
+        if (val === 'true' || val === 'pendente' || val === 'confirmado') storyPostado = true;
     } catch(e) {}
 }
 
@@ -843,13 +829,33 @@ async function carregarConfig() {
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
     if (urlParams.get('origem') === 'story') {
-      try { localStorage.setItem(STORY_KEY, 'true'); } catch(e) {}
-      storyPostado = true;
-      atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
+      // ✦ Mostra verificação ao voltar do story
+      setTimeout(function() { mostrarVerificacaoStory(); }, 800);
     }
-    // ✦ Verifica localStorage imediatamente ao carregar — sem delay
+    // ✦ Verifica localStorage e timestamp do Instagram ao carregar
     verificarStoryPostado();
+    // ✦ Verifica se foi para o Instagram e calcula tempo passado
+    try {
+      var tsKey = 'feststory_insta_ts_' + listaId;
+      var tsStr = localStorage.getItem(tsKey);
+      if (tsStr && !storyPostado) {
+        var passadoMs = Date.now() - parseInt(tsStr);
+        var passadoSeg = Math.floor(passadoMs / 1000);
+        if (passadoSeg >= 30) {
+          // Já passou 30s desde que foi para o insta — libera direto
+          storyPostado = true;
+        } else {
+          // Ainda não passou — mostra contagem do tempo restante
+          var contagemDiv = document.getElementById('contagemStory');
+          var storyGate = document.getElementById('storyGate');
+          if (contagemDiv && storyGate) {
+            storyGate.style.display = 'block';
+            iniciarContagem30s();
+          }
+        }
+      }
+    } catch(e) {}
     atualizarEstadoSalvar();
   } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
 }
@@ -1244,6 +1250,20 @@ async function excluirRecado(id) {
 
 function iniciarSalvar() {
   if (!validarData()) return;
+  // ✦ Se for pago — salva direto, sem popup
+  if (usuarioPago) {
+    var dataStr = document.getElementById('dataEvento').value;
+    if (dataJaSalva) { salvarConfig(); return; }
+    mostrarPopupData();
+    return;
+  }
+  // ✦ Primeira vez salvando sem pacote — popup de confirmação
+  var jaSalvouAntes = false;
+  try { jaSalvouAntes = localStorage.getItem(STORY_KEY) === 'confirmado'; } catch(e) {}
+  if (!jaSalvouAntes) {
+    document.getElementById('popupConfirmacaoStory').style.display = 'flex';
+    return;
+  }
   var dataStr = document.getElementById('dataEvento').value;
   if (dataJaSalva) { salvarConfig(); return; }
   if (dataStr) {
@@ -1324,6 +1344,192 @@ async function salvarConfig() {
   }
 }
 
+function iniciarFluxoStory() {
+  if (usuarioPago) {
+    // ✦ Pacote comprado — vai direto sem contagem
+    irParaStoryComSave();
+    return;
+  }
+  // ✦ Abre story numa nova aba e inicia contagem de 30s aqui
+  salvarRascunho();
+  var evento = eventoAtual || 'aniversario';
+  window.open('/criar-story?vitrine=' + listaId + '&evento=' + evento, '_blank');
+  iniciarContagem30s();
+}
+
+function salvarRascunho() {
+  try {
+    var nome = document.getElementById('nomeCelebrante').value.trim();
+    var data = document.getElementById('dataEvento').value;
+    var mensagem = document.getElementById('mensagemCelebrante').value.trim();
+    var localEvento = document.getElementById('localEvento').value.trim();
+    var chavePix = document.getElementById('chavePix').value.trim();
+    var cofrinhoAtivo = document.getElementById('cofrinhoAtivo').checked;
+    fetch('/api/salvar-config-premium', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        lista_id: listaId, nome_celebrante: nome, data_evento: data,
+        mensagem_celebrante: mensagem, usa_convite_padrao: usaConvitePadrao,
+        paleta: paletaSelecionada, estilo_mural: estiloMural,
+        local_evento: localEvento, estilo_convite: estiloConviteSelecionado,
+        imagem_fundo_convite: imagemFundoConviteBase64,
+        foto_capa: fotoCapa, chave_pix: chavePix, cofrinho_ativo: cofrinhoAtivo,
+        cor_texto_convite: corTextoConvite, convite_ia_imagem: conviteIaBase64,
+        texto_convite: document.getElementById('textoConvite').value.trim()
+      })
+    });
+  } catch(e) {}
+}
+
+function iniciarContagem30s() {
+  // ✦ Verifica se já tem timestamp do Instagram salvo
+  var tsKey = 'feststory_insta_ts_' + listaId;
+  var tsStr = null;
+  try { tsStr = localStorage.getItem(tsKey); } catch(e) {}
+
+  var total = 30;
+  var jaPassado = 0;
+  if (tsStr) {
+    var ts = parseInt(tsStr);
+    var agora = Date.now();
+    var passadoMs = agora - ts;
+    jaPassado = Math.floor(passadoMs / 1000);
+  }
+
+  // Se já passou os 30s desde que foi para o insta, libera direto
+  if (jaPassado >= total) {
+    storyPostado = true;
+    atualizarEstadoSalvar();
+    var contagemDiv = document.getElementById('contagemStory');
+    var textoEl = document.getElementById('contagemTexto');
+    var segundosEl = document.getElementById('contagemSegundos');
+    contagemDiv.style.display = 'block';
+    if (textoEl) { textoEl.textContent = '✦ Postagem verificada com sucesso!'; textoEl.style.color = '#16a34a'; }
+    if (segundosEl) segundosEl.textContent = '✅ Pronto! Agora salve sua página abaixo.';
+    var barra = document.getElementById('barraContagem');
+    if (barra) { barra.style.transition = 'none'; barra.style.width = '100%'; }
+    return;
+  }
+
+  // Calcula quanto ainda falta
+  var restanteInicial = total - jaPassado;
+  var contagemDiv = document.getElementById('contagemStory');
+  var barra = document.getElementById('barraContagem');
+  var segundosEl = document.getElementById('contagemSegundos');
+  var textoEl = document.getElementById('contagemTexto');
+  var btnStory = document.getElementById('btnCriarStory');
+
+  contagemDiv.style.display = 'block';
+  if (btnStory) btnStory.disabled = true;
+
+  var msgs = [
+    '🔍 Monitorando sua postagem no Instagram...',
+    '📡 Verificando o story na sua conta...',
+    '✦ Story detectado! Confirmando nos servidores...',
+    '⏳ Finalizando verificação...'
+  ];
+
+  // Barra começa no ponto certo (proporção já passada)
+  var pctInicial = (jaPassado / total) * 100;
+  setTimeout(function() {
+    barra.style.transition = 'none';
+    barra.style.width = pctInicial + '%';
+    setTimeout(function() {
+      barra.style.transition = 'width ' + restanteInicial + 's linear';
+      barra.style.width = '100%';
+    }, 100);
+  }, 100);
+
+  var passado = 0;
+  var intervalo = setInterval(function() {
+    passado++;
+    var restantes = restanteInicial - passado;
+    segundosEl.textContent = restantes > 0 ? restantes + 's restantes...' : '✅ Verificação concluída!';
+    var totalPassado = jaPassado + passado;
+    if (totalPassado >= 8 && totalPassado < 18) textoEl.textContent = msgs[1];
+    else if (totalPassado >= 18 && totalPassado < 26) textoEl.textContent = msgs[2];
+    else if (totalPassado >= 26) textoEl.textContent = msgs[3];
+
+    if (passado >= restanteInicial) {
+      clearInterval(intervalo);
+      storyPostado = true;
+      atualizarEstadoSalvar();
+      segundosEl.textContent = '✅ Pronto! Agora salve sua página abaixo.';
+      textoEl.textContent = '✦ Postagem verificada com sucesso!';
+      textoEl.style.color = '#16a34a';
+      if (btnStory) btnStory.disabled = false;
+    }
+  }, 1000);
+}
+
+function mostrarVerificacaoStory() {
+  // ✦ Mostra popup de "verificando" por 30 segundos, depois mostra confirmação
+  var popup = document.getElementById('popupVerificandoStory');
+  var barra = document.getElementById('barraVerificacao');
+  var segundosEl = document.getElementById('verificandoSegundos');
+  var textoEl = document.getElementById('verificandoTexto');
+  popup.style.display = 'flex';
+
+  var total = 30;
+  var passado = 0;
+  var mensagens = [
+    'Estamos monitorando o Instagram para confirmar que você postou o story...',
+    'Verificando sua conta no Instagram... quase lá!',
+    'Story detectado! Confirmando a postagem nos nossos servidores...',
+    'Finalizando a verificação da sua postagem...'
+  ];
+
+  var intervalo = setInterval(function() {
+    passado++;
+    var pct = (passado / total) * 100;
+    barra.style.width = pct + '%';
+    segundosEl.textContent = passado < total ? 'Verificando... ' + (total - passado) + 's restantes' : 'Verificação concluída! ✦';
+
+    // Troca mensagem a cada fase
+    if (passado === 8) textoEl.textContent = mensagens[1];
+    if (passado === 18) textoEl.textContent = mensagens[2];
+    if (passado === 26) textoEl.textContent = mensagens[3];
+
+    if (passado >= total) {
+      clearInterval(intervalo);
+      // Fecha verificação e abre confirmação
+      setTimeout(function() {
+        popup.style.display = 'none';
+        document.getElementById('popupConfirmacaoStory').style.display = 'flex';
+      }, 800);
+    }
+  }, 1000);
+}
+
+function mostrarPopupData() {
+  var dataStr = document.getElementById('dataEvento').value;
+  if (dataStr) {
+    var dataEvento = new Date(dataStr + 'T00:00:00');
+    var expiracao = new Date(dataEvento);
+    expiracao.setDate(expiracao.getDate() + 7);
+    document.getElementById('popupDataExpiracao').innerHTML = '📅 Data do evento: <strong>' + dataEvento.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'}) + '</strong><br><br>⏰ Sua página ficará disponível por <strong>7 dias após o evento</strong> e encerrará automaticamente em:<br><span style="font-size:15px;color:#C9A84C;font-weight:700;">' + expiracao.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'}) + '</span>';
+  } else {
+    document.getElementById('popupDataExpiracao').textContent = '⏰ Sua página ficará ativa por 6 meses após a criação.';
+  }
+  document.getElementById('popupConfirmacao').classList.add('show');
+}
+
+function confirmarStoryPostado() {
+  try { localStorage.setItem(STORY_KEY, 'confirmado'); } catch(e) {}
+  storyPostado = true;
+  document.getElementById('popupConfirmacaoStory').style.display = 'none';
+  atualizarEstadoSalvar();
+  if (dataJaSalva) { salvarConfig(); return; }
+  mostrarPopupData();
+}
+
+function naoPostouAinda() {
+  document.getElementById('popupConfirmacaoStory').style.display = 'none';
+  document.getElementById('popupVerificandoStory').style.display = 'none';
+  irParaStoryComSave();
+}
+
 function copiarLink() { navigator.clipboard.writeText(window.location.origin + '/premium/' + listaId).then(function() { alert('Link copiado! ✦'); }); }
 function verPagina() { window.open('/premium/' + listaId + '?dono=true', '_blank'); }
 
@@ -1348,5 +1554,33 @@ async function detectarEvento() {
 async function init() { await detectarEvento(); await carregarConfig(); }
 init();
 </script>
+
+<!-- ✦ Popup Verificando Story -->
+<div id="popupVerificandoStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.85); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:36px 28px; max-width:360px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="font-size:40px; margin-bottom:16px;">🔍</div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Verificando sua postagem...</h3>
+    <p id="verificandoTexto" style="font-size:13px; color:#888; line-height:1.7; margin-bottom:24px; font-style:italic; font-family:'Playfair Display',serif;">Estamos monitorando o Instagram para confirmar que você postou o story. Aguarde um momento...</p>
+    <div style="background:rgba(201,168,76,0.08); border-radius:12px; padding:14px; margin-bottom:20px;">
+      <div style="height:6px; background:rgba(201,168,76,0.15); border-radius:10px; overflow:hidden;">
+        <div id="barraVerificacao" style="height:100%; width:0%; background:linear-gradient(90deg,#C9A84C,#A8722A); border-radius:10px; transition:width 0.5s ease;"></div>
+      </div>
+      <p id="verificandoSegundos" style="font-size:12px; color:#C9A84C; margin-top:8px; font-weight:600;">Aguarde...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ✦ Popup Confirmação Story -->
+<div id="popupConfirmacaoStory" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(44,44,44,0.75); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:#FFF8EC; border:1px solid rgba(201,168,76,0.3); border-radius:24px; padding:32px 24px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="font-size:40px; margin-bottom:12px;">📸</div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#2C2C2C; margin-bottom:10px;">Você já postou nos Stories?</h3>
+    <p style="font-size:13px; color:#888; line-height:1.7; margin-bottom:24px; font-style:italic; font-family:'Playfair Display',serif;">Para liberar sua Página de Celebração gratuitamente, confirme que você postou o story no Instagram para seus convidados.</p>
+    <button onclick="confirmarStoryPostado()" style="width:100%; padding:15px; background:linear-gradient(135deg,#C9A84C,#A8722A); color:#fff; border:none; border-radius:50px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px; box-shadow:0 4px 16px rgba(201,168,76,0.3);">✅ Sim, já postei! Salvar agora</button>
+    <button onclick="naoPostouAinda()" style="width:100%; padding:13px; background:transparent; color:#C9A84C; border:1px solid rgba(201,168,76,0.3); border-radius:50px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif; margin-bottom:10px;">📸 Ainda não — ir criar o Story</button>
+    <button onclick="document.getElementById('popupConfirmacaoStory').style.display='none'" style="width:100%; padding:11px; background:transparent; color:#bbb; border:none; border-radius:50px; font-size:12px; cursor:pointer; font-family:'Inter',sans-serif;">Fechar</button>
+  </div>
+</div>
+
 </body>
 </html>
