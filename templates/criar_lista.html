@@ -446,25 +446,24 @@
                 <p>Nenhum presente ainda.<br>Adicione o primeiro acima!</p>
             </div>
         </div>
-        <div class="link-permanente" id="linkPermanente" style="display:none">
-            <p>✦ Seu link permanente</p>
-            <code id="textoLink"></code>
-            <button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
-        </div>
+        <div id="linkPermanente" style="display:none"></div>
         <div class="acoes" id="acoesVitrine" style="display:none">
             <div class="card-premium-cta">
                 <div class="card-premium-brilho"></div>
                 <div class="card-premium-conteudo">
-                    <div class="card-premium-badge">✦ NOVO</div>
-                    <h3 class="card-premium-titulo">Página do Evento 🎉</h3>
-                    <p class="card-premium-texto">Surpreenda seus convidados com uma página personalizada — mural de fotos, livro de recados, lista de presença e convite digital.</p>
+                    <div class="card-premium-badge">✦ PRÓXIMO PASSO</div>
+                    <h3 class="card-premium-titulo">🎉 Compartilhe sua Lista!</h3>
+                    <p class="card-premium-texto" style="font-size:14px; line-height:1.7;">Adicione pelo menos <strong style="color:#C9A84C;">3 presentes</strong> para liberar sua <strong style="color:#C9A84C;">Página de Celebração</strong> — onde seus convidados vão ver os presentes, confirmar presença e te mandar recados.</p>
                     <div class="card-premium-itens">
-                        <div class="card-premium-item">📸 Mural de memórias</div>
+                        <div class="card-premium-item">🎁 Lista de presentes para os convidados</div>
+                        <div class="card-premium-item">📸 Mural de fotos e memórias</div>
                         <div class="card-premium-item">💌 Livro de recados</div>
-                        <div class="card-premium-item">✅ Lista de presença</div>
-                        <div class="card-premium-item">✉️ Convite para WhatsApp</div>
+                        <div class="card-premium-item">✅ Confirmação de presença</div>
                     </div>
-                    <button class="btn-premium-cta" onclick="abrirPopupAcesso()">🎉 Criar minha Página do Evento</button>
+                    <div id="instrucaoAcesso" style="background:rgba(201,168,76,0.08);border:1px dashed rgba(201,168,76,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#888;line-height:1.6;">
+                      💡 <strong style="color:#C9A84C;">Sem lista?</strong> Você também pode receber seus presentes em dinheiro via Pix com o <strong style="color:#C9A84C;">Cofrinho Pix</strong>.
+                    </div>
+                    <button class="btn-premium-cta" onclick="abrirPopupAcesso()" style="font-size:15px; padding:16px;">✦ Iniciar minha Página de Celebração</button>
                 </div>
             </div>
             <button class="btn-gerar-vitrine" onclick="gerarVitrine()">✦ Gerar minha vitrine</button>
