@@ -1138,15 +1138,36 @@ async function processarFotos(e) {
   e.target.value = '';
 }
 
+function comprimirImagem(file, maxWidth, maxHeight, qualidade, callback) {
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var w = img.width, h = img.height;
+      // Redimensionar mantendo proporção
+      if (w > maxWidth || h > maxHeight) {
+        var ratio = Math.min(maxWidth / w, maxHeight / h);
+        w = Math.round(w * ratio);
+        h = Math.round(h * ratio);
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', qualidade));
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 async function uploadFoto(file) {
   var preview = document.getElementById('fotosPreview');
   var loadingDiv = document.createElement('div');
   loadingDiv.className = 'foto-uploading';
   loadingDiv.textContent = '✦';
   preview.appendChild(loadingDiv);
-  var reader = new FileReader();
-  reader.onload = async function(ev) {
-    var base64 = ev.target.result;
+  // ✦ Comprimir antes de enviar — máx 1200px, qualidade 80%
+  comprimirImagem(file, 1200, 1200, 0.80, async function(base64) {
     try {
       var ordem = document.querySelectorAll('.foto-preview-item').length;
       var r = await fetch('/api/salvar-foto-mural', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ lista_id: listaId, url_foto: base64, ordem: ordem }) });
@@ -1161,8 +1182,7 @@ async function uploadFoto(file) {
         atualizarContadorFotos();
       } else if (data.limite) { document.getElementById('popupComprarFotos').style.display = 'flex'; }
     } catch(e) { preview.removeChild(loadingDiv); alert('Erro ao salvar foto. Tente novamente.'); }
-  };
-  reader.readAsDataURL(file);
+  });
 }
 
 async function comprarPacotao() {
