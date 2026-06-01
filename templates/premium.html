@@ -894,7 +894,8 @@ function renderPresencas(presencas) {
     var statusLabel=p.status==='confirmado'?'✅ Confirmado':p.status==='talvez'?'🤔 Talvez':'❌ Não vai';
     var statusClass=p.status==='confirmado'?'status-confirmado':p.status==='talvez'?'status-talvez':'status-nao-vai';
     var acomp=p.acompanhantes>0?' +'+p.acompanhantes:'';
-    return '<div class="presenca-item"><div class="presenca-item-avatar">'+inicial+'</div><div><div class="presenca-item-nome">'+p.nome+acomp+'</div></div><span class="presenca-item-status '+statusClass+'">'+statusLabel+'</span></div>';
+    var emailInfo = p.email ? '<div style="font-size:11px;color:#aaa;margin-top:2px;">'+p.email+'</div>' : '';
+    return '<div class="presenca-item"><div class="presenca-item-avatar">'+inicial+'</div><div style="flex:1;"><div class="presenca-item-nome">'+p.nome+acomp+'</div>'+emailInfo+'</div><span class="presenca-item-status '+statusClass+'">'+statusLabel+'</span></div>';
   }).join('');
   document.getElementById('presencasLista').innerHTML = '<div class="presencas-lista">' + lista + '</div>';
 }
