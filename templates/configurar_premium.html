@@ -200,12 +200,7 @@ input:checked + .slider:before { transform: translateX(22px); }
   </div>
   <p class="page-titulo">Página do Evento 🎉</p>
   <p class="page-sub">Configure sua página especial para os convidados</p>
-  <div class="link-box">
-    <p>✦ Link da sua Página do Evento</p>
-    <code id="linkPremium"></code>
-    <button class="btn-copiar-link" onclick="copiarLink()">Copiar link</button>
-    <button class="btn-ver-pagina" onclick="verPagina()">Ver página →</button>
-  </div>
+
 
   <div class="secao-config">
     <div class="secao-config-header">
@@ -731,7 +726,7 @@ var frasesPorEvento = {
   outros: ['Estou muito feliz em compartilhar esse momento especial com vocês!','Cada gesto de carinho de vocês significa muito para mim.','Obrigado por fazer parte dessa celebração!','Com vocês ao meu lado, tudo fica mais especial!']
 };
 
-document.getElementById('linkPremium').textContent = window.location.origin + '/premium/' + listaId;
+// link removido do topo — disponível apenas na página de celebração
 
 // ✦ NOVA função separada para aplicar fundo — resolve o bug do preview
 function aplicarFundoPreview() {
