@@ -501,6 +501,12 @@ function irParaPagina() {
 }
 
 function abrirAppInstagram() {
+  // ✦ Salva o momento exato que foi para o Instagram
+  if (vitrineId) {
+    try {
+      localStorage.setItem('feststory_insta_ts_' + vitrineId, Date.now().toString());
+    } catch(e) {}
+  }
   window.location.href = 'instagram://story-camera';
   setTimeout(function(){ window.open('https://www.instagram.com','_blank'); }, 1500);
 }
