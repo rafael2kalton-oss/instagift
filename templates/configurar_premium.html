@@ -1021,13 +1021,12 @@ async function gerarConviteIa() {
 
 function processarFotoCapa(e) {
   var file = e.target.files[0]; if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    fotoCapa = ev.target.result;
+  // ✦ Comprimir antes de salvar — evita estouro do Supabase
+  comprimirImagem(file, 1200, 800, 0.80, function(base64) {
+    fotoCapa = base64;
     var prev = document.getElementById('fotoCapaPreview');
     if (prev) { prev.src = fotoCapa; prev.style.display = 'block'; }
-  };
-  reader.readAsDataURL(file);
+  });
 }
 
 function processarFundoConvite(e) {
