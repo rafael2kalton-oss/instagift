@@ -578,7 +578,8 @@ function atualizarEstadoSalvar() {
     if (usuarioPago || storyPostado) {
         btn.disabled = false;
         if (hint) hint.className = 'btn-salvar-hint';
-        if (gate) gate.style.display = 'none';
+        // ✦ Story gate continua visível — pessoa pode postar quando quiser
+        if (gate) gate.style.display = 'block';
         if (usuarioPago && pacotaoCard) pacotaoCard.style.display = 'none';
     } else {
         btn.disabled = true;
@@ -610,7 +611,9 @@ async function irParaStoryComSave() {
             })
         });
     } catch(e) { console.log('Auto-save erro:', e); }
-    try { localStorage.setItem(STORY_KEY, 'pendente'); } catch(e) {}
+    try {
+      localStorage.setItem(STORY_KEY, 'true');  // ✦ Já ativa o salvar ao voltar
+    } catch(e) {}
     window.location.href = '/criar-story?vitrine=' + listaId + '&evento=' + eventoAtual + '&origem=configurar';
 }
 
@@ -844,6 +847,9 @@ async function carregarConfig() {
       atualizarEstadoSalvar();
       window.history.replaceState({}, '', '/configurar-premium/' + listaId);
     }
+    // ✦ Verifica localStorage imediatamente ao carregar — sem delay
+    verificarStoryPostado();
+    atualizarEstadoSalvar();
   } catch(e) { console.error(e); var ov = document.getElementById('loadingOverlay'); if (ov) ov.style.display = 'none'; }
 }
 
