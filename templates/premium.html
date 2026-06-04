@@ -44,34 +44,26 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .secao-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
 .secao-divider-linha { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); }
 .secao-divider-icon { color: var(--cor-primaria); font-size: 10px; opacity: 0.7; }
-
-/* ✦ CARD CONVITE NO MURAL — destaque mas discreto */
 .convite-mural-card { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.35); border-radius: 20px; padding: 24px 22px; margin-bottom: 28px; text-align: center; }
 .convite-mural-ornamento { color: var(--cor-primaria); font-size: 10px; letter-spacing: 5px; margin-bottom: 10px; }
 .convite-mural-nome { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--cor-primaria); margin-bottom: 4px; }
 .convite-mural-data { font-family: 'Playfair Display', serif; font-size: 13px; color: rgba(245,237,216,0.7); margin-bottom: 16px; font-style: italic; }
 .convite-mural-botoes { display: flex; flex-direction: column; gap: 8px; }
 .btn-wpp-convite { width: 100%; padding: 13px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 7px; transition: all 0.2s; }
-.btn-wpp-convite:hover { transform: translateY(-1px); }
 .convite-mural-links { display: flex; gap: 8px; }
 .btn-link-mini { flex: 1; padding: 10px 8px; background: rgba(201,168,76,0.08); color: var(--cor-primaria); border: 1px solid rgba(201,168,76,0.25); border-radius: 50px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; }
-.btn-link-mini:hover { background: rgba(201,168,76,0.15); }
-
-/* ✦ MENSAGEM */
 .mensagem-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px 24px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.04); margin-bottom: 24px; }
 .mensagem-avatar { width: 64px; height: 64px; border-radius: 50%; border: 3px solid rgba(201,168,76,0.3); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #FFF8EC, #F5EDD8); }
 .mensagem-nome { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
 .mensagem-cargo { font-size: 11px; color: var(--cor-primaria); letter-spacing: 0.05em; margin-bottom: 16px; }
 .mensagem-texto { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #666; line-height: 1.8; }
 .aspas { font-size: 40px; color: rgba(201,168,76,0.2); font-family: Georgia; line-height: 0.5; display: block; margin-bottom: 8px; }
-
 .local-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 18px 20px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 14px; }
 .local-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .local-info { flex: 1; }
 .local-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
 .local-endereco { font-family: 'Playfair Display', serif; font-size: 14px; color: #2C2C2C; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
 .btn-ver-maps { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; text-decoration: none; font-family: 'Inter', sans-serif; }
-
 .mural-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .mural-foto { border-radius: 14px; overflow: hidden; aspect-ratio: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer; }
 .mural-foto:hover { transform: scale(1.02); }
@@ -84,7 +76,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .lightbox.show { display: flex; }
 .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 12px; object-fit: contain; }
 .lightbox-fechar { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; }
-
 .form-recado { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 28px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
 .form-recado h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 20px; text-align: center; }
 .form-field { margin-bottom: 14px; }
@@ -93,7 +84,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .form-field input:focus, .form-field textarea:focus { border-color: var(--cor-primaria); box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
 .form-field input::placeholder, .form-field textarea::placeholder { color: #ccc; }
 .btn-enviar-recado { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); margin-top: 4px; }
-.btn-enviar-recado:hover { transform: translateY(-2px); }
 .recado-sucesso { display: none; text-align: center; padding: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
 .recados-lista { display: flex; flex-direction: column; gap: 16px; }
 .recado-card { background: #fff; border: 1px solid rgba(201,168,76,0.15); border-radius: 16px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
@@ -104,7 +94,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .recado-mensagem { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #666; line-height: 1.7; }
 .recados-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .recados-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
-
 .presenca-contadores { display: flex; gap: 12px; margin-bottom: 20px; }
 .presenca-contador { flex: 1; background: var(--cor-fundo); border: 1px solid rgba(201,168,76,0.2); border-radius: 14px; padding: 16px 12px; text-align: center; }
 .presenca-contador-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--cor-primaria); }
@@ -117,7 +106,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .presenca-opcao.talvez { border-color: #f59e0b; color: #d97706; background: rgba(245,158,11,0.06); }
 .presenca-opcao.nao-vai { border-color: #ef4444; color: #dc2626; background: rgba(239,68,68,0.06); }
 .btn-confirmar-presenca { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 4px 16px rgba(201,168,76,0.3); margin-top: 4px; }
-.btn-confirmar-presenca:hover { transform: translateY(-2px); }
 .presenca-sucesso { display: none; text-align: center; padding: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; color: #16a34a; font-size: 14px; margin-top: 12px; }
 .presencas-lista { display: flex; flex-direction: column; gap: 10px; }
 .presenca-item { background: #fff; border: 1px solid rgba(201,168,76,0.15); border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
@@ -129,8 +117,6 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .status-nao-vai { background: rgba(239,68,68,0.1); color: #dc2626; }
 .presencas-vazio { text-align: center; padding: 40px 20px; color: #bbb; }
 .presencas-vazio p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; }
-
-/* ✦ CONVITE VISUAL — aba convite só visualização */
 .convite-visual-wrapper { position: relative; width: 100%; margin-bottom: 12px; border-radius: 16px; overflow: hidden; }
 .convite-visual { width: 100%; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; text-align: center; position: relative; }
 .convite-visual.classico { background: linear-gradient(135deg, #2C1A00, #1a0f00, #2C1A00); }
@@ -169,16 +155,9 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .classico .convite-local-visual { color: rgba(245,237,216,0.7); }
 .floral .convite-local-visual { color: #999; }
 .livre .convite-local-visual { color: rgba(255,255,255,0.6); }
-.convite-aviso { text-align: center; font-size: 12px; color: #aaa; font-style: italic; font-family: 'Playfair Display', serif; margin-top: 10px; }
-
-/* ✦ BOTÕES FLUTUANTES */
 .btns-flutuantes { position: fixed; bottom: 24px; left: 20px; right: 20px; max-width: 500px; margin: 0 auto; display: flex; gap: 10px; z-index: 50; }
 .btn-flutuante { flex: 1; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px 10px; border-radius: 50px; font-size: 14px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; white-space: nowrap; }
-.btn-flutuante:hover { transform: translateY(-2px); }
 .btn-flutuante-unico { position: fixed; bottom: 24px; left: 20px; right: 20px; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 8px 32px rgba(201,168,76,0.5); z-index: 50; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; transition: all 0.3s; letter-spacing: 0.02em; border: none; }
-.btn-flutuante-unico:hover { transform: translateY(-2px); }
-
-/* ✦ POPUP COFRINHO */
 .popup-cofrinho { display: none; position: fixed; inset: 0; background: rgba(44,44,44,0.7); backdrop-filter: blur(6px); z-index: 200; align-items: flex-end; justify-content: center; padding: 20px; }
 .popup-cofrinho.show { display: flex; }
 .popup-cofrinho-box { background: linear-gradient(135deg, #2C1A00, #1a0f00); border: 1px solid rgba(201,168,76,0.4); border-radius: 24px 24px 20px 20px; padding: 32px 28px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 -8px 40px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; }
@@ -186,18 +165,13 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .popup-cofrinho-icon { font-size: 44px; margin-bottom: 12px; }
 .popup-cofrinho-titulo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--cor-primaria); margin-bottom: 10px; }
 .popup-cofrinho-texto { font-family: 'Playfair Display', serif; font-style: italic; color: #F5EDD8; font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
-.popup-cofrinho-chave-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
 .popup-cofrinho-chave { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 14px 18px; font-family: 'Inter', sans-serif; font-size: 15px; color: var(--cor-primaria); font-weight: 600; word-break: break-all; margin-bottom: 16px; }
 .btn-copiar-pix { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria)); color: #fff; border: none; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-bottom: 10px; }
-.btn-copiar-pix:hover { transform: translateY(-2px); }
 .btn-fechar-cofrinho { width: 100%; padding: 12px; background: transparent; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; }
-.tipo-pix-label { font-size: 11px; color: rgba(201,168,76,0.5); margin-top: 8px; font-style: italic; font-family: 'Inter', sans-serif; letter-spacing: 0.03em; }
 .pix-copiado { display: none; text-align: center; padding: 10px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); border-radius: 10px; color: #4ade80; font-size: 13px; margin-bottom: 10px; }
 .dono-banner { background: linear-gradient(135deg,#2C1A00,#1a0f00); border-bottom: 1px solid rgba(201,168,76,0.3); padding: 10px 16px; text-align: center; position: sticky; top: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; }
 .loading-state { text-align: center; padding: 60px 20px; color: var(--cor-primaria); }
 .loading-state p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #aaa; margin-top: 12px; }
-
-/* ✦ CARROSSEL */
 .carrossel-wrapper { position: relative; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.15); background: #000; aspect-ratio: 4/3; }
 .carrossel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; }
 .carrossel-slide.ativo { opacity: 1; }
@@ -206,11 +180,25 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 .carrossel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(201,168,76,0.3); border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
 .carrossel-dot.ativo { background: var(--cor-primaria); transform: scale(1.3); }
 .carrossel-contador { position: absolute; bottom: 12px; right: 14px; background: rgba(0,0,0,0.45); color: #fff; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-family: 'Inter', sans-serif; z-index: 2; }
+
+/* ✦ RELATÓRIOS */
+.relatorio-card { background: #fff; border: 1px solid rgba(201,168,76,0.2); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+.relatorio-card h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #2C2C2C; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.relatorio-stat { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(201,168,76,0.1); }
+.relatorio-stat:last-child { border-bottom: none; }
+.relatorio-stat-label { font-size: 13px; color: #666; font-family: 'Playfair Display', serif; font-style: italic; }
+.relatorio-stat-valor { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--cor-primaria); }
+.relatorio-vazio { text-align: center; padding: 20px; color: #bbb; font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; }
+.presente-item-rel { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(201,168,76,0.08); }
+.presente-item-rel:last-child { border-bottom: none; }
+.presente-status-badge { font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+.badge-comprado { background: rgba(34,197,94,0.1); color: #16a34a; }
+.badge-reservado { background: rgba(245,158,11,0.1); color: #d97706; }
+.badge-disponivel { background: rgba(201,168,76,0.1); color: #C9A84C; }
 </style>
 </head>
 <body>
 
-<!-- ✦ BANNER DONO — aparece só quando ?dono=true -->
 <div class="dono-banner" id="donoBanner" style="display:none;">
   <span style="font-size:11px;color:rgba(201,168,76,0.8);font-family:'Inter',sans-serif;letter-spacing:0.05em;">👑 Você está vendo sua página como dono</span>
   <a id="donoConfigBtn" href="#" style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;">⚙️ Configurar</a>
@@ -232,12 +220,10 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="hero-scroll"><span>Explorar</span><div class="hero-scroll-arrow"></div></div>
 </div>
 
+<!-- ✦ NAV — abas diferentes para dono e convidado -->
 <div class="nav-premium">
-  <div class="nav-inner">
-    <div class="nav-tab active" onclick="trocarAba('mural')" id="tab-mural">📸 Mural</div>
-    <div class="nav-tab" onclick="trocarAba('recados')" id="tab-recados">💌 Recados</div>
-    <div class="nav-tab" onclick="trocarAba('presenca')" id="tab-presenca">✅ Presença</div>
-    <div class="nav-tab" onclick="trocarAba('convite')" id="tab-convite">✉️ Convite</div>
+  <div class="nav-inner" id="navInner">
+    <!-- Preenchido via JS -->
   </div>
 </div>
 
@@ -246,10 +232,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Mural de Memórias</h2>
   <p class="secao-sub">Momentos especiais que fazem parte dessa história</p>
-
-  <!-- ✦ CONVITE VISUAL — aparece no mural -->
   <div id="conviteMuralCard" style="display:none;margin-bottom:28px;">
-    <!-- ✦ Convite visual real (igual à aba Convite) -->
     <div class="convite-visual-wrapper">
       <div class="convite-visual classico" id="conviteMuralVisual">
         <div class="convite-visual-inner">
@@ -262,21 +245,19 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
         </div>
       </div>
     </div>
-    <!-- ✦ Botões abaixo do convite — só para o dono -->
     <div id="conviteMuralBotoes" style="display:none;margin-top:12px;flex-direction:column;gap:8px;">
-      <button id="btnCompartilharImagemMural" style="width:100%;padding:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;" onclick="compartilharConviteImagemMural()">📲 Compartilhar convite com imagem</button>
+      <button id="btnCompartilharImagemMural" style="width:100%;padding:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="compartilharConviteImagemMural()">📲 Compartilhar convite com imagem</button>
       <button style="width:100%;padding:12px;background:rgba(201,168,76,0.08);color:var(--cor-primaria);border:1px solid rgba(201,168,76,0.25);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;" onclick="compartilharWhatsApp()">💚 Compartilhar texto no WhatsApp</button>
     </div>
   </div>
 
-  <!-- ✦ BOTÃO CONFIRMAR PRESENÇA — visível para convidados abaixo do convite -->
+  <!-- ✦ Botão confirmar presença — só convidados -->
   <div id="btnConfirmarPresencaConvite" style="margin-bottom:20px;display:none;">
     <button onclick="trocarAba('presenca')" style="width:100%;padding:15px;background:linear-gradient(135deg,#C9A84C,#A8722A);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 4px 20px rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;gap:8px;">
       ✅ Confirmar minha presença
     </button>
   </div>
 
-  <!-- ✦ MENSAGEM DO ANIVERSARIANTE -->
   <div class="mensagem-card" id="mensagemCard" style="display:none;">
     <div class="mensagem-avatar">✦</div>
     <div class="mensagem-nome" id="mensagemNome"></div>
@@ -284,16 +265,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <span class="aspas">"</span>
     <p class="mensagem-texto" id="mensagemTexto"></p>
   </div>
-
   <div class="secao-divider" id="dividerFotos" style="display:none;">
     <div class="secao-divider-linha"></div><div class="secao-divider-icon">✦</div><div class="secao-divider-linha"></div>
   </div>
-
   <div id="muralContainer">
-    <div class="loading-state">
-      <div style="font-size:28px;letter-spacing:6px;color:rgba(201,168,76,0.4);">✦ ✦ ✦</div>
-      <p>Carregando memórias...</p>
-    </div>
+    <div class="loading-state"><div style="font-size:28px;letter-spacing:6px;color:rgba(201,168,76,0.4);">✦ ✦ ✦</div><p>Carregando memórias...</p></div>
   </div>
 </div>
 
@@ -313,19 +289,11 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <div id="recadosLista"><div class="loading-state"><div style="font-size:28px;letter-spacing:6px;color:rgba(201,168,76,0.4);">✦ ✦ ✦</div><p>Carregando recados...</p></div></div>
 </div>
 
-<!-- ✦ ABA PRESENÇA -->
+<!-- ✦ ABA PRESENÇA (convidados) -->
 <div class="secao" id="secao-presenca">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Lista de Presença</h2>
   <p class="secao-sub">Confirme sua presença no evento</p>
-  <!-- contadores só para dono, renderizados via JS -->
-  <div id="presencaContadoresDono" style="display:none;">
-    <div class="presenca-contadores">
-      <div class="presenca-contador"><div class="presenca-contador-num" id="totalConfirmados">0</div><div class="presenca-contador-label">✅ Confirmados</div></div>
-      <div class="presenca-contador"><div class="presenca-contador-num" id="totalTalvez">0</div><div class="presenca-contador-label">🤔 Talvez</div></div>
-      <div class="presenca-contador"><div class="presenca-contador-num" id="totalNaoVai">0</div><div class="presenca-contador-label">❌ Não vai</div></div>
-    </div>
-  </div>
   <div class="form-presenca">
     <h3>✦ Confirme sua presença</h3>
     <div class="form-field"><label>Seu nome</label><input type="text" id="presencaNome" placeholder="Como você se chama?"></div>
@@ -342,11 +310,66 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     <button class="btn-confirmar-presenca" onclick="confirmarPresenca()">✦ Confirmar presença</button>
     <div class="presenca-sucesso" id="presencaSucesso">🎉 Presença confirmada com sucesso!</div>
   </div>
-  <div class="secao-divider"><div class="secao-divider-linha"></div><div class="secao-divider-icon">✦</div><div class="secao-divider-linha"></div></div>
-  <div id="presencasLista"><div class="presencas-vazio"><p>Nenhuma confirmação ainda. Seja o primeiro! ✦</p></div></div>
 </div>
 
-<!-- ✦ ABA CONVITE — só visualização -->
+<!-- ✦ ABA CONFIRMADOS — só dono -->
+<div class="secao" id="secao-confirmados">
+  <div class="secao-ornamento">✦ ✦ ✦</div>
+  <h2 class="secao-titulo">Confirmados</h2>
+  <p class="secao-sub">Lista de convidados que confirmaram presença</p>
+  <div class="presenca-contadores">
+    <div class="presenca-contador"><div class="presenca-contador-num" id="totalConfirmados">0</div><div class="presenca-contador-label">✅ Confirmados</div></div>
+    <div class="presenca-contador"><div class="presenca-contador-num" id="totalTalvez">0</div><div class="presenca-contador-label">🤔 Talvez</div></div>
+    <div class="presenca-contador"><div class="presenca-contador-num" id="totalNaoVai">0</div><div class="presenca-contador-label">❌ Não vai</div></div>
+  </div>
+  <div id="confirmadosLista"><div class="presencas-vazio"><p>Nenhuma confirmação ainda. ✦</p></div></div>
+</div>
+
+<!-- ✦ ABA RELATÓRIOS — só dono -->
+<div class="secao" id="secao-relatorios">
+  <div class="secao-ornamento">✦ ✦ ✦</div>
+  <h2 class="secao-titulo">Relatórios</h2>
+  <p class="secao-sub">Acompanhe os presentes e contribuições</p>
+
+  <!-- Cofrinho -->
+  <div class="relatorio-card" id="relatorioCofrinho" style="display:none;">
+    <h3>💛 Cofrinho Pix</h3>
+    <div class="relatorio-stat">
+      <span class="relatorio-stat-label">Chave Pix configurada</span>
+      <span class="relatorio-stat-valor" id="relChavePix">—</span>
+    </div>
+    <div class="relatorio-stat">
+      <span class="relatorio-stat-label">Status</span>
+      <span class="relatorio-stat-valor" style="color:#22c55e;">✅ Ativo</span>
+    </div>
+    <p style="font-size:12px;color:#aaa;font-style:italic;margin-top:12px;font-family:'Playfair Display',serif;">✦ As contribuições são recebidas diretamente no seu Pix. O FestStory não processa os valores.</p>
+  </div>
+
+  <!-- Presentes -->
+  <div class="relatorio-card">
+    <h3>🎁 Lista de Presentes</h3>
+    <div class="relatorio-stat">
+      <span class="relatorio-stat-label">Total de presentes</span>
+      <span class="relatorio-stat-valor" id="relTotalPresentes">0</span>
+    </div>
+    <div class="relatorio-stat">
+      <span class="relatorio-stat-label">✅ Comprados</span>
+      <span class="relatorio-stat-valor" id="relComprados">0</span>
+    </div>
+    <div class="relatorio-stat">
+      <span class="relatorio-stat-label">🔒 Reservados</span>
+      <span class="relatorio-stat-valor" id="relReservados">0</span>
+    </div>
+    <div class="relatorio-stat">
+      <span class="relatorio-stat-label">🎁 Disponíveis</span>
+      <span class="relatorio-stat-valor" id="relDisponiveis">0</span>
+    </div>
+    <div class="secao-divider" style="margin:16px 0;"><div class="secao-divider-linha"></div><div class="secao-divider-icon">✦</div><div class="secao-divider-linha"></div></div>
+    <div id="relPresentesLista"></div>
+  </div>
+</div>
+
+<!-- ✦ ABA CONVITE (só convidados) -->
 <div class="secao" id="secao-convite">
   <div class="secao-ornamento">✦ ✦ ✦</div>
   <h2 class="secao-titulo">Convite Digital</h2>
@@ -364,12 +387,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
     </div>
   </div>
   <div id="conviteAcoesConvidado">
-    <p class="convite-aviso">Para compartilhar o convite, use o botão na aba Mural ✦</p>
-  </div>
-  <div id="conviteAcoesDono" style="display:none;margin-top:12px;">
-    <button id="btnCompartilharImagem" style="width:100%;padding:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;transition:all 0.2s;" onclick="compartilharConviteImagem()">📲 Compartilhar convite com imagem</button>
-    <button style="width:100%;padding:12px;background:rgba(201,168,76,0.08);color:var(--cor-primaria);border:1px solid rgba(201,168,76,0.25);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;" onclick="copiarConvite()">📋 Copiar texto do convite</button>
-    <p style="text-align:center;font-size:11px;color:#bbb;font-style:italic;font-family:'Playfair Display',serif;margin-top:8px;">Salva a imagem do convite para compartilhar onde quiser ✦</p>
+    <p style="text-align:center;font-size:12px;color:#aaa;font-style:italic;font-family:'Playfair Display',serif;margin-top:10px;">Para compartilhar o convite, use o botão na aba Mural ✦</p>
   </div>
 </div>
 
@@ -377,7 +395,7 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 <button class="btn-flutuante-unico" id="btnFlutuanteUnico" onclick="irParaPresentes()">🎁 Ver Lista de Presentes</button>
 <div class="btns-flutuantes" id="btnsFlutuantesDuplos" style="display:none;">
   <button class="btn-flutuante" onclick="irParaPresentes()">🎁 Ver Presentes</button>
-  <button class="btn-flutuante" onclick="abrirCofrinho()">🎁 Presentear via Pix</button>
+  <button class="btn-flutuante" onclick="abrirCofrinho()">💛 Presentear via Pix</button>
 </div>
 
 <!-- ✦ POPUP COFRINHO -->
@@ -400,24 +418,40 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
 <script>
 var listaId = "{{ lista_id }}";
 var isDono = new URLSearchParams(window.location.search).get('dono') === 'true';
-// ✦ Ativa banner e recursos do dono
+var dadosPremium = {};
+var conviteTextoFinal = "";
+var presencaSelecionada = 'confirmado';
+var chavePix = '';
+var carrosselIndex = 0, carrosselTimer = null;
+
+// ✦ Monta abas diferentes para dono e convidado
+function montarNav() {
+  var nav = document.getElementById('navInner');
+  if (isDono) {
+    // Dono: Mural, Recados, Confirmados, Relatórios
+    nav.innerHTML = [
+      '<div class="nav-tab active" onclick="trocarAba(\'mural\')" id="tab-mural">📸 Mural</div>',
+      '<div class="nav-tab" onclick="trocarAba(\'recados\')" id="tab-recados">💌 Recados</div>',
+      '<div class="nav-tab" onclick="trocarAba(\'confirmados\')" id="tab-confirmados">✅ Confirmados</div>',
+      '<div class="nav-tab" onclick="trocarAba(\'relatorios\')" id="tab-relatorios">📊 Relatórios</div>'
+    ].join('');
+  } else {
+    // Convidado: Mural, Recados, Presença, Convite
+    nav.innerHTML = [
+      '<div class="nav-tab active" onclick="trocarAba(\'mural\')" id="tab-mural">📸 Mural</div>',
+      '<div class="nav-tab" onclick="trocarAba(\'recados\')" id="tab-recados">💌 Recados</div>',
+      '<div class="nav-tab" onclick="trocarAba(\'presenca\')" id="tab-presenca">✅ Presença</div>',
+      '<div class="nav-tab" onclick="trocarAba(\'convite\')" id="tab-convite">✉️ Convite</div>'
+    ].join('');
+  }
+}
+
 if (isDono) {
   var banner = document.getElementById('donoBanner');
   if (banner) banner.style.display = 'flex';
   var configBtn = document.getElementById('donoConfigBtn');
   if (configBtn) configBtn.href = '/configurar-premium/' + listaId;
 }
-var dadosPremium = {};
-
-// ✦ Resolve usa_convite_padrao como bool ou string do Supabase
-function usaPersonalizado(config) {
-  if (!config || !config.texto_convite) return false;
-  var v = config.usa_convite_padrao;
-  return (v === false || v === 'false' || v === 0 || v === '0');
-}
-var conviteTextoFinal = "";
-var presencaSelecionada = 'confirmado';
-var chavePix = '';
 
 function aplicarPaleta(paleta) {
   var paletas = { dourado:{primaria:'#C9A84C',secundaria:'#A8722A'}, rosa:{primaria:'#E91E8C',secundaria:'#C2185B'}, azul:{primaria:'#1E88E5',secundaria:'#1565C0'}, verde:{primaria:'#43A047',secundaria:'#2E7D32'}, roxo:{primaria:'#8E24AA',secundaria:'#6A1B9A'}, vermelho:{primaria:'#E53935',secundaria:'#B71C1C'} };
@@ -426,79 +460,10 @@ function aplicarPaleta(paleta) {
   document.documentElement.style.setProperty('--cor-secundaria', cores.secundaria);
 }
 
-async function compartilharConviteImagemMural() {
-  var btn = document.getElementById('btnCompartilharImagemMural');
-  var elemento = document.getElementById('conviteMuralVisual');
-  if (!elemento) return;
-  if (btn) { btn.textContent = '⏳ Gerando imagem...'; btn.disabled = true; }
-  try {
-    var canvas = await html2canvas(elemento, {
-      useCORS: true, allowTaint: true, scale: 2, backgroundColor: null, logging: false
-    });
-    canvas.toBlob(async function(blob) {
-      var file = new File([blob], 'convite.png', { type: 'image/png' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ title: 'Convite', text: conviteTextoFinal, files: [file] });
-          if (btn) { btn.innerHTML = '📲 Compartilhar convite com imagem'; btn.disabled = false; }
-          return;
-        } catch(e) { if (e.name !== 'AbortError') console.log(e); }
-      }
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = 'convite.png'; a.click();
-      URL.revokeObjectURL(url);
-      if (btn) { btn.innerHTML = '📲 Compartilhar convite com imagem'; btn.disabled = false; }
-    }, 'image/png');
-  } catch(e) {
-    alert('Não foi possível gerar a imagem. Tire um print do convite!');
-    if (btn) { btn.innerHTML = '📲 Compartilhar convite com imagem'; btn.disabled = false; }
-  }
-}
-
-async function compartilharConviteImagem() {
-  var btn = document.getElementById('btnCompartilharImagem');
-  var elemento = document.getElementById('conviteVisual');
-  if (!elemento) return;
-  if (btn) { btn.textContent = '⏳ Gerando imagem...'; btn.disabled = true; }
-  try {
-    var canvas = await html2canvas(elemento, {
-      useCORS: true,
-      allowTaint: true,
-      scale: 2,
-      backgroundColor: null,
-      logging: false
-    });
-    canvas.toBlob(async function(blob) {
-      var file = new File([blob], 'convite-' + listaId + '.png', { type: 'image/png' });
-      // ✦ Tenta Web Share API com imagem (mobile)
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            title: 'Convite — ' + (dadosPremium.config && dadosPremium.config.nome_celebrante || 'Celebração'),
-            text: conviteTextoFinal,
-            files: [file]
-          });
-          if (btn) { btn.innerHTML = '📲 Compartilhar convite com imagem'; btn.disabled = false; }
-          return;
-        } catch(e) {
-          if (e.name !== 'AbortError') console.log('Share erro:', e);
-        }
-      }
-      // ✦ Fallback: baixa a imagem
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'convite.png';
-      a.click();
-      URL.revokeObjectURL(url);
-      if (btn) { btn.innerHTML = '📲 Compartilhar convite com imagem'; btn.disabled = false; }
-    }, 'image/png');
-  } catch(e) {
-    console.error('Erro ao gerar imagem:', e);
-    alert('Não foi possível gerar a imagem. Tente tirar um print do convite!');
-    if (btn) { btn.innerHTML = '📲 Compartilhar convite com imagem'; btn.disabled = false; }
-  }
+function usaPersonalizado(config) {
+  if (!config || !config.texto_convite) return false;
+  var v = config.usa_convite_padrao;
+  return (v === false || v === 'false' || v === 0 || v === '0');
 }
 
 async function carregarPremium() {
@@ -506,7 +471,7 @@ async function carregarPremium() {
     var exp = await fetch('/api/verificar-expiracao/' + listaId);
     var expData = await exp.json();
     if (expData.expirada) {
-      document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFF8EC;font-family:\'Playfair Display\',serif;text-align:center;padding:40px;"><div><div style="font-size:48px;margin-bottom:20px;">✦</div><h2 style="color:#C9A84C;font-size:28px;margin-bottom:12px;">Página Encerrada</h2><p style="color:#aaa;font-style:italic;font-size:16px;line-height:1.7;">' + (expData.motivo === 'evento_encerrado' ? 'Este evento já foi celebrado!<br>A página ficou disponível por 7 dias após o evento.' : 'O prazo desta página expirou após 6 meses.') + '</p></div></div>';
+      document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFF8EC;font-family:\'Playfair Display\',serif;text-align:center;padding:40px;"><div><div style="font-size:48px;margin-bottom:20px;">✦</div><h2 style="color:#C9A84C;font-size:28px;margin-bottom:12px;">Página Encerrada</h2><p style="color:#aaa;font-style:italic;font-size:16px;line-height:1.7;">' + (expData.motivo === 'evento_encerrado' ? 'Este evento já foi celebrado!' : 'O prazo desta página expirou.') + '</p></div></div>';
       return;
     }
     var r = await fetch('/api/config-premium/' + listaId);
@@ -515,12 +480,6 @@ async function carregarPremium() {
     if (data.config && data.config.paleta) aplicarPaleta(data.config.paleta);
     if (data.config && data.config.cofrinho_ativo && data.config.chave_pix) {
       chavePix = data.config.chave_pix;
-      // ✦ Tipo do pix discreto
-      var tiposLabel = { cpf: 'Pix por CPF', telefone: 'Pix por telefone', email: 'Pix por e-mail', aleatoria: 'Pix copia e cola' };
-      var tipoEl = document.getElementById('tipoPix');
-      if (tipoEl && data.config.tipo_chave_pix) {
-        tipoEl.textContent = tiposLabel[data.config.tipo_chave_pix] || '';
-      }
       document.getElementById('btnFlutuanteUnico').style.display = 'none';
       document.getElementById('btnsFlutuantesDuplos').style.display = 'flex';
     }
@@ -531,24 +490,17 @@ async function carregarPremium() {
     renderRecados(data.recados);
     renderConviteVisual(data.config);
     carregarPresencas();
+    if (isDono) carregarRelatorios(data.config);
   } catch(e) { console.error('Erro ao carregar:', e); }
 }
 
 function renderHero(config) {
-  // ✦ Ativa recursos do dono
   if (isDono) {
-    var conviteConvidado = document.getElementById('conviteAcoesConvidado');
-    var conviteDono = document.getElementById('conviteAcoesDono');
-    if (conviteConvidado) conviteConvidado.style.display = 'none';
-    if (conviteDono) conviteDono.style.display = 'block';
-    // ✦ Botões de compartilhar só para o dono
     var botoesMural = document.getElementById('conviteMuralBotoes');
     if (botoesMural) botoesMural.style.display = 'flex';
   }
-  // ✦ Botão de presença — só para convidados
   var btnPresenca = document.getElementById('btnConfirmarPresencaConvite');
   if (btnPresenca) btnPresenca.style.display = isDono ? 'none' : 'block';
-
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var data = config.data_evento ? formatarData(config.data_evento) : '';
@@ -559,7 +511,6 @@ function renderHero(config) {
   else if (dadosPremium.fotos && dadosPremium.fotos.length > 0) { heroBg.style.backgroundImage = 'url(' + dadosPremium.fotos[0].url_foto + ')'; heroBg.style.opacity = '1'; }
 }
 
-// ✦ Convite no mural — mostra convite visual real
 function renderConviteMural(config) {
   if (!config) return;
   var card = document.getElementById('conviteMuralCard');
@@ -568,95 +519,45 @@ function renderConviteMural(config) {
   var localEvento = config.local_evento || '';
   var link = window.location.origin + '/premium/' + listaId;
   var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
-
-  // ✦ Gera texto do convite
-  var tipoEvento = config.evento || config.tipo_evento || 'outros';
+  var tipoEvento = config.evento || 'outros';
   var textosPadrao = {
-    aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha celebrar esse momento! ✦',
-    casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para celebrar o seu casamento.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será inesquecível! ✦',
-    'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
-    'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Venha fazer parte desse momento! ✦',
-    outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 ' + (dataStr || 'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
+    aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha celebrar esse momento! ✦',
+    casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para o casamento.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será inesquecível! ✦',
+    'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
+    'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Venha fazer parte desse momento! ✦',
+    outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
   };
-  conviteTextoFinal = (usaPersonalizado(config))
-    ? config.texto_convite + mapsLink
-    : (textosPadrao[tipoEvento] || textosPadrao['outros']);
-
-  // ✦ Aplica estilo e imagem de fundo no convite do mural
+  conviteTextoFinal = usaPersonalizado(config) ? config.texto_convite + mapsLink : (textosPadrao[tipoEvento] || textosPadrao['outros']);
   var estilo = config.estilo_convite || 'classico';
   var imagemFundo = config.imagem_fundo_convite || '';
   var imagemIa = config.convite_ia_imagem || '';
   var visual = document.getElementById('conviteMuralVisual');
-
-  // ✦ Estilo IA: mostra só a imagem gerada como <img>, sem texto sobreposto
   if (estilo === 'ia' && imagemIa) {
-    if (visual) {
-      visual.className = 'convite-visual';
-      visual.style.background = 'transparent';
-      visual.style.backgroundImage = 'none';
-      visual.style.minHeight = '0';
-      visual.style.padding = '0';
-      visual.style.display = 'block';
-      // Substitui conteúdo por <img>
-      visual.innerHTML = '<img src="' + imagemIa + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
-    }
-    card.style.display = 'block';
-    return;
+    visual.className = 'convite-visual'; visual.style.background = 'transparent'; visual.style.minHeight = '0'; visual.style.padding = '0'; visual.style.display = 'block';
+    visual.innerHTML = '<img src="' + imagemIa + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
+    card.style.display = 'block'; return;
   }
-
-  // ✦ Estilo Livre: mostra a imagem completa sem corte e sem texto por cima
   if (estilo === 'livre' && imagemFundo) {
-    if (visual) {
-      visual.className = 'convite-visual livre-img';
-      visual.style.backgroundImage = 'none';
-      visual.style.background = 'transparent';
-      visual.style.padding = '0';
-      visual.style.minHeight = '0';
-      visual.innerHTML = '<img src="' + imagemFundo + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
-    }
-    card.style.display = 'block';
-    return;
+    visual.className = 'convite-visual livre-img'; visual.style.backgroundImage = 'none'; visual.style.background = 'transparent'; visual.style.padding = '0'; visual.style.minHeight = '0';
+    visual.innerHTML = '<img src="' + imagemFundo + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
+    card.style.display = 'block'; return;
   }
-
-  if (visual) {
-    visual.className = 'convite-visual ' + estilo;
-    visual.style.backgroundImage = '';
-    var inner = visual.querySelector('.convite-visual-inner');
-    if (inner) inner.style.display = 'block';
-  }
-
-  // ✦ Preenche textos
+  if (visual) { visual.className = 'convite-visual ' + estilo; visual.style.backgroundImage = ''; }
+  var coresTextoMap2 = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
+  var corTexto = coresTextoMap2[config.cor_texto_convite] || '#F5EDD8';
   var nomeEl = document.getElementById('conviteMuralNome');
   var dataEl = document.getElementById('conviteMuralData');
   var textoEl = document.getElementById('conviteMuralTexto');
   var localEl = document.getElementById('conviteMuralLocal');
   var localTextoEl = document.getElementById('conviteMuralLocalTexto');
-  var coresTextoMap2 = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
-  var corTextoMural = coresTextoMap2[config.cor_texto_convite] || '#F5EDD8';
-  if (nomeEl) { nomeEl.textContent = nome; nomeEl.style.color = corTextoMural; }
-  if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTextoMural; }
+  if (nomeEl) { nomeEl.textContent = nome; nomeEl.style.color = corTexto; }
+  if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTexto; }
   if (textoEl) {
-    if (usaPersonalizado(config)) {
-      textoEl.textContent = config.texto_convite || '';
-      textoEl.style.display = config.texto_convite ? 'block' : 'none';
-    } else {
-      textoEl.style.display = 'block';
-      var convites = {
-        aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
-        casamento: nome + ' têm a alegria de convidar você para celebrar o seu casamento ✦',
-        'cha-bebe': nome + ' convida você para o chá de bebê ✦',
-        'casa-nova': nome + ' convida você para celebrar essa nova fase ✦',
-        outros: nome + ' convida você para uma celebração especial ✦'
-      };
-      textoEl.textContent = convites[tipoEvento] || convites['outros'];
-    }
-    textoEl.style.color = corTextoMural;
+    var convites = { aniversario: nome+' está celebrando mais um ano de vida ✦', casamento: nome+' convidam você para o casamento ✦', 'cha-bebe': nome+' convida você para o chá de bebê ✦', 'casa-nova': nome+' convida você para celebrar a nova fase ✦', outros: nome+' convida você para uma celebração especial ✦' };
+    textoEl.textContent = usaPersonalizado(config) ? (config.texto_convite||'') : (convites[tipoEvento]||convites['outros']);
+    textoEl.style.color = corTexto;
   }
-  if (localEl && localTextoEl) {
-    if (localEvento) { localTextoEl.textContent = localEvento; localEl.style.display = 'flex'; }
-    else { localEl.style.display = 'none'; }
-  }
-
+  if (localEl && localTextoEl) { if (localEvento) { localTextoEl.textContent = localEvento; localEl.style.display = 'flex'; } else { localEl.style.display = 'none'; } }
   card.style.display = 'block';
 }
 
@@ -681,273 +582,231 @@ function renderMural(fotos) {
 
 function renderMuralNormal(container, fotos) {
   var html = '<div class="mural-grid">';
-  fotos.forEach(function(f, idx) { html += '<div class="mural-foto" onclick="abrirLightbox(\'' + f.url_foto + '\')"><img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="lazy"></div>'; });
-  html += '</div>';
-  container.innerHTML = html;
+  fotos.forEach(function(f,idx){ html += '<div class="mural-foto" onclick="abrirLightbox(\''+f.url_foto+'\')"><img src="'+f.url_foto+'" alt="Foto '+(idx+1)+'" loading="lazy"></div>'; });
+  html += '</div>'; container.innerHTML = html;
 }
 
 function renderMuralPolaroid(container, fotos) {
-  var rotacoes = [-3,2,-1,3,-2,1,-3,2,-1,3], cores = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6','#e91e63','#00bcd4','#ff5722','#8bc34a'];
+  var rotacoes=[-3,2,-1,3,-2,1,-3,2,-1,3];
   var html = '<div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:16px 0;">';
-  fotos.forEach(function(f, idx) { var rot=rotacoes[idx%rotacoes.length], cor=cores[idx%cores.length]; html += '<div onclick="abrirLightbox(\'' + f.url_foto + '\')" style="transform:rotate(' + rot + 'deg);background:#fff;padding:10px 10px 36px 10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);width:calc(50% - 24px);cursor:pointer;position:relative;"><img src="' + f.url_foto + '" alt="foto" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;"><div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:' + cor + ';"></div></div>'; });
+  fotos.forEach(function(f,idx){ var rot=rotacoes[idx%rotacoes.length]; html += '<div onclick="abrirLightbox(\''+f.url_foto+'\')" style="transform:rotate('+rot+'deg);background:#fff;padding:10px 10px 36px;box-shadow:0 4px 20px rgba(0,0,0,0.15);width:calc(50% - 24px);cursor:pointer;"><img src="'+f.url_foto+'" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;"></div>'; });
   html += '</div>'; container.innerHTML = html;
 }
 
 function renderMuralColagem(container, fotos) {
   var rotacoes=[-4,3,-2,5,-3,2,-5,4,-1,3], tamanhos=['60%','45%','55%','50%','65%','48%','58%','52%','62%','46%'];
   var html = '<div style="position:relative;width:100%;min-height:420px;padding:20px 0;">';
-  fotos.forEach(function(f, idx) { var rot=rotacoes[idx%rotacoes.length], tam=tamanhos[idx%tamanhos.length], top=Math.floor(idx/2)*120+(idx%2)*40, left=idx%2===0?'5%':'35%'; html += '<div onclick="abrirLightbox(\'' + f.url_foto + '\')" style="position:absolute;top:' + top + 'px;left:' + left + ';width:' + tam + ';transform:rotate(' + rot + 'deg);z-index:' + (idx+1) + ';background:#fff;padding:6px 6px 24px 6px;box-shadow:0 6px 24px rgba(0,0,0,0.18);cursor:pointer;"><img src="' + f.url_foto + '" alt="foto" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;"></div>'; });
-  var alturaTotal = Math.ceil(fotos.length/2)*120+200;
-  html += '<div style="height:' + alturaTotal + 'px;"></div></div>'; container.innerHTML = html;
+  fotos.forEach(function(f,idx){ var rot=rotacoes[idx%rotacoes.length],tam=tamanhos[idx%tamanhos.length],top=Math.floor(idx/2)*120+(idx%2)*40,left=idx%2===0?'5%':'35%'; html += '<div onclick="abrirLightbox(\''+f.url_foto+'\')" style="position:absolute;top:'+top+'px;left:'+left+';width:'+tam+';transform:rotate('+rot+'deg);z-index:'+(idx+1)+';background:#fff;padding:6px 6px 24px;box-shadow:0 6px 24px rgba(0,0,0,0.18);cursor:pointer;"><img src="'+f.url_foto+'" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;"></div>'; });
+  var alt=Math.ceil(fotos.length/2)*120+200; html+='<div style="height:'+alt+'px;"></div></div>'; container.innerHTML=html;
 }
 
-function renderRecados(recados) {
-  var lista = document.getElementById('recadosLista');
-  if (!recados || recados.length === 0) { lista.innerHTML = '<div class="recados-vazio"><p>Seja o primeiro a deixar uma mensagem! 💌</p></div>'; return; }
-  lista.innerHTML = '<div class="recados-lista">' + recados.map(function(r) {
-    var inicial = r.nome ? r.nome[0].toUpperCase() : '?';
-    return '<div class="recado-card"><div class="recado-header"><div class="recado-avatar">' + inicial + '</div><div><div class="recado-nome">' + r.nome + '</div><div class="recado-data">' + (r.criado_em ? formatarDataHora(r.criado_em) : '') + '</div></div></div><p class="recado-mensagem">' + r.mensagem + '</p></div>';
-  }).join('') + '</div>';
-}
-
-// ✦ Convite visual na aba Convite — só visualização
-function renderConviteVisual(config) {
-  // ✦ Botão de presença — só para convidados
-  var btnPresenca = document.getElementById('btnConfirmarPresencaConvite');
-  if (btnPresenca) btnPresenca.style.display = isDono ? 'none' : 'block';
-
-  if (!config) return;
-  var nome = config.nome_celebrante || 'Celebração Especial';
-  var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
-  var link = window.location.origin + '/premium/' + listaId;
-  var estilo = config.estilo_convite || 'classico';
-  var imagemFundo = config.imagem_fundo_convite || '';
-  var imagemIa = config.convite_ia_imagem || '';
-  var visual = document.getElementById('conviteVisual');
-
-  // ✦ Estilo IA: mostra só a imagem gerada como <img>, sem texto
-  if (estilo === 'ia' && imagemIa) {
-    if (visual) {
-      visual.className = 'convite-visual';
-      visual.style.background = 'transparent';
-      visual.style.backgroundImage = 'none';
-      visual.style.minHeight = '0';
-      visual.style.padding = '0';
-      visual.style.display = 'block';
-      visual.innerHTML = '<img src="' + imagemIa + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
-    }
-    return;
-  }
-
-  // ✦ Estilo Livre: imagem completa sem corte
-  if (estilo === 'livre' && imagemFundo) {
-    if (visual) {
-      visual.className = 'convite-visual livre-img';
-      visual.style.background = 'transparent';
-      visual.style.padding = '0';
-      visual.style.minHeight = '0';
-      visual.innerHTML = '<img src="' + imagemFundo + '" alt="Convite" style="width:100%;display:block;border-radius:14px;">';
-    }
-    return;
-  }
-
-  if (visual) {
-    visual.className = 'convite-visual ' + estilo;
-    visual.style.backgroundImage = '';
-    var inner = visual.querySelector('.convite-visual-inner');
-    if (inner) inner.style.display = 'block';
-  }
-
-  // ✦ Aplica cor do texto
-  var coresTextoMap = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
-  var corTexto = coresTextoMap[config.cor_texto_convite] || '#F5EDD8';
-  var tituloEl = document.getElementById('conviteTituloVisual');
-  var dataEl = document.getElementById('conviteDataVisual');
-  var textoEl = document.getElementById('conviteTextoVisual');
-  if (tituloEl) { tituloEl.textContent = nome; tituloEl.style.color = corTexto; }
-  if (dataEl) { dataEl.textContent = '📅 ' + dataStr; dataEl.style.color = corTexto; }
-  if (textoEl) {
-    if (usaPersonalizado(config)) {
-      textoEl.textContent = config.texto_convite || '';
-      textoEl.style.display = config.texto_convite ? 'block' : 'none';
-    } else if (estilo === 'livre') {
-      textoEl.style.display = 'none';
-    } else {
-      textoEl.style.display = 'block';
-      var tipoEvento = (dadosPremium.config && dadosPremium.config.tipo_evento) || 'outros';
-      var convites = {
-        aniversario: nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença ✦',
-        casamento: nome + ' têm a alegria de convidar você para celebrar o seu casamento ✦',
-        'casa-nova': nome + ' convida você para celebrar essa nova fase ✦',
-        'cha-bebe': nome + ' convida você para o chá de bebê ✦',
-        outros: nome + ' convida você para uma celebração especial ✦'
-      };
-      textoEl.textContent = convites[tipoEvento] || convites['outros'];
-    }
-    textoEl.style.color = corTexto;
-  }
-  var localEvento = config.local_evento || '';
-  var localVisual = document.getElementById('conviteLocalVisual');
-  var localTexto = document.getElementById('conviteLocalTexto');
-  if (localVisual && localTexto) {
-    if (localEvento) { localTexto.textContent = localEvento; localVisual.style.display = 'flex'; }
-    else { localVisual.style.display = 'none'; }
-  }
-}
-
-function copiarConvite() {
-  navigator.clipboard.writeText(conviteTextoFinal).then(function() { alert('Convite copiado! ✦'); });
-}
-
-function compartilharWhatsApp() {
-  // ✦ Garante que conviteTextoFinal está preenchido antes de abrir o WhatsApp
-  if (!conviteTextoFinal) {
-    var config = dadosPremium.config || {};
-    var nome = config.nome_celebrante || 'Celebração Especial';
-    var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
-    var localEvento = config.local_evento || '';
-    var link = window.location.origin + '/premium/' + listaId;
-    var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
-    conviteTextoFinal = (usaPersonalizado(config))
-      ? config.texto_convite + mapsLink
-      : '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 Data: ' + dataStr + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦';
-  }
-  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(conviteTextoFinal), '_blank');
-}
-
-function copiarLinkPagina() {
-  var link = window.location.origin + '/premium/' + listaId;
-  navigator.clipboard.writeText(link).then(function() { alert('✦ Link copiado!'); });
-}
-
-function abrirCofrinho() { document.getElementById('popupCofrinho').classList.add('show'); }
-function fecharCofrinho() { document.getElementById('popupCofrinho').classList.remove('show'); document.getElementById('pixCopiado').style.display = 'none'; }
-function copiarPix() { navigator.clipboard.writeText(chavePix).then(function() { document.getElementById('pixCopiado').style.display = 'block'; setTimeout(function() { document.getElementById('pixCopiado').style.display = 'none'; }, 3000); }); }
-
-function selecionarPresenca(status) {
-  presencaSelecionada = status;
-  document.querySelectorAll('.presenca-opcao').forEach(function(el) { el.style.opacity = '0.4'; el.style.transform = 'scale(0.95)'; });
-  var id = status === 'confirmado' ? 'opcaoConfirmado' : status === 'talvez' ? 'opcaoTalvez' : 'opcaoNaoVai';
-  var el = document.getElementById(id);
-  if (el) { el.style.opacity = '1'; el.style.transform = 'scale(1.05)'; }
-}
-
-async function confirmarPresenca() {
-  var nome = document.getElementById('presencaNome').value.trim();
-  var email = document.getElementById('presencaEmail').value.trim().toLowerCase();
-  var acompanhantes = parseInt(document.getElementById('presencaAcompanhantes').value) || 0;
-  if (!nome) { alert('Preencha seu nome!'); return; }
-  if (!email || !email.includes('@')) { alert('Preencha seu e-mail!'); return; }
-  try {
-    var r = await fetch('/api/salvar-presenca', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ lista_id: listaId, nome: nome, email: email, status: presencaSelecionada, acompanhantes: acompanhantes }) });
-    var data = await r.json();
-    if (data.ja_confirmou) {
-      // ✦ Já confirmou — mostra mensagem amigável
-      var sucesso = document.getElementById('presencaSucesso');
-      sucesso.innerHTML = '✦ Você já confirmou sua presença anteriormente!';
-      sucesso.style.background = 'rgba(245,158,11,0.08)';
-      sucesso.style.borderColor = 'rgba(245,158,11,0.3)';
-      sucesso.style.color = '#d97706';
-      sucesso.style.display = 'block';
-      setTimeout(function(){ sucesso.style.display='none'; sucesso.innerHTML='🎉 Presença confirmada com sucesso!'; sucesso.style.background=''; sucesso.style.borderColor=''; sucesso.style.color=''; }, 4000);
-      return;
-    }
-    if (data.ok) {
-      document.getElementById('presencaNome').value='';
-      document.getElementById('presencaEmail').value='';
-      document.getElementById('presencaAcompanhantes').value='0';
-      document.getElementById('presencaSucesso').style.display='block';
-      setTimeout(function(){ document.getElementById('presencaSucesso').style.display='none'; }, 3000);
-      carregarPresencas();
-    }
-  } catch(e) { alert('Erro ao confirmar. Tente novamente.'); }
-}
-
-async function carregarPresencas() {
-  try { renderPresencas(await (await fetch('/api/presencas/' + listaId)).json()); } catch(e) {}
-}
-
-function renderPresencas(presencas) {
-  // ✦ Convidado: só vê formulário, sem contadores nem lista
-  if (!isDono) {
-    document.getElementById('presencasLista').innerHTML = '';
-    return;
-  }
-  // ✦ Dono: vê contadores e lista completa
-  var divContadores = document.getElementById('presencaContadoresDono');
-  if (divContadores) divContadores.style.display = 'block';
-  if (!presencas || presencas.length === 0) {
-    document.getElementById('presencasLista').innerHTML = '<div class="presencas-vazio"><p>Nenhuma confirmação ainda. ✦</p></div>';
-    return;
-  }
-  var confirmados = presencas.filter(function(p){return p.status==='confirmado';}).length;
-  var talvez = presencas.filter(function(p){return p.status==='talvez';}).length;
-  var naoVai = presencas.filter(function(p){return p.status==='nao-vai';}).length;
-  var el1 = document.getElementById('totalConfirmados');
-  var el2 = document.getElementById('totalTalvez');
-  var el3 = document.getElementById('totalNaoVai');
-  if (el1) el1.textContent = confirmados;
-  if (el2) el2.textContent = talvez;
-  if (el3) el3.textContent = naoVai;
-  var lista = presencas.map(function(p) {
-    var inicial=p.nome?p.nome[0].toUpperCase():'?';
-    var statusLabel=p.status==='confirmado'?'✅ Confirmado':p.status==='talvez'?'🤔 Talvez':'❌ Não vai';
-    var statusClass=p.status==='confirmado'?'status-confirmado':p.status==='talvez'?'status-talvez':'status-nao-vai';
-    var acomp=p.acompanhantes>0?' +'+p.acompanhantes:'';
-    var emailInfo = p.email ? '<div style="font-size:11px;color:#aaa;margin-top:2px;">'+p.email+'</div>' : '';
-    return '<div class="presenca-item"><div class="presenca-item-avatar">'+inicial+'</div><div style="flex:1;"><div class="presenca-item-nome">'+p.nome+acomp+'</div>'+emailInfo+'</div><span class="presenca-item-status '+statusClass+'">'+statusLabel+'</span></div>';
-  }).join('');
-  document.getElementById('presencasLista').innerHTML = '<div class="presencas-lista">' + lista + '</div>';
-}
-
-async function enviarRecado() {
-  var nome = document.getElementById('recadoNome').value.trim();
-  var mensagem = document.getElementById('recadoMensagem').value.trim();
-  if (!nome || !mensagem) { alert('Preencha seu nome e mensagem!'); return; }
-  try {
-    var r = await fetch('/api/salvar-recado', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ lista_id: listaId, nome: nome, mensagem: mensagem }) });
-    var data = await r.json();
-    if (data.ok) { document.getElementById('recadoNome').value=''; document.getElementById('recadoMensagem').value=''; document.getElementById('recadoSucesso').style.display='block'; setTimeout(function(){document.getElementById('recadoSucesso').style.display='none';},3000); renderRecados(await (await fetch('/api/recados/'+listaId)).json()); }
-  } catch(e) { alert('Erro ao enviar. Tente novamente.'); }
-}
-
-function irParaPresentes() { window.location.href = '/vitrine/' + listaId; }
-function explorarPagina() { var nav = document.querySelector('.nav-premium'); if (nav) window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' }); }
-function trocarAba(aba) {
-  document.querySelectorAll('.secao').forEach(function(s){s.classList.remove('ativa');});
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-  document.getElementById('secao-' + aba).classList.add('ativa');
-  document.getElementById('tab-' + aba).classList.add('active');
-  window.scrollTo({ top: document.querySelector('.nav-premium').offsetTop - 10, behavior: 'smooth' });
-}
-function abrirLightbox(url) { document.getElementById('lightboxImg').src = url; document.getElementById('lightbox').classList.add('show'); }
-function fecharLightbox() { document.getElementById('lightbox').classList.remove('show'); }
-function formatarData(dataStr) { try { var d=new Date(dataStr+'T00:00:00'); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}); } catch(e){return dataStr;} }
-function formatarDataHora(dataStr) { try { var d=new Date(dataStr); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}); } catch(e){return '';} }
-
-var carrosselIndex = 0, carrosselTimer = null;
 function renderMuralCarrossel(container, fotos) {
   if (carrosselTimer) { clearInterval(carrosselTimer); carrosselTimer = null; }
   carrosselIndex = 0;
   var html = '<div class="carrossel-wrapper">';
-  fotos.forEach(function(f, idx) { html += '<div class="carrossel-slide' + (idx===0?' ativo':'') + '" onclick="abrirLightbox(\'' + f.url_foto + '\')"><img src="' + f.url_foto + '" alt="Foto ' + (idx+1) + '" loading="' + (idx===0?'eager':'lazy') + '"></div>'; });
-  html += '<div class="carrossel-contador"><span id="carrosselAtual">1</span>/' + fotos.length + '</div></div>';
+  fotos.forEach(function(f,idx){ html += '<div class="carrossel-slide'+(idx===0?' ativo':'')+'" onclick="abrirLightbox(\''+f.url_foto+'\')"><img src="'+f.url_foto+'" alt="Foto '+(idx+1)+'" loading="'+(idx===0?'eager':'lazy')+'"></div>'; });
+  html += '<div class="carrossel-contador"><span id="carrosselAtual">1</span>/'+fotos.length+'</div></div>';
   html += '<div class="carrossel-dots">';
-  fotos.forEach(function(_,idx) { html += '<button class="carrossel-dot' + (idx===0?' ativo':'') + '" onclick="irParaSlide(' + idx + ')"></button>'; });
-  html += '</div>';
-  container.innerHTML = html;
-  if (fotos.length > 1) { carrosselTimer = setInterval(function() { irParaSlide((carrosselIndex+1) % document.querySelectorAll('.carrossel-slide').length); }, 3500); }
+  fotos.forEach(function(_,idx){ html += '<button class="carrossel-dot'+(idx===0?' ativo':'')+'" onclick="irParaSlide('+idx+')"></button>'; });
+  html += '</div>'; container.innerHTML = html;
+  if (fotos.length > 1) { carrosselTimer = setInterval(function(){ irParaSlide((carrosselIndex+1)%document.querySelectorAll('.carrossel-slide').length); }, 3500); }
 }
+
 function irParaSlide(idx) {
-  var slides=document.querySelectorAll('.carrossel-slide'), dots=document.querySelectorAll('.carrossel-dot');
+  var slides=document.querySelectorAll('.carrossel-slide'),dots=document.querySelectorAll('.carrossel-dot');
   if (!slides.length) return;
   slides.forEach(function(s){s.classList.remove('ativo');}); dots.forEach(function(d){d.className='carrossel-dot';});
   carrosselIndex=idx; if(slides[idx])slides[idx].classList.add('ativo'); if(dots[idx])dots[idx].classList.add('ativo');
   var atual=document.getElementById('carrosselAtual'); if(atual)atual.textContent=idx+1;
 }
 
-selecionarPresenca('confirmado');
-carregarPremium();
-</script>
-</body>
-</html>
+function renderRecados(recados) {
+  var lista = document.getElementById('recadosLista');
+  if (!recados || recados.length === 0) { lista.innerHTML = '<div class="recados-vazio"><p>Seja o primeiro a deixar uma mensagem! 💌</p></div>'; return; }
+  lista.innerHTML = '<div class="recados-lista">'+recados.map(function(r){
+    var inicial=r.nome?r.nome[0].toUpperCase():'?';
+    return '<div class="recado-card"><div class="recado-header"><div class="recado-avatar">'+inicial+'</div><div><div class="recado-nome">'+r.nome+'</div><div class="recado-data">'+(r.criado_em?formatarDataHora(r.criado_em):'')+'</div></div></div><p class="recado-mensagem">'+r.mensagem+'</p></div>';
+  }).join('')+'</div>';
+}
+
+function renderConviteVisual(config) {
+  if (!config) return;
+  var nome = config.nome_celebrante || 'Celebração Especial';
+  var dataStr = config.data_evento ? formatarData(config.data_evento) : 'Em breve';
+  var estilo = config.estilo_convite || 'classico';
+  var imagemFundo = config.imagem_fundo_convite || '';
+  var imagemIa = config.convite_ia_imagem || '';
+  var visual = document.getElementById('conviteVisual');
+  if (!visual) return;
+  if (estilo === 'ia' && imagemIa) {
+    visual.className='convite-visual'; visual.style.background='transparent'; visual.style.minHeight='0'; visual.style.padding='0'; visual.style.display='block';
+    visual.innerHTML='<img src="'+imagemIa+'" alt="Convite" style="width:100%;display:block;border-radius:14px;">'; return;
+  }
+  if (estilo === 'livre' && imagemFundo) {
+    visual.className='convite-visual livre-img'; visual.style.background='transparent'; visual.style.padding='0'; visual.style.minHeight='0';
+    visual.innerHTML='<img src="'+imagemFundo+'" alt="Convite" style="width:100%;display:block;border-radius:14px;">'; return;
+  }
+  visual.className='convite-visual '+estilo; visual.style.backgroundImage='';
+  var coresTextoMap = { claro:'#F5EDD8', branco:'#ffffff', dourado:'#C9A84C', escuro:'#2C2C2C', rosa:'#E91E8C', azul:'#1E88E5', verde:'#43A047', roxo:'#8E24AA' };
+  var corTexto = coresTextoMap[config.cor_texto_convite] || '#F5EDD8';
+  var tituloEl=document.getElementById('conviteTituloVisual'),dataEl=document.getElementById('conviteDataVisual'),textoEl=document.getElementById('conviteTextoVisual');
+  if (tituloEl) { tituloEl.textContent=nome; tituloEl.style.color=corTexto; }
+  if (dataEl) { dataEl.textContent='📅 '+dataStr; dataEl.style.color=corTexto; }
+  if (textoEl) { textoEl.textContent=usaPersonalizado(config)?(config.texto_convite||''):nome+' convida você para uma celebração especial ✦'; textoEl.style.color=corTexto; }
+  var localVisual=document.getElementById('conviteLocalVisual'),localTexto=document.getElementById('conviteLocalTexto');
+  if (localVisual && localTexto) { if (config.local_evento) { localTexto.textContent=config.local_evento; localVisual.style.display='flex'; } else { localVisual.style.display='none'; } }
+}
+
+async function carregarPresencas() {
+  try {
+    var presencas = await (await fetch('/api/presencas/' + listaId)).json();
+    renderConfirmados(presencas);
+  } catch(e) {}
+}
+
+function renderConfirmados(presencas) {
+  if (!isDono) return;
+  if (!presencas || presencas.length === 0) {
+    var el = document.getElementById('confirmadosLista');
+    if (el) el.innerHTML = '<div class="presencas-vazio"><p>Nenhuma confirmação ainda. ✦</p></div>';
+    return;
+  }
+  var confirmados = presencas.filter(function(p){return p.status==='confirmado';}).length;
+  var talvez = presencas.filter(function(p){return p.status==='talvez';}).length;
+  var naoVai = presencas.filter(function(p){return p.status==='nao-vai';}).length;
+  var el1=document.getElementById('totalConfirmados'),el2=document.getElementById('totalTalvez'),el3=document.getElementById('totalNaoVai');
+  if(el1)el1.textContent=confirmados; if(el2)el2.textContent=talvez; if(el3)el3.textContent=naoVai;
+  var lista = presencas.map(function(p) {
+    var inicial=p.nome?p.nome[0].toUpperCase():'?';
+    var statusLabel=p.status==='confirmado'?'✅ Confirmado':p.status==='talvez'?'🤔 Talvez':'❌ Não vai';
+    var statusClass=p.status==='confirmado'?'status-confirmado':p.status==='talvez'?'status-talvez':'status-nao-vai';
+    var acomp=p.acompanhantes>0?' +'+p.acompanhantes:'';
+    var emailInfo=p.email?'<div style="font-size:11px;color:#aaa;margin-top:2px;">'+p.email+'</div>':'';
+    return '<div class="presenca-item"><div class="presenca-item-avatar">'+inicial+'</div><div style="flex:1;"><div class="presenca-item-nome">'+p.nome+acomp+'</div>'+emailInfo+'</div><span class="presenca-item-status '+statusClass+'">'+statusLabel+'</span></div>';
+  }).join('');
+  var el=document.getElementById('confirmadosLista');
+  if(el) el.innerHTML='<div class="presencas-lista">'+lista+'</div>';
+}
+
+async function carregarRelatorios(config) {
+  if (!isDono) return;
+  // Cofrinho
+  if (config && config.cofrinho_ativo && config.chave_pix) {
+    var relCofrinho = document.getElementById('relatorioCofrinho');
+    var relChave = document.getElementById('relChavePix');
+    if (relCofrinho) relCofrinho.style.display = 'block';
+    if (relChave) relChave.textContent = config.chave_pix;
+  }
+  // Presentes
+  try {
+    var produtos = await (await fetch('/api/produtos/' + listaId)).json();
+    if (!Array.isArray(produtos)) return;
+    var total = produtos.length;
+    var comprados = produtos.filter(function(p){return p.reservado===2;}).length;
+    var reservados = produtos.filter(function(p){return p.reservado===1;}).length;
+    var disponiveis = produtos.filter(function(p){return p.reservado===0;}).length;
+    var el=document.getElementById('relTotalPresentes'); if(el)el.textContent=total;
+    var el2=document.getElementById('relComprados'); if(el2)el2.textContent=comprados;
+    var el3=document.getElementById('relReservados'); if(el3)el3.textContent=reservados;
+    var el4=document.getElementById('relDisponiveis'); if(el4)el4.textContent=disponiveis;
+    var listaEl = document.getElementById('relPresentesLista');
+    if (listaEl) {
+      if (produtos.length === 0) { listaEl.innerHTML = '<div class="relatorio-vazio">Nenhum presente na lista ainda.</div>'; return; }
+      listaEl.innerHTML = produtos.map(function(p) {
+        var badge, badgeClass;
+        if (p.reservado===2) { badge='✅ Comprado'; badgeClass='badge-comprado'; }
+        else if (p.reservado===1) { badge='🔒 Reservado'; badgeClass='badge-reservado'; }
+        else { badge='🎁 Disponível'; badgeClass='badge-disponivel'; }
+        var img = p.imagem_url ? '<img src="'+p.imagem_url+'" style="width:40px;height:40px;object-fit:cover;border-radius:8px;flex-shrink:0;">' : '<div style="width:40px;height:40px;background:rgba(201,168,76,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🎁</div>';
+        var comprador = (p.reservado===2||p.reservado===1) && p.nome_comprador ? '<div style="font-size:11px;color:#aaa;margin-top:2px;">por '+p.nome_comprador+'</div>' : '';
+        return '<div class="presente-item-rel">'+img+'<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;color:#2C2C2C;font-family:\'Playfair Display\',serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.nome+'</div>'+comprador+'</div><span class="presente-status-badge '+badgeClass+'">'+badge+'</span></div>';
+      }).join('');
+    }
+  } catch(e) { console.error('Erro relatórios:', e); }
+}
+
+async function enviarRecado() {
+  var nome=document.getElementById('recadoNome').value.trim(),mensagem=document.getElementById('recadoMensagem').value.trim();
+  if(!nome||!mensagem){alert('Preencha seu nome e mensagem!');return;}
+  try {
+    var r=await fetch('/api/salvar-recado',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lista_id:listaId,nome:nome,mensagem:mensagem})});
+    var data=await r.json();
+    if(data.ok){document.getElementById('recadoNome').value='';document.getElementById('recadoMensagem').value='';document.getElementById('recadoSucesso').style.display='block';setTimeout(function(){document.getElementById('recadoSucesso').style.display='none';},3000);renderRecados(await (await fetch('/api/recados/'+listaId)).json());}
+  } catch(e){alert('Erro ao enviar. Tente novamente.');}
+}
+
+async function confirmarPresenca() {
+  var nome=document.getElementById('presencaNome').value.trim();
+  var email=document.getElementById('presencaEmail').value.trim().toLowerCase();
+  var acompanhantes=parseInt(document.getElementById('presencaAcompanhantes').value)||0;
+  if(!nome){alert('Preencha seu nome!');return;}
+  if(!email||!email.includes('@')){alert('Preencha seu e-mail!');return;}
+  try {
+    var r=await fetch('/api/salvar-presenca',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lista_id:listaId,nome:nome,email:email,status:presencaSelecionada,acompanhantes:acompanhantes})});
+    var data=await r.json();
+    if(data.ja_confirmou){
+      var sucesso=document.getElementById('presencaSucesso');
+      sucesso.innerHTML='✦ Você já confirmou sua presença anteriormente!';
+      sucesso.style.background='rgba(245,158,11,0.08)';sucesso.style.borderColor='rgba(245,158,11,0.3)';sucesso.style.color='#d97706';sucesso.style.display='block';
+      setTimeout(function(){sucesso.style.display='none';sucesso.innerHTML='🎉 Presença confirmada!';sucesso.style.background='';sucesso.style.borderColor='';sucesso.style.color='';},4000);
+      return;
+    }
+    if(data.ok){
+      document.getElementById('presencaNome').value='';document.getElementById('presencaEmail').value='';document.getElementById('presencaAcompanhantes').value='0';
+      document.getElementById('presencaSucesso').style.display='block';
+      setTimeout(function(){document.getElementById('presencaSucesso').style.display='none';},3000);
+      carregarPresencas();
+    }
+  } catch(e){alert('Erro ao confirmar. Tente novamente.');}
+}
+
+function selecionarPresenca(status) {
+  presencaSelecionada=status;
+  document.querySelectorAll('.presenca-opcao').forEach(function(el){el.style.opacity='0.4';el.style.transform='scale(0.95)';});
+  var id=status==='confirmado'?'opcaoConfirmado':status==='talvez'?'opcaoTalvez':'opcaoNaoVai';
+  var el=document.getElementById(id);
+  if(el){el.style.opacity='1';el.style.transform='scale(1.05)';}
+}
+
+function trocarAba(aba) {
+  document.querySelectorAll('.secao').forEach(function(s){s.classList.remove('ativa');});
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  var secao=document.getElementById('secao-'+aba);
+  var tab=document.getElementById('tab-'+aba);
+  if(secao)secao.classList.add('ativa');
+  if(tab)tab.classList.add('active');
+  window.scrollTo({top:document.querySelector('.nav-premium').offsetTop-10,behavior:'smooth'});
+}
+
+async function compartilharConviteImagemMural() {
+  var btn=document.getElementById('btnCompartilharImagemMural'),elemento=document.getElementById('conviteMuralVisual');
+  if(!elemento)return;
+  if(btn){btn.textContent='⏳ Gerando imagem...';btn.disabled=true;}
+  try {
+    var canvas=await html2canvas(elemento,{useCORS:true,allowTaint:true,scale:2,backgroundColor:null,logging:false});
+    canvas.toBlob(async function(blob){
+      var file=new File([blob],'convite.png',{type:'image/png'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        try{await navigator.share({title:'Convite',text:conviteTextoFinal,files:[file]});if(btn){btn.innerHTML='📲 Compartilhar convite com imagem';btn.disabled=false;}return;}catch(e){if(e.name!=='AbortError')console.log(e);}
+      }
+      var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='convite.png';a.click();URL.revokeObjectURL(url);
+      if(btn){btn.innerHTML='📲 Compartilhar convite com imagem';btn.disabled=false;}
+    },'image/png');
+  } catch(e){alert('Não foi possível gerar a imagem. Tire um print!');if(btn){btn.innerHTML='📲 Compartilhar convite com imagem';btn.disabled=false;}}
+}
+
+function compartilharWhatsApp() {
+  if(!conviteTextoFinal){
+    var config=dadosPremium.config||{},nome=config.nome_celebrante||'Celebração Especial',link=window.location.origin+'/premium/'+listaId;
+    conviteTextoFinal='🎉 Você está convidado!\n\n'+nome+' convida você para uma celebração especial.\n\n✦ Acesse a Página de Celebração:\n'+link+'\n\n✦ Será incrível! ✦';
+  }
+  window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(conviteTextoFinal),'_blank');
+}
+
+function irParaPresentes(){window.location.href='/vitrine/'+listaId;}
+function explorarPagina(){var nav=document.querySelector('.nav-premium');if(nav)window.scrollTo({top:nav.offsetTop,behavior:'smooth'});}
+function abrirLightbox(url){document.getElementById('lightboxImg').src=url;document.getElementById('lightbox').classList.add('show');}
+function fecharLightbox(){document.getElementById('lightbox').classList.remove('show');}
+function abrirCofrinho(){document.getElementById('popupCofrinho').classList.add('show');}
+function fecharCofrinho(){document.getElementById('popupCofrinho').classList.remove('show');document.getElementById('pixCopiado').style.display='none';}
+function copiarPix(){navigator.clipboard.writeText(chavePix).th
