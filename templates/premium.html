@@ -513,8 +513,14 @@ function renderHero(config) {
   if (!config) return;
   var nome = config.nome_celebrante || 'Celebração Especial';
   var data = config.data_evento ? formatarData(config.data_evento) : '';
+  var horario = config.horario_evento || '';
   document.getElementById('heroTitulo').innerHTML = nome.includes('&') ? nome.replace('&','<span>&</span>') : '<span>' + nome + '</span>';
-  if (data) document.getElementById('heroSubtitulo').textContent = '✦ ' + data + ' ✦';
+  if (data) {
+    var subtitulo = '✦ ' + data;
+    if (horario) subtitulo += ' às ' + horario;
+    subtitulo += ' ✦';
+    document.getElementById('heroSubtitulo').textContent = subtitulo;
+  }
   var heroBg = document.getElementById('heroBg');
   if (config.foto_capa) { heroBg.style.backgroundImage = 'url(' + config.foto_capa + ')'; heroBg.style.opacity = '1'; }
   else if (dadosPremium.fotos && dadosPremium.fotos.length > 0) { heroBg.style.backgroundImage = 'url(' + dadosPremium.fotos[0].url_foto + ')'; heroBg.style.opacity = '1'; }
@@ -560,7 +566,7 @@ function renderConviteMural(config) {
   var localEl = document.getElementById('conviteMuralLocal');
   var localTextoEl = document.getElementById('conviteMuralLocalTexto');
   if (nomeEl) { nomeEl.textContent = nome; nomeEl.style.color = corTexto; }
-  if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr : ''; dataEl.style.color = corTexto; }
+  if (dataEl) { dataEl.textContent = dataStr ? '📅 ' + dataStr + (config.horario_evento ? ' · ⏰ ' + config.horario_evento : '') : ''; dataEl.style.color = corTexto; }
   if (textoEl) {
     var convites = { aniversario: nome+' está celebrando mais um ano de vida ✦', casamento: nome+' convidam você para o casamento ✦', 'cha-bebe': nome+' convida você para o chá de bebê ✦', 'casa-nova': nome+' convida você para celebrar a nova fase ✦', outros: nome+' convida você para uma celebração especial ✦' };
     textoEl.textContent = usaPersonalizado(config) ? (config.texto_convite||'') : (convites[tipoEvento]||convites['outros']);
