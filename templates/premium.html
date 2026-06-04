@@ -331,18 +331,27 @@ body { background: #FFF8EC; font-family: 'Inter', sans-serif; color: #2C2C2C; }
   <h2 class="secao-titulo">Relatórios</h2>
   <p class="secao-sub">Acompanhe os presentes e contribuições</p>
 
-  <!-- Cofrinho -->
-  <div class="relatorio-card" id="relatorioCofrinho" style="display:none;">
+  <!-- Cofrinho — sempre visível -->
+  <div class="relatorio-card" id="relatorioCofrinho">
     <h3>💛 Cofrinho Pix</h3>
-    <div class="relatorio-stat">
-      <span class="relatorio-stat-label">Chave Pix configurada</span>
-      <span class="relatorio-stat-valor" id="relChavePix">—</span>
+    <div id="relCofrinhoAtivo" style="display:none;">
+      <div class="relatorio-stat">
+        <span class="relatorio-stat-label">Chave Pix configurada</span>
+        <span class="relatorio-stat-valor" id="relChavePix">—</span>
+      </div>
+      <div class="relatorio-stat">
+        <span class="relatorio-stat-label">Status</span>
+        <span class="relatorio-stat-valor" style="color:#22c55e;">✅ Ativo</span>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic;margin-top:12px;font-family:'Playfair Display',serif;">✦ As contribuições são recebidas diretamente no seu Pix. O FestStory não processa os valores.</p>
     </div>
-    <div class="relatorio-stat">
-      <span class="relatorio-stat-label">Status</span>
-      <span class="relatorio-stat-valor" style="color:#22c55e;">✅ Ativo</span>
+    <div id="relCofrinhoInativo">
+      <div class="relatorio-stat">
+        <span class="relatorio-stat-label">Status</span>
+        <span class="relatorio-stat-valor" style="color:#aaa;">⚪ Não adquirido</span>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic;margin-top:12px;font-family:'Playfair Display',serif;">✦ Adquira o Cofrinho Pix para receber contribuições dos convidados diretamente no seu Pix.</p>
     </div>
-    <p style="font-size:12px;color:#aaa;font-style:italic;margin-top:12px;font-family:'Playfair Display',serif;">✦ As contribuições são recebidas diretamente no seu Pix. O FestStory não processa os valores.</p>
   </div>
 
   <!-- Presentes -->
@@ -691,11 +700,14 @@ function renderConfirmados(presencas) {
 async function carregarRelatorios(config) {
   if (!isDono) return;
   // Cofrinho
+  // ✦ Cofrinho — sempre mostra, com estado correto
   if (config && config.cofrinho_ativo && config.chave_pix) {
-    var relCofrinho = document.getElementById('relatorioCofrinho');
     var relChave = document.getElementById('relChavePix');
-    if (relCofrinho) relCofrinho.style.display = 'block';
     if (relChave) relChave.textContent = config.chave_pix;
+    var ativo = document.getElementById('relCofrinhoAtivo');
+    var inativo = document.getElementById('relCofrinhoInativo');
+    if (ativo) ativo.style.display = 'block';
+    if (inativo) inativo.style.display = 'none';
   }
   // Presentes
   try {
