@@ -718,6 +718,7 @@ def salvar_config_premium():
         "paleta": data.get("paleta", "dourado"),
         "estilo_mural": data.get("estilo_mural", "normal"),
         "local_evento": data.get("local_evento", ""),
+        "horario_evento": data.get("horario_evento", ""),
         "chave_pix": data.get("chave_pix", ""),
         "cofrinho_ativo": data.get("cofrinho_ativo", False),
         "estilo_convite": data.get("estilo_convite", "classico"),
