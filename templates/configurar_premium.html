@@ -222,6 +222,10 @@ input:checked + .slider:before { transform: translateX(22px); }
       <p class="data-erro" id="dataErro">⚠️ Data inválida! Máximo de 12 meses a partir de hoje.</p>
     </div>
     <div class="campo">
+      <label>⏰ Horário do evento <span style="color:#C9A84C;font-size:10px;">— opcional</span></label>
+      <input type="time" id="horarioEvento" placeholder="Ex: 19:00">
+    </div>
+    <div class="campo">
       <label>📍 Local do evento <span style="color:#C9A84C;font-size:10px;">— opcional</span></label>
       <input type="text" id="localEvento" placeholder="Ex: Rua das Flores, 123 — São Paulo, SP">
     </div>
@@ -789,6 +793,7 @@ async function carregarConfig() {
       if (data.config.paleta) selecionarPaleta(data.config.paleta);
       if (data.config.estilo_mural) selecionarEstilo(data.config.estilo_mural);
       if (data.config.local_evento) document.getElementById('localEvento').value = data.config.local_evento;
+      if (data.config.horario_evento) document.getElementById('horarioEvento').value = data.config.horario_evento;
       if (data.config.convite_ia_imagem) {
         conviteIaBase64 = data.config.convite_ia_imagem;
         var iaWrapper = document.getElementById('iaPreviewWrapper');
@@ -1325,6 +1330,7 @@ async function salvarConfig() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         lista_id: listaId, nome_celebrante: nome, data_evento: data,
+        horario_evento: document.getElementById('horarioEvento').value.trim(),
         mensagem_celebrante: mensagem, texto_convite: textoConvite,
         usa_convite_padrao: usaConvitePadrao, paleta: paletaSelecionada,
         estilo_mural: estiloMural, local_evento: localEvento,
