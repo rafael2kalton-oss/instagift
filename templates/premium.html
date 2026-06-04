@@ -533,14 +533,16 @@ function renderConviteMural(config) {
   var dataStr = config.data_evento ? formatarData(config.data_evento) : '';
   var localEvento = config.local_evento || '';
   var link = window.location.origin + '/premium/' + listaId;
+  var horarioStr = config.horario_evento ? ' · ⏰ ' + config.horario_evento : '';
   var mapsLink = localEvento ? '\n\n📍 Local: ' + localEvento + '\nhttps://www.google.com/maps/search/' + encodeURIComponent(localEvento) : '';
   var tipoEvento = config.evento || 'outros';
+  var dataHora = (dataStr||'Em breve') + horarioStr;
   var textosPadrao = {
-    aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha celebrar esse momento! ✦',
-    casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para o casamento.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será inesquecível! ✦',
-    'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
-    'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Venha fazer parte desse momento! ✦',
-    outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 ' + (dataStr||'Em breve') + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
+    aniversario: '🎂 Você está convidado!\n\n' + nome + ' está celebrando mais um ano de vida e ficaria muito feliz com a sua presença.\n\n📅 ' + dataHora + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha celebrar esse momento! ✦',
+    casamento: '💍 Você está convidado!\n\n' + nome + ' têm a alegria de convidar você para o casamento.\n\n📅 ' + dataHora + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será inesquecível! ✦',
+    'cha-bebe': '👶 O bebê está chegando!\n\n' + nome + ' convida você para o chá de bebê.\n\n📅 ' + dataHora + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Venha receber esse novo amor! ✦',
+    'casa-nova': '🏠 Novo lar, nova história!\n\n' + nome + ' convida você para celebrar essa nova fase.\n\n📅 ' + dataHora + mapsLink + '\n\n✦ Venha fazer parte desse momento! ✦',
+    outros: '🎉 Você está convidado!\n\n' + nome + ' convida você para uma celebração especial.\n\n📅 ' + dataHora + mapsLink + '\n\n✦ Acesse a Página de Celebração:\n' + link + '\n\n✦ Será incrível! ✦'
   };
   conviteTextoFinal = usaPersonalizado(config) ? config.texto_convite + mapsLink : (textosPadrao[tipoEvento] || textosPadrao['outros']);
   var estilo = config.estilo_convite || 'classico';
