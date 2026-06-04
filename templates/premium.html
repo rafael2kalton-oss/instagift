@@ -809,4 +809,13 @@ function abrirLightbox(url){document.getElementById('lightboxImg').src=url;docum
 function fecharLightbox(){document.getElementById('lightbox').classList.remove('show');}
 function abrirCofrinho(){document.getElementById('popupCofrinho').classList.add('show');}
 function fecharCofrinho(){document.getElementById('popupCofrinho').classList.remove('show');document.getElementById('pixCopiado').style.display='none';}
-function copiarPix(){navigator.clipboard.writeText(chavePix).th
+function copiarPix(){navigator.clipboard.writeText(chavePix).then(function(){document.getElementById('pixCopiado').style.display='block';setTimeout(function(){document.getElementById('pixCopiado').style.display='none';},3000);});}
+function formatarData(dataStr){try{var d=new Date(dataStr+'T00:00:00');return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}catch(e){return dataStr;}}
+function formatarDataHora(dataStr){try{var d=new Date(dataStr);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '';}}
+
+selecionarPresenca('confirmado');
+montarNav();
+carregarPremium();
+</script>
+</body>
+</html>
