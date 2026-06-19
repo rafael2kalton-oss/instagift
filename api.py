@@ -917,16 +917,24 @@ def presidente(token):
 @app.route("/api/presidente/metricas")
 def presidente_metricas():
     try:
-        listas = sb_get("listas", "order=criado_em.desc&limit=100") or []
+        listas = sb_get("listas", "select=id&limit=1000") or []
         if not isinstance(listas, list): listas = []
-        paginas = sb_get("config_premium", "limit=100") or []
+        print(f"Presidente metricas — listas: {len(listas)}")
+
+        paginas = sb_get("config_premium", "select=lista_id&limit=1000") or []
         if not isinstance(paginas, list): paginas = []
-        recados = sb_get("recados", "limit=100") or []
+        print(f"Presidente metricas — paginas: {len(paginas)}")
+
+        recados = sb_get("recados", "select=id&limit=1000") or []
         if not isinstance(recados, list): recados = []
+        print(f"Presidente metricas — recados: {len(recados)}")
+
         try:
-            vendas = sb_get("vendas", "order=criado_em.desc&limit=100") or []
+            vendas = sb_get("vendas", "order=criado_em.desc&limit=1000") or []
             if not isinstance(vendas, list): vendas = []
-        except Exception:
+            print(f"Presidente metricas — vendas: {len(vendas)}")
+        except Exception as ve:
+            print(f"Vendas erro: {ve}")
             vendas = []
         faturamento = 0
         vendas_por_pacote = {}
